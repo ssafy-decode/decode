@@ -1,7 +1,5 @@
 # 24.01.09 - VS Code 및 Intellij 세팅하기
 
-# 24.01.09 - VS Code 및 Intellij 세팅하기
-
 ### VS Code
 
 - Node.js 설치
