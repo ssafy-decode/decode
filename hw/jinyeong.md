@@ -1,6 +1,6 @@
 # 공통 PJT 정진영 README
 
-## 1. Vuetify를 사용하는 pjt 시작하기
+## 1. Vuetify를 사용하는 pjt 시작하기(24.01.09)
 - 1학기 수업 때는 node.js의 npm을 이용하여 `npm create vue@latest`를 이용하여 프로젝트를 시작했지만, vuetify를 사용하기 위한 방법 중 하나로 이제 vue-cli를 이용하여 vuetify를 쓰는 프로젝트를 생성할 것이다.
 
 ### 1) vue-cli 설치
@@ -48,3 +48,15 @@ npm run serve  # 로컬 서버 실행
 ---
 ### 공부 후기
 - 기존의 npm을 사용하여 프로젝트를 생성하는 방식이 아닌, vue-cli를 사용하여 프로젝트를 생성하고, vue-cli의 존재에 대해 처음 알게 되었다. 또한 vuetify를 사용하기 위해 이것저것 찾아봤었다. vuetify를 설치하여 프로젝트를 처음 시작하는 방법을 익혔다. 이전 1학기 최종 프로젝트 때 bootstrap을 이용하긴 했지만 단순히 색을 칠하고 정렬하는 데에 그친 것 같았고, 다른 교육생들의 페이지를 보며 좀 더 예쁘게 꾸며보고 싶다는 생각을 했었는데, 이제 그 시작을 열었다는 마음에 기대가 된다. 비록 멋들어지게 꾸미는 것이 쉽지는 않겠지만, 오히려 도전정신을 불러일으키고 설레는 마음을 가지게 되었다.
+
+
+## 2. 기능 명세서 및 ERD 작성(24.01.10)
+
+### 1) 기능 명세서
+![기능_명세서-1](https://github.com/jinddobaegi/mine/assets/139422554/9b11dea7-ffc9-49a7-94d4-4fe9b0201910)
+![기능_명세서-2](https://github.com/jinddobaegi/mine/assets/139422554/7978dff0-6225-4ba9-8337-561e03c4f592)
+![기능_명세서-3](https://github.com/jinddobaegi/mine/assets/139422554/c0017354-988a-441a-b726-680d562cc220)
+![기능_명세서-4](https://github.com/jinddobaegi/mine/assets/139422554/a40cf262-9b06-4175-ab88-d14f3f07b8a9)
+
+### 2) ERD
+![code Agile](https://github.com/jinddobaegi/mine/assets/139422554/fa5cff9e-87d0-465f-aa8c-5cec60f7c70d)
