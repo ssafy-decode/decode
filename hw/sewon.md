@@ -171,11 +171,85 @@
 
 
 
-# 24.01.10 - ERD 작성
+# 24.01.10 - ERD 작성 및 React.js 스터디 실습 일부 진행
 
 ### ERD
 
 ![code Agile](https://github.com/serethia/git-test/assets/137035446/2f332886-413c-4fb6-988c-3900139270b1)
+
+### React.js 스터디 코딩 연습 1: 연습: 함수 다루기
+
+<br/>
+
+![연습1-1](https://github.com/serethia/web1/assets/137035446/44a2e1ae-11e2-4c8a-a628-10fe524db7c0)
+
+<br/>
+
+![연습1-2](https://github.com/serethia/web1/assets/137035446/f16c455c-5928-4217-8f04-83e0ed21fc7e)
+
+<br/>
+
+- 해답
+
+![연습1 해답](https://github.com/serethia/web1/assets/137035446/cd40b9b0-d19c-407e-a059-c76b541df04f)
+
+### React.js 스터디 퀴즈 1: 컴포넌트와 JSX
+
+<br/>
+
+![퀴즈1](https://github.com/serethia/git-test/assets/137035446/5c9bdb02-9623-44a7-9bfe-75504e40d266)
+
+<br/>
+
+![정답1](https://github.com/serethia/git-test/assets/137035446/dcad69f5-936a-45e1-8a86-502f0631d7f8)
+
+<br/>
+
+![퀴즈2](https://github.com/serethia/git-test/assets/137035446/574802c2-9dae-4509-a7fd-5de9b101de35)
+
+<br/>
+
+![정답2](https://github.com/serethia/git-test/assets/137035446/4923133a-e079-459e-8118-0f637e28d1ff)
+
+<br/>
+
+![퀴즈3](https://github.com/serethia/git-test/assets/137035446/5c5b6c31-d49b-451a-8da2-8084bb703ecc)
+
+<br/>
+
+![정답3](https://github.com/serethia/git-test/assets/137035446/4d1529b4-5f70-49aa-9bc3-787e67c74c8e)
+
+<br/>
+
+![퀴즈4](https://github.com/serethia/git-test/assets/137035446/e8dcf59d-f097-455e-b66a-f455adf03cf4)
+
+<br/>
+
+![정답4](https://github.com/serethia/git-test/assets/137035446/b99db2f5-bd61-4431-929f-69f6570235fd)
+
+<br/>
+
+![퀴즈5](https://github.com/serethia/git-test/assets/137035446/609b76ec-a536-4c48-bd28-04e6c562e0ff)
+
+<br/>
+
+![정답5](https://github.com/serethia/git-test/assets/137035446/73849c08-319c-42ca-9112-4d9a452c907e)
+
+<br/>
+
+![퀴즈6](https://github.com/serethia/git-test/assets/137035446/e1906885-a4eb-475d-840f-50000711939d)
+
+<br/>
+
+![정답6](https://github.com/serethia/git-test/assets/137035446/6d8ef5e1-6fa3-44f4-9031-8f0498e52132)
+
+<br/>
+
+![퀴즈7](https://github.com/serethia/git-test/assets/137035446/b1115d9f-04ba-44a7-828c-ae9914e9bed2)
+
+<br/>
+
+![정답7](https://github.com/serethia/git-test/assets/137035446/bfaac194-44d0-47ab-8e68-84b97ba93856)
 
 
 
