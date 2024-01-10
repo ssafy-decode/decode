@@ -168,3 +168,27 @@
 - 아까 다운로드 받았던 intellij-java-google-style.xml을 선택
 - Tab size (4), Indent (4), Continuation indent (8)로 설정 후 Apply
 (설정은 얼마든지 변경 가능)
+
+
+
+# 24.01.10 - ERD 작성
+
+### ERD
+
+![code Agile](https://github.com/serethia/git-test/assets/137035446/2f332886-413c-4fb6-988c-3900139270b1)
+
+
+
+# 24.01.11 - .
+
+### .
+
+.
+
+
+
+# 24.01.12 - .
+
+### .
+
+.
