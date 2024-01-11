@@ -253,11 +253,15 @@
 
 
 
-# 24.01.11 - ERD 수정 추가 및 .
+# 24.01.11 - ERD 수정 추가 및 화면설계서 구조만 피그마로 작성
 
 ### ERD 업데이트
 
 ![code Agile](https://github.com/serethia/git-test/assets/137035446/7e7f50f2-648f-4206-b1bc-4ade47886db3)
+
+### 피그마로 화면설계서 구조 작성
+
+![de;code_화면정의서](https://github.com/serethia/git-test/assets/137035446/6aaa9f22-5b13-489d-833f-126f54a18d06)
 
 
 
