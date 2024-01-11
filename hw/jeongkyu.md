@@ -6,6 +6,7 @@
 
 Commit Convention
 Git Commit Convention : https://gist.github.com/stephenparish/9941e89d80e2bc58a153
+<br>
 <img src="./img/image.png" width="500px"/>
 
 <br>
@@ -81,4 +82,16 @@ feat : 기능 개발 중
 ## 2023-01-10
 
 ERD 설계
+<br>
 <img src="./img/erd1.png" width="600px"/>
+
+
+## 2023-01-11
+
+JPA 강의 구매 및 수강 중
+<br>
+<img src="./img/jpa.png" width="600px"/>
+
+Kafka 강의 구매 및 수강 중
+<br>
+<img src="./img/kafka.png" width="300px"/>
