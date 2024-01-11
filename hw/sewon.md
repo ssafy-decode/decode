@@ -253,11 +253,11 @@
 
 
 
-# 24.01.11 - .
+# 24.01.11 - ERD 수정 추가 및 .
 
-### .
+### ERD 업데이트
 
-.
+![code Agile](https://github.com/serethia/git-test/assets/137035446/7e7f50f2-648f-4206-b1bc-4ade47886db3)
 
 
 
