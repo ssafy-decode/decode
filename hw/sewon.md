@@ -253,16 +253,91 @@
 
 
 
-# 24.01.11 - ERD 수정 추가 및 .
+# 24.01.11 - ERD 수정 추가, 화면설계서 구조만 피그마로 작성, React.js 스터디 실습 일부 진행
 
 ### ERD 업데이트
 
 ![code Agile](https://github.com/serethia/git-test/assets/137035446/7e7f50f2-648f-4206-b1bc-4ade47886db3)
 
+### 피그마로 화면설계서 구조 작성
+
+![de;code_화면정의서](https://github.com/serethia/git-test/assets/137035446/6aaa9f22-5b13-489d-833f-126f54a18d06)
+
+### React.js 스터디 퀴즈 2: 동적인 값과 Prop(속성)
+
+<br/>
+
+![퀴즈1](https://github.com/serethia/git-test/assets/137035446/4c630e05-8964-4001-8138-c22035deffbe)
+
+<br/>
+
+![정답1](https://github.com/serethia/git-test/assets/137035446/56b2e4fe-a688-434d-83a0-0960d09a3078)
+
+<br/>
+
+![퀴즈2](https://github.com/serethia/git-test/assets/137035446/b73141d1-81c2-412a-b433-3729e6cdaa41)
+
+<br/>
+
+![정답2](https://github.com/serethia/git-test/assets/137035446/12fef31a-8023-4790-b24f-b1948d565354)
+
+<br/>
+
+![퀴즈3](https://github.com/serethia/git-test/assets/137035446/7001ea52-2d96-4fcb-8339-f1103b981a92)
+
+<br/>
+
+![정답3](https://github.com/serethia/git-test/assets/137035446/4c16c514-7373-4c12-9603-9950437d6f83)
+
+<br/>
+
+![퀴즈4](https://github.com/serethia/git-test/assets/137035446/8140d1d9-5730-41de-be0f-cf86c140c712)
+
+<br/>
+
+![정답4](https://github.com/serethia/git-test/assets/137035446/6f84a7b3-d6ec-4bbf-a5e7-f68c97664c02)
+
+<br/>
+
+![퀴즈5](https://github.com/serethia/git-test/assets/137035446/d5cf446d-c6cf-4834-9c9d-d3421b8a00ba)
+
+<br/>
+
+![정답5](https://github.com/serethia/git-test/assets/137035446/44e4036d-6a80-4136-a06d-b9098adba6d5)
+
+<br/>
+
+![퀴즈6](https://github.com/serethia/git-test/assets/137035446/9be7ffb0-1010-4c96-9f1f-1e8c520bcf19)
+
+<br/>
+
+![정답6](https://github.com/serethia/git-test/assets/137035446/34827ef9-7a33-4380-a615-995e2c964731)
+
+<br/>
+
+![퀴즈7](https://github.com/serethia/git-test/assets/137035446/0a0b4cab-5cd5-4bfd-b75f-9eb3eea1ccf9)
+
+<br/>
+
+![정답7](https://github.com/serethia/git-test/assets/137035446/9cdd455c-9ef4-4d79-a0fb-a041c49f030d)
 
 
-# 24.01.12 - .
 
-### .
+# 24.01.12 - 회고
 
-.
+### 회고 작성 (KPT)
+
+<br/>
+
+![공통 프로젝트 회고 1주차 KEEP](https://github.com/serethia/git-test/assets/137035446/938f72c2-bf80-4897-842f-53b07f57ce09)
+
+<br/>
+
+![공통 프로젝트 회고 1주차 PROBLEM](https://github.com/serethia/git-test/assets/137035446/431bb386-7ed8-4b2e-80f8-df265781bd0d)
+
+<br/>
+
+![공통 프로젝트 회고 1주차 TRY](https://github.com/serethia/git-test/assets/137035446/3f1e6253-6067-4092-80dd-0cc32f7829de)
+
+
+

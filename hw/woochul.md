@@ -29,4 +29,17 @@
 ### ERD 설계 과정 참여
 <img src = "img/erd1.png">
 
+--- 
+
+## 1.11
+### ERD 설계 완료 및 백엔드 세부 도메인 담당 역할 분배
+
+### 개발 환경 셋팅
+- Java jdk 17.0.9
+- Spring Boot 3.2.1
+- Gradle
+- MySQL 8.0.35
+### JPA 관련 학습 진행 중
+![image.png](./image.png)
+
 
