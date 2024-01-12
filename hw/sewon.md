@@ -323,8 +323,21 @@
 
 
 
-# 24.01.12 - .
+# 24.01.12 - 회고
 
-### .
+### 회고 작성 (KPT)
 
-.
+<br/>
+
+![공통 프로젝트 회고 1주차 KEEP](https://github.com/serethia/git-test/assets/137035446/938f72c2-bf80-4897-842f-53b07f57ce09)
+
+<br/>
+
+![공통 프로젝트 회고 1주차 PROBLEM](https://github.com/serethia/git-test/assets/137035446/431bb386-7ed8-4b2e-80f8-df265781bd0d)
+
+<br/>
+
+![공통 프로젝트 회고 1주차 TRY](https://github.com/serethia/git-test/assets/137035446/3f1e6253-6067-4092-80dd-0cc32f7829de)
+
+
+
