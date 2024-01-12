@@ -30,3 +30,8 @@
 <img src = "img/erd1.png">
 
 
+## 1.11
+### JPA 관련 학습 진행 중
+![image.png](./image.png)
+
+
