@@ -123,7 +123,7 @@ cmake-build-*/
 out/
 
 backend/decode/.idea/
-backend.decode/src/main/resources/application.properties
+backend/decode/src/main/resources/application.properties
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
