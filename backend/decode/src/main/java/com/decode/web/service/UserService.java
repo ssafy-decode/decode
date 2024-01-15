@@ -8,5 +8,11 @@ public interface UserService {
 
   public UserDto getUserById(Long id);
   public List<UserDto> getAllUser();
+  public boolean idDupCheck(String email);
+  public boolean nickDupCheck(String nickname);
+
+  public UserDto getUserByEmail(String email);
+
+  public boolean checkLogin();
 
 }

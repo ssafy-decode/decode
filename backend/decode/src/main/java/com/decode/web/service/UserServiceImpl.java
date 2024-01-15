@@ -5,6 +5,7 @@ import com.decode.web.entity.UserEntity;
 import com.decode.web.repository.UserRepository;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,11 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserDto getUserById(Long id) {
+    Optional<UserEntity> user = ur.findById(id);
+    if (user.isPresent()) {
+      UserEntity entity = user.get();
+      return entity.toDto();
+    }
     return null;
   }
 
@@ -28,11 +34,28 @@ public class UserServiceImpl implements UserService {
     List<UserDto> result = new LinkedList<>();
     List<UserEntity> users = ur.findAll();
     for (UserEntity user : users) {
-      result.add(new UserDto(user.getId(), user.getEmail(), user.getNickname(), user.getPassword(),
-          user.getPoint(), user.getCoin(), user.getBirth(), user.getPhoneNumber(), user.getExp(),
-          user.getTier(), user.getCreatedTime(), user.getUpdatedTime(), user.getProfileImg(),
-          user.getFollowerNum(), user.getFolloweeNum()));
+      result.add(user.toDto());
     }
     return result;
+  }
+
+  @Override
+  public boolean idDupCheck(String email) {
+    return false;
+  }
+
+  @Override
+  public boolean nickDupCheck(String nickname) {
+    return false;
+  }
+
+  @Override
+  public UserDto getUserByEmail(String email) {
+    return null;
+  }
+
+  @Override
+  public boolean checkLogin() {
+    return false;
   }
 }

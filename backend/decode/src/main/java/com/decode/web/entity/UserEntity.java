@@ -1,4 +1,5 @@
 package com.decode.web.entity;
+import com.decode.web.dto.UserDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,7 +9,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+
 
 @Getter
 @Entity
@@ -60,7 +61,23 @@ public class UserEntity extends CommonEntity {
   @Column(name = "user_followees")
   private int followeeNum;
 
-
+  public UserDto toDto(){
+    return UserDto.builder()
+        .id(id)
+        .email(email)
+        .nickname(nickname)
+        .password(password)
+        .point(point)
+        .coin(coin)
+        .birth(birth)
+        .phoneNumber(phoneNumber)
+        .exp(exp)
+        .tier(tier)
+        .profileImg(profileImg)
+        .followerNum(followerNum)
+        .followeeNum(followeeNum)
+        .build();
+  }
 
 
   public UserEntity() {
