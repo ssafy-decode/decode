@@ -18,7 +18,8 @@ bin/
 !**/src/test/**/bin/
 
 ### IntelliJ IDEA ###
-.idea
+.idea/
+gradle/
 *.iws
 *.iml
 *.ipr
@@ -35,3 +36,5 @@ out/
 
 ### VS Code ###
 .vscode/
+
+src/main/resources/application.yml
