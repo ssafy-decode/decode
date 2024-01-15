@@ -122,6 +122,9 @@ cmake-build-*/
 # IntelliJ
 out/
 
+backend/decode/.idea/
+backend.decode/src/main/resources/application.properties
+
 # mpeltonen/sbt-idea plugin
 .idea_modules/
 
