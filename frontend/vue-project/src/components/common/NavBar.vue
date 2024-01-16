@@ -1,18 +1,25 @@
 <template>
-  <div>
-    <v-container fluid class="bg-surface-variant">
-      <v-row class="d-flex align-center text-center">
-        <v-text style="width: 7%"> 아이콘 </v-text>
-        <v-text style="width: 7%"> DE;CODE </v-text>
-        <v-text style="width: 3%"> | </v-text>
-        <v-text style="width: 7%"> 기능 </v-text>
-        <v-text style="width: 7%"> 기능 </v-text>
-        <v-text style="width: 7%"> 기능 </v-text>
-        <v-text-field class="mx-3" label="검색어를 입력하세요" :rules="rules" hide-details="auto"></v-text-field>
-        <v-btn style="width: 7%" class="mx-3 text-black">로그인</v-btn>
-      </v-row>
-    </v-container>
-  </div>
+  <v-toolbar>
+    <v-btn>
+      <img src="./de;code_logo_jin.png" alt="로고이미지" height="30px" />
+    </v-btn>
+
+    <v-btn>
+      <v-toolbar-title>DE;CODE</v-toolbar-title>
+    </v-btn>
+
+    <v-btn>
+      <v-toolbar-items>질문게시판</v-toolbar-items>
+    </v-btn>
+
+    <v-btn>
+      <v-toolbar-items>상점</v-toolbar-items>
+    </v-btn>
+
+    <v-spacer></v-spacer>
+
+    <v-btn>로그인</v-btn>
+  </v-toolbar>
 </template>
 
 <script setup></script>
