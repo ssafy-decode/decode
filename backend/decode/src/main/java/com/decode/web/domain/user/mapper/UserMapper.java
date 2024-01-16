@@ -1,13 +1,13 @@
 package com.decode.web.domain.user.mapper;
 
-import com.decode.web.domain.user.dto.UserDto;
-import com.decode.web.domain.user.entity.UserEntity;
+import com.decode.web.domain.user.dto.UserInfoDto;
+import com.decode.web.entity.UserInfoEntity;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-  public UserDto toDto(UserEntity entity);
-  public UserEntity toEntity(UserDto dto);
+  public UserInfoDto toDto(UserInfoEntity entity);
+  public UserInfoEntity toEntity(UserInfoDto dto);
 
 }

@@ -13,23 +13,17 @@ import lombok.ToString;
 @Setter
 @ToString
 
-public class UserDto {
+public class UserInfoDto {
 
   private Long id;
   private String email;
   private String nickname;
   private String password;
-  private int point;
-  private int coin;
-  private String birth;
   private String phoneNumber;
-  private int exp;
-  private String tier;
+
   private LocalDateTime createdTime;
-  private LocalDateTime updateTime;
-  private String profileImg;
-  private int followerNum;
-  private int followeeNum;
+  private LocalDateTime updatedTime;
+
 
 
 

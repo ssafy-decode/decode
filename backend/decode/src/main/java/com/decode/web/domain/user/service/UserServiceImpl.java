@@ -1,8 +1,8 @@
 package com.decode.web.domain.user.service;
 
-import com.decode.web.domain.user.mapper.UserMapper;
-import com.decode.web.domain.user.entity.UserEntity;
-import com.decode.web.domain.user.repository.UserRepository;
+import com.decode.web.entity.UserInfoEntity;
+import com.decode.web.entity.UserProfileEntity;
+import com.decode.web.domain.user.repository.UserInfoRepository;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,20 +11,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl implements UserService {
 
-  private final UserRepository ur;
-
-
-  private final UserMapper um;
-
+  private final UserInfoRepository uir;
   @Autowired
-  public UserServiceImpl(UserRepository ur, UserMapper um) {
-    this.ur = ur;
-    this.um = um;
+  public UserServiceImpl(UserInfoRepository ur) {
+    this.uir = ur;
+
   }
 
   @Override
-  public UserEntity getUserById(Long id) {
-    Optional<UserEntity> user = ur.findById(id);
+  public UserInfoEntity getUserById(Long id) {
+    Optional<UserInfoEntity> user = uir.findById(id);
     if (user.isPresent()) {
       return user.get();
     }
@@ -32,28 +28,34 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public List<UserEntity> getAllUser() {
-
-    return ur.findAll();
-  }
-
-  @Override
-  public boolean emailDupCheck(String email) {
-    return false;
-  }
-
-  @Override
-  public boolean nickDupCheck(String nickname) {
-    return false;
-  }
-
-  @Override
-  public UserEntity getUserByEmail(String email) {
+  public UserProfileEntity getUserProfileById(Long id) {
     return null;
   }
 
   @Override
-  public boolean checkLogin() {
+  public List<UserInfoEntity> getAllUser() {
+
+    return uir.findAll();
+  }
+
+  @Override
+  public boolean emailDupCheck(String email) {
+    return uir.findByEmail(email).isEmpty();
+  }
+
+  @Override
+  public boolean nickDupCheck(String nickname) {
+    return uir.findByNickname(nickname).isEmpty();
+  }
+
+  @Override
+  public boolean checkLogin(String email, String password) {
     return false;
   }
+
+  @Override
+  public UserInfoEntity getUserByEmail(String email) {
+    return null;
+  }
+
 }

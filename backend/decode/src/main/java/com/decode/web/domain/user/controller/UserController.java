@@ -1,11 +1,11 @@
 package com.decode.web.domain.user.controller;
 
-import com.decode.web.domain.user.entity.UserEntity;
+import com.decode.web.domain.user.dto.UserInfoDto;
+import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.domain.user.mapper.UserMapper;
 import com.decode.web.global.ResponseDto;
 import java.util.LinkedList;
 import java.util.List;
-import com.decode.web.domain.user.dto.UserDto;
 import com.decode.web.domain.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,8 +26,8 @@ public class UserController {
 
   @GetMapping("/user")
   public ResponseDto getAllUser(){
-    List<UserDto> users = new LinkedList<>();
-    for(UserEntity u : us.getAllUser()){
+    List<UserInfoDto> users = new LinkedList<>();
+    for(UserInfoEntity u : us.getAllUser()){
       users.add(um.toDto(u));
     }
     return new ResponseDto().builder()

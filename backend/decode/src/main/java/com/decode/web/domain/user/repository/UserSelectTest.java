@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @SpringBootTest
 @Service
-public class UserTest {
+public class UserSelectTest {
   @Autowired
   private UserInfoRepository ur;
 
