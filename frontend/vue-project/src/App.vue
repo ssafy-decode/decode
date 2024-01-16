@@ -1,13 +1,14 @@
 <template>
   <div>
+    <!-- <Header/> -->
     <!-- <RouterView /> -->
-    <LoginForm></LoginForm>
-    <FooterBar></FooterBar>
+    <QuestionList />
+    <FooterBar />
   </div>
 </template>
 
 <script setup>
-import LoginForm from '@/components/LoginForm.vue';
+import QuestionList from '@/components/question/QuestionList.vue';
 import FooterBar from '@/components/common/FooterBar.vue';
 </script>
 
