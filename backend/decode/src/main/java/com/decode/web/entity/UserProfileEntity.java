@@ -14,23 +14,24 @@ import lombok.NoArgsConstructor;
 @Table(name = "UserProfile")
 @NoArgsConstructor
 public class UserProfileEntity {
-  @Id
-  @Column(name = "user_id")
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
 
-  @Column(name = "user_exp")
-  private int exp;
+    @Id
+    @Column(name = "user_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @Column(name = "user_tier")
-  private String tier;
+    @Column(name = "user_exp")
+    private int exp;
 
-  @Column(name = "user_profile_img")
-  private String profileImg;
+    @Column(name = "user_tier")
+    private String tier;
 
-  @Column(name = "user_point")
-  private int point;
+    @Column(name = "user_profile_img")
+    private String profileImg;
 
-  @Column(name = "user_coin")
-  private int coin;
+    @Column(name = "user_point")
+    private int point;
+
+    @Column(name = "user_coin")
+    private int coin;
 }

@@ -12,10 +12,11 @@ import lombok.ToString;
 @Setter
 @ToString
 public class UserProfileDto {
-  private int exp;
-  private int point;
-  private int coin;
-  private String tier;
-  private String profileImg;
+
+    private int exp;
+    private int point;
+    private int coin;
+    private String tier;
+    private String profileImg;
 
 }
