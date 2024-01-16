@@ -9,13 +9,13 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 
 @Getter
 @Entity
 @Table(name = "User")
-@Builder
-@AllArgsConstructor
+@NoArgsConstructor
 
 
 public class UserEntity extends CommonEntity {
@@ -61,26 +61,22 @@ public class UserEntity extends CommonEntity {
   @Column(name = "user_followees")
   private int followeeNum;
 
-  public UserDto toDto(){
-    return UserDto.builder()
-        .id(id)
-        .email(email)
-        .nickname(nickname)
-        .password(password)
-        .point(point)
-        .coin(coin)
-        .birth(birth)
-        .phoneNumber(phoneNumber)
-        .exp(exp)
-        .tier(tier)
-        .profileImg(profileImg)
-        .followerNum(followerNum)
-        .followeeNum(followeeNum)
-        .build();
-  }
-
-
-  public UserEntity() {
-
+  @Builder
+  public UserEntity(Long id, String email, String nickname, String password, int point, int coin,
+      String birth, String phoneNumber, int exp, String tier, String profileImg, int followerNum,
+      int followeeNum) {
+    this.id = id;
+    this.email = email;
+    this.nickname = nickname;
+    this.password = password;
+    this.point = point;
+    this.coin = coin;
+    this.birth = birth;
+    this.phoneNumber = phoneNumber;
+    this.exp = exp;
+    this.tier = tier;
+    this.profileImg = profileImg;
+    this.followerNum = followerNum;
+    this.followeeNum = followeeNum;
   }
 }

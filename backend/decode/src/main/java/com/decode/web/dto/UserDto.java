@@ -14,7 +14,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@Builder
+
 public class UserDto {
 
   private Long id;
@@ -33,22 +33,6 @@ public class UserDto {
   private int followerNum;
   private int followeeNum;
 
-  public UserEntity toEntity(){
-    return UserEntity.builder()
-        .id(id)
-        .email(email)
-        .nickname(nickname)
-        .password(password)
-        .point(point)
-        .coin(coin)
-        .birth(birth)
-        .phoneNumber(phoneNumber)
-        .exp(exp)
-        .tier(tier)
-        .profileImg(profileImg)
-        .followerNum(followerNum)
-        .followeeNum(followeeNum)
-        .build();
-  }
+
 
 }

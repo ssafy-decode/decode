@@ -2,6 +2,7 @@ package com.decode.web.service;
 
 import com.decode.web.dto.UserDto;
 import com.decode.web.entity.UserEntity;
+import com.decode.web.mapper.UserMapper;
 import com.decode.web.repository.UserRepository;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,9 +15,12 @@ public class UserServiceImpl implements UserService {
 
   private final UserRepository ur;
 
+  private final UserMapper um;
+
   @Autowired
-  public UserServiceImpl(UserRepository ur) {
+  public UserServiceImpl(UserRepository ur, UserMapper um) {
     this.ur = ur;
+    this.um = um;
   }
 
   @Override
@@ -24,7 +28,7 @@ public class UserServiceImpl implements UserService {
     Optional<UserEntity> user = ur.findById(id);
     if (user.isPresent()) {
       UserEntity entity = user.get();
-      return entity.toDto();
+      return um.toDto(entity);
     }
     return null;
   }
@@ -34,13 +38,13 @@ public class UserServiceImpl implements UserService {
     List<UserDto> result = new LinkedList<>();
     List<UserEntity> users = ur.findAll();
     for (UserEntity user : users) {
-      result.add(user.toDto());
+      result.add(um.toDto(user));
     }
     return result;
   }
 
   @Override
-  public boolean idDupCheck(String email) {
+  public boolean emailDupCheck(String email) {
     return false;
   }
 
