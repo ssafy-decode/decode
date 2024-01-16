@@ -1,4 +1,4 @@
-package com.decode.web.entity;
+package com.decode.web.global;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

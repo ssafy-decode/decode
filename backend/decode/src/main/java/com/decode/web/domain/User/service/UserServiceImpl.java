@@ -1,9 +1,9 @@
-package com.decode.web.service;
+package com.decode.web.domain.User.service;
 
-import com.decode.web.dto.UserDto;
-import com.decode.web.entity.UserEntity;
-import com.decode.web.mapper.UserMapper;
-import com.decode.web.repository.UserRepository;
+import com.decode.web.domain.User.mapper.UserMapper;
+import com.decode.web.domain.User.dto.UserDto;
+import com.decode.web.domain.User.entity.UserEntity;
+import com.decode.web.domain.User.repository.UserRepository;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;

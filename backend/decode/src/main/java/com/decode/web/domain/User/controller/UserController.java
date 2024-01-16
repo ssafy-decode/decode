@@ -1,8 +1,8 @@
-package com.decode.web.controller;
+package com.decode.web.domain.User.controller;
 
 import java.util.List;
-import com.decode.web.dto.UserDto;
-import com.decode.web.service.UserService;
+import com.decode.web.domain.User.dto.UserDto;
+import com.decode.web.domain.User.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

@@ -1,7 +1,6 @@
-package com.decode.web.service;
+package com.decode.web.domain.User.service;
 
-import com.decode.web.dto.UserDto;
-import com.decode.web.entity.UserEntity;
+import com.decode.web.domain.User.dto.UserDto;
 import java.util.List;
 
 public interface UserService {
