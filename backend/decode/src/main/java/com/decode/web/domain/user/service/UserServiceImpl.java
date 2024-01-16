@@ -1,10 +1,8 @@
-package com.decode.web.domain.User.service;
+package com.decode.web.domain.user.service;
 
-import com.decode.web.domain.User.mapper.UserMapper;
-import com.decode.web.domain.User.dto.UserDto;
-import com.decode.web.domain.User.entity.UserEntity;
-import com.decode.web.domain.User.repository.UserRepository;
-import java.util.LinkedList;
+import com.decode.web.domain.user.mapper.UserMapper;
+import com.decode.web.domain.user.entity.UserEntity;
+import com.decode.web.domain.user.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,23 +23,18 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public UserDto getUserById(Long id) {
+  public UserEntity getUserById(Long id) {
     Optional<UserEntity> user = ur.findById(id);
     if (user.isPresent()) {
-      UserEntity entity = user.get();
-      return um.toDto(entity);
+      return user.get();
     }
     return null;
   }
 
   @Override
-  public List<UserDto> getAllUser() {
-    List<UserDto> result = new LinkedList<>();
-    List<UserEntity> users = ur.findAll();
-    for (UserEntity user : users) {
-      result.add(um.toDto(user));
-    }
-    return result;
+  public List<UserEntity> getAllUser() {
+
+    return ur.findAll();
   }
 
   @Override
@@ -55,7 +48,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public UserDto getUserByEmail(String email) {
+  public UserEntity getUserByEmail(String email) {
     return null;
   }
 

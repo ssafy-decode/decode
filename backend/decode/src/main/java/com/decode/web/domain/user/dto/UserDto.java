@@ -1,4 +1,4 @@
-package com.decode.web.domain.User.dto;
+package com.decode.web.domain.user.dto;
 
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;

@@ -1,7 +1,7 @@
-package com.decode.web.domain.User.mapper;
+package com.decode.web.domain.user.mapper;
 
-import com.decode.web.domain.User.dto.UserDto;
-import com.decode.web.domain.User.entity.UserEntity;
+import com.decode.web.domain.user.dto.UserDto;
+import com.decode.web.domain.user.entity.UserEntity;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

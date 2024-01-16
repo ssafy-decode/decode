@@ -1,4 +1,4 @@
-package com.decode.web.domain.User.entity;
+package com.decode.web.domain.user.entity;
 import com.decode.web.global.CommonEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

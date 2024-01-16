@@ -1,6 +1,6 @@
-package com.decode.web.domain.User.repository;
+package com.decode.web.domain.user.repository;
 
-import com.decode.web.domain.User.entity.UserEntity;
+import com.decode.web.domain.user.entity.UserEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

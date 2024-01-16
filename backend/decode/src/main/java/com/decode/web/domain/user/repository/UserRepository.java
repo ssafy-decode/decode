@@ -1,5 +1,5 @@
-package com.decode.web.domain.User.repository;
-import com.decode.web.domain.User.entity.UserEntity;
+package com.decode.web.domain.user.repository;
+import com.decode.web.domain.user.entity.UserEntity;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
