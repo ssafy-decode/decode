@@ -1,23 +1,23 @@
 <template>
-  <div class="text-center">
-    <div class="search-container">
-      <span style="position: relative; margin: auto">
-        <input
-          class="view"
-          type="text"
-          placeholder="키워드를 입력하세요."
-          style="width: 60%; border: 1px solid #bbb; border-radius: 8px; font-size: 20px"
-        />
-        <input
-          type="image"
-          src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png"
-          alt="검색"
-          style="position: absolute; width: 15px; top: 5px; right: 10px; margin: 0"
-        />
+  <div style="text-align: center; font-size: xx-large;"> nav bar 들어간다 길을 비켜라 <br/> <br/></div>
+  <div class="text-center" style="display: flex; flex-direction: column; align-items: center;">
+    <div class="search-container" style="width: 60%">
+      <span style="position: relative; margin: auto; display: flex; align-items: center;">
+        <textarea
+          class="view"          
+          :placeholder="switchLabel"
+          :style="{ height: model? '300px' : '25px', width: '100%', border: '1px solid #bbb', borderRadius: '8px', fontSize: '15px' }"
+          ></textarea>
+          <input
+            type="image"
+            src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png"
+            alt="검색"
+            style="position: absolute; width: 15px; top: 50%; transform: translateY(-50%); right: 10px; margin: 0; cursor: pointer"
+          />
       </span>
     </div>
-    <div class="chips-switch-container">
-      <span>
+    <div class="chips-switch-container" style="display: flex; align-items: center; width: 60%;">
+      <span style="display: flex; align-items: center;">
         <!-- <v-if ="search"> -->
         <v-chip closable variant="elevated" style="background-color: cornflowerblue"> python </v-chip>
         <v-chip closable variant="elevated" style="background-color: orangered"> java </v-chip>
@@ -25,7 +25,7 @@
         <v-chip closable variant="elevated" style="background-color: mediumorchid"> javascript </v-chip>
         <!-- </v-if> -->
       </span>
-      <v-switch inset :label="switchLabel"></v-switch>
+      <v-switch inset :label="switchLabel" v-model="model" style="margin-top: 3%"></v-switch>
     </div>
   </div>
 
@@ -53,7 +53,7 @@
             </v-col>
           </v-row>
 
-          <v-virtual-scroll :bench="benched" :items="items" height="300" item-height="70">
+          <v-virtual-scroll id="virtualScroll" :bench="benched" :items="items" height="500" item-height="50">
             <template v-slot:default="{ item }">
               <v-list-item :key="item">
                 <v-list-item-action class="d-inline">
@@ -99,5 +99,9 @@ const items = computed(() => {
 
 span {
   margin: 5px;
+}
+
+#virtualScroll::-webkit-scrollbar {
+  display: none;
 }
 </style>
