@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: agile
+    url: jdbc:mysql://decode-db.c5qy4qwy880z.ap-northeast-2.rds.amazonaws.com:3306/decodedb?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&useLegacyDatetimeCode=false
+    password: agileagile
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    show-sql: 'true'
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: 'true'
+        use_sql_comments: 'false'
+        jdbc:
+          time_zone: Asia/Seoul
+
+server:
+  servlet:
+    context-path: /decode
+  port: '80'
