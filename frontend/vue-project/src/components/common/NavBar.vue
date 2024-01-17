@@ -5,7 +5,7 @@
     </v-btn>
 
     <v-btn>
-      <v-toolbar-title>DE;CODE</v-toolbar-title>
+      <v-toolbar-title>de;code</v-toolbar-title>
     </v-btn>
 
     <v-btn>
