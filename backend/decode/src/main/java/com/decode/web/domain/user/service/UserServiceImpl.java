@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean createUser(UserInfoEntity user) {
+    public Long createUser(UserInfoEntity user) {
         if (emailDupCheck(user.getEmail()) && nickDupCheck(user.getNickname())
                 && pwCheck(user.getPassword())) {
             uir.save(user);
@@ -84,13 +84,13 @@ public class UserServiceImpl implements UserService {
                     .point(0)
                     .coin(0)
                     .build());
-            return true;
+            return user.getId();
         }
-        return false;
+        return -1L;
     }
 
     @Override
-    public boolean createUser2(UserInfoEntity user) {
+    public Long createUser2(UserInfoEntity user) {
         uir.save(user);
         upr.save(UserProfileEntity.builder()
                 .id(user.getId())
@@ -100,7 +100,7 @@ public class UserServiceImpl implements UserService {
                 .point(0)
                 .coin(0)
                 .build());
-        return true;
+        return user.getId();
     }
 
 

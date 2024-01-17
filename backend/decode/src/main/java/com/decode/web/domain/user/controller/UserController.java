@@ -49,7 +49,9 @@ public class UserController {
 
     @PostMapping("/regist")
     public ResponseDto createUser(@RequestBody UserInfoDto user) {
-        if (us.createUser(um.toEntity(user))) {
+        Long id = us.createUser(um.toEntity(user));
+        if (id != -1) {
+            user.setId(id);
             return new ResponseDto().builder()
                     .data(user)
                     .status(HttpStatus.OK)
