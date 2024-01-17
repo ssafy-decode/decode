@@ -33,9 +33,6 @@ public interface UserService {
 
 
 
-
-
-
     boolean checkLogin(String email, String password);
 
     UserInfoEntity getUserByEmail(String email);

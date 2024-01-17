@@ -2,10 +2,9 @@ package com.decode.web.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -33,4 +32,14 @@ public class UserProfileEntity {
 
     @Column(name = "user_coin")
     private int coin;
+
+    @Builder
+    public UserProfileEntity(Long id, int exp, String tier, String profileImg, int point, int coin) {
+        this.id = id;
+        this.exp = exp;
+        this.tier = tier;
+        this.profileImg = profileImg;
+        this.point = point;
+        this.coin = coin;
+    }
 }

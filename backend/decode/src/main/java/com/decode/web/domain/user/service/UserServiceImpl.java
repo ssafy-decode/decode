@@ -61,14 +61,11 @@ public class UserServiceImpl implements UserService {
         // 영어/숫자/특수문자 조합으로 8자리 이상
         if (password.length() < 8) {
             return false;
-        }
-        else if (!password.matches(".*[a-zA-Z].*")) {
+        } else if (!password.matches(".*[a-zA-Z].*")) {
             return false;
-        }
-        else if (!password.matches(".*[0-9].*")) {
+        } else if (!password.matches(".*[0-9].*")) {
             return false;
-        }
-        else if (!password.matches(".*[~!@#$%^&*()].*")) {
+        } else if (!password.matches(".*[~!@#$%^&*()].*")) {
             return false;
         }
         return true;
@@ -79,13 +76,30 @@ public class UserServiceImpl implements UserService {
         if (emailDupCheck(user.getEmail()) && nickDupCheck(user.getNickname())
                 && pwCheck(user.getPassword())) {
             uir.save(user);
+            upr.save(UserProfileEntity.builder()
+                    .id(user.getId())
+                    .exp(0)
+                    .tier("bronze")
+                    .profileImg(null)
+                    .point(0)
+                    .coin(0)
+                    .build());
             return true;
         }
         return false;
     }
+
     @Override
     public boolean createUser2(UserInfoEntity user) {
         uir.save(user);
+        upr.save(UserProfileEntity.builder()
+                .id(user.getId())
+                .exp(0)
+                .tier("bronze")
+                .profileImg(null)
+                .point(0)
+                .coin(0)
+                .build());
         return true;
     }
 
