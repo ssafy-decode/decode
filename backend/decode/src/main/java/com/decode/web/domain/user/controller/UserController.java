@@ -5,6 +5,11 @@ import com.decode.web.domain.user.mapper.UserMapper;
 import com.decode.web.domain.user.service.UserService;
 import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.global.ResponseDto;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.LinkedList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +19,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+
+
 @RestController
+@Tag(name = "UserController", description = "사용자 정보 관련 API")
 public class UserController {
 
     private final UserService userService;
@@ -28,6 +36,7 @@ public class UserController {
 
     @Deprecated
     @GetMapping("/user")
+    @Operation(summary = "사용자 정보 조회", description = "모든 사용자 정보를 조회합니다.")
     public ResponseDto getAllUser() {
         List<UserInfoDto> users = new LinkedList<>();
         for (UserInfoEntity u : userService.getAllUser()) {
@@ -40,6 +49,7 @@ public class UserController {
     }
 
     @GetMapping("/profile/{id}")
+    @Operation(summary = "사용자 프로필 조회", description = "사용자 프로필 정보를 조회합니다.")
     public ResponseDto getUserProfileById(Long id) {
         return new ResponseDto().builder()
                 .data(userService.getUserProfileById(id))
@@ -48,6 +58,7 @@ public class UserController {
     }
 
     @PostMapping("/regist")
+    @Operation(summary = "회원 가입", description = "회원 가입 API")
     public ResponseDto createUser(@RequestBody UserInfoDto user) {
         Long id = userService.createUser(userMapper.toEntity(user));
         if (id != -1) {
