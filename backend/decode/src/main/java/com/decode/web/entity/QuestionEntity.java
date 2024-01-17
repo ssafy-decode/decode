@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "Questions")
+@Table(name = "Question")
 @NoArgsConstructor
 public class QuestionEntity extends CommonEntity{
 

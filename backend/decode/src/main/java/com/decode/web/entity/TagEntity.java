@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "Tags")
+@Table(name = "Tag")
 @NoArgsConstructor
 public class TagEntity {
 
