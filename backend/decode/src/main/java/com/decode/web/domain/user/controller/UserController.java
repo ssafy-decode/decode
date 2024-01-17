@@ -35,5 +35,12 @@ public class UserController {
                 .status(HttpStatus.OK)
                 .message("select All user info").build();
     }
+    @GetMapping("/profile/{id}")
+    public ResponseDto getUserProfileById(Long id) {
+        return new ResponseDto().builder()
+                .data(us.getUserProfileById(id))
+                .status(HttpStatus.OK)
+                .message("select user profile info").build();
+    }
 
 }

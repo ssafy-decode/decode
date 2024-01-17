@@ -1,6 +1,7 @@
 package com.decode.web.domain.user.service;
 
 import com.decode.web.domain.user.repository.UserInfoRepository;
+import com.decode.web.domain.user.repository.UserProfileRepository;
 import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.entity.UserProfileEntity;
 import java.util.List;
@@ -12,10 +13,12 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     private final UserInfoRepository uir;
+    private final UserProfileRepository upr;
 
     @Autowired
-    public UserServiceImpl(UserInfoRepository ur) {
+    public UserServiceImpl(UserInfoRepository ur, UserProfileRepository upr) {
         this.uir = ur;
+        this.upr = upr;
 
     }
 
@@ -30,6 +33,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserProfileEntity getUserProfileById(Long id) {
+        Optional<UserProfileEntity> profile = upr.findById(id);
+        if (profile.isPresent()) {
+            return profile.get();
+        }
         return null;
     }
 
@@ -64,6 +71,21 @@ public class UserServiceImpl implements UserService {
         else if (!password.matches(".*[~!@#$%^&*()].*")) {
             return false;
         }
+        return true;
+    }
+
+    @Override
+    public boolean createUser(UserInfoEntity user) {
+        if (emailDupCheck(user.getEmail()) && nickDupCheck(user.getNickname())
+                && pwCheck(user.getPassword())) {
+            uir.save(user);
+            return true;
+        }
+        return false;
+    }
+    @Override
+    public boolean createUser2(UserInfoEntity user) {
+        uir.save(user);
         return true;
     }
 
