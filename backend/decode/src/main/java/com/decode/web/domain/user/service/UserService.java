@@ -31,8 +31,6 @@ public interface UserService {
     boolean createUser2(UserInfoEntity user);
 
 
-
-
     boolean checkLogin(String email, String password);
 
     UserInfoEntity getUserByEmail(String email);
