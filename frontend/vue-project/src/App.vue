@@ -1,15 +1,7 @@
 <template>
-  <div>
-    <!-- <Header/> -->
-    <!-- <RouterView /> -->
-    <QuestionList />
-    <FooterBar />
-  </div>
+  <div></div>
 </template>
 
-<script setup>
-import QuestionList from '@/components/question/QuestionList.vue';
-import FooterBar from '@/components/common/FooterBar.vue';
-</script>
+<script setup></script>
 
 <style scoped></style>
