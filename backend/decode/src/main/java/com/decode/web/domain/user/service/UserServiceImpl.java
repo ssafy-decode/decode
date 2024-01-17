@@ -12,19 +12,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final UserInfoRepository uir;
-    private final UserProfileRepository upr;
+    private final UserInfoRepository userInfoRepository;
+    private final UserProfileRepository userProfileRepository;
 
     @Autowired
-    public UserServiceImpl(UserInfoRepository ur, UserProfileRepository upr) {
-        this.uir = ur;
-        this.upr = upr;
+    public UserServiceImpl(UserInfoRepository userInfoRepository,
+            UserProfileRepository userProfileRepository) {
+        this.userInfoRepository = userInfoRepository;
+        this.userProfileRepository = userProfileRepository;
 
     }
 
     @Override
     public UserInfoEntity getUserById(Long id) {
-        Optional<UserInfoEntity> user = uir.findById(id);
+        Optional<UserInfoEntity> user = userInfoRepository.findById(id);
         if (user.isPresent()) {
             return user.get();
         }
@@ -33,7 +34,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserProfileEntity getUserProfileById(Long id) {
-        Optional<UserProfileEntity> profile = upr.findById(id);
+        Optional<UserProfileEntity> profile = userProfileRepository.findById(id);
         if (profile.isPresent()) {
             return profile.get();
         }
@@ -43,17 +44,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserInfoEntity> getAllUser() {
 
-        return uir.findAll();
+        return userInfoRepository.findAll();
     }
 
     @Override
     public boolean emailDupCheck(String email) {
-        return uir.findByEmail(email).isEmpty();
+        return userInfoRepository.findByEmail(email).isEmpty();
     }
 
     @Override
     public boolean nickDupCheck(String nickname) {
-        return uir.findByNickname(nickname).isEmpty();
+        return userInfoRepository.findByNickname(nickname).isEmpty();
     }
 
     @Override
@@ -75,8 +76,8 @@ public class UserServiceImpl implements UserService {
     public Long createUser(UserInfoEntity user) {
         if (emailDupCheck(user.getEmail()) && nickDupCheck(user.getNickname())
                 && pwCheck(user.getPassword())) {
-            uir.save(user);
-            upr.save(UserProfileEntity.builder()
+            userInfoRepository.save(user);
+            userProfileRepository.save(UserProfileEntity.builder()
                     .id(user.getId())
                     .exp(0)
                     .tier("bronze")
@@ -91,8 +92,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Long createUser2(UserInfoEntity user) {
-        uir.save(user);
-        upr.save(UserProfileEntity.builder()
+        userInfoRepository.save(user);
+        userProfileRepository.save(UserProfileEntity.builder()
                 .id(user.getId())
                 .exp(0)
                 .tier("bronze")

@@ -17,21 +17,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserController {
 
-    private final UserService us;
-    private final UserMapper um;
+    private final UserService userService;
+    private final UserMapper userMapper;
 
     @Autowired
-    UserController(UserService us, UserMapper um) {
-        this.us = us;
-        this.um = um;
+    UserController(UserService userService, UserMapper userMapper) {
+        this.userService = userService;
+        this.userMapper = userMapper;
     }
 
     @Deprecated
     @GetMapping("/user")
     public ResponseDto getAllUser() {
         List<UserInfoDto> users = new LinkedList<>();
-        for (UserInfoEntity u : us.getAllUser()) {
-            users.add(um.toDto(u));
+        for (UserInfoEntity u : userService.getAllUser()) {
+            users.add(userMapper.toDto(u));
         }
         return new ResponseDto().builder()
                 .data(users)
@@ -42,14 +42,14 @@ public class UserController {
     @GetMapping("/profile/{id}")
     public ResponseDto getUserProfileById(Long id) {
         return new ResponseDto().builder()
-                .data(us.getUserProfileById(id))
+                .data(userService.getUserProfileById(id))
                 .status(HttpStatus.OK)
                 .message("select user profile info").build();
     }
 
     @PostMapping("/regist")
     public ResponseDto createUser(@RequestBody UserInfoDto user) {
-        Long id = us.createUser(um.toEntity(user));
+        Long id = userService.createUser(userMapper.toEntity(user));
         if (id != -1) {
             user.setId(id);
             return new ResponseDto().builder()
