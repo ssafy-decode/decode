@@ -20,8 +20,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class UserProfileEntity {
 
     @Id

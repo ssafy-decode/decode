@@ -21,7 +21,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Long save(CommentEntity commentEntity){
-        return commentRepository.save(commentEntity).getCommentId();
+        return commentRepository.save(commentEntity).getId();
     }
     @Override
     public List<CommentEntity> findByAnswer(AnswerEntity answerEntity){
