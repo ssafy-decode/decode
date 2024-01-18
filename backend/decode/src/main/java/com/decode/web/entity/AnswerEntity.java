@@ -22,7 +22,7 @@ public class AnswerEntity extends CommonEntity {
     @Id
     @Column(name = "answer_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long answerId;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "answer_writer_id")
@@ -40,9 +40,9 @@ public class AnswerEntity extends CommonEntity {
     @Column(name = "is_adopted")
     private boolean idAdopted;
 
-    public AnswerEntity(Long answerId, UserInfoEntity answerWriter, QuestionEntity question,
+    public AnswerEntity(Long id, UserInfoEntity answerWriter, QuestionEntity question,
             String content, boolean idAdopted) {
-        this.answerId = answerId;
+        this.id = id;
         this.answerWriter = answerWriter;
         this.question = question;
         this.content = content;

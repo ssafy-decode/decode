@@ -24,7 +24,7 @@ public class CommentEntity extends CommonEntity {
     @Id
     @Column(name = "comment_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long commentId;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "answer_id")
@@ -38,9 +38,9 @@ public class CommentEntity extends CommonEntity {
     private String content;
 
     @Builder
-    public CommentEntity(Long commentId, String content, UserInfoEntity commentWriter,
+    public CommentEntity(Long id, String content, UserInfoEntity commentWriter,
             AnswerEntity answer) {
-        this.commentId = commentId;
+        this.id = id;
         this.content = content;
         this.commentWriter = commentWriter;
         this.answer = answer;
