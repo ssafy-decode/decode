@@ -15,16 +15,14 @@ import lombok.ToString;
 
 public class UserInfoDto {
 
-  private Long id;
-  private String email;
-  private String nickname;
-  private String password;
-  private String phoneNumber;
+    private Long id;
+    private String email;
+    private String nickname;
+    private String password;
+    private String phoneNumber;
 
-  private LocalDateTime createdTime;
-  private LocalDateTime updatedTime;
-
-
+    private LocalDateTime createdTime;
+    private LocalDateTime updatedTime;
 
 
 }

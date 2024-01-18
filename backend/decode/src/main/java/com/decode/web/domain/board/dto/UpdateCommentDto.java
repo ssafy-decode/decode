@@ -1,5 +1,5 @@
 package com.decode.web.domain.board.dto;
 
-public class CommentDto {
+public class UpdateCommentDto {
 
 }
