@@ -1,9 +1,9 @@
 <template>
-  <v-sheet class="bg-deep-purple pa-12" rounded>
+  <v-sheet rounded>
     <v-card class="mx-auto px-6 py-8" max-width="344">
       <v-form v-model="form" onsubmit.prevent="onSubmit">
         <img src="./LogoDecode3.png" />
-        <h1>로그인</h1>
+        <h1 style="text-align: center">로그인</h1>
 
         <br />
 

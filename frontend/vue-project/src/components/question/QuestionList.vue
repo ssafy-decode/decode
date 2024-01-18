@@ -1,9 +1,7 @@
 <template>
   <div>
-    <div style="text-align: center; font-size: xx-large">
-      nav bar 들어간다 길을 비켜라 <br />
-      <br />
-    </div>
+    <h1 style="text-align: center">질문 게시판</h1>
+    <br />
     <div class="text-center" style="display: flex; flex-direction: column; align-items: center">
       <div class="search-container" style="width: 60%">
         <span style="position: relative; margin: auto; display: flex; align-items: center">
@@ -120,7 +118,22 @@ span {
   margin: 5px;
 }
 
-#virtualScroll::-webkit-scrollbar {
+/* 스크롤바 안 보이게 할 거면 주석 제거 */
+/* #virtualScroll::-webkit-scrollbar {
   display: none;
+} */
+
+::-webkit-scrollbar {
+  width: 15px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #b0b0b0;
+  border: solid 2px #e6e6e6;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #e6e6e6;
 }
 </style>
