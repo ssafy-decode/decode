@@ -1,11 +1,9 @@
 <template>
-    <div>
-      <h1>App Vue</h1>
-    </div>
-  </template>
-  
-  <script setup></script>
-  
-  <style scoped></style>
-  
-  
+  <div>
+    <h1>QuestionBoard</h1>
+  </div>
+</template>
+
+<script setup></script>
+
+<style scoped></style>
