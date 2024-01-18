@@ -21,23 +21,30 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Long save(CommentEntity commentEntity){
-        return commentRepository.save(commentEntity).getId;
+        return commentRepository.save(commentEntity).getCommentId();
     }
     @Override
     public List<CommentEntity> findByAnswer(AnswerEntity answerEntity){
         return commentRepository.findAllByAnswer(answerEntity);
     }
+
+//    @Override
+//    public List<CommentEntity> findByAnswerId(String answerId){
+//        return commentRepository.findAllByAnswerId(answerId);
+//    }
+
     @Override
     public CommentEntity update(UpdateCommentDto updateCommentDto){
-        Optional<CommentEntity> optionalComment = commentRepository.findById(updateCommentDto.get);
-        if(optionalComment.isPresent()){
-            CommentEntity commentEntity = optionalComment.get();
-            commentEntity.setCommentContent(updateCommentDto.get);
-            commentRepository.save(commentEntity);
-        }else{
-            // 업데이트 대상이 존재하지 않음.
-            // error 처리는 어떻게 할 것인가?
-        }
+//        Optional<CommentEntity> optionalComment = commentRepository.findById(updateCommentDto);
+//        if(optionalComment.isPresent()){
+//            CommentEntity commentEntity = optionalComment.get();
+//            commentEntity.setCommentContent(updateCommentDto.get);
+//            commentRepository.save(commentEntity);
+//        }else{
+//            // 업데이트 대상이 존재하지 않음.
+//            // error 처리는 어떻게 할 것인가?
+//        }
+        return null;
     }
 
     @Override
