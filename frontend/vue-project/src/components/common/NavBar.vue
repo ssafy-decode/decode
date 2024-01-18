@@ -21,6 +21,10 @@
     <v-btn>
       <v-toolbar-items>상점</v-toolbar-items>
     </v-btn>
+    <!-- 임시 비활성화 -->
+    <!-- <v-btn>
+      <router-link to="/shop"><v-toolbar-items>상점</v-toolbar-items></router-link>
+    </v-btn> -->
 
     <v-btn>
       <router-link to="/">
@@ -30,7 +34,8 @@
 
     <v-spacer></v-spacer>
 
-    <v-btn>로그인</v-btn>
+    <!-- <router-link to="/login"><v-btn>로그인</v-btn></router-link> -->
+    <router-link to="/"><v-btn>로그인</v-btn></router-link>
   </v-toolbar>
 </template>
 

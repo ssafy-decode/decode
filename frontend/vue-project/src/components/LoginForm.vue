@@ -2,6 +2,7 @@
   <v-sheet class="bg-deep-purple pa-12" rounded>
     <v-card class="mx-auto px-6 py-8" max-width="344">
       <v-form v-model="form" onsubmit.prevent="onSubmit">
+        <img src="./LogoDecode3.png" />
         <h1>로그인</h1>
 
         <br />
@@ -33,9 +34,9 @@
             로그인
           </v-btn>
           &nbsp;
-          <v-btn :disabled="!form" :loading="loading" color="success" size="large" type="submit" variant="elevated">
+          <!-- <v-btn :disabled="!form" :loading="loading" color="success" size="large" type="submit" variant="elevated">
             회원가입
-          </v-btn>
+          </v-btn> -->
         </span>
 
         <br />

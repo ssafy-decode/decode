@@ -1,9 +1,11 @@
 <template>
   <div>
-    <h1>QuestionBoard</h1>
+    <QuestionList />
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import QuestionList from '@/components/question/QuestionList.vue';
+</script>
 
 <style scoped></style>
