@@ -19,14 +19,14 @@ public class TagEntity {
     @Id
     @Column(name = "tag_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long tagId;
 
     @Column(name = "tag_name")
     private String tagName;
 
     @Builder
-    public TagEntity(Long id, String tagName) {
-        this.id = id;
+    public TagEntity(Long tagId, String tagName) {
+        this.tagId = tagId;
         this.tagName = tagName;
     }
 }
