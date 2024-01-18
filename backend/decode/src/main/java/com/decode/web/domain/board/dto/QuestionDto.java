@@ -16,7 +16,7 @@ public class QuestionDto {
 
     private Long id;
     private String title;
-    private Long user_id;
+    private Long question_writer_id;
     private String content;
 
     private LocalDateTime createTime;

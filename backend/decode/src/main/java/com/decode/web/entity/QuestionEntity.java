@@ -5,10 +5,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Entity
@@ -24,17 +27,20 @@ public class QuestionEntity extends CommonEntity{
     @Column(name = "question_title")
     private String title;
 
-    @Column(name = "user_id")
-    private int writerId;
+    @ManyToOne
+    @JoinColumn(name = "question_writer_id")
+    private UserInfoEntity questionWriter;
 
+    @Setter
     @Column(name = "question_content")
     private String content;
 
     @Builder
-    public QuestionEntity(Long id, String title, int writerId, String content){
+    public QuestionEntity(Long id, String title, UserInfoEntity questionWriter, String content){
         this.id = id;
         this.title = title;
-        this.writerId = writerId;
+        this.questionWriter = questionWriter;
         this.content = content;
     }
+
 }

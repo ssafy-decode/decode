@@ -1,15 +1,12 @@
 package com.decode.web.entity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -30,4 +27,9 @@ public class QuestionTagEntity {
     @JoinColumn(name = "question_id")
     private QuestionEntity question;
 
+    public QuestionTagEntity(Long id, TagEntity tag, QuestionEntity question) {
+        this.id = id;
+        this.tag = tag;
+        this.question = question;
+    }
 }
