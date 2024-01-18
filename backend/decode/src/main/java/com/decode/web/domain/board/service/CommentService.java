@@ -10,6 +10,7 @@ public interface CommentService {
     Long save(CommentEntity commentEntity);
 
     List<CommentEntity> findByAnswer(AnswerEntity answerEntity);
+//    List<CommentEntity> findByAnswerId(String answerId);
 
     CommentEntity update(UpdateCommentDto updateCommentDto);
 
