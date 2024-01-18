@@ -1,7 +1,6 @@
 <template>
   <div>
-    <h1>App Vue</h1>
-    <h2>fe-develop</h2>
+    <h1>MainPage예요~테스트예요~yeah</h1>
   </div>
 </template>
 
