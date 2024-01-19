@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,10 +27,12 @@ public class AnswerEntity extends CommonEntity {
 
     @ManyToOne
     @JoinColumn(name = "answer_writer_id")
+    @Setter
     private UserInfoEntity answerWriter;
 
     @ManyToOne
     @JoinColumn(name = "question_id")
+    @Setter
     private QuestionEntity question;
 
     @Setter

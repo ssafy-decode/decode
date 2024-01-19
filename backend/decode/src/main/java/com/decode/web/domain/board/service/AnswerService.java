@@ -10,11 +10,11 @@ public interface AnswerService {
 
     public List<AnswerEntity> findAllByQuestion(QuestionEntity question);
 
-    public Long saveAnswer(CreateAnswerDto createAnswerDto);
+    public Long save(CreateAnswerDto createAnswerDto);
 
-    public AnswerEntity updateAnswer(UpdateAnswerDto updateAnswerDto);
+    public AnswerEntity update(UpdateAnswerDto updateAnswerDto);
 
-    public void deleteAnswer(String answerId);
+    public void delete(Long answerId);
 
 
 }

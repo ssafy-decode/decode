@@ -13,6 +13,8 @@ import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.mapstruct.control.MappingControl.Use;
 
 @Getter
 @Entity
@@ -27,13 +29,16 @@ public class CommentEntity extends CommonEntity {
 
     @ManyToOne
     @JoinColumn(name = "answer_id")
+    @Setter
     private AnswerEntity answer;
 
     @ManyToOne
     @JoinColumn(name = "comment_writer_id")
+    @Setter
     private UserInfoEntity commentWriter;
 
     @Column(name = "comment_content")
+    @Setter
     private String content;
 
     @Builder
