@@ -1,5 +1,6 @@
 package com.decode.web.domain.board.dto;
 
+import com.decode.web.entity.UserInfoEntity;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,12 +15,17 @@ import lombok.ToString;
 @ToString
 public class QuestionDto {
 
-    private Long id;
     private String title;
-    private Long question_writer_id;
+    private UserInfoEntity questionWriter;
     private String content;
 
     private LocalDateTime createTime;
     private LocalDateTime updatedTime;
 
+    public QuestionDto(InputQuestionDto question) {
+        this.title = question.getTitle();
+        this.content = question.getContent();
+        this.createTime = question.getCreateTime();
+        this.updatedTime = question.getUpdateTime();
+    }
 }

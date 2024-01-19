@@ -6,6 +6,8 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface QuestionMapper {
+
     public QuestionDto toDto(QuestionEntity entity);
+
     public QuestionEntity toEntity(QuestionDto dto);
 }

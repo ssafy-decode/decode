@@ -1,7 +1,5 @@
 package com.decode.web.domain.board.dto;
 
-import com.decode.web.entity.AnswerEntity;
-import com.decode.web.entity.UserInfoEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,9 +11,9 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class CreateCommentDto {
+public class MetooDto {
 
-    private String content;
     private Long userId;
-    private Long answerId;
+    private Long questionId;
+
 }
