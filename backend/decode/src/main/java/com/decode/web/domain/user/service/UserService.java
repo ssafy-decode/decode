@@ -2,6 +2,8 @@ package com.decode.web.domain.user.service;
 
 import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.entity.UserProfileEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 import java.util.List;
 
 public interface UserService {
@@ -31,9 +33,9 @@ public interface UserService {
     Long createUser2(UserInfoEntity user);
 
 
-    boolean checkLogin(String email, String password);
+//    boolean checkLogin(String email, String password);
 
-    UserInfoEntity getUserByEmail(String email);
+    UserInfoEntity getUserByEmail(String email) throws UsernameNotFoundException;
 
 
 }

@@ -1,17 +1,17 @@
 package com.decode.web.domain.user.controller;
 
+import com.decode.web.domain.user.dto.AuthDto;
 import com.decode.web.domain.user.dto.UserInfoDto;
 import com.decode.web.domain.user.mapper.UserMapper;
+import com.decode.web.domain.user.service.AuthService;
 import com.decode.web.domain.user.service.UserService;
 import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.global.ResponseDto;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.info.Info;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.LinkedList;
 import java.util.List;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,11 +27,13 @@ public class UserController {
 
     private final UserService userService;
     private final UserMapper userMapper;
+    private final AuthService authService;
 
     @Autowired
-    UserController(UserService userService, UserMapper userMapper) {
+    UserController(UserService userService, UserMapper userMapper,AuthService authService) {
         this.userService = userService;
         this.userMapper = userMapper;
+        this.authService = authService;
     }
 
     @Deprecated
@@ -72,6 +74,17 @@ public class UserController {
                 .data(user)
                 .status(HttpStatus.BAD_REQUEST)
                 .message("가입 실패").build();
+    }
+
+    @PostMapping("/login")
+    @Operation(summary = "로그인", description = "로그인 API")
+    public ResponseDto login(@RequestBody AuthDto.LoginDto loginDto){
+
+        // 로그인 성공하면 토큰을 ResponseDto에 담아서 반환
+
+
+        // 실패하면 실패 메시지를 ResponseDto에 담아서 반환
+        return null;
     }
 
 }
