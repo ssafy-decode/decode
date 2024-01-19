@@ -37,8 +37,8 @@ public class SecurityConfig {
 
                 .formLogin(formLogin -> formLogin.disable())
 
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
-                        UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
+//                        UsernamePasswordAuthenticationFilter.class)
 
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests

@@ -36,7 +36,6 @@ dependencies {
     implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.2.0'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-    implementation 'javax.xml.bind:jaxb-api'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
 
     compileOnly 'org.projectlombok:lombok'
