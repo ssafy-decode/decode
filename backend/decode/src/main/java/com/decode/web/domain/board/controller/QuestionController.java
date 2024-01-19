@@ -1,8 +1,7 @@
 package com.decode.web.domain.board.controller;
 
-import com.decode.web.domain.board.dto.GetQuestionListDto;
 import com.decode.web.domain.board.dto.InputQuestionDto;
-import com.decode.web.domain.board.mapper.QuestionMapper;
+import com.decode.web.domain.board.dto.QuestionListDto;
 import com.decode.web.domain.board.service.QuestionService;
 import com.decode.web.global.ResponseDto;
 import java.util.List;
@@ -19,14 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class QuestionController {
 
     private final QuestionService questionService;
-    private final QuestionMapper questionMapper;
 
     @GetMapping("/question")
-    public List<GetQuestionListDto> questionSearch(@RequestParam List<Integer> tags,
-            @RequestParam String keyword) {
-        List<GetQuestionListDto> questions = questionService.questionSearch(tags, keyword);
-
-        return questions;
+    public ResponseDto questionSearch(@RequestParam String keyword) {
+        List<QuestionListDto> questionList = questionService.searchQuestionByKeyword(keyword);
+        return ResponseDto.builder().status(HttpStatus.OK).message("조회 완료").data(questionList).build();
     }
 
     @PostMapping("/question")
@@ -35,4 +31,5 @@ public class QuestionController {
 
         return ResponseDto.builder().status(HttpStatus.OK).message(title + "질문 등록 성공").build();
     }
+
 }

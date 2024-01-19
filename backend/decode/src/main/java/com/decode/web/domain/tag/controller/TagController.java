@@ -17,7 +17,7 @@ public class TagController {
     private final TagService tagService;
     private final TagMapper tagMapper;
 
-    @PostMapping("/addtag")
+    @PostMapping("/addTag")
     public ResponseDto addTag(@RequestBody TagDto tagName) {
         if (tagService.addTag(tagName)) {
             return ResponseDto.builder().status(HttpStatus.OK).message(tagName + "add").build();
