@@ -61,7 +61,6 @@ public class JwtTokenProvider {
                 .setExpiration(new Date(now + validityInMilliseconds))
                 .setSubject(subject)
                 .claim("email", email)
-                .claim("http://localhost:80", "true")
                 .signWith(signingKey, SignatureAlgorithm.HS512)
                 .compact();
     }
