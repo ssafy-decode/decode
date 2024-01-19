@@ -1,4 +1,5 @@
 package com.decode.web.entity;
+
 import com.decode.web.global.CommonEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,7 +18,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "Question")
 @NoArgsConstructor
-public class QuestionEntity extends CommonEntity{
+public class QuestionEntity extends CommonEntity {
 
     @Id
     @Column(name = "question_id")
@@ -36,7 +37,7 @@ public class QuestionEntity extends CommonEntity{
     private String content;
 
     @Builder
-    public QuestionEntity(Long id, String title, UserInfoEntity questionWriter, String content){
+    public QuestionEntity(Long id, String title, UserInfoEntity questionWriter, String content) {
         this.id = id;
         this.title = title;
         this.questionWriter = questionWriter;

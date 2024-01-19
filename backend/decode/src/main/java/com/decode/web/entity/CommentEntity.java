@@ -13,7 +13,6 @@ import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.mapstruct.control.MappingControl.Use;
 
 @Getter
 @Entity

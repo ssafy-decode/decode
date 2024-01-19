@@ -9,7 +9,9 @@ import java.util.List;
 public interface AnswerService {
 
     public List<AnswerEntity> findAllByQuestion(QuestionEntity question);
+
     public Long saveAnswer(CreateAnswerDto createAnswerDto);
+
     public AnswerEntity updateAnswer(UpdateAnswerDto updateAnswerDto);
 
     public void deleteAnswer(String answerId);

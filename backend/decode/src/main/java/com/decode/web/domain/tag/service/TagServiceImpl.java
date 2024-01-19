@@ -9,7 +9,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class TagServiceImpl implements TagService{
+public class TagServiceImpl implements TagService {
+
     private final TagRepository tagRepository;
     private final TagMapper tagMapper;
 
@@ -19,7 +20,7 @@ public class TagServiceImpl implements TagService{
         try {
             tagRepository.save(tagEntity);
             return true;
-        } catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
 

@@ -2,8 +2,6 @@ package com.decode.web.domain.board.service;
 
 import com.decode.web.domain.board.dto.GetQuestionListDto;
 import com.decode.web.domain.board.dto.InputQuestionDto;
-import com.decode.web.domain.board.dto.QuestionDto;
-import com.decode.web.entity.QuestionEntity;
 import java.util.List;
 
 public interface QuestionService {

@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class GetQuestionListDto {
+
     private String title;
     private String writer;
     private int bookmarkCnt;

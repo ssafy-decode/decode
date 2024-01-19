@@ -8,5 +8,6 @@ import org.mapstruct.Mapper;
 public interface AnswerMapper {
 
     public AnswerDto toDto(AnswerEntity entity);
+
     public AnswerEntity toEntity(AnswerDto dto);
 }

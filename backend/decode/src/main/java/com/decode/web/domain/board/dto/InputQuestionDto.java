@@ -1,6 +1,5 @@
 package com.decode.web.domain.board.dto;
 
-import com.decode.web.entity.TagEntity;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -15,6 +14,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class InputQuestionDto {
+
     private String title;
     private String content;
     private Long questionWriterId;

@@ -12,5 +12,6 @@ import lombok.ToString;
 @Setter
 @ToString
 public class TagDto {
+
     private String tagName;
 }

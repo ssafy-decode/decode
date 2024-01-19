@@ -8,7 +8,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AnswerServiceImpl implements AnswerService{
+public class AnswerServiceImpl implements AnswerService {
 
 
     @Override

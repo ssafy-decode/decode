@@ -18,10 +18,11 @@ public class TagController {
     private final TagMapper tagMapper;
 
     @PostMapping("/addtag")
-    public ResponseDto addTag(@RequestBody TagDto tagName){
-        if(tagService.addTag(tagName))
-            return ResponseDto.builder().status(HttpStatus.OK).message(tagName+"add").build();
-        return ResponseDto.builder().status(HttpStatus.OK).message(tagName+"duplicate").build();
+    public ResponseDto addTag(@RequestBody TagDto tagName) {
+        if (tagService.addTag(tagName)) {
+            return ResponseDto.builder().status(HttpStatus.OK).message(tagName + "add").build();
+        }
+        return ResponseDto.builder().status(HttpStatus.OK).message(tagName + "duplicate").build();
     }
 
 }
