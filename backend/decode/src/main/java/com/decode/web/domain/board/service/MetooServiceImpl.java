@@ -1,5 +1,38 @@
 package com.decode.web.domain.board.service;
 
-public class MetooServiceImpl implements MetooService{
+import com.decode.web.domain.board.dto.MetooDto;
+import com.decode.web.domain.board.repository.MetooRepository;
+import com.decode.web.domain.board.repository.QuestionRepository;
+import com.decode.web.domain.user.repository.UserInfoRepository;
+import com.decode.web.entity.MetooEntity;
+import com.decode.web.entity.QuestionEntity;
+import com.decode.web.entity.UserInfoEntity;
+import org.springframework.stereotype.Service;
+
+@Service
+public class MetooServiceImpl implements MetooService {
+
+    private final MetooRepository metooRepository;
+    private final UserInfoRepository userInfoRepository;
+    private final QuestionRepository questionRepository;
+
+    public MetooServiceImpl(MetooRepository metooRepository, UserInfoRepository userInfoRepository,
+            QuestionRepository questionRepository) {
+        this.metooRepository = metooRepository;
+        this.userInfoRepository = userInfoRepository;
+        this.questionRepository = questionRepository;
+
+    }
+
+
+    @Override
+    public Long save(MetooDto metooDto) {
+        // dto -> entity
+        UserInfoEntity userInfo = userInfoRepository.getReferenceById(metooDto.getUserId());
+        QuestionEntity question = questionRepository.getReferenceById(metooDto.getQuestionId());
+
+        return metooRepository.save(MetooEntity.builder().userInfo(userInfo).question(question).build()).getId();
+    }
+
 
 }
