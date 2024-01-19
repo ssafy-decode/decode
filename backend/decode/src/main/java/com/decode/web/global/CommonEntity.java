@@ -13,19 +13,19 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 
-
 // 엔티티에 공통적으로 들어가는 필드를 정의
 // 각 엔티티에서 상속해서 사용하면 DB에 자동으로 필드가 정의됨
 
 public abstract class CommonEntity {
-  @CreatedDate
-  // 한국 시간으로 맞춰야함
 
-  @Column(name = "created_time", updatable = false, nullable = false)
-  private LocalDateTime createdTime;
+    @CreatedDate
+    // 한국 시간으로 맞춰야함
 
-  @LastModifiedDate
-  @Column(name = "updated_time", nullable = false)
-  private LocalDateTime updatedTime;
+    @Column(name = "created_time", updatable = false, nullable = false)
+    private LocalDateTime createdTime;
+
+    @LastModifiedDate
+    @Column(name = "updated_time", nullable = false)
+    private LocalDateTime updatedTime;
 
 }
