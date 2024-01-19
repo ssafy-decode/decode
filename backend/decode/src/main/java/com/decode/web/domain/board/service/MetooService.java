@@ -4,7 +4,9 @@ import com.decode.web.domain.board.dto.MetooDto;
 
 public interface MetooService {
 
-    public Long save(MetooDto metooDto);
+    Long save(MetooDto metooDto);
+
+    void delete(Long metooId);
 
 
 }

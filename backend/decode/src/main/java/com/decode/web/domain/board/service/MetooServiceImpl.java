@@ -31,7 +31,13 @@ public class MetooServiceImpl implements MetooService {
         UserInfoEntity userInfo = userInfoRepository.getReferenceById(metooDto.getUserId());
         QuestionEntity question = questionRepository.getReferenceById(metooDto.getQuestionId());
 
-        return metooRepository.save(MetooEntity.builder().userInfo(userInfo).question(question).build()).getId();
+        return metooRepository.save(
+                MetooEntity.builder().userInfo(userInfo).question(question).build()).getId();
+    }
+
+    @Override
+    public void delete(Long metooId) {
+        metooRepository.deleteById(metooId);
     }
 
 
