@@ -26,14 +26,8 @@ public interface UserService {
     boolean pwCheck(String password);
 
     // 회원 정보 create, False : 실패, True : 성공
-    // 1: api 호출 시 백엔드에서도 email, nick, pw 검사 후 회원가입
-    // 2: api 호출 시 검증 없이 바로 가입
+
     Long createUser(UserInfoEntity user);
-
-    Long createUser2(UserInfoEntity user);
-
-
-//    boolean checkLogin(String email, String password);
 
     UserInfoEntity getUserByEmail(String email) throws UsernameNotFoundException;
 

@@ -33,6 +33,7 @@ public class UserController {
 
 
 
+
     @Deprecated
     @GetMapping("/user")
     @Operation(summary = "사용자 정보 조회", description = "모든 사용자 정보를 조회합니다.")
@@ -59,12 +60,11 @@ public class UserController {
     @PostMapping("/regist")
     @Operation(summary = "회원 가입", description = "회원 가입 API")
     public ResponseDto createUser(@RequestBody UserInfoDto user) {
-        String encodedPassword = encoder.encode(user.getPassword());
-        log.debug("encodedPassword: {}", encodedPassword);
-        user.setPassword(encodedPassword);
-
-        Long id = userService.createUser(userMapper.toEntity(user));
-        if (id != -1) {
+        Long id;
+        if(userService.emailDupCheck(user.getEmail()) && userService.nickDupCheck(user.getNickname()) && userService.pwCheck(user.getPassword())){
+            String encodedPassword = encoder.encode(user.getPassword());
+            user.setPassword(encodedPassword);
+            id = userService.createUser(userMapper.toEntity(user));
             user.setId(id);
             return new ResponseDto().builder()
                     .data(user)
