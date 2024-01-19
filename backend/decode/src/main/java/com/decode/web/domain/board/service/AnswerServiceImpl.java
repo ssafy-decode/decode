@@ -13,6 +13,7 @@ import com.decode.web.entity.UserInfoEntity;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,6 +25,7 @@ public class AnswerServiceImpl implements AnswerService {
     private final AnswerRepository answerRepository;
     private final AnswerMapper answerMapper;
 
+    @Autowired
     public AnswerServiceImpl(UserInfoRepository userInfoRepository,
             QuestionRepository questionRepository, AnswerRepository answerRepository,
             AnswerMapper answerMapper) {
