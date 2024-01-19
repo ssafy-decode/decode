@@ -1,16 +1,13 @@
 package com.decode.web.global.utils.authentication;
 
-import com.decode.web.domain.user.dto.AuthDto;
 import com.decode.web.domain.user.service.RedisService;
 import com.decode.web.domain.user.service.UserService;
-
 import com.decode.web.entity.UserInfoEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-
-import java.security.Key;
-
+import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,11 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
-
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
-
-
+import java.security.Key;
 import java.util.Date;
 
 @Slf4j
@@ -32,15 +25,12 @@ import java.util.Date;
 @Transactional(readOnly = true)
 public class JwtTokenProvider {
 
+    private static Key signingKey;
     private final RedisService redisService;
     private final UserService userService;
-
-
     private final String secretKey;
     private final Long accessTokenValidityInMilliseconds;
     private final Long refreshTokenValidityInMilliseconds;
-
-    private static Key signingKey;
 
 
     public JwtTokenProvider(RedisService redisService,
@@ -120,7 +110,8 @@ public class JwtTokenProvider {
             return false;
         }
     }
-    public boolean validateTokenExpired(String token){
+
+    public boolean validateTokenExpired(String token) {
         try {
             return getClaims(token)
                     .getExpiration()

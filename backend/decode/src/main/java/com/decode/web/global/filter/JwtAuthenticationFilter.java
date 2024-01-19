@@ -1,7 +1,6 @@
 package com.decode.web.global.filter;
 
 import com.decode.web.global.utils.authentication.JwtTokenProvider;
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,7 +25,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse res,
                                     FilterChain filterChain) throws ServletException, IOException {
         String accessToken = resolveToken(req);
-        try{
+        try {
             // token 유효성 검사 후 securityContext에 저장
             if (accessToken != null && jwtTokenProvider.validateToken(accessToken)) {
                 Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
@@ -43,12 +42,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             res.sendError(403);
 
 
-        filterChain.doFilter(req, res);
+            filterChain.doFilter(req, res);
+
+        }
+
 
     }
-
-
-}
 
     private String resolveToken(HttpServletRequest req) {
         String bearerToken = req.getHeader("Authorization");

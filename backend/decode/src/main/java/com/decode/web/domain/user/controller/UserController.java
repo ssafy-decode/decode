@@ -7,9 +7,6 @@ import com.decode.web.domain.user.service.AuthService;
 import com.decode.web.domain.user.service.UserService;
 import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.global.ResponseDto;
-import java.util.LinkedList;
-import java.util.List;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.LinkedList;
+import java.util.List;
 
 
 @RestController
@@ -30,7 +29,7 @@ public class UserController {
     private final AuthService authService;
 
     @Autowired
-    UserController(UserService userService, UserMapper userMapper,AuthService authService) {
+    UserController(UserService userService, UserMapper userMapper, AuthService authService) {
         this.userService = userService;
         this.userMapper = userMapper;
         this.authService = authService;
@@ -78,7 +77,7 @@ public class UserController {
 
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "로그인 API")
-    public ResponseDto login(@RequestBody AuthDto.LoginDto loginDto){
+    public ResponseDto login(@RequestBody AuthDto.LoginDto loginDto) {
 
         // 로그인 성공하면 토큰을 ResponseDto에 담아서 반환
 

@@ -4,11 +4,12 @@ import com.decode.web.domain.user.repository.UserInfoRepository;
 import com.decode.web.domain.user.repository.UserProfileRepository;
 import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.entity.UserProfileEntity;
-import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -18,7 +19,7 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     public UserServiceImpl(UserInfoRepository userInfoRepository,
-            UserProfileRepository userProfileRepository) {
+                           UserProfileRepository userProfileRepository) {
         this.userInfoRepository = userInfoRepository;
         this.userProfileRepository = userProfileRepository;
 
@@ -115,7 +116,7 @@ public class UserServiceImpl implements UserService {
     public UserInfoEntity getUserByEmail(String email) throws UsernameNotFoundException {
         UserInfoEntity user = userInfoRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
-        if(user != null){
+        if (user != null) {
             return user;
         }
         return null;

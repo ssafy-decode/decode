@@ -35,7 +35,7 @@ public class UserProfileEntity {
 
     @Builder
     public UserProfileEntity(Long id, int exp, String tier, String profileImg, int point,
-            int coin) {
+                             int coin) {
         this.id = id;
         this.exp = exp;
         this.tier = tier;

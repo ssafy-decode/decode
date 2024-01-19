@@ -1,12 +1,7 @@
 package com.decode.web.entity;
 
 import com.decode.web.global.CommonEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,7 +34,7 @@ public class UserInfoEntity extends CommonEntity {
 
     @Builder
     public UserInfoEntity(Long id, String email, String nickname, String password,
-            String phoneNumber) {
+                          String phoneNumber) {
         this.id = id;
         this.email = email;
         this.nickname = nickname;
