@@ -47,6 +47,14 @@ public class UserController {
                 .status(HttpStatus.OK)
                 .message("select All user info").build();
     }
+    @GetMapping("/user/{id}")
+    @Operation(summary = "사용자 정보 조회", description = "사용자 1명의 정보를 조회합니다.")
+    public ResponseDto getUserById(Long id) {
+        return new ResponseDto().builder()
+                .data(userService.getUserById(id))
+                .status(HttpStatus.OK)
+                .message("select user info").build();
+    }
 
     @GetMapping("/profile/{id}")
     @Operation(summary = "사용자 프로필 조회", description = "사용자 프로필 정보를 조회합니다.")
@@ -82,7 +90,6 @@ public class UserController {
     public ResponseDto login(@RequestBody AuthDto.LoginDto loginDto) {
 
         // 로그인 성공하면 토큰을 헤더에 쿠키로 저장
-
 
         // 실패하면 토큰은 반환 안되니까 null로 들어가고, status는 400으로 반환
         return null;
