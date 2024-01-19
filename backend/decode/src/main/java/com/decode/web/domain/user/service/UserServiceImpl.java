@@ -5,6 +5,7 @@ import com.decode.web.domain.user.repository.UserProfileRepository;
 import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.entity.UserProfileEntity;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,11 +16,11 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final UserInfoRepository userInfoRepository;
     private final UserProfileRepository userProfileRepository;
-
 
     @Override
     public UserInfoEntity getUserById(Long id) {
@@ -33,7 +34,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserProfileEntity getUserProfileById(Long id) {
         Optional<UserProfileEntity> profile = userProfileRepository.findById(id);
+        log.info("id: {}", id);
         if (profile.isPresent()) {
+            log.info("profile: {}", profile.get());
             return profile.get();
         }
         return null;
@@ -89,6 +92,17 @@ public class UserServiceImpl implements UserService {
             return user;
         }
         return null;
+    }
+
+    @Override
+    public Object pwConfirm(Long id, String password) {
+        UserInfoEntity user = userInfoRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        if(user.getPassword().equals(password)){
+            return false;
+        }
+
+        return true;
     }
 
 }

@@ -32,4 +32,5 @@ public interface UserService {
     UserInfoEntity getUserByEmail(String email) throws UsernameNotFoundException;
 
 
+    Object pwConfirm(Long id, String password);
 }

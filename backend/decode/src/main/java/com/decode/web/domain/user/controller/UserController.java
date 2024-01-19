@@ -49,16 +49,24 @@ public class UserController {
     }
     @GetMapping("/user/{id}")
     @Operation(summary = "사용자 정보 조회", description = "사용자 1명의 정보를 조회합니다.")
-    public ResponseDto getUserById(Long id) {
+    public ResponseDto getUserById(@PathVariable Long id) {
         return new ResponseDto().builder()
                 .data(userService.getUserById(id))
                 .status(HttpStatus.OK)
                 .message("select user info").build();
     }
+    @PostMapping("/user/{id}")
+    @Operation(summary = "사용자 정보 수정", description = "사용자 1명의 정보를 수정합니다.")
+    public ResponseDto updateUserById(@PathVariable Long id, @RequestBody UserInfoDto user) {
+        return new ResponseDto().builder()
+                .data(userService.getUserById(id))
+                .status(HttpStatus.OK)
+                .message("update user info").build();
+    }
 
     @GetMapping("/profile/{id}")
     @Operation(summary = "사용자 프로필 조회", description = "사용자 프로필 정보를 조회합니다.")
-    public ResponseDto getUserProfileById(Long id) {
+    public ResponseDto getUserProfileById(@PathVariable Long id) {
         return new ResponseDto().builder()
                 .data(userService.getUserProfileById(id))
                 .status(HttpStatus.OK)
@@ -106,6 +114,41 @@ public class UserController {
                                @RequestHeader("Authorization") String accessToken) {
         // 토큰 재발급 성공하면 토큰을 헤더에 쿠키로 저장
         return null;
+    }
+
+    @GetMapping("/email")
+    @Operation(summary = "이메일 중복 체크", description = "이메일 중복 체크 API")
+    public ResponseDto emailDupCheck(@RequestParam String keyword) {
+        return new ResponseDto().builder()
+                .data(userService.emailDupCheck(keyword))
+                .status(HttpStatus.OK)
+                .message("email duplicate check").build();
+    }
+    @GetMapping("/nickname")
+    @Operation(summary = "닉네임 중복 체크", description = "닉네임 중복 체크 API")
+    public ResponseDto nickDupCheck(@RequestParam String keyword) {
+        return new ResponseDto().builder()
+                .data(userService.nickDupCheck(keyword))
+                .status(HttpStatus.OK)
+                .message("nickname duplicate check").build();
+    }
+    @PostMapping("/password-validation")
+    @Operation(summary = "비밀번호 유효성 검사", description = "비밀번호 유효성 검사 API")
+    public ResponseDto pwCheck(@RequestBody String password) {
+        return new ResponseDto().builder()
+                .data(userService.pwCheck(password))
+                .status(HttpStatus.OK)
+                .message("password validation check").build();
+    }
+
+    @PostMapping("/confirm/{id}")
+    @Operation(summary = "비밀번호 확인", description = "비밀번호 확인 API")
+    public ResponseDto pwConfirm(@PathVariable Long id, @RequestBody String password) {
+        String encodedPassword = encoder.encode(password);
+        return new ResponseDto().builder()
+                .data(userService.pwConfirm(id, encodedPassword))
+                .status(HttpStatus.OK)
+                .message("password confirm").build();
     }
 
 
