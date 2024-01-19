@@ -7,6 +7,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,8 +29,8 @@ public class QuestionTagEntity {
     @JoinColumn(name = "question_id")
     private QuestionEntity question;
 
-    public QuestionTagEntity(Long id, TagEntity tag, QuestionEntity question) {
-        this.id = id;
+    @Builder
+    public QuestionTagEntity(TagEntity tag, QuestionEntity question) {
         this.tag = tag;
         this.question = question;
     }

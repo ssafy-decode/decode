@@ -18,7 +18,7 @@ public class InputQuestionDto {
     private String title;
     private String content;
     private Long questionWriterId;
-    private List<TagEntity> tags;
+    private List<Long> tags;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
 }

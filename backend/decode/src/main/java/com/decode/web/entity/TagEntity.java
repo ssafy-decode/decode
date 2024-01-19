@@ -21,7 +21,7 @@ public class TagEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "tag_name")
+    @Column(name = "tag_name", unique = true)
     private String tagName;
 
     @Builder

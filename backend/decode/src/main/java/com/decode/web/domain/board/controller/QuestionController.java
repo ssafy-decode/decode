@@ -37,8 +37,6 @@ public class QuestionController {
     public ResponseDto createQuestion(@RequestBody InputQuestionDto question){
         String title = questionService.createQuestion(question);
 
-//        UserInfoEntity userInfo = userInfoRepo.findById(question.getId());
-//        QuestionEntity()
         return ResponseDto.builder().status(HttpStatus.OK).message(title+"질문 등록 성공").build();
     }
 }
