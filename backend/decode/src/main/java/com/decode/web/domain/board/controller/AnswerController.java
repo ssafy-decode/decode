@@ -46,5 +46,4 @@ public class AnswerController {
         return ResponseDto.builder().status(HttpStatus.OK).message("답변 삭제 성공").build();
     }
 
-
 }

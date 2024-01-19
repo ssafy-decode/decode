@@ -1,5 +1,6 @@
 package com.decode.web.domain.board.dto;
 
+public class CreateAnswerDto {
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
