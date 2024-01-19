@@ -4,6 +4,7 @@ import com.decode.web.domain.board.dto.InputQuestionDto;
 import com.decode.web.domain.board.dto.QuestionDto;
 import com.decode.web.domain.board.dto.QuestionListDto;
 import com.decode.web.domain.board.mapper.QuestionMapper;
+import com.decode.web.domain.board.repository.AnswerRepository;
 import com.decode.web.domain.board.repository.QuestionRepository;
 import com.decode.web.domain.tag.dto.TagDto;
 import com.decode.web.domain.tag.repository.QuestionTagRepository;
@@ -27,6 +28,7 @@ public class QuestionServiceImpl implements QuestionService {
     private final QuestionMapper questionMapper;
     private final TagRepository tagRepository;
     private final QuestionTagRepository questionTagRepository;
+    private final AnswerRepository answerRepository;
 
     @Override
     public List<QuestionListDto> searchQuestionByKeyword(String keyword) {
@@ -38,7 +40,8 @@ public class QuestionServiceImpl implements QuestionService {
                 .collect(Collectors.toList());
     }
     private QuestionListDto convertToDto(QuestionEntity question) {
-        List<QuestionTagEntity> questionTagEntities = questionTagRepository.findAllByQuestionId(question.getId());
+//        List<QuestionTagEntity> questionTagEntities = questionTagRepository.findAllByQuestionId(question.getId());
+        int answerCnt = answerRepository.countByQuestion_Id(question.getId());
         return new QuestionListDto(
                 question.getId(),
                 question.getTitle(),
@@ -47,7 +50,7 @@ public class QuestionServiceImpl implements QuestionService {
                 null,
                 question.getCreatedTime(),
                 // answerCnt, meTooCnt 값 가져오는 방법에 따라 수정 필요
-                0,
+                answerCnt,
                 0
         );
     }
