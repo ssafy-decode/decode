@@ -6,9 +6,7 @@ import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.entity.UserProfileEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -88,6 +86,7 @@ public class UserServiceImpl implements UserService {
     public UserInfoEntity getUserByEmail(String email) throws UsernameNotFoundException {
         UserInfoEntity user = userInfoRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        log.info("user: {}", user);
         if (user != null) {
             return user;
         }
@@ -98,7 +97,7 @@ public class UserServiceImpl implements UserService {
     public Object pwConfirm(Long id, String password) {
         UserInfoEntity user = userInfoRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
-        if(user.getPassword().equals(password)){
+        if (user.getPassword().equals(password)) {
             return false;
         }
 
