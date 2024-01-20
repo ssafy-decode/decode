@@ -1,11 +1,9 @@
 package com.decode.web.domain.user.service;
 
 import com.decode.web.domain.user.dto.AuthDto;
-import com.decode.web.domain.user.repository.UserInfoRepository;
 import com.decode.web.global.utils.authentication.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -28,12 +26,13 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public AuthDto.TokenDto login(AuthDto.LoginDto loginDto) {
+        log.info("loginDto: {}", loginDto);
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
-
+        log.info("authenticationToken: {}", authenticationToken);
         Authentication authentication = authenticationManagerBuilder.getObject()
                 .authenticate(authenticationToken);
+        log.info("authentication: {}", authentication);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
         return generateToken(SERVER, authentication.getName());
     }
 
@@ -57,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         // 요청된 RT의 유효성 검사 & Redis에 저장되어 있는 RT와 같은지 비교
-        if(!jwtTokenProvider.validateToken(refreshToken) || !refreshTokenInRedis.equals(refreshToken)){
+        if (!jwtTokenProvider.validateToken(refreshToken) || !refreshTokenInRedis.equals(refreshToken)) {
             redisService.deleteValues("RT(" + SERVER + "):" + principal);
             return null; // -> 재로그인 요청
         }
@@ -77,8 +76,8 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public AuthDto.TokenDto generateToken(String provider, String email) {
-        if(redisService.getValues("RT("+provider+"):"+email) != null){
-            redisService.deleteValues("RT("+provider+"):"+email);
+        if (redisService.getValues("RT(" + provider + "):" + email) != null) {
+            redisService.deleteValues("RT(" + provider + "):" + email);
         }
 
         AuthDto.TokenDto tokenDto = AuthDto.TokenDto.builder()
@@ -92,7 +91,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public void saveRefreshToken(String provider, String principal, String token) {
-        redisService.setValuesWithTimeout("RT(:"+provider+"):"+principal,
+        redisService.setValuesWithTimeout("RT(:" + provider + "):" + principal,
                 token,
                 jwtTokenProvider.getTokenExpirationTime(token));
     }
@@ -104,7 +103,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String resolveToken(String token) {
-        if(token != null && token.startsWith("Bearer ")){
+        if (token != null && token.startsWith("Bearer ")) {
             return token.substring(7);
         }
         return null;
@@ -116,11 +115,11 @@ public class AuthServiceImpl implements AuthService {
         String requestAccessToken = resolveToken(token);
         String principal = getPrincipal(requestAccessToken);
 
-        String refreshTokenInRedis = redisService.getValues("RT(:"+SERVER+"):"+principal);
-        if (refreshTokenInRedis != null){
-            redisService.deleteValues("RT(:"+SERVER+"):"+principal);
+        String refreshTokenInRedis = redisService.getValues("RT(:" + SERVER + "):" + principal);
+        if (refreshTokenInRedis != null) {
+            redisService.deleteValues("RT(:" + SERVER + "):" + principal);
         }
         long expiration = jwtTokenProvider.getTokenExpirationTime(requestAccessToken) - new Date().getTime();
-        redisService.setValuesWithTimeout(requestAccessToken,"logout",expiration);
+        redisService.setValuesWithTimeout(requestAccessToken, "logout", expiration);
     }
 }

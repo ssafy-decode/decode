@@ -30,27 +30,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (accessToken != null && jwtTokenProvider.validateToken(accessToken)) {
                 Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                log.debug("인증정보 저장");
+                log.info("인증정보 저장");
             }
         } catch (UsernameNotFoundException e) {
             SecurityContextHolder.clearContext();
-            log.debug("회원 정보 없음");
+            log.info("회원 정보 없음");
             res.sendError(403);
         } catch (Exception e) {
             SecurityContextHolder.clearContext();
-            log.debug("토큰 만료");
+            log.info("토큰 만료");
             res.sendError(403);
 
 
-            filterChain.doFilter(req, res);
-
         }
+        filterChain.doFilter(req, res);
 
 
     }
 
     private String resolveToken(HttpServletRequest req) {
         String bearerToken = req.getHeader("Authorization");
+        log.info("bearerToken : {}", bearerToken);
         if (bearerToken != null && bearerToken.startsWith("Bearer "))
             return bearerToken.substring(7);
         return null;

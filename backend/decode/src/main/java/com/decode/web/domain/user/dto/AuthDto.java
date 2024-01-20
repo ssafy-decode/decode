@@ -3,11 +3,13 @@ package com.decode.web.domain.user.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 
 public class AuthDto {
     @Getter
     @NoArgsConstructor
+    @ToString
 
     public static class LoginDto {
         private String email;
