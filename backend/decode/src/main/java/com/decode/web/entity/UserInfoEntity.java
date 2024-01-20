@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 public class UserInfoEntity extends CommonEntity {
 
     @Id
-    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
     @Column(name = "user_email", unique = true)
