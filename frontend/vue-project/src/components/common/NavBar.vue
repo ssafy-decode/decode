@@ -1,41 +1,38 @@
 <template>
   <v-toolbar>
     <v-btn>
+      <!-- 피그마에서는 버튼이 두 개가 아닌 하나인 것 같아서 로고랑 사이트명이랑 하나로 합쳤습니다. 물론 수정해도 무방합니다.-->
       <router-link to="/">
-        <img src="./de;code_logo_jin.png" alt="로고이미지" height="30px" />
+        <span style="display: flex; justify-content: space-between">
+          <img src="./de;code_logo_jin.png" alt="로고이미지" height="30px" /><v-toolbar-title
+            >de;code</v-toolbar-title
+          ></span
+        >
       </router-link>
     </v-btn>
 
-    <v-btn>
+    <!-- 처음 버튼을 두 개로 했을 때의 코드 -->
+    <!-- <v-btn>
       <router-link to="/">
         <v-toolbar-title>de;code</v-toolbar-title>
       </router-link>
-    </v-btn>
+    </v-btn> -->
 
     <v-btn>
-      <router-link to="/questionboard">
+      <router-link to="/question">
         <v-toolbar-items>질문게시판</v-toolbar-items>
       </router-link>
     </v-btn>
 
-    <v-btn>
-      <v-toolbar-items>상점</v-toolbar-items>
-    </v-btn>
-    <!-- 임시 비활성화 -->
-    <!-- <v-btn>
-      <router-link to="/shop"><v-toolbar-items>상점</v-toolbar-items></router-link>
-    </v-btn> -->
+    <!-- 상점 nav -->
 
-    <v-btn>
-      <router-link to="/">
-        <v-toolbar-items>test_btn</v-toolbar-items>
-      </router-link>
-    </v-btn>
+    <!-- 랭킹 nav -->
+
+    <!-- 마이페이지 nav -->
 
     <v-spacer></v-spacer>
 
-    <!-- <router-link to="/login"><v-btn>로그인</v-btn></router-link> -->
-    <router-link to="/"><v-btn>로그인</v-btn></router-link>
+    <v-btn><router-link to="/login">로그인</router-link></v-btn>
   </v-toolbar>
 </template>
 

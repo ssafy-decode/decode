@@ -46,7 +46,7 @@
     </div>
 
     <div id="app">
-      <v-app id="inspire">
+      <div id="inspire">
         <div>
           <v-responsive max-width="400" class="mx-auto mb-4"> </v-responsive>
 
@@ -88,7 +88,7 @@
             </v-virtual-scroll>
           </v-card>
         </div>
-      </v-app>
+      </div>
     </div>
   </div>
 </template>

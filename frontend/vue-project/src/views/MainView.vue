@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <h1>MainView</h1>
-  </div>
+  <div></div>
 </template>
 
 <script setup></script>
