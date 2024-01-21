@@ -1,16 +1,23 @@
 package com.decode.web.domain.board.service;
 
 import com.decode.web.domain.board.dto.CreateCommentDto;
+import com.decode.web.domain.board.dto.ResponseCommentDto;
 import com.decode.web.domain.board.dto.UpdateCommentDto;
 import com.decode.web.domain.board.mapper.CommentMapper;
 import com.decode.web.domain.board.repository.AnswerRepository;
 import com.decode.web.domain.board.repository.CommentRepository;
+import com.decode.web.domain.user.dto.UserProfileDto;
+import com.decode.web.domain.user.mapper.UserProfileMapper;
 import com.decode.web.domain.user.repository.UserInfoRepository;
+import com.decode.web.domain.user.repository.UserProfileRepository;
 import com.decode.web.entity.AnswerEntity;
 import com.decode.web.entity.CommentEntity;
 import com.decode.web.entity.UserInfoEntity;
+import com.decode.web.entity.UserProfileEntity;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,15 +29,17 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
     private final AnswerRepository answerRepository;
-    private final UserInfoRepository userInfoRepository;
+    private final UserProfileRepository userProfileRepository;
+    private final UserProfileMapper userProfileMapper;
 
     @Autowired
     public CommentServiceImpl(CommentRepository commentRepository, CommentMapper commentMapper,
-            AnswerRepository answerRepository, UserInfoRepository userInfoRepository) {
+            AnswerRepository answerRepository, UserProfileRepository userProfileRepository, UserProfileMapper userProfileMapper) {
         this.commentRepository = commentRepository;
         this.commentMapper = commentMapper;
         this.answerRepository = answerRepository;
-        this.userInfoRepository = userInfoRepository;
+        this.userProfileRepository = userProfileRepository;
+        this.userProfileMapper = userProfileMapper;
     }
 
     @Override
@@ -39,7 +48,7 @@ public class CommentServiceImpl implements CommentService {
         // dto -> entity
         AnswerEntity answer = answerRepository.getReferenceById(
                 createCommentDto.getAnswerId());
-        UserInfoEntity userInfo = userInfoRepository.getReferenceById(createCommentDto.getUserId());
+        UserProfileEntity userInfo = userProfileRepository.getReferenceById(createCommentDto.getUserId());
         CommentEntity comment = commentMapper.toEntity(createCommentDto);
         comment.setCommentWriter(userInfo);
         comment.setAnswer(answer);
@@ -72,6 +81,32 @@ public class CommentServiceImpl implements CommentService {
         // 삭제하기
         commentRepository.deleteById(commentId);
     }
+
+    @Override
+    public List<ResponseCommentDto> getResponseAnswerDtoList(AnswerEntity answerEntity) {
+        List<CommentEntity> commentList = commentRepository.findAllByAnswer(answerEntity);
+
+        return commentList.stream()
+                .map(this::convertToResponseCommentDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public ResponseCommentDto convertToResponseCommentDto(CommentEntity commentEntity) {
+
+        ResponseCommentDto responseCommentDto = new ResponseCommentDto();
+        responseCommentDto.setCommentId(commentEntity.getId());
+        responseCommentDto.setContent(commentEntity.getContent());
+        responseCommentDto.setCreatedTime(commentEntity.getCreatedTime());
+        responseCommentDto.setUpdatedTime(commentEntity.getUpdatedTime());
+
+        UserProfileEntity commentWriterEntity = commentEntity.getCommentWriter();
+        UserProfileDto commentWriterDto =userProfileMapper.toDto(commentWriterEntity);
+        responseCommentDto.setCommentWriter(commentWriterDto);
+
+        return responseCommentDto;
+    }
+
 
 }
 

@@ -2,6 +2,8 @@ package com.decode.web.domain.board.dto;
 
 import com.decode.web.entity.UserInfoEntity;
 import java.time.LocalDateTime;
+
+import com.decode.web.entity.UserProfileEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +18,7 @@ import lombok.ToString;
 public class QuestionDto {
 
     private String title;
-    private UserInfoEntity questionWriter;
+    private UserProfileEntity questionWriter;
     private String content;
 
     private LocalDateTime createTime;
