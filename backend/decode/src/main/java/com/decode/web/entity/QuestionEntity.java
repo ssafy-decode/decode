@@ -30,14 +30,14 @@ public class QuestionEntity extends CommonEntity {
 
     @ManyToOne
     @JoinColumn(name = "question_writer_id")
-    private UserInfoEntity questionWriter;
+    private UserProfileEntity questionWriter;
 
     @Setter
     @Column(name = "question_content")
     private String content;
 
     @Builder
-    public QuestionEntity(Long id, String title, UserInfoEntity questionWriter, String content) {
+    public QuestionEntity(Long id, String title, UserProfileEntity questionWriter, String content) {
         this.id = id;
         this.title = title;
         this.questionWriter = questionWriter;

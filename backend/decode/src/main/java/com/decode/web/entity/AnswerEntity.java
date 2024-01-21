@@ -28,7 +28,7 @@ public class AnswerEntity extends CommonEntity {
     @ManyToOne
     @JoinColumn(name = "answer_writer_id")
     @Setter
-    private UserInfoEntity answerWriter;
+    private UserProfileEntity answerWriter;
 
     @ManyToOne
     @JoinColumn(name = "question_id")
@@ -41,14 +41,14 @@ public class AnswerEntity extends CommonEntity {
 
     @Setter
     @Column(name = "is_adopted")
-    private boolean idAdopted;
+    private boolean isAdopted;
 
-    public AnswerEntity(Long id, UserInfoEntity answerWriter, QuestionEntity question,
+    public AnswerEntity(Long id, UserProfileEntity answerWriter, QuestionEntity question,
             String content, boolean idAdopted) {
         this.id = id;
         this.answerWriter = answerWriter;
         this.question = question;
         this.content = content;
-        this.idAdopted = idAdopted;
+        this.isAdopted = idAdopted;
     }
 }

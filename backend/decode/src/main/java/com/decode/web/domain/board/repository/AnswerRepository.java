@@ -1,5 +1,6 @@
 package com.decode.web.domain.board.repository;
 
+import com.decode.web.domain.board.dto.ResponseAnswerDto;
 import com.decode.web.entity.AnswerEntity;
 import com.decode.web.entity.QuestionEntity;
 import java.util.List;
