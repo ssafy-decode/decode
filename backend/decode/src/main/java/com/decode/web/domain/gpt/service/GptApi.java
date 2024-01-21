@@ -18,7 +18,9 @@ public class GptApi {
     @GetMapping("/gpt")
     public ResponseDto test() throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode jsonNode = mapper.readValue(gptApiService.gpt2(), JsonNode.class);
+        JsonNode jsonNode = mapper.readValue(
+                gptApiService.requestGptResponse("Who won the world series in 2020?"),
+                JsonNode.class);
         return ResponseDto.builder()
                 .message("ok")
                 .status(HttpStatus.OK)
