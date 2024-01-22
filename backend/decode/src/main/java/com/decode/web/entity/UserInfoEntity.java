@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 @Getter
@@ -13,6 +14,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 
 public class UserInfoEntity extends CommonEntity {
+
+    @OneToOne(mappedBy = "userInfoEntity")
+    @PrimaryKeyJoinColumn
+    private UserProfileEntity userProfileEntity;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,8 +50,6 @@ public class UserInfoEntity extends CommonEntity {
         this.birth = birth;
         this.name = name;
 
+
     }
-    @OneToOne(mappedBy = "userInfo", fetch = FetchType.LAZY)
-    @PrimaryKeyJoinColumn
-    private UserProfileEntity userProfileEntity;
 }

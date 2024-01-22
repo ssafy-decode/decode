@@ -70,16 +70,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Long createUser(UserInfoEntity user, String nickname) {
-        userInfoRepository.save(user);
-        userProfileRepository.save(UserProfileEntity.builder()
-                .id(user.getId())
+
+        UserProfileEntity profile = UserProfileEntity.builder()
+                .nickname(nickname)
                 .exp(0)
                 .tier("bronze")
-                .profileImg(null)
+                .profileImg("default")
                 .point(0)
                 .coin(0)
-                .nickname(nickname)
-                .build());
+                .build();
+
+        profile.setUserInfoEntity(user);
+        userProfileRepository.save(profile);
         return user.getId();
     }
 
