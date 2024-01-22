@@ -2,6 +2,7 @@ package com.decode.web.domain.user.controller;
 
 import com.decode.web.domain.user.dto.AuthDto;
 import com.decode.web.domain.user.dto.UserInfoDto;
+import com.decode.web.domain.user.dto.UserRegistDto;
 import com.decode.web.domain.user.mapper.UserMapper;
 import com.decode.web.domain.user.service.AuthService;
 import com.decode.web.domain.user.service.UserService;
@@ -61,6 +62,8 @@ public class UserController {
 
     @PostMapping("/user/{id}")
     @Operation(summary = "사용자 정보 수정", description = "사용자 1명의 정보를 수정합니다.")
+    // todo
+
     public ResponseDto updateUserById(@PathVariable Long id, @RequestBody UserInfoDto user) {
         return new ResponseDto().builder()
                 .data(userService.getUserById(id))
@@ -79,23 +82,21 @@ public class UserController {
 
     @PostMapping("/regist")
     @Operation(summary = "회원 가입", description = "회원 가입 API")
-    public ResponseDto createUser(@RequestBody UserInfoDto user) {
+    public ResponseDto createUser(@RequestBody UserRegistDto user){
         log.info("user : {}", user);
-        Long id;
-        if (userService.emailDupCheck(user.getEmail()) && userService.nickDupCheck(user.getNickname()) && userService.pwCheck(user.getPassword())) {
-            String encodedPassword = encoder.encode(user.getPassword());
-            user.setPassword(encodedPassword);
-            id = userService.createUser(userMapper.toEntity(user));
-            user.setId(id);
-            return new ResponseDto().builder()
-                    .data(user)
-                    .status(HttpStatus.OK)
-                    .message("create user info").build();
-        }
+        UserInfoDto userInfoDto = UserInfoDto.builder()
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .name(user.getName())
+                .phoneNumber(user.getPhoneNumber())
+                .birth(user.getBirth())
+                .build();
+
+        Long id = userService.createUser(userMapper.toEntity(userInfoDto), user.getNickname());
         return new ResponseDto().builder()
-                .data(user)
-                .status(HttpStatus.BAD_REQUEST)
-                .message("가입 실패").build();
+                .data(id)
+                .status(HttpStatus.OK)
+                .message("create user with id : " + id).build();
     }
 
     @PostMapping("/login")

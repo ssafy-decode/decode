@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean nickDupCheck(String nickname) {
-        return userInfoRepository.findByNickname(nickname).isEmpty();
+        return userProfileRepository.findByNickname(nickname).isEmpty();
     }
 
     @Override
@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Long createUser(UserInfoEntity user) {
+    public Long createUser(UserInfoEntity user, String nickname) {
         userInfoRepository.save(user);
         userProfileRepository.save(UserProfileEntity.builder()
                 .id(user.getId())
@@ -78,6 +78,7 @@ public class UserServiceImpl implements UserService {
                 .profileImg(null)
                 .point(0)
                 .coin(0)
+                .nickname(nickname)
                 .build());
         return user.getId();
     }
@@ -94,7 +95,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Object pwConfirm(Long id, String password) {
+    public boolean pwConfirm(Long id, String password) {
         UserInfoEntity user = userInfoRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
         if (user.getPassword().equals(password)) {
@@ -102,6 +103,16 @@ public class UserServiceImpl implements UserService {
         }
 
         return true;
+    }
+
+    @Override
+    public String findEmail(String name, String phoneNumber, String birth) {
+        return null;
+    }
+
+    @Override
+    public String findPassword(String email, String name, String phoneNumber, String birth) {
+        return null;
     }
 
 }

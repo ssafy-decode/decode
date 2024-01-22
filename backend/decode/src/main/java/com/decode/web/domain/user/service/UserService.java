@@ -27,10 +27,15 @@ public interface UserService {
 
     // 회원 정보 create, False : 실패, True : 성공
 
-    Long createUser(UserInfoEntity user);
+    Long createUser(UserInfoEntity user, String nickname);
 
     UserInfoEntity getUserByEmail(String email) throws UsernameNotFoundException;
 
+    boolean pwConfirm(Long id, String password);
 
-    Object pwConfirm(Long id, String password);
+    String findEmail(String name, String phoneNumber, String birth);
+
+    String findPassword(String email, String name, String phoneNumber, String birth);
+
+
 }
