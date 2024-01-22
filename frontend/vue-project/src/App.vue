@@ -1,7 +1,8 @@
 <template>
   <div>
     <NavBar />
-    <router-view></router-view>
+    <br />
+    <router-view class="temp"></router-view>
     <FooterBar />
   </div>
 </template>

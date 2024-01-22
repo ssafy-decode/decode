@@ -120,7 +120,22 @@ span {
   margin: 5px;
 }
 
-#virtualScroll::-webkit-scrollbar {
+/* 스크롤바 안 보이게 할 거면 주석 제거 */
+/* #virtualScroll::-webkit-scrollbar {
   display: none;
+} */
+
+::-webkit-scrollbar {
+  width: 15px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #b0b0b0;
+  border: solid 2px #e6e6e6;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #e6e6e6;
 }
 </style>

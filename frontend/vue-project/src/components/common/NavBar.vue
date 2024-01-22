@@ -13,7 +13,7 @@
     </v-btn>
 
     <v-btn>
-      <router-link to="/questionboard">
+      <router-link to="/question">
         <v-toolbar-items>질문게시판</v-toolbar-items>
       </router-link>
     </v-btn>
@@ -27,7 +27,7 @@
     </v-btn> -->
 
     <v-btn>
-      <router-link to="/">
+      <router-link to="/test">
         <v-toolbar-items>test_btn</v-toolbar-items>
       </router-link>
     </v-btn>
