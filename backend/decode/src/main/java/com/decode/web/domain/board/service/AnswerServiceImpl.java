@@ -100,6 +100,6 @@ public class AnswerServiceImpl implements AnswerService {
         RecommendEntity recommend = RecommendEntity.builder().answer(answer).userInfo(userInfo).recommend(
                 recommendDto.isRecommend()).build();
         recommendRepository.save(recommend);
-
+        return null;
     }
 }
