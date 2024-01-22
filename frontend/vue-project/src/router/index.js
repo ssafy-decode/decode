@@ -1,20 +1,24 @@
 import { createWebHistory, createRouter } from 'vue-router';
-import MainView from '../views/MainView.vue';
-import LoginForm from '@/components/LoginForm.vue';
+
+// Views
+import MainView from '@/views/MainView.vue';
 import UserView from '@/views/UserView.vue';
 import QuestionBoardView from '@/views/QuestionBoardView.vue';
-import UserRegistView from '@/views/UserRegistView.vue';
-import QuestionCreateView from '@/views/QuestionCreateView.vue';
-import AnswerCreateView from '@/views/AnswerCreateView.vue';
+
+// Components
+import LoginForm from '@/components/LoginForm.vue';
+import UserRegistVue from '@/components/user/UserRegist.vue';
+import AuthenticationLoadingVue from '@/components/user/AuthenticationLoading.vue';
+import TechStackVue from '@/components/user/TechStack.vue';
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    // {
-    //   path: '/',
-    //   name: 'mainview',
-    //   component: MainView,
-    // },
+    {
+      path: '/',
+      name: 'mainview',
+      component: MainView,
+    },
     {
       path: '/',
       name: 'login',
@@ -31,14 +35,24 @@ const router = createRouter({
       component: QuestionBoardView,
     },
     {
-      path: '/regist',
-      name: 'registview',
-      component: UserRegistView,
+      path: '/login',
+      name: 'login',
+      component: LoginForm,
     },
     {
-      path: '/test',
-      name: 'TestView',
-      component: AnswerCreateView,
+      path: '/regist',
+      name: 'userregist',
+      component: UserRegistVue,
+    },
+    {
+      path: '/loading',
+      name: 'authenticationloading',
+      component: AuthenticationLoadingVue,
+    },
+    {
+      path: '/techstack',
+      name: 'techstack',
+      component: TechStackVue,
     },
   ],
 });

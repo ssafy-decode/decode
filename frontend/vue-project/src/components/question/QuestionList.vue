@@ -1,9 +1,7 @@
 <template>
   <div>
-    <div style="text-align: center; font-size: xx-large">
-      nav bar 들어간다 길을 비켜라 <br />
-      <br />
-    </div>
+    <h1 style="text-align: center">질문 게시판</h1>
+    <br />
     <div class="text-center" style="display: flex; flex-direction: column; align-items: center">
       <div class="search-container" style="width: 60%">
         <span style="position: relative; margin: auto; display: flex; align-items: center">
@@ -48,7 +46,7 @@
     </div>
 
     <div id="app">
-      <v-app id="inspire">
+      <div id="inspire">
         <div>
           <v-responsive max-width="400" class="mx-auto mb-4"> </v-responsive>
 
@@ -90,7 +88,7 @@
             </v-virtual-scroll>
           </v-card>
         </div>
-      </v-app>
+      </div>
     </div>
   </div>
 </template>
