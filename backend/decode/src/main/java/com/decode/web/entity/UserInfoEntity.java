@@ -46,4 +46,7 @@ public class UserInfoEntity extends CommonEntity {
         this.name = name;
 
     }
+    @OneToOne(mappedBy = "student")
+    @PrimaryKeyJoinColumn
+    private UserProfileEntity userProfileEntity;
 }

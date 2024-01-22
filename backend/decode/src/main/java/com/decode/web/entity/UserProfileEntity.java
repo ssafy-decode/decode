@@ -7,12 +7,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Entity
@@ -56,6 +58,8 @@ public class UserProfileEntity {
         this.coin = coin;
     }
     @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    @Setter
     @JoinColumn(name = "user_id")
     private UserInfoEntity userInfo;
 
