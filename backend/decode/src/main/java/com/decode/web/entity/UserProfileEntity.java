@@ -24,11 +24,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserProfileEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_profile_id")
-    private Long id;
-
     @Column(name = "user_nickname", unique = true)
     private String nickname;
 
@@ -48,8 +43,7 @@ public class UserProfileEntity {
     private int coin;
 
     @Builder
-    public UserProfileEntity(Long id, String nickname, int exp, String tier, String profileImg, int point, int coin) {
-        this.id = id;
+    public UserProfileEntity(String nickname, int exp, String tier, String profileImg, int point, int coin) {
         this.nickname = nickname;
         this.exp = exp;
         this.tier = tier;
