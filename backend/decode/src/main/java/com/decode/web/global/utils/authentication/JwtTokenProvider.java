@@ -57,6 +57,7 @@ public class JwtTokenProvider {
 
     public String createToken(String email, String subject, Long validityInMilliseconds) {
         Long now = System.currentTimeMillis();
+        Long userId = userDetailsService.loadUserByUsername(email).getId();
 
         return Jwts.builder()
                 .setHeaderParam("typ", "JWT")
@@ -64,6 +65,7 @@ public class JwtTokenProvider {
                 .setExpiration(new Date(now + validityInMilliseconds))
                 .setSubject(subject)
                 .claim("email", email)
+                .claim("userId", userId)
                 .signWith(signingKey, SignatureAlgorithm.HS512)
                 .compact();
     }
@@ -88,6 +90,9 @@ public class JwtTokenProvider {
         String email = getClaims(token).get("email", String.class);
         UserDetailsImpl userDetailsImpl = userDetailsService.loadUserByUsername(email);
         return new UsernamePasswordAuthenticationToken(userDetailsImpl, "");
+    }
+    public Long getAuthUserId(String token) {
+        return getClaims(token).get("userId", Long.class);
     }
 
     public long getTokenExpirationTime(String token) {
