@@ -46,7 +46,7 @@ public class UserInfoEntity extends CommonEntity {
         this.name = name;
 
     }
-    @OneToOne(mappedBy = "student")
+    @OneToOne(mappedBy = "userInfo", fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
     private UserProfileEntity userProfileEntity;
 }
