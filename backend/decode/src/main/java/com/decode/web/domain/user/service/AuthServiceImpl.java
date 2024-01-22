@@ -26,12 +26,9 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public AuthDto.TokenDto login(AuthDto.LoginDto loginDto) {
-        log.info("loginDto: {}", loginDto);
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
-        log.info("authenticationToken: {}", authenticationToken);
         Authentication authentication = authenticationManagerBuilder.getObject()
                 .authenticate(authenticationToken);
-        log.info("authentication: {}", authentication);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return generateToken(SERVER, authentication.getName());
     }
@@ -39,38 +36,22 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public boolean validate(String token) {
         String requestAccessToken = resolveToken(token);
-        return jwtTokenProvider.validateTokenExpired(requestAccessToken);
+        return jwtTokenProvider.validateToken(requestAccessToken);
+
     }
 
     @Override
     @Transactional
-    public AuthDto.TokenDto reissue(String accessToken, String refreshToken) {
-        String requestAccessToken = resolveToken(accessToken);
-
-        Authentication authentication = jwtTokenProvider.getAuthentication(requestAccessToken);
-        String principal = getPrincipal(requestAccessToken);
-
-        String refreshTokenInRedis = redisService.getValues("RT(" + SERVER + "):" + principal);
-        if (refreshTokenInRedis == null) { // Redis에 저장되어 있는 RT가 없을 경우
-            return null; // -> 재로그인 요청
-        }
-
-        // 요청된 RT의 유효성 검사 & Redis에 저장되어 있는 RT와 같은지 비교
-        if (!jwtTokenProvider.validateToken(refreshToken) || !refreshTokenInRedis.equals(refreshToken)) {
-            redisService.deleteValues("RT(" + SERVER + "):" + principal);
-            return null; // -> 재로그인 요청
-        }
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        // 토큰 재발급 및 Redis 업데이트
-        redisService.deleteValues("RT(" + SERVER + "):" + principal); // 기존 RT 삭제
-        AuthDto.TokenDto tokenDto = AuthDto.TokenDto.builder()
-                .accessToken(jwtTokenProvider.createAccessToken(principal))
-                .refreshToken(jwtTokenProvider.createRefreshToken(principal))
-                .build();
-        saveRefreshToken(SERVER, principal, tokenDto.getRefreshToken());
-        return tokenDto;
+    public AuthDto.TokenDto reissue(String accessToken) {
+//        String requestAccessToken = resolveToken(accessToken);
+//        Authentication authentication = jwtTokenProvider.getAuthentication(requestAccessToken);
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//        // email 추출
+//        String principal = getPrincipal(requestAccessToken);
+//
+//        // 토큰 재발급 및 Redis 업데이트
+//        redisService.deleteValues("RT(" + SERVER + "):" + principal); // 기존 RT 삭제
+//        return generateToken(SERVER, principal);
     }
 
     @Override
@@ -81,8 +62,8 @@ public class AuthServiceImpl implements AuthService {
         }
 
         AuthDto.TokenDto tokenDto = AuthDto.TokenDto.builder()
-                .accessToken(jwtTokenProvider.createAccessToken(email))
-                .refreshToken(jwtTokenProvider.createRefreshToken(email))
+                .accessToken(jwtTokenProvider.createAccessToken(email, provider))
+                .refreshToken(jwtTokenProvider.createRefreshToken(email, provider))
                 .build();
         saveRefreshToken(provider, email, tokenDto.getRefreshToken());
         return tokenDto;

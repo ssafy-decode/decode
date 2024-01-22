@@ -23,11 +23,12 @@ import java.util.Date;
 @Component
 @Transactional(readOnly = true)
 public class JwtTokenProvider {
+    private final String PROVIDER = "Server";
     private static Key signingKey;
-    private final RedisService redisService;
 
     private final UserDetailsServiceImpl userDetailsService;
     private final String secretKey;
+    private final RedisService redisService;
     private final Long accessTokenValidityInMilliseconds;
     private final Long refreshTokenValidityInMilliseconds;
 
@@ -55,7 +56,7 @@ public class JwtTokenProvider {
 
     }
 
-    public String createToken(String email, String subject, Long validityInMilliseconds) {
+    public String createToken(String email, String subject, Long validityInMilliseconds, String provider) {
         Long now = System.currentTimeMillis();
         Long userId = userDetailsService.loadUserByUsername(email).getId();
 
@@ -66,16 +67,17 @@ public class JwtTokenProvider {
                 .setSubject(subject)
                 .claim("email", email)
                 .claim("userId", userId)
+                .claim("provider", provider)
                 .signWith(signingKey, SignatureAlgorithm.HS512)
                 .compact();
     }
 
-    public String createAccessToken(String email) {
-        return createToken(email, "access", accessTokenValidityInMilliseconds);
+    public String createAccessToken(String email, String provider) {
+        return createToken(email, "access", accessTokenValidityInMilliseconds,provider);
     }
 
-    public String createRefreshToken(String email) {
-        return createToken(email, "refresh", refreshTokenValidityInMilliseconds);
+    public String createRefreshToken(String email, String provider) {
+        return createToken(email, "refresh", refreshTokenValidityInMilliseconds, provider);
     }
 
     public Claims getClaims(String token) {
@@ -101,46 +103,33 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String token) {
         try {
-            if (redisService.getValues(token) != null && redisService.getValues(token).equals("logout")) {
-                return false;
-            }
             Jwts.parserBuilder()
                     .setSigningKey(signingKey)
                     .build()
                     .parseClaimsJws(token);
             return true;
+        } catch(ExpiredJwtException e) {
+            log.error("access token expired");
         } catch (SignatureException e) {
             log.error("Invalid JWT signature.");
-            throw new SignatureException("Invalid JWT signature.");
         } catch (MalformedJwtException e) {
             log.error("Invalid JWT token.");
-            throw new MalformedJwtException("Invalid JWT token.");
-        } catch (ExpiredJwtException e) {
-            log.error("Expired JWT token.");
-            throw new ExpiredJwtException(null, null, "Expired JWT token.");
         } catch (UnsupportedJwtException e) {
             log.error("Unsupported JWT token.");
-            throw new UnsupportedJwtException("Unsupported JWT token.");
         } catch (IllegalArgumentException e) {
             log.error("JWT claims string is empty.");
-            throw new IllegalArgumentException("JWT claims string is empty.");
         } catch (NullPointerException e) {
             log.error("JWT Token is empty.");
-            throw new NullPointerException("JWT Token is empty.");
+
         }
+        return false;
     }
 
+
     public boolean validateTokenExpired(String token) {
-        try {
-            return getClaims(token)
+        return getClaims(token)
                     .getExpiration()
                     .before(new Date());
-        } catch (ExpiredJwtException e) {
-            return true;
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return false;
-        }
     }
 
 

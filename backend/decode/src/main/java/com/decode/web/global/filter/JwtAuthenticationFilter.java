@@ -41,10 +41,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             log.info("토큰 만료");
             res.sendError(403);
 
-
         }
         filterChain.doFilter(req, res);
-
 
     }
 

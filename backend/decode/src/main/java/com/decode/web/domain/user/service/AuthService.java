@@ -7,7 +7,7 @@ public interface AuthService {
 
     boolean validate(String token);
 
-    AuthDto.TokenDto reissue(String accessToken, String refreshToken);
+    AuthDto.TokenDto reissue(String accessToken);
 
     AuthDto.TokenDto generateToken(String provider, String email);
 

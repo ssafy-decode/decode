@@ -1,8 +1,5 @@
 package com.decode.web.domain.user.controller;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
-
-import com.decode.web.domain.user.dto.AuthDto;
 import com.decode.web.domain.user.dto.AuthDto.LoginDto;
 import com.decode.web.domain.user.dto.AuthDto.TokenDto;
 import com.decode.web.domain.user.dto.UserInfoDto;
@@ -15,6 +12,8 @@ import com.decode.web.global.ResponseDto;
 import com.decode.web.global.utils.authentication.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.LinkedList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpCookie;
@@ -22,10 +21,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.LinkedList;
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
@@ -88,12 +90,12 @@ public class UserController {
 
     @PostMapping("/regist")
     @Operation(summary = "회원 가입", description = "회원 가입 API")
-    public ResponseDto createUser(@RequestBody UserRegistDto user){
+    public ResponseDto createUser(@RequestBody UserRegistDto user) {
         log.debug("user : {}", user);
         Long id = null;
-        if(userService.emailDupCheck(user.getEmail())
+        if (userService.emailDupCheck(user.getEmail())
                 && userService.nickDupCheck(user.getNickname())
-                && userService.pwCheck(user.getPassword())){
+                && userService.pwCheck(user.getPassword())) {
 
             user.setPassword(encoder.encode(user.getPassword()));
             UserInfoDto userInfoDto = UserInfoDto.builder()
@@ -125,7 +127,7 @@ public class UserController {
         TokenDto tokenDto = authService.login(loginDto);
         // 로그인 성공하면 토큰을 헤더에 쿠키로 저장
 
-        HttpCookie httpcookie = ResponseCookie.from("refresh-token", tokenDto.getRefreshToken())
+        HttpCookie httpcookie = ResponseCookie.from("access-token", tokenDto.getAccessToken())
                 .httpOnly(true)
                 .maxAge(COOKIE_MAX_AGE)
                 .secure(true)
@@ -133,7 +135,7 @@ public class UserController {
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.SET_COOKIE, httpcookie.toString());
         return new ResponseDto().builder()
-                .data(tokenDto.getAccessToken())
+                .data(null)
                 .status(HttpStatus.OK)
                 .headers(headers)
                 .message("login").build();
@@ -150,11 +152,20 @@ public class UserController {
         return null;
     }
 
-    @PostMapping("/reissue")
-    @Operation(summary = "토큰 재발급", description = "토큰 재발급 API")
-    public ResponseDto reissue(@CookieValue(name = "refresh-token") String refreshToken,
-                               @RequestHeader("Authorization") String accessToken) {
-        // 토큰 재발급 성공하면 토큰을 헤더에 쿠키로 저장
+    @PostMapping("/validate")
+    @Operation(summary = "토큰 만료 검사", description = "토큰 만료 검사 API")
+    public ResponseDto validate(@RequestHeader("Authorization") String token) {
+//        요청 -> AT 검사 -> AT 유효 -> 요청 실행
+//        요청 -> AT 검사 -> AT 기간만 만료 -> AT, RT로 재발급 요청 -> RT 유효 -> 재발급
+//        요청 -> AT 검사 -> AT 기간만 만료 -> AT, RT로 재발급 요청 -> RT 유효X -> 재로그인
+        if (authService.validate(token)) {
+            return new ResponseDto().builder()
+                    .data(null)
+                    .status(HttpStatus.OK)
+                    .message("validated").build();
+        } else {
+
+        }
         return null;
     }
 
@@ -187,7 +198,8 @@ public class UserController {
 
     @PostMapping("/confirm")
     @Operation(summary = "비밀번호 확인", description = "비밀번호 확인 API")
-    public ResponseDto pwConfirm(@RequestBody String password, @RequestHeader("Authorization") String token) {
+    public ResponseDto pwConfirm(@RequestBody String password,
+            @RequestHeader("Authorization") String token) {
         String encodedPassword = encoder.encode(password);
         Long uid = jwtTokenProvider.getAuthUserId(token);
         return new ResponseDto().builder()
