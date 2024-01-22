@@ -21,18 +21,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@CrossOrigin(origins = "*")
 @Tag(name = "UserController", description = "사용자 정보 관련 API")
 public class UserController {
 
@@ -127,9 +122,31 @@ public class UserController {
         TokenDto tokenDto = authService.login(loginDto);
         // 로그인 성공하면 토큰을 헤더에 쿠키로 저장
 
-        HttpCookie httpcookie = ResponseCookie.from("access-token", tokenDto.getAccessToken())
+        HttpCookie httpcookie = ResponseCookie.from("refresh-token", tokenDto.getRefreshToken())
                 .httpOnly(true)
                 .maxAge(COOKIE_MAX_AGE)
+                .secure(true)
+                .build();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.SET_COOKIE, httpcookie.toString());
+        return new ResponseDto().builder()
+                .data("Bearer " + tokenDto.getAccessToken())
+                .status(HttpStatus.OK)
+                .headers(headers)
+                .message("login").build();
+
+
+
+    }
+
+    @PostMapping("/logout")
+    @Operation(summary = "로그아웃", description = "로그아웃 API")
+    public ResponseDto logout(@RequestHeader("Authorization") String token) {
+        // 로그아웃 성공하면 쿠키 삭제 및 redis에서 토큰 삭제, status 200 반환,
+        authService.logout(token);
+        HttpCookie httpcookie = ResponseCookie.from("refresh-token", "")
+                .httpOnly(true)
+                .maxAge(0)
                 .secure(true)
                 .build();
         HttpHeaders headers = new HttpHeaders();
@@ -138,18 +155,8 @@ public class UserController {
                 .data(null)
                 .status(HttpStatus.OK)
                 .headers(headers)
-                .message("login").build();
+                .message("logout").build();
 
-        // 실패하면 토큰은 반환 안되니까 null로 들어가고, status는 400으로 반환
-
-    }
-
-    @PostMapping("/logout")
-    @Operation(summary = "로그아웃", description = "로그아웃 API")
-    public ResponseDto logout(@RequestHeader("Authorization") String token) {
-        // 로그아웃 성공하면 쿠키 삭제 및 redis에서 토큰 삭제, status 200 반환
-        authService.logout(token);
-        return null;
     }
 
     @PostMapping("/validate")
@@ -157,16 +164,23 @@ public class UserController {
     public ResponseDto validate(@RequestHeader("Authorization") String token) {
 //        요청 -> AT 검사 -> AT 유효 -> 요청 실행
 //        요청 -> AT 검사 -> AT 기간만 만료 -> AT, RT로 재발급 요청 -> RT 유효 -> 재발급
-//        요청 -> AT 검사 -> AT 기간만 만료 -> AT, RT로 재발급 요청 -> RT 유효X -> 재로그인
-        if (authService.validate(token)) {
+//        요청 -> AT 검사 -> AT 기간만 만료 -> AT, RT로 재발급 요청 -> RT 유효X ->
+        log.info("validate");
+        // 만료되면 true, 유효하면 false
+        if (!authService.validate(token)) {
+            log.info("validated");
             return new ResponseDto().builder()
                     .data(null)
                     .status(HttpStatus.OK)
                     .message("validated").build();
         } else {
+            log.info("expired");
+            return new ResponseDto().builder()
+                    .data(null)
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .message("expired").build();
 
         }
-        return null;
     }
 
     @GetMapping("/email")

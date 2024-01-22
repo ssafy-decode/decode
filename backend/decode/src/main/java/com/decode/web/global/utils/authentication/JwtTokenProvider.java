@@ -127,9 +127,12 @@ public class JwtTokenProvider {
 
 
     public boolean validateTokenExpired(String token) {
-        return getClaims(token)
-                    .getExpiration()
-                    .before(new Date());
+        try {
+            return getClaims(token).getExpiration().before(new Date());
+        } catch (ExpiredJwtException e) {
+            log.error("access token expired");
+            return true;
+        }
     }
 
 

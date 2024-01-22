@@ -36,7 +36,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public boolean validate(String token) {
         String requestAccessToken = resolveToken(token);
-        return jwtTokenProvider.validateToken(requestAccessToken);
+        return jwtTokenProvider.validateTokenExpired(requestAccessToken);
 
     }
 
@@ -52,6 +52,7 @@ public class AuthServiceImpl implements AuthService {
 //        // 토큰 재발급 및 Redis 업데이트
 //        redisService.deleteValues("RT(" + SERVER + "):" + principal); // 기존 RT 삭제
 //        return generateToken(SERVER, principal);
+        return null;
     }
 
     @Override
@@ -100,7 +101,7 @@ public class AuthServiceImpl implements AuthService {
         if (refreshTokenInRedis != null) {
             redisService.deleteValues("RT(:" + SERVER + "):" + principal);
         }
-        long expiration = jwtTokenProvider.getTokenExpirationTime(requestAccessToken) - new Date().getTime();
-        redisService.setValuesWithTimeout(requestAccessToken, "logout", expiration);
+//        long expiration = jwtTokenProvider.getTokenExpirationTime(requestAccessToken) - new Date().getTime();
+//        redisService.setValuesWithTimeout(requestAccessToken, "logout", expiration);
     }
 }

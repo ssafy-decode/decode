@@ -25,23 +25,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse res,
                                     FilterChain filterChain) throws ServletException, IOException {
         String accessToken = resolveToken(req);
-        try {
-            // token 유효성 검사 후 securityContext에 저장
-            if (accessToken != null && jwtTokenProvider.validateToken(accessToken)) {
-                Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                log.info("인증정보 저장");
-            }
-        } catch (UsernameNotFoundException e) {
-            SecurityContextHolder.clearContext();
-            log.info("회원 정보 없음");
-            res.sendError(403);
-        } catch (Exception e) {
-            SecurityContextHolder.clearContext();
-            log.info("토큰 만료");
-            res.sendError(403);
-
+        // token 유효성 검사 후 securityContext에 저장
+        if (accessToken != null && jwtTokenProvider.validateToken(accessToken)) {
+            Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            log.info("인증정보 저장");
         }
+        else{
+            log.info("인증정보 없음");
+        }
+
+
+
         filterChain.doFilter(req, res);
 
     }
