@@ -24,6 +24,12 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserProfileEntity {
 
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "user_id")
+    @Setter
+    private UserInfoEntity userInfoEntity;
+
     @Id
     @Column(name = "user_id")
     private Long id;
@@ -47,8 +53,8 @@ public class UserProfileEntity {
     private int coin;
 
     @Builder
-    public UserProfileEntity(Long id, String nickname, int exp, String tier, String profileImg, int point, int coin) {
-        this.id = id;
+    public UserProfileEntity(String nickname, int exp, String tier, String profileImg, int point, int coin) {
+        this.id = userInfoEntity.getId();
         this.nickname = nickname;
         this.exp = exp;
         this.tier = tier;
@@ -56,10 +62,5 @@ public class UserProfileEntity {
         this.point = point;
         this.coin = coin;
     }
-    @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
-    @Setter
-    @JoinColumn(name = "user_id")
-    private UserInfoEntity userInfo;
 
 }

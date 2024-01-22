@@ -1,6 +1,10 @@
 package com.decode.web.domain.user.controller;
 
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
 import com.decode.web.domain.user.dto.AuthDto;
+import com.decode.web.domain.user.dto.AuthDto.LoginDto;
+import com.decode.web.domain.user.dto.AuthDto.TokenDto;
 import com.decode.web.domain.user.dto.UserInfoDto;
 import com.decode.web.domain.user.dto.UserRegistDto;
 import com.decode.web.domain.user.mapper.UserMapper;
@@ -8,6 +12,7 @@ import com.decode.web.domain.user.service.AuthService;
 import com.decode.web.domain.user.service.UserService;
 import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.global.ResponseDto;
+import com.decode.web.global.utils.authentication.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +38,7 @@ public class UserController {
     private final UserMapper userMapper;
     private final AuthService authService;
     private final BCryptPasswordEncoder encoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
     private final int COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30일
 
@@ -83,27 +89,40 @@ public class UserController {
     @PostMapping("/regist")
     @Operation(summary = "회원 가입", description = "회원 가입 API")
     public ResponseDto createUser(@RequestBody UserRegistDto user){
-        log.info("user : {}", user);
-        UserInfoDto userInfoDto = UserInfoDto.builder()
-                .email(user.getEmail())
-                .password(user.getPassword())
-                .name(user.getName())
-                .phoneNumber(user.getPhoneNumber())
-                .birth(user.getBirth())
-                .build();
+        log.debug("user : {}", user);
+        Long id = null;
+        if(userService.emailDupCheck(user.getEmail())
+                && userService.nickDupCheck(user.getNickname())
+                && userService.pwCheck(user.getPassword())){
 
-        Long id = userService.createUser(userMapper.toEntity(userInfoDto), user.getNickname());
+            user.setPassword(encoder.encode(user.getPassword()));
+            UserInfoDto userInfoDto = UserInfoDto.builder()
+                    .email(user.getEmail())
+                    .password(user.getPassword())
+                    .name(user.getName())
+                    .phoneNumber(user.getPhoneNumber())
+                    .birth(user.getBirth())
+                    .build();
+
+            id = userService.createUser(userMapper.toEntity(userInfoDto), user.getNickname());
+        }
+        if (id == null) {
+            return new ResponseDto().builder()
+                    .data(id)
+                    .status(HttpStatus.BAD_REQUEST)
+                    .message("create user").build();
+        }
         return new ResponseDto().builder()
                 .data(id)
                 .status(HttpStatus.OK)
-                .message("create user with id : " + id).build();
+                .message("create user").build();
     }
 
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "로그인 API")
-    public ResponseDto login(@RequestBody AuthDto.LoginDto loginDto) {
+    public ResponseDto login(@RequestBody LoginDto loginDto) {
         log.info("loginDto : {}", loginDto);
-        AuthDto.TokenDto tokenDto = authService.login(loginDto);
+        TokenDto tokenDto = authService.login(loginDto);
         // 로그인 성공하면 토큰을 헤더에 쿠키로 저장
 
         HttpCookie httpcookie = ResponseCookie.from("refresh-token", tokenDto.getRefreshToken())
@@ -114,7 +133,7 @@ public class UserController {
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.SET_COOKIE, httpcookie.toString());
         return new ResponseDto().builder()
-                .data(tokenDto)
+                .data(tokenDto.getAccessToken())
                 .status(HttpStatus.OK)
                 .headers(headers)
                 .message("login").build();
@@ -127,6 +146,7 @@ public class UserController {
     @Operation(summary = "로그아웃", description = "로그아웃 API")
     public ResponseDto logout(@RequestHeader("Authorization") String token) {
         // 로그아웃 성공하면 쿠키 삭제 및 redis에서 토큰 삭제, status 200 반환
+        authService.logout(token);
         return null;
     }
 
@@ -165,12 +185,13 @@ public class UserController {
                 .message("password validation check").build();
     }
 
-    @PostMapping("/confirm/{id}")
+    @PostMapping("/confirm")
     @Operation(summary = "비밀번호 확인", description = "비밀번호 확인 API")
-    public ResponseDto pwConfirm(@PathVariable Long id, @RequestBody String password) {
+    public ResponseDto pwConfirm(@RequestBody String password, @RequestHeader("Authorization") String token) {
         String encodedPassword = encoder.encode(password);
+        Long uid = jwtTokenProvider.getAuthUserId(token);
         return new ResponseDto().builder()
-                .data(userService.pwConfirm(id, encodedPassword))
+                .data(userService.pwConfirm(uid, encodedPassword))
                 .status(HttpStatus.OK)
                 .message("password confirm").build();
     }
