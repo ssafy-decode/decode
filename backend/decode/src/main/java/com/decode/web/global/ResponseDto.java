@@ -3,6 +3,7 @@ package com.decode.web.global;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 @Builder
@@ -13,6 +14,7 @@ public class ResponseDto {
     private HttpStatus status;
     private String message;
     private Object data;
+    private HttpHeaders headers;
 
 
     public ResponseDto() {
