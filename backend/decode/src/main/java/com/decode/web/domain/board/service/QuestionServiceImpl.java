@@ -63,12 +63,13 @@ public class QuestionServiceImpl implements QuestionService {
     private QuestionListDto convertToDto(QuestionEntity question) {
 //        List<QuestionTagEntity> questionTagEntities = questionTagRepository.findAllByQuestionId(question.getId());
         int answerCnt = answerRepository.countByQuestionId(question.getId());
+        List<QuestionTagDto> questionTagDtoList = tagService.getQuestionTagList(question.getId());
         return new QuestionListDto(
                 question.getId(),
                 question.getTitle(),
                 userProfileMapper.toDto(question.getQuestionWriter()),
                 // tags는 어떻게 가져올지에 따라 수정 필요
-                null,
+                questionTagDtoList,
                 question.getCreatedTime(),
                 // answerCnt, meTooCnt 값 가져오는 방법에 따라 수정 필요
                 answerCnt,
