@@ -25,7 +25,5 @@ public class QuestionDto {
     public QuestionDto(CreateQuestionDto question) {
         this.title = question.getTitle();
         this.content = question.getContent();
-        this.createTime = question.getCreateTime();
-        this.updatedTime = question.getUpdateTime();
     }
 }

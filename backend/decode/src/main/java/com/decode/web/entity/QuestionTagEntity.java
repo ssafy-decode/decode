@@ -26,6 +26,7 @@ public class QuestionTagEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @ManyToOne
     @JoinColumn(name = "tag_id")
     private TagEntity tag;
@@ -35,6 +36,7 @@ public class QuestionTagEntity {
     @JoinColumn(name = "question_id")
     private QuestionEntity question;
 
+    @Setter
     @Column(name = "version")
     private String version;
 }

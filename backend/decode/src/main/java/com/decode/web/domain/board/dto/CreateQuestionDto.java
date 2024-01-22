@@ -19,6 +19,4 @@ public class CreateQuestionDto {
     private String content;
     private Long questionWriterId;
     private List<QuestionTagDto> tags;
-    private LocalDateTime createTime;
-    private LocalDateTime updateTime;
 }

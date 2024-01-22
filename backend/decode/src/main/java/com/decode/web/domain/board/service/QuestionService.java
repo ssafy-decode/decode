@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface QuestionService {
 
-    List<QuestionListDto> searchQuestionByKeyword(String keyword);
+    List<QuestionListDto> searchQuestionByKeyword(String keyword, List<Long> tagIds);
 
     Long createQuestion(CreateQuestionDto question);
 

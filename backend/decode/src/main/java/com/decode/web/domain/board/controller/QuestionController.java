@@ -9,6 +9,7 @@ import com.decode.web.global.ResponseDto;
 import com.decode.web.global.utils.authentication.JwtTokenProvider;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,14 +25,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("question")
 @RequiredArgsConstructor
+@Slf4j
 public class QuestionController {
 
     private final QuestionService questionService;
     private final JwtTokenProvider jwtTokenProvider;
 
     @GetMapping
-    public ResponseDto questionSearch(@RequestParam String keyword) {
-        List<QuestionListDto> questionList = questionService.searchQuestionByKeyword(keyword);
+    public ResponseDto questionSearch(@RequestParam String keyword, @RequestParam List<Long> tagIds) {
+        List<QuestionListDto> questionList = questionService.searchQuestionByKeyword(keyword, tagIds);
         return ResponseDto.builder().status(HttpStatus.OK).message("조회 완료").data(questionList)
                 .build();
     }
@@ -57,8 +59,9 @@ public class QuestionController {
     }
 
     @PatchMapping
-    public ResponseDto updateQuestion(@RequestHeader("Authorization") String jwtToken, UpdateQuestionDto updateQuestion){
+    public ResponseDto updateQuestion(@RequestHeader("Authorization") String jwtToken, @RequestBody UpdateQuestionDto updateQuestion){
         Long userId = jwtTokenProvider.getAuthUserId(jwtToken);
+        log.info(userId + " " + updateQuestion.getUserId());
         if (!userId.equals(updateQuestion.getUserId())) {
             return ResponseDto.builder().status(HttpStatus.BAD_REQUEST).message("사용자 불일치").build();
         }

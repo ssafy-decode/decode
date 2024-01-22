@@ -20,15 +20,18 @@ import com.decode.web.domain.user.mapper.UserProfileMapper;
 import com.decode.web.domain.user.repository.UserProfileRepository;
 import com.decode.web.entity.QuestionEntity;
 import com.decode.web.entity.QuestionTagEntity;
+import com.decode.web.entity.TagEntity;
 import com.decode.web.entity.UserProfileEntity;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class QuestionServiceImpl implements QuestionService {
 
     private final QuestionRepository questionRepository;
@@ -44,7 +47,7 @@ public class QuestionServiceImpl implements QuestionService {
     private final UserProfileMapper userProfileMapper;
 
     @Override
-    public List<QuestionListDto> searchQuestionByKeyword(String keyword) {
+    public List<QuestionListDto> searchQuestionByKeyword(String keyword, List<Long> tagIds) {
         List<QuestionEntity> questionEntityList;
         if ("".equals(keyword)) {
             questionEntityList = questionRepository.findAllByOrderByCreatedTimeDesc();
@@ -73,6 +76,7 @@ public class QuestionServiceImpl implements QuestionService {
         );
     }
 
+
     @Override
     public Long createQuestion(CreateQuestionDto question) {
         UserProfileEntity questionWriter = userProfileRepository.getReferenceById(
@@ -84,8 +88,11 @@ public class QuestionServiceImpl implements QuestionService {
 
         List<QuestionTagDto> tagList = question.getTags();
         for (QuestionTagDto questionTag : tagList) {
-            QuestionTagEntity questionTagEntity = questionTagMapper.toEntity(questionTag);
-            questionTagEntity.setQuestion(questionMapper.toEntity(questionDto));
+            TagEntity tagEntity = tagRepository.getReferenceById(questionTag.getTagId());
+            QuestionTagEntity questionTagEntity = new QuestionTagEntity();
+            questionTagEntity.setQuestion(questionEntity);
+            questionTagEntity.setTag(tagEntity);
+            questionTagEntity.setVersion(questionTag.getVersion());
             questionTagRepository.save(questionTagEntity);
         }
         return questionEntity.getId();
@@ -104,7 +111,8 @@ public class QuestionServiceImpl implements QuestionService {
         LocalDateTime createdTime = questionEntity.getCreatedTime();
         LocalDateTime updateTime = questionEntity.getUpdatedTime();
 
-        return new ResponseQuestionDto(questionId, title, content, writerDto, questionTagDtoList, answerList, meTooCnt,
+        return new ResponseQuestionDto(questionId, title, content, writerDto, questionTagDtoList,
+                answerList, meTooCnt,
                 createdTime, updateTime);
     }
 
@@ -116,7 +124,8 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public Long updateQuestion(UpdateQuestionDto updateQuestion) {
-        QuestionEntity question = questionRepository.getReferenceById(updateQuestion.getQuestionId());
+        QuestionEntity question = questionRepository.getReferenceById(
+                updateQuestion.getQuestionId());
         question.setTitle(updateQuestion.getTitle());
         question.setContent(updateQuestion.getContent());
 
@@ -124,9 +133,13 @@ public class QuestionServiceImpl implements QuestionService {
                 updateQuestion.getQuestionId());
         questionTagRepository.deleteAll(questionTagEntityList);
         List<QuestionTagDto> tagList = updateQuestion.getTagList();
+
         for (QuestionTagDto questionTag : tagList) {
-            QuestionTagEntity questionTagEntity = questionTagMapper.toEntity(questionTag);
+            TagEntity tagEntity = tagRepository.getReferenceById(questionTag.getTagId());
+            QuestionTagEntity questionTagEntity = new QuestionTagEntity();
             questionTagEntity.setQuestion(question);
+            questionTagEntity.setTag(tagEntity);
+            questionTagEntity.setVersion(questionTag.getVersion());
             questionTagRepository.save(questionTagEntity);
         }
 
