@@ -1,7 +1,6 @@
 package com.decode.web.domain.board.service;
 
 import com.decode.web.domain.board.dto.BookmarkDto;
-import com.decode.web.domain.board.mapper.BookmarkMapper;
 import com.decode.web.domain.board.repository.BookmarkRepository;
 import com.decode.web.domain.board.repository.QuestionRepository;
 import com.decode.web.domain.user.repository.UserProfileRepository;
@@ -13,22 +12,27 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class BookmarkServiceImpl implements BookmarkService{
+public class BookmarkServiceImpl implements BookmarkService {
 
     private final UserProfileRepository userProfileRepository;
     private final QuestionRepository questionRepository;
-    BookmarkRepository bookmarkRepository;
+    private final BookmarkRepository bookmarkRepository;
+
     @Override
-    public Long bookMark(Long userId, Long questionId) {
+    public Long bookMark(BookmarkDto bookmarkDto) {
+        Long userId = bookmarkDto.getUserId();
+        Long questionId = bookmarkDto.getQuestionId();
         UserProfileEntity userProfile = userProfileRepository.getReferenceById(userId);
         QuestionEntity question = questionRepository.getReferenceById(questionId);
 
         return bookmarkRepository.save(
-                BookmarkEntity.builder().userProfile(userProfile).question(question).build()).getId();
+                        BookmarkEntity.builder().userProfile(userProfile).question(question).build())
+                .getId();
     }
 
     @Override
     public void unBookMark(Long userId, Long questionId) {
-        bookmarkRepository.delete(bookmarkRepository.findByUserProfileIdAndQuestionId(userId,questionId));
+        bookmarkRepository.delete(
+                bookmarkRepository.findByUserProfileIdAndQuestionId(userId, questionId));
     }
 }

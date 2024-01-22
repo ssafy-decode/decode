@@ -9,18 +9,19 @@ import com.decode.web.domain.board.repository.AnswerRepository;
 import com.decode.web.domain.board.repository.QuestionRepository;
 import com.decode.web.domain.user.dto.UserProfileDto;
 import com.decode.web.domain.user.mapper.UserProfileMapper;
-import com.decode.web.domain.user.repository.UserInfoRepository;
 import com.decode.web.domain.user.repository.UserProfileRepository;
-import com.decode.web.entity.*;
+import com.decode.web.entity.AnswerEntity;
+import com.decode.web.entity.QuestionEntity;
+import com.decode.web.entity.UserProfileEntity;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
-
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class AnswerServiceImpl implements AnswerService {
 
@@ -30,18 +31,6 @@ public class AnswerServiceImpl implements AnswerService {
     private final AnswerMapper answerMapper;
     private final CommentService commentService;
     private final UserProfileMapper userProfileMapper;
-
-    @Autowired
-    public AnswerServiceImpl(UserProfileRepository userProfileRepository,
-            QuestionRepository questionRepository, AnswerRepository answerRepository,
-            AnswerMapper answerMapper, CommentService commentService, UserProfileMapper userProfileMapper) {
-        this.questionRepository = questionRepository;
-        this.userProfileRepository = userProfileRepository;
-        this.answerRepository = answerRepository;
-        this.answerMapper = answerMapper;
-        this.commentService = commentService;
-        this.userProfileMapper = userProfileMapper;
-    }
 
 
     @Override
@@ -55,7 +44,8 @@ public class AnswerServiceImpl implements AnswerService {
 
         // dto -> entity
         AnswerEntity answer = answerMapper.toEntity(createAnswerDto);
-        UserProfileEntity userProfile = userProfileRepository.getReferenceById(createAnswerDto.getUserId());
+        UserProfileEntity userProfile = userProfileRepository.getReferenceById(
+                createAnswerDto.getUserId());
         QuestionEntity question = questionRepository.getReferenceById(
                 createAnswerDto.getQuestionId());
         answer.setAnswerWriter(userProfile);
@@ -85,6 +75,7 @@ public class AnswerServiceImpl implements AnswerService {
         // 삭제하기
         answerRepository.deleteById(answerId);
     }
+
     @Override
     public List<ResponseAnswerDto> getResponseAnswerDtoList(QuestionEntity questionEntity) {
         List<AnswerEntity> answerList = answerRepository.findAllByQuestion(questionEntity);
@@ -97,7 +88,6 @@ public class AnswerServiceImpl implements AnswerService {
     @Override
     public ResponseAnswerDto convertToResponseAnswerDto(AnswerEntity answerEntity) {
 
-
         ResponseAnswerDto responseAnswerDto = new ResponseAnswerDto();
         responseAnswerDto.setAnswerId(answerEntity.getId());
         responseAnswerDto.setContent(answerEntity.getContent());
@@ -105,7 +95,8 @@ public class AnswerServiceImpl implements AnswerService {
         responseAnswerDto.setCreatedTime(answerEntity.getCreatedTime());
         responseAnswerDto.setUpdatedTime(answerEntity.getUpdatedTime());
         // CommentEntity를 가져와서 ResponseCommentDto로 변환
-        List<ResponseCommentDto> responseCommentList = commentService.getResponseAnswerDtoList(answerEntity);
+        List<ResponseCommentDto> responseCommentList = commentService.getResponseAnswerDtoList(
+                answerEntity);
         responseAnswerDto.setCommentList(responseCommentList);
 
         UserProfileEntity answerWriterEntity = answerEntity.getAnswerWriter();

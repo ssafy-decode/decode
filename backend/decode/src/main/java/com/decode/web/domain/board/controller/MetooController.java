@@ -3,6 +3,7 @@ package com.decode.web.domain.board.controller;
 import com.decode.web.domain.board.dto.MetooDto;
 import com.decode.web.domain.board.service.MetooService;
 import com.decode.web.global.ResponseDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,13 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/metoo")
+@RequiredArgsConstructor
 public class MetooController {
 
     private final MetooService metooService;
-
-    public MetooController(MetooService metooService) {
-        this.metooService = metooService;
-    }
 
     @PostMapping()
     public ResponseDto save(@RequestBody MetooDto metooDto) {

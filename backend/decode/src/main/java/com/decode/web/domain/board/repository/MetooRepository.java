@@ -5,5 +5,6 @@ import com.decode.web.entity.QuestionEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MetooRepository extends JpaRepository<MetooEntity, Long> {
+
     Long countAllByQuestion(QuestionEntity question);
 }

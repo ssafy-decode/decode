@@ -8,21 +8,19 @@ import com.decode.web.domain.board.repository.AnswerRepository;
 import com.decode.web.domain.board.repository.CommentRepository;
 import com.decode.web.domain.user.dto.UserProfileDto;
 import com.decode.web.domain.user.mapper.UserProfileMapper;
-import com.decode.web.domain.user.repository.UserInfoRepository;
 import com.decode.web.domain.user.repository.UserProfileRepository;
 import com.decode.web.entity.AnswerEntity;
 import com.decode.web.entity.CommentEntity;
-import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.entity.UserProfileEntity;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
-
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class CommentServiceImpl implements CommentService {
 
@@ -32,15 +30,6 @@ public class CommentServiceImpl implements CommentService {
     private final UserProfileRepository userProfileRepository;
     private final UserProfileMapper userProfileMapper;
 
-    @Autowired
-    public CommentServiceImpl(CommentRepository commentRepository, CommentMapper commentMapper,
-            AnswerRepository answerRepository, UserProfileRepository userProfileRepository, UserProfileMapper userProfileMapper) {
-        this.commentRepository = commentRepository;
-        this.commentMapper = commentMapper;
-        this.answerRepository = answerRepository;
-        this.userProfileRepository = userProfileRepository;
-        this.userProfileMapper = userProfileMapper;
-    }
 
     @Override
     public Long save(CreateCommentDto createCommentDto) {
@@ -48,7 +37,8 @@ public class CommentServiceImpl implements CommentService {
         // dto -> entity
         AnswerEntity answer = answerRepository.getReferenceById(
                 createCommentDto.getAnswerId());
-        UserProfileEntity userInfo = userProfileRepository.getReferenceById(createCommentDto.getUserId());
+        UserProfileEntity userInfo = userProfileRepository.getReferenceById(
+                createCommentDto.getUserId());
         CommentEntity comment = commentMapper.toEntity(createCommentDto);
         comment.setCommentWriter(userInfo);
         comment.setAnswer(answer);
@@ -101,7 +91,7 @@ public class CommentServiceImpl implements CommentService {
         responseCommentDto.setUpdatedTime(commentEntity.getUpdatedTime());
 
         UserProfileEntity commentWriterEntity = commentEntity.getCommentWriter();
-        UserProfileDto commentWriterDto =userProfileMapper.toDto(commentWriterEntity);
+        UserProfileDto commentWriterDto = userProfileMapper.toDto(commentWriterEntity);
         responseCommentDto.setCommentWriter(commentWriterDto);
 
         return responseCommentDto;

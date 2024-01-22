@@ -3,28 +3,23 @@ package com.decode.web.domain.board.controller;
 import com.decode.web.domain.board.dto.CreateAnswerDto;
 import com.decode.web.domain.board.dto.UpdateAnswerDto;
 import com.decode.web.domain.board.service.AnswerService;
-import com.decode.web.domain.board.service.AnswerServiceImpl;
 import com.decode.web.entity.AnswerEntity;
 import com.decode.web.global.ResponseDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/answer")
 public class AnswerController {
 
     private final AnswerService answerService;
 
-    @Autowired
-    public AnswerController(AnswerServiceImpl answerServiceImpl) {
-        this.answerService = answerServiceImpl;
-    }
 
     @PostMapping()
     public ResponseDto save(CreateAnswerDto createAnswerDto) {

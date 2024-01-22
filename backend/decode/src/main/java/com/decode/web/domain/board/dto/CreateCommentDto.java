@@ -1,7 +1,5 @@
 package com.decode.web.domain.board.dto;
 
-import com.decode.web.entity.AnswerEntity;
-import com.decode.web.entity.UserInfoEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
