@@ -25,6 +25,7 @@ public class QuestionEntity extends CommonEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @Column(name = "question_title")
     private String title;
 

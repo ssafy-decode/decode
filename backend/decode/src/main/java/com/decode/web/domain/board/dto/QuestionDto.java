@@ -22,7 +22,7 @@ public class QuestionDto {
     private LocalDateTime createTime;
     private LocalDateTime updatedTime;
 
-    public QuestionDto(InputQuestionDto question) {
+    public QuestionDto(CreateQuestionDto question) {
         this.title = question.getTitle();
         this.content = question.getContent();
         this.createTime = question.getCreateTime();

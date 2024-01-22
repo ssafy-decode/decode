@@ -13,12 +13,12 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class InputQuestionDto {
+public class CreateQuestionDto {
 
     private String title;
     private String content;
     private Long questionWriterId;
-    private List<Long> tags;
+    private List<QuestionTagDto> tags;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
 }

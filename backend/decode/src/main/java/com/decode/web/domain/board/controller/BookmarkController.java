@@ -26,8 +26,9 @@ public class BookmarkController {
         return ResponseDto.builder().status(HttpStatus.OK).message(bookMarkId + "북마크 완료").build();
     }
 
-    @DeleteMapping("/{userId}/{questionId}")
-    public ResponseDto unBookMark(@PathVariable Long userId, @PathVariable Long questionId) {
+    @DeleteMapping("/{questionId}")
+    public ResponseDto unBookMark( @PathVariable Long questionId) {
+        Long userId = 1L;
         bookmarkService.unBookMark(userId, questionId);
         return ResponseDto.builder().status(HttpStatus.OK).build();
     }

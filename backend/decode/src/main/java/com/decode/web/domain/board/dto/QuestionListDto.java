@@ -20,7 +20,7 @@ public class QuestionListDto {
     private Long id;
     private String title;
     private UserProfileDto writer;
-    private List<TagDto> tags;
+    private List<QuestionTagDto> tagList;
     private LocalDateTime createdTime;
     private int answerCnt;
     private int meTooCnt;

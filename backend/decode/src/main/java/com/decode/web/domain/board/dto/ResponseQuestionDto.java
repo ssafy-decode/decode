@@ -20,6 +20,7 @@ public class ResponseQuestionDto {
     private String title;
     private String content;
     private UserProfileDto questionWriter;
+    private List<QuestionTagDto> tagList;
     private List<ResponseAnswerDto> answerList;
     private Long meTooCnt;
     private LocalDateTime createdTime;
