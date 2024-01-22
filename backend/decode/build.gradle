@@ -64,5 +64,5 @@ tasks.named('asciidoctor') {
 }
 
 jar {
-    archivesBaseName = 'decode-server'
+    archivesBaseName = 'backend'
 }
