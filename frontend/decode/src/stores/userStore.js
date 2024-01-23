@@ -223,7 +223,6 @@ export const useUserStore = defineStore('user', () => {
     searchUsers,
     user,
     userCnt,
-    registrationData,
     userId,
     searchUserCnt, // 애는 회원 이름 검색에서 쓸 일이 있나 추후 확인
     createUser,

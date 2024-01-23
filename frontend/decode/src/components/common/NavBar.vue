@@ -31,7 +31,7 @@
     <!-- 마이페이지 nav -->
 
     <v-spacer></v-spacer>
-    <v-btn v-if="userStore.isLoggedIn" @click="logout">로그아웃</v-btn>
+    <v-btn id="loginBtn" v-if="userStore.isLoggedIn" @click="logout">로그아웃</v-btn>
     <v-btn id="loginBtn" v-else><router-link to="/login">로그인</router-link></v-btn>
   </v-toolbar>
 </template>
