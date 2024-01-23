@@ -4,27 +4,25 @@ import com.decode.web.domain.user.repository.UserInfoRepository;
 import com.decode.web.domain.user.repository.UserProfileRepository;
 import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.entity.UserProfileEntity;
-import java.util.List;
-import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
 
-    private final UserInfoRepository uir;
-    private final UserProfileRepository upr;
-
-    @Autowired
-    public UserServiceImpl(UserInfoRepository ur, UserProfileRepository upr) {
-        this.uir = ur;
-        this.upr = upr;
-
-    }
+    private final UserInfoRepository userInfoRepository;
+    private final UserProfileRepository userProfileRepository;
 
     @Override
     public UserInfoEntity getUserById(Long id) {
-        Optional<UserInfoEntity> user = uir.findById(id);
+        Optional<UserInfoEntity> user = userInfoRepository.findById(id);
         if (user.isPresent()) {
             return user.get();
         }
@@ -33,8 +31,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserProfileEntity getUserProfileById(Long id) {
-        Optional<UserProfileEntity> profile = upr.findById(id);
+        Optional<UserProfileEntity> profile = userProfileRepository.findById(id);
+        log.info("id: {}", id);
         if (profile.isPresent()) {
+            log.info("profile: {}", profile.get());
             return profile.get();
         }
         return null;
@@ -43,74 +43,77 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserInfoEntity> getAllUser() {
 
-        return uir.findAll();
+        return userInfoRepository.findAll();
     }
 
     @Override
     public boolean emailDupCheck(String email) {
-        return uir.findByEmail(email).isEmpty();
+        return userInfoRepository.findByEmail(email).isEmpty();
     }
 
     @Override
     public boolean nickDupCheck(String nickname) {
-        return uir.findByNickname(nickname).isEmpty();
+        return userProfileRepository.findByNickname(nickname).isEmpty();
     }
 
     @Override
     public boolean pwCheck(String password) {
         // 영어/숫자/특수문자 조합으로 8자리 이상
-        if (password.length() < 8) {
+        if (password.length() < 8
+                || !password.matches(".*[a-zA-Z].*")
+                || !password.matches(".*[0-9].*")
+                || !password.matches(".*[~!@#$%^&*()_+|<>?:{}].*"))
             return false;
-        } else if (!password.matches(".*[a-zA-Z].*")) {
-            return false;
-        } else if (!password.matches(".*[0-9].*")) {
-            return false;
-        } else if (!password.matches(".*[~!@#$%^&*()].*")) {
-            return false;
-        }
+
         return true;
     }
 
     @Override
-    public Long createUser(UserInfoEntity user) {
-        if (emailDupCheck(user.getEmail()) && nickDupCheck(user.getNickname())
-                && pwCheck(user.getPassword())) {
-            uir.save(user);
-            upr.save(UserProfileEntity.builder()
-                    .id(user.getId())
-                    .exp(0)
-                    .tier("bronze")
-                    .profileImg(null)
-                    .point(0)
-                    .coin(0)
-                    .build());
-            return user.getId();
-        }
-        return -1L;
-    }
+    public Long createUser(UserInfoEntity user, String nickname) {
 
-    @Override
-    public Long createUser2(UserInfoEntity user) {
-        uir.save(user);
-        upr.save(UserProfileEntity.builder()
-                .id(user.getId())
+        UserProfileEntity profile = UserProfileEntity.builder()
+                .nickname(nickname)
                 .exp(0)
                 .tier("bronze")
-                .profileImg(null)
+                .profileImg("default")
                 .point(0)
                 .coin(0)
-                .build());
+                .build();
+
+        profile.setUserInfoEntity(user);
+        userProfileRepository.save(profile);
         return user.getId();
     }
 
-
     @Override
-    public boolean checkLogin(String email, String password) {
-        return false;
+    public UserInfoEntity getUserByEmail(String email) throws UsernameNotFoundException {
+        UserInfoEntity user = userInfoRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        log.info("user: {}", user);
+        if (user != null) {
+            return user;
+        }
+        return null;
     }
 
     @Override
-    public UserInfoEntity getUserByEmail(String email) {
+    public boolean pwConfirm(Long id, String password) {
+        UserInfoEntity user = userInfoRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        if (user.getPassword().equals(password)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public String findEmail(String name, String phoneNumber, String birth) {
+        return null;
+    }
+
+    @Override
+    public String findPassword(String email, String name, String phoneNumber, String birth) {
         return null;
     }
 

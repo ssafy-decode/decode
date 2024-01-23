@@ -7,12 +7,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Entity
@@ -22,10 +24,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserProfileEntity {
 
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "user_id")
+    @Setter
+    private UserInfoEntity userInfoEntity;
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_profile_id")
+    @Column(name = "user_id")
     private Long id;
+
+    @Column(name = "user_nickname", unique = true)
+    private String nickname;
 
     @Column(name = "user_exp")
     private int exp;
@@ -42,8 +52,15 @@ public class UserProfileEntity {
     @Column(name = "user_coin")
     private int coin;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private UserInfoEntity userInfo;
+    @Builder
+    public UserProfileEntity(String nickname, int exp, String tier, String profileImg, int point, int coin) {
+        this.id = userInfoEntity.getId();
+        this.nickname = nickname;
+        this.exp = exp;
+        this.tier = tier;
+        this.profileImg = profileImg;
+        this.point = point;
+        this.coin = coin;
+    }
 
 }

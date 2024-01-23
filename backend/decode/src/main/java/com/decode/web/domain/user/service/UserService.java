@@ -2,6 +2,8 @@ package com.decode.web.domain.user.service;
 
 import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.entity.UserProfileEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 import java.util.List;
 
 public interface UserService {
@@ -24,16 +26,16 @@ public interface UserService {
     boolean pwCheck(String password);
 
     // 회원 정보 create, False : 실패, True : 성공
-    // 1: api 호출 시 백엔드에서도 email, nick, pw 검사 후 회원가입
-    // 2: api 호출 시 검증 없이 바로 가입
-    Long createUser(UserInfoEntity user);
 
-    Long createUser2(UserInfoEntity user);
+    Long createUser(UserInfoEntity user, String nickname);
 
+    UserInfoEntity getUserByEmail(String email) throws UsernameNotFoundException;
 
-    boolean checkLogin(String email, String password);
+    boolean pwConfirm(Long id, String password);
 
-    UserInfoEntity getUserByEmail(String email);
+    String findEmail(String name, String phoneNumber, String birth);
+
+    String findPassword(String email, String name, String phoneNumber, String birth);
 
 
 }
