@@ -1,6 +1,7 @@
 package com.decode.web.domain.user.service;
 
 import com.decode.web.domain.user.dto.AuthDto;
+import com.decode.web.domain.user.dto.AuthDto.TokenDto;
 import com.decode.web.global.utils.authentication.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,17 +42,16 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public AuthDto.TokenDto reissue(String accessToken) {
-//        String requestAccessToken = resolveToken(accessToken);
-//        Authentication authentication = jwtTokenProvider.getAuthentication(requestAccessToken);
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//        // email 추출
-//        String principal = getPrincipal(requestAccessToken);
-//
-//        // 토큰 재발급 및 Redis 업데이트
-//        redisService.deleteValues("RT(" + SERVER + "):" + principal); // 기존 RT 삭제
-//        return generateToken(SERVER, principal);
-        return null;
+    // 이미 validate 메소드에서 토큰이 유효한지 검사했기 때문에 여기서는 토큰만 검사하면 된다.
+    public AuthDto.TokenDto reissue(String principal) {
+
+        TokenDto tokenDto = generateToken(SERVER, principal);
+        Authentication authentication = jwtTokenProvider.getAuthentication(tokenDto.getAccessToken());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        // 토큰 재발급 및 Redis 업데이트
+        redisService.deleteValues("RT(" + SERVER + "):" + principal); // 기존 RT 삭제
+        return tokenDto;
     }
 
     @Override
