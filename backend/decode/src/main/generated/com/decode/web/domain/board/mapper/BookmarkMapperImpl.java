@@ -1,7 +1,7 @@
 package com.decode.web.domain.board.mapper;
 
-import com.decode.web.domain.board.dto.MetooDto;
-import com.decode.web.entity.MetooEntity;
+import com.decode.web.domain.board.dto.BookmarkDto;
+import com.decode.web.entity.BookmarkEntity;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
@@ -11,27 +11,27 @@ import org.springframework.stereotype.Component;
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.9 (Oracle Corporation)"
 )
 @Component
-public class MetooMapperImpl implements MetooMapper {
+public class BookmarkMapperImpl implements BookmarkMapper {
 
     @Override
-    public MetooDto toDto(MetooEntity entity) {
+    public BookmarkDto toDto(BookmarkEntity entity) {
         if ( entity == null ) {
             return null;
         }
 
-        MetooDto metooDto = new MetooDto();
+        BookmarkDto bookmarkDto = new BookmarkDto();
 
-        return metooDto;
+        return bookmarkDto;
     }
 
     @Override
-    public MetooEntity toEntity(MetooDto dto) {
+    public BookmarkEntity toEntity(BookmarkDto dto) {
         if ( dto == null ) {
             return null;
         }
 
-        MetooEntity.MetooEntityBuilder metooEntity = MetooEntity.builder();
+        BookmarkEntity.BookmarkEntityBuilder bookmarkEntity = BookmarkEntity.builder();
 
-        return metooEntity.build();
+        return bookmarkEntity.build();
     }
 }
