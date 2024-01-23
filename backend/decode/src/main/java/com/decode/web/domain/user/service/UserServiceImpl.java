@@ -4,13 +4,12 @@ import com.decode.web.domain.user.repository.UserInfoRepository;
 import com.decode.web.domain.user.repository.UserProfileRepository;
 import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.entity.UserProfileEntity;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -62,8 +61,9 @@ public class UserServiceImpl implements UserService {
         if (password.length() < 8
                 || !password.matches(".*[a-zA-Z].*")
                 || !password.matches(".*[0-9].*")
-                || !password.matches(".*[~!@#$%^&*()_+|<>?:{}].*"))
+                || !password.matches(".*[~!@#$%^&*()_+|<>?:{}].*")) {
             return false;
+        }
 
         return true;
     }

@@ -12,6 +12,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class QuestionTagDto {
+
     private Long tagId;
     private String tagName;
     private String version;

@@ -3,6 +3,7 @@ package com.decode.web.domain.user.service;
 import com.decode.web.domain.user.dto.AuthDto;
 
 public interface AuthService {
+
     AuthDto.TokenDto login(AuthDto.LoginDto loginDto);
 
     boolean validate(String token);

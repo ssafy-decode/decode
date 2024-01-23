@@ -1,6 +1,5 @@
 package com.decode.web.domain.board.dto;
 
-import com.decode.web.domain.tag.dto.TagDto;
 import com.decode.web.domain.user.dto.UserProfileDto;
 import java.time.LocalDateTime;
 import java.util.List;

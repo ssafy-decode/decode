@@ -46,7 +46,7 @@ public class AnswerController {
     }
 
     @PutMapping("/{answerId}/recommend")
-    public ResponseDto recommend(Long answerId, @RequestBody RecommendDto recommendDto){
+    public ResponseDto recommend(Long answerId, @RequestBody RecommendDto recommendDto) {
         answerService.recommend(answerId, recommendDto);
         return null;
     }
