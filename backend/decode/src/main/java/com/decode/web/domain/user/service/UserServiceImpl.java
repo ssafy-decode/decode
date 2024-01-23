@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 @RequiredArgsConstructor
@@ -102,6 +101,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void updateUserInfo(Long id, String password) {
+        UserInfoEntity user = userInfoRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        user.updateInfo(password);
+        userInfoRepository.save(user);
+    }
+
+
+    @Override
+    public void updateUserProfile(Long id, UserProfileEntity profile) {
+        UserProfileEntity user = userProfileRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        user.updateProfile(profile);
+        userProfileRepository.save(user);
+    }
+
+    @Override
     public boolean pwConfirm(Long id, String password) {
         UserInfoEntity user = userInfoRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
@@ -114,7 +130,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String findEmail(String name, String phoneNumber, String birth) {
-        return null;
+        UserInfoEntity user = userInfoRepository.findByNameAndPhoneNumberAndBirth(name, phoneNumber,
+                        birth)
+                .orElseThrow(() -> new UsernameNotFoundException("아이디 찾기 실패"));
+        return user.getEmail();
     }
 
     @Override
@@ -137,7 +156,8 @@ public class UserServiceImpl implements UserService {
     public void updateUserTag(RequestUserTagDto requestUserTagDto) {
         Long userId = requestUserTagDto.getUserId();
         List<Long> tagIds = requestUserTagDto.getTagIdList();
-        List<UserTagEntity> userTagEntities = userTagRepository.findAllByUserProfile(userProfileRepository.getReferenceById(userId));
+        List<UserTagEntity> userTagEntities = userTagRepository.findAllByUserProfile(
+                userProfileRepository.getReferenceById(userId));
         userTagRepository.deleteAll(userTagEntities);
         for (Long tagId : tagIds) {
             userTagRepository.save(UserTagEntity.builder()

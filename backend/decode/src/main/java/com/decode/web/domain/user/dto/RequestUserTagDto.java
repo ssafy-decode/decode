@@ -13,6 +13,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class RequestUserTagDto {
+
     private Long userId;
     private List<Long> tagIdList;
 }

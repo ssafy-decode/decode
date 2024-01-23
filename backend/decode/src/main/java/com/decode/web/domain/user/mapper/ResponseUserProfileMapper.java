@@ -1,7 +1,6 @@
 package com.decode.web.domain.user.mapper;
 
 import com.decode.web.domain.user.dto.ResponseUserProfileDto;
-import com.decode.web.domain.user.dto.UserProfileDto;
 import com.decode.web.entity.UserProfileEntity;
 import org.mapstruct.Mapper;
 

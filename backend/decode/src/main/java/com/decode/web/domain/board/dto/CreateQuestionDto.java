@@ -15,6 +15,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class CreateQuestionDto {
+
     @NotEmpty
     private String title;
     @NotEmpty

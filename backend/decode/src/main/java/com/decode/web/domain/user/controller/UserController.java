@@ -2,10 +2,14 @@ package com.decode.web.domain.user.controller;
 
 import com.decode.web.domain.user.dto.AuthDto.LoginDto;
 import com.decode.web.domain.user.dto.AuthDto.TokenDto;
+import com.decode.web.domain.user.dto.FindEmailDto;
+import com.decode.web.domain.user.dto.InfoUpdateDto;
 import com.decode.web.domain.user.dto.RequestUserTagDto;
 import com.decode.web.domain.user.dto.UserInfoDto;
+import com.decode.web.domain.user.dto.UserProfileDto;
 import com.decode.web.domain.user.dto.UserRegistDto;
 import com.decode.web.domain.user.mapper.UserMapper;
+import com.decode.web.domain.user.mapper.UserProfileMapper;
 import com.decode.web.domain.user.service.AuthService;
 import com.decode.web.domain.user.service.UserService;
 import com.decode.web.entity.UserInfoEntity;
@@ -17,13 +21,11 @@ import java.util.LinkedList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.annotations.Fetch;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,12 +39,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "*")
 @Tag(name = "UserController", description = "사용자 정보 관련 API")
 public class UserController {
 
     private final UserService userService;
     private final UserMapper userMapper;
+    private final UserProfileMapper userProfileMapper;
     private final AuthService authService;
     private final BCryptPasswordEncoder encoder;
     private final JwtTokenProvider jwtTokenProvider;
@@ -73,15 +75,23 @@ public class UserController {
                 .message("select user info").build();
     }
 
-    @PostMapping("/user/{id}")
-    @Operation(summary = "사용자 정보 수정", description = "사용자 1명의 정보를 수정합니다.")
-    // todo
-
-    public ResponseDto updateUserById(@PathVariable Long id, @RequestBody UserInfoDto user) {
+    @PostMapping("/user")
+    @Operation(summary = "사용자 정보 수정", description = "사용자 1명의 정보를 수정합니다.(비밀번호 변경)")
+    public ResponseDto updateUserById(@RequestBody InfoUpdateDto infoUpdateDto) {
+        String password = infoUpdateDto.getPassword();
+        log.info("password : {}", password);
+        if (userService.pwCheck(password)) {
+            userService.updateUserInfo(infoUpdateDto.getId(), encoder.encode(password));
+            return new ResponseDto().builder()
+                    .data(null)
+                    .status(HttpStatus.OK)
+                    .message("update user info").build();
+        }
         return new ResponseDto().builder()
-                .data(userService.getUserById(id))
-                .status(HttpStatus.OK)
-                .message("update user info").build();
+                .data(null)
+                .status(HttpStatus.BAD_REQUEST)
+                .message("update fail").build();
+
     }
 
     @GetMapping("/profile/{id}")
@@ -230,11 +240,32 @@ public class UserController {
                 .message("password confirm").build();
     }
 
+    @PostMapping("/profile/{id}")
+    @Operation(summary = "프로필 수정", description = "프로필 수정 API")
+    public ResponseDto updateUserProfile(@PathVariable Long id,
+            @RequestBody UserProfileDto userProfileDto) {
+        userService.updateUserProfile(id, userProfileMapper.toEntity(userProfileDto));
+        return new ResponseDto().builder()
+                .data(null)
+                .status(HttpStatus.OK)
+                .message("update user profile").build();
+    }
+
+    @PostMapping("/email")
+    @Operation(summary = "이메일 찾기", description = "이메일 찾기 API")
+    public ResponseDto findEmail(@RequestBody FindEmailDto findEmailDto) {
+        return new ResponseDto().builder()
+                .data(userService.findEmail(findEmailDto.getName(), findEmailDto.getPhoneNumber(),
+                        findEmailDto.getBirth()))
+                .status(HttpStatus.OK)
+                .message("find email").build();
+    }
+
 
     @PostMapping("/addUserTag")
     @Operation(summary = "유저 태그 선택", description = "신규 유저의 선호 기술 태그 추가")
     public ResponseDto addUserTag(@RequestBody
-            RequestUserTagDto requestUserTagDto){
+    RequestUserTagDto requestUserTagDto) {
         userService.addUserTag(requestUserTagDto);
         return ResponseDto.builder().status(HttpStatus.OK).build();
     }
@@ -242,9 +273,9 @@ public class UserController {
     @PatchMapping("/updateUserTag")
     @Operation(summary = "유저 태그 수정", description = "기존 유저의 선후 기술 태그 수정")
     public ResponseDto updateUserTag(@RequestHeader("Authorization") String jwtToken, @RequestBody
-    RequestUserTagDto requestUserTagDto){
+    RequestUserTagDto requestUserTagDto) {
         Long userId = jwtTokenProvider.getAuthUserId(jwtToken);
-        if(!userId.equals(requestUserTagDto.getUserId())){
+        if (!userId.equals(requestUserTagDto.getUserId())) {
             return ResponseDto.builder().status(HttpStatus.BAD_REQUEST).message("사용자 불일치").build();
         }
         userService.updateUserTag(requestUserTagDto);

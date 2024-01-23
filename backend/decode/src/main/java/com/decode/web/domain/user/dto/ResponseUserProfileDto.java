@@ -12,6 +12,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class ResponseUserProfileDto {
+
     private Long id;
     private int exp;
     private int point;

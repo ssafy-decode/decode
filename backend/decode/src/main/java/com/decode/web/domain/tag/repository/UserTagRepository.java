@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserTagRepository extends JpaRepository<UserTagEntity, Long> {
+
     List<UserTagEntity> findAllByUserProfile(UserProfileEntity userProfile);
 
 }

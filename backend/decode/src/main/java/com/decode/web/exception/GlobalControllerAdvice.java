@@ -1,6 +1,7 @@
 package com.decode.web.exception;
 
 import com.decode.web.global.ResponseDto;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,17 @@ public class GlobalControllerAdvice {
                 .build(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(ExpiredJwtException.class)
+    private ResponseEntity<ResponseDto> expiredJwtException(Exception e) {
+        log.error("{}", e.getMessage());
+        return new ResponseEntity<>(ResponseDto.builder()
+                .status(HttpStatus.UNAUTHORIZED)
+                .message("Expired JWT")
+                .data("")
+                .headers(new HttpHeaders())
+                .build(), HttpStatus.UNAUTHORIZED);
+    }
+
     @ExceptionHandler(Exception.class)
     private ResponseEntity<ResponseDto> handleException(Exception e) {
         log.error("{}", e.getMessage());
@@ -34,4 +46,5 @@ public class GlobalControllerAdvice {
                 .headers(new HttpHeaders())
                 .build(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
 }

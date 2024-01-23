@@ -31,6 +31,11 @@ public interface UserService {
 
     UserInfoEntity getUserByEmail(String email) throws UsernameNotFoundException;
 
+    // 회원 정보 update, False : 실패, True : 성공
+    void updateUserInfo(Long id, String password);
+
+    void updateUserProfile(Long id, UserProfileEntity profile);
+
     boolean pwConfirm(Long id, String password);
 
     String findEmail(String name, String phoneNumber, String birth);

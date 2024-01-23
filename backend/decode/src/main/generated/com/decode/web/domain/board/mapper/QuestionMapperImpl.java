@@ -6,40 +6,40 @@ import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
-    value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-01-23T10:08:09+0900",
-    comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.9 (Oracle Corporation)"
+        value = "org.mapstruct.ap.MappingProcessor",
+        date = "2024-01-23T10:08:09+0900",
+        comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.9 (Oracle Corporation)"
 )
 @Component
 public class QuestionMapperImpl implements QuestionMapper {
 
     @Override
     public QuestionDto toDto(QuestionEntity entity) {
-        if ( entity == null ) {
+        if (entity == null) {
             return null;
         }
 
         QuestionDto questionDto = new QuestionDto();
 
-        questionDto.setTitle( entity.getTitle() );
-        questionDto.setQuestionWriter( entity.getQuestionWriter() );
-        questionDto.setContent( entity.getContent() );
-        questionDto.setUpdatedTime( entity.getUpdatedTime() );
+        questionDto.setTitle(entity.getTitle());
+        questionDto.setQuestionWriter(entity.getQuestionWriter());
+        questionDto.setContent(entity.getContent());
+        questionDto.setUpdatedTime(entity.getUpdatedTime());
 
         return questionDto;
     }
 
     @Override
     public QuestionEntity toEntity(QuestionDto dto) {
-        if ( dto == null ) {
+        if (dto == null) {
             return null;
         }
 
         QuestionEntity.QuestionEntityBuilder questionEntity = QuestionEntity.builder();
 
-        questionEntity.title( dto.getTitle() );
-        questionEntity.questionWriter( dto.getQuestionWriter() );
-        questionEntity.content( dto.getContent() );
+        questionEntity.title(dto.getTitle());
+        questionEntity.questionWriter(dto.getQuestionWriter());
+        questionEntity.content(dto.getContent());
 
         return questionEntity.build();
     }

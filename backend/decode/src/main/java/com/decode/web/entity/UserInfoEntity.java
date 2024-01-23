@@ -58,4 +58,8 @@ public class UserInfoEntity extends CommonEntity {
 
 
     }
+
+    public void updateInfo(String password) {
+        this.password = password;
+    }
 }
