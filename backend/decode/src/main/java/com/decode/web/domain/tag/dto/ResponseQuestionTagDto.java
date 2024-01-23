@@ -1,4 +1,4 @@
-package com.decode.web.domain.board.dto;
+package com.decode.web.domain.tag.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,9 +11,10 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class QuestionTagDto {
+public class ResponseQuestionTagDto {
 
     private Long tagId;
+    private Long questionId;
     private String tagName;
-    private String version;
+
 }

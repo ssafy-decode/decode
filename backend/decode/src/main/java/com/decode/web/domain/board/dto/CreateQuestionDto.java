@@ -1,5 +1,6 @@
 package com.decode.web.domain.board.dto;
 
+import com.decode.web.domain.tag.dto.QuestionTagDto;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

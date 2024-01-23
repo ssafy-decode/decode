@@ -6,7 +6,9 @@ import com.decode.web.domain.board.dto.UpdateCommentDto;
 import com.decode.web.domain.board.mapper.CommentMapper;
 import com.decode.web.domain.board.repository.AnswerRepository;
 import com.decode.web.domain.board.repository.CommentRepository;
+import com.decode.web.domain.user.dto.ResponseUserProfileDto;
 import com.decode.web.domain.user.dto.UserProfileDto;
+import com.decode.web.domain.user.mapper.ResponseUserProfileMapper;
 import com.decode.web.domain.user.mapper.UserProfileMapper;
 import com.decode.web.domain.user.repository.UserProfileRepository;
 import com.decode.web.entity.AnswerEntity;
@@ -28,8 +30,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentMapper commentMapper;
     private final AnswerRepository answerRepository;
     private final UserProfileRepository userProfileRepository;
-    private final UserProfileMapper userProfileMapper;
-
+    private final ResponseUserProfileMapper responseUserProfileMapper;
 
     @Override
     public Long save(CreateCommentDto createCommentDto) {
@@ -91,7 +92,7 @@ public class CommentServiceImpl implements CommentService {
         responseCommentDto.setUpdatedTime(commentEntity.getUpdatedTime());
 
         UserProfileEntity commentWriterEntity = commentEntity.getCommentWriter();
-        UserProfileDto commentWriterDto = userProfileMapper.toDto(commentWriterEntity);
+        ResponseUserProfileDto commentWriterDto = responseUserProfileMapper.toDto(commentWriterEntity);
         responseCommentDto.setCommentWriter(commentWriterDto);
 
         return responseCommentDto;

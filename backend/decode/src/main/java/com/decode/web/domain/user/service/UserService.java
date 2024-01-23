@@ -37,4 +37,7 @@ public interface UserService {
     String findPassword(String email, String name, String phoneNumber, String birth);
 
 
+    void addUserTag(Long userId, List<Long> tagIds);
+
+    void updateUserTag(Long userId, List<Long> tagIds);
 }

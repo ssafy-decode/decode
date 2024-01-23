@@ -16,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.Fetch;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -227,5 +229,20 @@ public class UserController {
                 .message("password confirm").build();
     }
 
+
+    @PostMapping("/selectUserTag")
+    @Operation(summary = "유저 태그 선택", description = "유저의 선호 기술 태그 추가")
+    public ResponseDto selectUserTag(@RequestHeader("Authorization") String token, @RequestBody Long userId, @RequestBody List<Long> tagIds){
+        log.info("tagIds : {}", tagIds);
+        userService.addUserTag(userId, tagIds);
+        return ResponseDto.builder().status(HttpStatus.OK).build();
+    }
+
+    @PatchMapping("/updateUserTag")
+    @Operation(summary = "", description = "")
+    public ResponseDto updateUserTag(@RequestBody Long userId, @RequestBody List<Long> tagIds){
+        userService.updateUserTag(userId, tagIds);
+        return ResponseDto.builder().status(HttpStatus.OK).build();
+    }
 
 }

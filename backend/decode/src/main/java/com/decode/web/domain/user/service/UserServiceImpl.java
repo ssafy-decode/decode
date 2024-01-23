@@ -1,9 +1,11 @@
 package com.decode.web.domain.user.service;
 
+import com.decode.web.domain.tag.repository.UserTagRepository;
 import com.decode.web.domain.user.repository.UserInfoRepository;
 import com.decode.web.domain.user.repository.UserProfileRepository;
 import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.entity.UserProfileEntity;
+import com.decode.web.entity.UserTagEntity;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserInfoRepository userInfoRepository;
     private final UserProfileRepository userProfileRepository;
+    private final UserTagRepository userTagRepository;
 
     @Override
     public UserInfoEntity getUserById(Long id) {
@@ -115,6 +118,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public String findPassword(String email, String name, String phoneNumber, String birth) {
         return null;
+    }
+
+    @Override
+    public void addUserTag(Long userId, List<Long> tagIds) {
+        for (Long tagId : tagIds) {
+            userTagRepository.save(UserTagEntity.builder()
+                    .userProfile(userProfileRepository.getReferenceById(userId)).tag(tagId)
+                    .build());
+        }
+    }
+
+    @Override
+    public void updateUserTag(Long userId, List<Long> tagIds) {
+        List<UserTagEntity> userTagEntities = userTagRepository.findAllByUserProfile(userProfileRepository.getReferenceById(userId));
+        userTagRepository.deleteAll(userTagEntities);
+        for (Long tagId : tagIds) {
+            userTagRepository.save(UserTagEntity.builder()
+                    .userProfile(userProfileRepository.getReferenceById(userId)).tag(tagId)
+                    .build());
+        }
     }
 
 }

@@ -1,5 +1,7 @@
 package com.decode.web.domain.board.dto;
 
+import com.decode.web.domain.tag.dto.QuestionTagDto;
+import com.decode.web.domain.user.dto.ResponseUserProfileDto;
 import com.decode.web.domain.user.dto.UserProfileDto;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,10 +21,10 @@ public class ResponseQuestionDto {
     private Long id;
     private String title;
     private String content;
-    private UserProfileDto questionWriter;
+    private ResponseUserProfileDto questionWriter;
     private List<QuestionTagDto> tagList;
     private List<ResponseAnswerDto> answerList;
-    private Long meTooCnt;
+    private int meTooCnt;
     private LocalDateTime createdTime;
     private LocalDateTime updatedTime;
 }

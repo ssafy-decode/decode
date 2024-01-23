@@ -1,5 +1,6 @@
 package com.decode.web.domain.board.dto;
 
+import com.decode.web.domain.user.dto.ResponseUserProfileDto;
 import com.decode.web.domain.user.dto.UserProfileDto;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,8 +19,8 @@ public class QuestionListDto {
 
     private Long id;
     private String title;
-    private UserProfileDto writer;
-    private List<QuestionTagDto> tagList;
+    private ResponseUserProfileDto writer;
+    private List<Long> tagList;
     private LocalDateTime createdTime;
     private int answerCnt;
     private int meTooCnt;
