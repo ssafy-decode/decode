@@ -22,7 +22,7 @@ public class UserTagEntity extends CommonEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private UserInfoEntity userInfo;
+    private UserProfileEntity userProfile;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tag_id")

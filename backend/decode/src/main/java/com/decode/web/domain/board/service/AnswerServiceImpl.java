@@ -11,12 +11,10 @@ import com.decode.web.domain.board.repository.QuestionRepository;
 import com.decode.web.domain.board.repository.RecommendRepository;
 import com.decode.web.domain.user.dto.UserProfileDto;
 import com.decode.web.domain.user.mapper.UserProfileMapper;
-import com.decode.web.domain.user.repository.UserInfoRepository;
 import com.decode.web.domain.user.repository.UserProfileRepository;
 import com.decode.web.entity.AnswerEntity;
 import com.decode.web.entity.QuestionEntity;
 import com.decode.web.entity.RecommendEntity;
-import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.entity.UserProfileEntity;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
@@ -36,7 +34,6 @@ public class AnswerServiceImpl implements AnswerService {
     private final AnswerMapper answerMapper;
     private final CommentService commentService;
     private final UserProfileMapper userProfileMapper;
-    private final UserInfoRepository userInfoRepository;
 
     private final RecommendRepository recommendRepository;
 
@@ -122,9 +119,11 @@ public class AnswerServiceImpl implements AnswerService {
 
         //dto -> entity
         AnswerEntity answer = answerRepository.getReferenceById(answerId);
-        UserInfoEntity userInfo = userInfoRepository.getReferenceById(recommendDto.getUserId());
+        UserProfileEntity userProfile = userProfileRepository.getReferenceById(
+                recommendDto.getUserId());
 
-        RecommendEntity recommend = RecommendEntity.builder().answer(answer).userInfo(userInfo)
+        RecommendEntity recommend = RecommendEntity.builder().answer(answer)
+                .userProfile(userProfile)
                 .recommend(
                         recommendDto.isRecommend()).build();
         recommendRepository.save(recommend);

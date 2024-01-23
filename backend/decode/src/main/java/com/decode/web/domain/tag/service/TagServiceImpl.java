@@ -1,9 +1,7 @@
 package com.decode.web.domain.tag.service;
 
 import com.decode.web.domain.board.dto.QuestionTagDto;
-import com.decode.web.domain.board.repository.QuestionRepository;
 import com.decode.web.domain.tag.dto.TagDto;
-import com.decode.web.domain.tag.mapper.QuestionTagMapper;
 import com.decode.web.domain.tag.mapper.TagMapper;
 import com.decode.web.domain.tag.repository.QuestionTagRepository;
 import com.decode.web.domain.tag.repository.TagRepository;
@@ -21,8 +19,6 @@ public class TagServiceImpl implements TagService {
     private final TagRepository tagRepository;
     private final TagMapper tagMapper;
     private final QuestionTagRepository questionTagRepository;
-    private final QuestionTagMapper questionTagMapper;
-    private final QuestionRepository questionRepository;
 
 
     @Override
