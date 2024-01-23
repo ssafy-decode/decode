@@ -2,9 +2,8 @@ package com.decode.web.domain.user.service;
 
 import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.entity.UserProfileEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
 import java.util.List;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 public interface UserService {
 

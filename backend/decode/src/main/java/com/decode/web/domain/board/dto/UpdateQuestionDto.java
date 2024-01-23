@@ -13,6 +13,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class UpdateQuestionDto {
+
     private Long userId;
     private Long questionId;
     private String title;

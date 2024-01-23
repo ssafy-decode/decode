@@ -114,7 +114,7 @@ public class AnswerServiceImpl implements AnswerService {
         return responseAnswerDto;
     }
 
-    public Long recommend (Long answerId, RecommendDto recommendDto){
+    public Long recommend(Long answerId, RecommendDto recommendDto) {
         // redis cache hit 조사
         // ...
         // 후 expire 5분 설정 후 끝나면 DB 저장

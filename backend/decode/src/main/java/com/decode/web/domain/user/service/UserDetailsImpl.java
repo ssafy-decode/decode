@@ -1,15 +1,15 @@
 package com.decode.web.domain.user.service;
 
 import com.decode.web.entity.UserInfoEntity;
+import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-
 
 @RequiredArgsConstructor
 public class UserDetailsImpl implements UserDetails {
+
     private final UserInfoEntity userInfoEntity;
 
     @Override
@@ -47,7 +47,7 @@ public class UserDetailsImpl implements UserDetails {
         return true;
     }
 
-    public Long getId(){
+    public Long getId() {
         return userInfoEntity.getId();
     }
 }
