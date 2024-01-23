@@ -32,6 +32,6 @@ public class UserTagEntity extends CommonEntity {
     @JoinColumn(name = "user_id")
     private UserProfileEntity userProfile;
 
-    @JoinColumn(name = "tag_id")
-    private Long tag;
+    @Column(name = "tag_id")
+    private Long tagId;
 }

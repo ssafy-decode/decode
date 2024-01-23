@@ -2,6 +2,7 @@ package com.decode.web.domain.user.controller;
 
 import com.decode.web.domain.user.dto.AuthDto.LoginDto;
 import com.decode.web.domain.user.dto.AuthDto.TokenDto;
+import com.decode.web.domain.user.dto.RequestUserTagDto;
 import com.decode.web.domain.user.dto.UserInfoDto;
 import com.decode.web.domain.user.dto.UserRegistDto;
 import com.decode.web.domain.user.mapper.UserMapper;
@@ -230,18 +231,23 @@ public class UserController {
     }
 
 
-    @PostMapping("/selectUserTag")
-    @Operation(summary = "유저 태그 선택", description = "유저의 선호 기술 태그 추가")
-    public ResponseDto selectUserTag(@RequestHeader("Authorization") String token, @RequestBody Long userId, @RequestBody List<Long> tagIds){
-        log.info("tagIds : {}", tagIds);
-        userService.addUserTag(userId, tagIds);
+    @PostMapping("/addUserTag")
+    @Operation(summary = "유저 태그 선택", description = "신규 유저의 선호 기술 태그 추가")
+    public ResponseDto addUserTag(@RequestBody
+            RequestUserTagDto requestUserTagDto){
+        userService.addUserTag(requestUserTagDto);
         return ResponseDto.builder().status(HttpStatus.OK).build();
     }
 
     @PatchMapping("/updateUserTag")
-    @Operation(summary = "", description = "")
-    public ResponseDto updateUserTag(@RequestBody Long userId, @RequestBody List<Long> tagIds){
-        userService.updateUserTag(userId, tagIds);
+    @Operation(summary = "유저 태그 수정", description = "기존 유저의 선후 기술 태그 수정")
+    public ResponseDto updateUserTag(@RequestHeader("Authorization") String jwtToken, @RequestBody
+    RequestUserTagDto requestUserTagDto){
+        Long userId = jwtTokenProvider.getAuthUserId(jwtToken);
+        if(!userId.equals(requestUserTagDto.getUserId())){
+            return ResponseDto.builder().status(HttpStatus.BAD_REQUEST).message("사용자 불일치").build();
+        }
+        userService.updateUserTag(requestUserTagDto);
         return ResponseDto.builder().status(HttpStatus.OK).build();
     }
 

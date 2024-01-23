@@ -1,5 +1,6 @@
 package com.decode.web.domain.user.service;
 
+import com.decode.web.domain.user.dto.RequestUserTagDto;
 import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.entity.UserProfileEntity;
 import java.util.List;
@@ -37,7 +38,7 @@ public interface UserService {
     String findPassword(String email, String name, String phoneNumber, String birth);
 
 
-    void addUserTag(Long userId, List<Long> tagIds);
+    void addUserTag(RequestUserTagDto requestUserTagDto);
 
-    void updateUserTag(Long userId, List<Long> tagIds);
+    void updateUserTag(RequestUserTagDto requestUserTagDto);
 }

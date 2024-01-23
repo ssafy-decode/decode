@@ -27,7 +27,7 @@ public class QuestionTagEntity {
     private Long id;
 
     @Setter
-    @JoinColumn(name = "tag_id")
+    @Column(name = "tag_id")
     private Long tagId;
 
     @Setter
