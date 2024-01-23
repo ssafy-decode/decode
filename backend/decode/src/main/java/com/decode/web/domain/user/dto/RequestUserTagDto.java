@@ -1,5 +1,6 @@
-package com.decode.web.domain.board.dto;
+package com.decode.web.domain.user.dto;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,9 +12,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class QuestionTagDto {
+public class RequestUserTagDto {
 
-    private Long tagId;
-    private String tagName;
-    private String version;
+    private Long userId;
+    private List<Long> tagIdList;
 }

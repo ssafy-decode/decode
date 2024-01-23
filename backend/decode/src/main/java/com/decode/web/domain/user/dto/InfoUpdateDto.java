@@ -14,6 +14,7 @@ import lombok.ToString;
 @ToString
 @Builder
 public class InfoUpdateDto {
+
     private Long id;
     private String password;
 

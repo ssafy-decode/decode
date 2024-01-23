@@ -1,6 +1,6 @@
 package com.decode.web.domain.tag.service;
 
-import com.decode.web.domain.board.dto.QuestionTagDto;
+import com.decode.web.domain.tag.dto.QuestionTagDto;
 import com.decode.web.domain.tag.dto.TagDto;
 import com.decode.web.domain.tag.mapper.TagMapper;
 import com.decode.web.domain.tag.repository.QuestionTagRepository;
@@ -33,6 +33,19 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    public List<Long> getQuestionTagIdList(Long questionId) {
+        List<QuestionTagEntity> questionTagEntityList = questionTagRepository.findAllByQuestionId(
+                questionId);
+        return questionTagEntityList.stream().map(this::convertQuestionTagEntityToTagId).collect(
+                Collectors.toList());
+
+    }
+
+    public Long convertQuestionTagEntityToTagId(QuestionTagEntity questionTagEntity) {
+        return questionTagEntity.getTagId();
+    }
+
+    @Override
     public List<QuestionTagDto> getQuestionTagList(Long questionId) {
         List<QuestionTagEntity> questionTagEntityList = questionTagRepository.findAllByQuestionId(
                 questionId);
@@ -43,8 +56,6 @@ public class TagServiceImpl implements TagService {
 
     public QuestionTagDto convertQuestionEntityToQuestionTagDto(
             QuestionTagEntity questionTagEntity) {
-        TagEntity tagEntity = questionTagEntity.getTag();
-        return new QuestionTagDto(tagEntity.getId(), tagEntity.getTagName(),
-                questionTagEntity.getVersion());
+        return new QuestionTagDto(questionTagEntity.getTagId(), questionTagEntity.getVersion());
     }
 }

@@ -16,5 +16,5 @@ public interface QuestionService {
 
     void deleteQuestion(Long questionId);
 
-    Long updateQuestion(UpdateQuestionDto updateQuestion);
+    ResponseQuestionDto updateQuestion(UpdateQuestionDto updateQuestion);
 }

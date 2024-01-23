@@ -74,8 +74,7 @@ public class QuestionController {
         if (!userId.equals(updateQuestion.getUserId())) {
             return ResponseDto.builder().status(HttpStatus.BAD_REQUEST).message("사용자 불일치").build();
         }
-        Long questionId = questionService.updateQuestion(updateQuestion);
-        ResponseQuestionDto responseQuestionDto = questionService.questionDetail(questionId);
+        ResponseQuestionDto responseQuestionDto = questionService.updateQuestion(updateQuestion);
         return ResponseDto.builder().status(HttpStatus.OK).data(responseQuestionDto).build();
     }
 

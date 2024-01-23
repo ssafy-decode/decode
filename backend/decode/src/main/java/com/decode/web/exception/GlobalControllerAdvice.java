@@ -35,6 +35,7 @@ public class GlobalControllerAdvice {
                 .headers(new HttpHeaders())
                 .build(), HttpStatus.UNAUTHORIZED);
     }
+
     @ExceptionHandler(Exception.class)
     private ResponseEntity<ResponseDto> handleException(Exception e) {
         log.error("{}", e.getMessage());

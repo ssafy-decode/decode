@@ -6,37 +6,37 @@ import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
-    value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-01-23T10:08:09+0900",
-    comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.9 (Oracle Corporation)"
+        value = "org.mapstruct.ap.MappingProcessor",
+        date = "2024-01-23T10:08:09+0900",
+        comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.9 (Oracle Corporation)"
 )
 @Component
 public class TagMapperImpl implements TagMapper {
 
     @Override
     public TagDto toDto(TagEntity entity) {
-        if ( entity == null ) {
+        if (entity == null) {
             return null;
         }
 
         TagDto tagDto = new TagDto();
 
-        tagDto.setId( entity.getId() );
-        tagDto.setTagName( entity.getTagName() );
+        tagDto.setId(entity.getId());
+        tagDto.setTagName(entity.getTagName());
 
         return tagDto;
     }
 
     @Override
     public TagEntity toEntity(TagDto dto) {
-        if ( dto == null ) {
+        if (dto == null) {
             return null;
         }
 
         TagEntity.TagEntityBuilder tagEntity = TagEntity.builder();
 
-        tagEntity.id( dto.getId() );
-        tagEntity.tagName( dto.getTagName() );
+        tagEntity.id(dto.getId());
+        tagEntity.tagName(dto.getTagName());
 
         return tagEntity.build();
     }

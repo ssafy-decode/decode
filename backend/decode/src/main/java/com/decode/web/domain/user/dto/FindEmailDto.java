@@ -15,8 +15,8 @@ import lombok.ToString;
 @Builder
 public class FindEmailDto {
 
-        private String name;
-        private String phoneNumber;
-        private String birth;
+    private String name;
+    private String phoneNumber;
+    private String birth;
 
 }

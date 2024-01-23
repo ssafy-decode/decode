@@ -87,14 +87,14 @@ public class JwtTokenProvider {
     }
 
     public Claims getClaims(String token) {
-        try{
+        try {
             return Jwts.parserBuilder()
                     .setSigningKey(signingKey)
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
 
-        } catch (ExpiredJwtException e){
+        } catch (ExpiredJwtException e) {
             log.info(e.getMessage());
             throw new ExpiredJwtException(null, null, e.getMessage());
         }

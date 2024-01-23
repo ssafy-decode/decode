@@ -46,7 +46,8 @@ public class AuthServiceImpl implements AuthService {
     public AuthDto.TokenDto reissue(String principal) {
 
         TokenDto tokenDto = generateToken(SERVER, principal);
-        Authentication authentication = jwtTokenProvider.getAuthentication(tokenDto.getAccessToken());
+        Authentication authentication = jwtTokenProvider.getAuthentication(
+                tokenDto.getAccessToken());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // 토큰 재발급 및 Redis 업데이트

@@ -6,16 +6,16 @@ import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
-    value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-01-23T10:08:09+0900",
-    comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.9 (Oracle Corporation)"
+        value = "org.mapstruct.ap.MappingProcessor",
+        date = "2024-01-23T10:08:09+0900",
+        comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.9 (Oracle Corporation)"
 )
 @Component
 public class MetooMapperImpl implements MetooMapper {
 
     @Override
     public MetooDto toDto(MetooEntity entity) {
-        if ( entity == null ) {
+        if (entity == null) {
             return null;
         }
 
@@ -26,7 +26,7 @@ public class MetooMapperImpl implements MetooMapper {
 
     @Override
     public MetooEntity toEntity(MetooDto dto) {
-        if ( dto == null ) {
+        if (dto == null) {
             return null;
         }
 
