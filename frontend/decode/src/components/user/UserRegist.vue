@@ -148,7 +148,7 @@
 import { ref } from 'vue';
 import { useUserStore } from '@/stores/userStore';
 import axios from 'axios';
-const URL = 'http://localhost:80/decode';
+const URL = process.env.VUE_APP_BACKEND_URL;
 
 const userStore = useUserStore();
 
