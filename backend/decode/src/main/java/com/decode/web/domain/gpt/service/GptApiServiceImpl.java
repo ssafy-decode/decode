@@ -1,5 +1,6 @@
 package com.decode.web.domain.gpt.service;
 
+import com.decode.web.domain.gpt.dto.GPTResponseDto;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,15 +30,15 @@ public class GptApiServiceImpl {
                     + "The title should be no more than 30 characters."
                     + "Only title.";
 
-    public String keywordByError(String error) {
-        return response(error, KEYWORD_VALUE);
+    public String[] keywordByError(String error) {
+        return response(error, KEYWORD_VALUE).keywords();
     }
 
     public String titleByError(String title) {
-        return response(title, TITLE_VALUE);
+        return response(title, TITLE_VALUE).title();
     }
 
-    private String response(String title, String type) {
+    private GPTResponseDto response(String title, String type) {
         Map<String, Object> jsonObject = new HashMap<>();
         List<Map<String, String>> messages = new ArrayList<>();
         messages.add(createMessageMap(SYSTEM_ROLE_VALUE, type));
@@ -47,7 +48,7 @@ public class GptApiServiceImpl {
         return webClient.post()
                 .bodyValue(jsonObject)
                 .retrieve()
-                .bodyToMono(String.class)
+                .bodyToMono(GPTResponseDto.class)
                 .block();
     }
 
