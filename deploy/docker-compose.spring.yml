@@ -1,0 +1,21 @@
+version: "3"
+
+services:
+  spring_boot_app:
+    image: ggramgyo/decode-hub:backend
+    container_name: decode-server
+    ports:
+      - "7777:7777"
+    volumes:
+      - ./application.yml:/app/config/application.yml
+  dockerhub-login:
+    image: alpine
+    entrypoint: /bin/sh
+    command: -c "echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin"
+
+  redis:
+    image: redis
+    container_name: redis
+    hostname: redis
+    ports:
+      - "6379:6379"
