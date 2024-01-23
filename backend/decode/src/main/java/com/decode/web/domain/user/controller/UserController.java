@@ -164,7 +164,7 @@ public class UserController {
     public ResponseDto validate(@RequestHeader("Authorization") String token) {
 //        요청 -> AT 검사 -> AT 유효 -> 요청 실행
 //        요청 -> AT 검사 -> AT 기간만 만료 -> AT, RT로 재발급 요청 -> RT 유효 -> 재발급
-//        요청 -> AT 검사 -> AT 기간만 만료 -> AT, RT로 재발급 요청 -> RT 유효X ->
+//        요청 -> AT 검사 -> AT 기간만 만료 -> AT, RT로 재발급 요청 -> RT 유효X -> 로그아웃
         log.info("validate");
         // 만료되면 true, 유효하면 false
         if (!authService.validate(token)) {
@@ -214,6 +214,7 @@ public class UserController {
     @Operation(summary = "비밀번호 확인", description = "비밀번호 확인 API")
     public ResponseDto pwConfirm(@RequestBody String password,
             @RequestHeader("Authorization") String token) {
+
         String encodedPassword = encoder.encode(password);
         Long uid = jwtTokenProvider.getAuthUserId(token);
         return new ResponseDto().builder()

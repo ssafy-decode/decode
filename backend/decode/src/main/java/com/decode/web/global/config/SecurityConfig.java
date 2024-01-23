@@ -1,6 +1,7 @@
 package com.decode.web.global.config;
 
 import com.decode.web.global.filter.JwtAuthenticationFilter;
+import com.decode.web.global.utils.authentication.JwtAccessDeniedHandler;
 import com.decode.web.global.utils.authentication.JwtAuthenticationEntryPoint;
 import com.decode.web.global.utils.authentication.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtTokenProvider jwtTokenProvider;
 
 
@@ -36,6 +38,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests ->
                     authorizeRequests
                             .requestMatchers("/**", "/decode/**").permitAll()
+                            .anyRequest().authenticated()
 
                 )
                 .httpBasic(httpBasic ->
@@ -54,9 +57,9 @@ public class SecurityConfig {
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                )
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
-
+                        .accessDeniedHandler(jwtAccessDeniedHandler)
+                );
+//                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
     }

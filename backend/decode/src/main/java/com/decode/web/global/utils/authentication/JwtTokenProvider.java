@@ -94,6 +94,8 @@ public class JwtTokenProvider {
         return new UsernamePasswordAuthenticationToken(userDetailsImpl, "");
     }
     public Long getAuthUserId(String token) {
+        if(token.startsWith("Bearer "))
+            token = token.substring(7);
         return getClaims(token).get("userId", Long.class);
     }
 
