@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
         value = "org.mapstruct.ap.MappingProcessor",
-        date = "2024-01-22T13:44:54+0900",
+        date = "2024-01-23T10:08:09+0900",
         comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.9 (Oracle Corporation)"
 )
 @Component
@@ -21,6 +21,7 @@ public class TagMapperImpl implements TagMapper {
 
         TagDto tagDto = new TagDto();
 
+        tagDto.setId(entity.getId());
         tagDto.setTagName(entity.getTagName());
 
         return tagDto;
@@ -34,6 +35,7 @@ public class TagMapperImpl implements TagMapper {
 
         TagEntity.TagEntityBuilder tagEntity = TagEntity.builder();
 
+        tagEntity.id(dto.getId());
         tagEntity.tagName(dto.getTagName());
 
         return tagEntity.build();

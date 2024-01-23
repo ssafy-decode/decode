@@ -9,8 +9,8 @@ import com.decode.web.domain.board.mapper.AnswerMapper;
 import com.decode.web.domain.board.repository.AnswerRepository;
 import com.decode.web.domain.board.repository.QuestionRepository;
 import com.decode.web.domain.board.repository.RecommendRepository;
-import com.decode.web.domain.user.dto.UserProfileDto;
-import com.decode.web.domain.user.mapper.UserProfileMapper;
+import com.decode.web.domain.user.dto.ResponseUserProfileDto;
+import com.decode.web.domain.user.mapper.ResponseUserProfileMapper;
 import com.decode.web.domain.user.repository.UserProfileRepository;
 import com.decode.web.entity.AnswerEntity;
 import com.decode.web.entity.QuestionEntity;
@@ -33,8 +33,7 @@ public class AnswerServiceImpl implements AnswerService {
     private final AnswerRepository answerRepository;
     private final AnswerMapper answerMapper;
     private final CommentService commentService;
-    private final UserProfileMapper userProfileMapper;
-
+    private final ResponseUserProfileMapper responseUserProfileMapper;
     private final RecommendRepository recommendRepository;
 
 
@@ -105,8 +104,8 @@ public class AnswerServiceImpl implements AnswerService {
         responseAnswerDto.setCommentList(responseCommentList);
 
         UserProfileEntity answerWriterEntity = answerEntity.getAnswerWriter();
-        UserProfileDto UserProfileEntity = userProfileMapper.toDto(answerWriterEntity);
-        responseAnswerDto.setAnswerWriter(UserProfileEntity);
+        ResponseUserProfileDto userProfileDto = responseUserProfileMapper.toDto(answerWriterEntity);
+        responseAnswerDto.setAnswerWriter(userProfileDto);
 
         return responseAnswerDto;
     }

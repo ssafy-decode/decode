@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>App Vue</h1>
+    <h1>Question Detail</h1>
   </div>
 </template>
 

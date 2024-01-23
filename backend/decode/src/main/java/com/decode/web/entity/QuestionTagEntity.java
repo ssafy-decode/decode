@@ -27,9 +27,8 @@ public class QuestionTagEntity {
     private Long id;
 
     @Setter
-    @ManyToOne
-    @JoinColumn(name = "tag_id")
-    private TagEntity tag;
+    @Column(name = "tag_id")
+    private Long tagId;
 
     @Setter
     @ManyToOne

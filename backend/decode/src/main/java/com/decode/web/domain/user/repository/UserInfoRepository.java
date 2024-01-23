@@ -10,5 +10,8 @@ public interface UserInfoRepository extends JpaRepository<UserInfoEntity, Long> 
 
     Optional<UserInfoEntity> findByEmail(String email);
 
+    Optional<UserInfoEntity> findByNameAndPhoneNumberAndBirth(String name, String phoneNumber,
+            String birth);
+
 
 }

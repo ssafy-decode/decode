@@ -1,5 +1,6 @@
 package com.decode.web.domain.user.service;
 
+import com.decode.web.domain.user.dto.RequestUserTagDto;
 import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.entity.UserProfileEntity;
 import java.util.List;
@@ -30,6 +31,11 @@ public interface UserService {
 
     UserInfoEntity getUserByEmail(String email) throws UsernameNotFoundException;
 
+    // 회원 정보 update, False : 실패, True : 성공
+    void updateUserInfo(Long id, String password);
+
+    void updateUserProfile(Long id, UserProfileEntity profile);
+
     boolean pwConfirm(Long id, String password);
 
     String findEmail(String name, String phoneNumber, String birth);
@@ -37,4 +43,7 @@ public interface UserService {
     String findPassword(String email, String name, String phoneNumber, String birth);
 
 
+    void addUserTag(RequestUserTagDto requestUserTagDto);
+
+    void updateUserTag(RequestUserTagDto requestUserTagDto);
 }

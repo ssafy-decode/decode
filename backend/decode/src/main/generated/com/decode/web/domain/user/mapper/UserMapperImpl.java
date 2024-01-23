@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
         value = "org.mapstruct.ap.MappingProcessor",
-        date = "2024-01-19T11:23:48+0900",
+        date = "2024-01-23T10:08:09+0900",
         comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.9 (Oracle Corporation)"
 )
 @Component
@@ -19,17 +19,18 @@ public class UserMapperImpl implements UserMapper {
             return null;
         }
 
-        UserInfoDto userInfoDto = new UserInfoDto();
+        UserInfoDto.UserInfoDtoBuilder userInfoDto = UserInfoDto.builder();
 
-        userInfoDto.setId(entity.getId());
-        userInfoDto.setEmail(entity.getEmail());
-        userInfoDto.setNickname(entity.getNickname());
-        userInfoDto.setPassword(entity.getPassword());
-        userInfoDto.setPhoneNumber(entity.getPhoneNumber());
-        userInfoDto.setCreatedTime(entity.getCreatedTime());
-        userInfoDto.setUpdatedTime(entity.getUpdatedTime());
+        userInfoDto.id(entity.getId());
+        userInfoDto.email(entity.getEmail());
+        userInfoDto.password(entity.getPassword());
+        userInfoDto.phoneNumber(entity.getPhoneNumber());
+        userInfoDto.birth(entity.getBirth());
+        userInfoDto.name(entity.getName());
+        userInfoDto.createdTime(entity.getCreatedTime());
+        userInfoDto.updatedTime(entity.getUpdatedTime());
 
-        return userInfoDto;
+        return userInfoDto.build();
     }
 
     @Override
@@ -42,9 +43,10 @@ public class UserMapperImpl implements UserMapper {
 
         userInfoEntity.id(dto.getId());
         userInfoEntity.email(dto.getEmail());
-        userInfoEntity.nickname(dto.getNickname());
         userInfoEntity.password(dto.getPassword());
         userInfoEntity.phoneNumber(dto.getPhoneNumber());
+        userInfoEntity.birth(dto.getBirth());
+        userInfoEntity.name(dto.getName());
 
         return userInfoEntity.build();
     }
