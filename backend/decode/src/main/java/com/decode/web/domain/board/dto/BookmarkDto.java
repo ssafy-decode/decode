@@ -6,14 +6,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @ToString
-public class CreateCommentDto {
+public class BookmarkDto {
 
-    private String content;
     private Long userId;
-    private Long answerId;
+    private Long questionId;
 }

@@ -7,22 +7,16 @@ import com.decode.web.domain.user.repository.UserInfoRepository;
 import com.decode.web.entity.MetooEntity;
 import com.decode.web.entity.QuestionEntity;
 import com.decode.web.entity.UserInfoEntity;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class MetooServiceImpl implements MetooService {
 
     private final MetooRepository metooRepository;
     private final UserInfoRepository userInfoRepository;
     private final QuestionRepository questionRepository;
-
-    public MetooServiceImpl(MetooRepository metooRepository, UserInfoRepository userInfoRepository,
-            QuestionRepository questionRepository) {
-        this.metooRepository = metooRepository;
-        this.userInfoRepository = userInfoRepository;
-        this.questionRepository = questionRepository;
-
-    }
 
 
     @Override

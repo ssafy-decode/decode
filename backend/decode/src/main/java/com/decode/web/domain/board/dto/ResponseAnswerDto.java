@@ -1,7 +1,8 @@
 package com.decode.web.domain.board.dto;
 
-import com.decode.web.entity.UserProfileEntity;
+import com.decode.web.domain.user.dto.UserProfileDto;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,17 +14,14 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class QuestionDto {
+public class ResponseAnswerDto {
 
-    private String title;
-    private UserProfileEntity questionWriter;
+    private Long answerId;
+    private UserProfileDto answerWriter;
     private String content;
-
-    private LocalDateTime createTime;
+    private boolean isAdopted;
+    //    private Long recommendCnt;
+    private List<ResponseCommentDto> commentList;
+    private LocalDateTime createdTime;
     private LocalDateTime updatedTime;
-
-    public QuestionDto(CreateQuestionDto question) {
-        this.title = question.getTitle();
-        this.content = question.getContent();
-    }
 }

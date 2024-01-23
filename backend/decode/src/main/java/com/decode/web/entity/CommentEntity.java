@@ -14,7 +14,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.mapstruct.control.MappingControl.Use;
 
 @Getter
 @Entity
@@ -35,14 +34,14 @@ public class CommentEntity extends CommonEntity {
     @ManyToOne
     @JoinColumn(name = "comment_writer_id")
     @Setter
-    private UserInfoEntity commentWriter;
+    private UserProfileEntity commentWriter;
 
     @Column(name = "comment_content")
     @Setter
     private String content;
 
     @Builder
-    public CommentEntity(Long id, String content, UserInfoEntity commentWriter,
+    public CommentEntity(Long id, String content, UserProfileEntity commentWriter,
             AnswerEntity answer) {
         this.id = id;
         this.content = content;

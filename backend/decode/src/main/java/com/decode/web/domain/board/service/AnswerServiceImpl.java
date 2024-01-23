@@ -2,44 +2,43 @@ package com.decode.web.domain.board.service;
 
 import com.decode.web.domain.board.dto.CreateAnswerDto;
 import com.decode.web.domain.board.dto.RecommendDto;
+import com.decode.web.domain.board.dto.ResponseAnswerDto;
+import com.decode.web.domain.board.dto.ResponseCommentDto;
 import com.decode.web.domain.board.dto.UpdateAnswerDto;
 import com.decode.web.domain.board.mapper.AnswerMapper;
 import com.decode.web.domain.board.repository.AnswerRepository;
 import com.decode.web.domain.board.repository.QuestionRepository;
 import com.decode.web.domain.board.repository.RecommendRepository;
+import com.decode.web.domain.user.dto.UserProfileDto;
+import com.decode.web.domain.user.mapper.UserProfileMapper;
 import com.decode.web.domain.user.repository.UserInfoRepository;
+import com.decode.web.domain.user.repository.UserProfileRepository;
 import com.decode.web.entity.AnswerEntity;
-import com.decode.web.entity.CommentEntity;
 import com.decode.web.entity.QuestionEntity;
 import com.decode.web.entity.RecommendEntity;
 import com.decode.web.entity.UserInfoEntity;
+import com.decode.web.entity.UserProfileEntity;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class AnswerServiceImpl implements AnswerService {
 
-    private final UserInfoRepository userInfoRepository;
+    private final UserProfileRepository userProfileRepository;
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
     private final AnswerMapper answerMapper;
+    private final CommentService commentService;
+    private final UserProfileMapper userProfileMapper;
+    private final UserInfoRepository userInfoRepository;
 
     private final RecommendRepository recommendRepository;
-
-    @Autowired
-    public AnswerServiceImpl(UserInfoRepository userInfoRepository,
-            QuestionRepository questionRepository, AnswerRepository answerRepository,
-            AnswerMapper answerMapper, RecommendRepository recommendRepository) {
-        this.questionRepository = questionRepository;
-        this.userInfoRepository = userInfoRepository;
-        this.answerRepository = answerRepository;
-        this.answerMapper = answerMapper;
-        this.recommendRepository = recommendRepository;
-    }
 
 
     @Override
@@ -53,10 +52,11 @@ public class AnswerServiceImpl implements AnswerService {
 
         // dto -> entity
         AnswerEntity answer = answerMapper.toEntity(createAnswerDto);
-        UserInfoEntity userInfo = userInfoRepository.getReferenceById(createAnswerDto.getUserId());
+        UserProfileEntity userProfile = userProfileRepository.getReferenceById(
+                createAnswerDto.getUserId());
         QuestionEntity question = questionRepository.getReferenceById(
                 createAnswerDto.getQuestionId());
-        answer.setAnswerWriter(userInfo);
+        answer.setAnswerWriter(userProfile);
         answer.setQuestion(question);
 
         // save 후 id value 반환
@@ -85,20 +85,48 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
-    public Long recommend(Long answerId, RecommendDto recommendDto) {
+    public List<ResponseAnswerDto> getResponseAnswerDtoList(QuestionEntity questionEntity) {
+        List<AnswerEntity> answerList = answerRepository.findAllByQuestion(questionEntity);
+
+        return answerList.stream()
+                .map(this::convertToResponseAnswerDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public ResponseAnswerDto convertToResponseAnswerDto(AnswerEntity answerEntity) {
+
+        ResponseAnswerDto responseAnswerDto = new ResponseAnswerDto();
+        responseAnswerDto.setAnswerId(answerEntity.getId());
+        responseAnswerDto.setContent(answerEntity.getContent());
+        responseAnswerDto.setAdopted(answerEntity.isAdopted());
+        responseAnswerDto.setCreatedTime(answerEntity.getCreatedTime());
+        responseAnswerDto.setUpdatedTime(answerEntity.getUpdatedTime());
+        // CommentEntity를 가져와서 ResponseCommentDto로 변환
+        List<ResponseCommentDto> responseCommentList = commentService.getResponseAnswerDtoList(
+                answerEntity);
+        responseAnswerDto.setCommentList(responseCommentList);
+
+        UserProfileEntity answerWriterEntity = answerEntity.getAnswerWriter();
+        UserProfileDto UserProfileEntity = userProfileMapper.toDto(answerWriterEntity);
+        responseAnswerDto.setAnswerWriter(UserProfileEntity);
+
+        return responseAnswerDto;
+    }
+
+    public Long recommend (Long answerId, RecommendDto recommendDto){
         // redis cache hit 조사
         // ...
         // 후 expire 5분 설정 후 끝나면 DB 저장
         // 우선 단순 API 구현
 
-
         //dto -> entity
         AnswerEntity answer = answerRepository.getReferenceById(answerId);
         UserInfoEntity userInfo = userInfoRepository.getReferenceById(recommendDto.getUserId());
 
-
-        RecommendEntity recommend = RecommendEntity.builder().answer(answer).userInfo(userInfo).recommend(
-                recommendDto.isRecommend()).build();
+        RecommendEntity recommend = RecommendEntity.builder().answer(answer).userInfo(userInfo)
+                .recommend(
+                        recommendDto.isRecommend()).build();
         recommendRepository.save(recommend);
         return null;
     }

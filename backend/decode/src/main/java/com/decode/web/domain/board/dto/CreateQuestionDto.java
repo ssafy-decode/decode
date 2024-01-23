@@ -1,19 +1,22 @@
 package com.decode.web.domain.board.dto;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @ToString
-public class CreateCommentDto {
+public class CreateQuestionDto {
 
+    private String title;
     private String content;
-    private Long userId;
-    private Long answerId;
+    private Long questionWriterId;
+    private List<QuestionTagDto> tags;
 }

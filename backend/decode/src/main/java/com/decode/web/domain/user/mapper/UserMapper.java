@@ -10,5 +10,4 @@ public interface UserMapper {
     public UserInfoDto toDto(UserInfoEntity entity);
 
     public UserInfoEntity toEntity(UserInfoDto dto);
-
 }

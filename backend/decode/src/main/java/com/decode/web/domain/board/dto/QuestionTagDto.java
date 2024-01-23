@@ -11,9 +11,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class CreateCommentDto {
-
-    private String content;
-    private Long userId;
-    private Long answerId;
+public class QuestionTagDto {
+    private Long tagId;
+    private String tagName;
+    private String version;
 }

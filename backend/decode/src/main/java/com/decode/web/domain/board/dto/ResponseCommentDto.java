@@ -1,9 +1,7 @@
 package com.decode.web.domain.board.dto;
 
-import com.decode.web.domain.tag.dto.TagDto;
 import com.decode.web.domain.user.dto.UserProfileDto;
 import java.time.LocalDateTime;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,14 +13,11 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class QuestionListDto {
+public class ResponseCommentDto {
 
-    private Long id;
-    private String title;
-    private UserProfileDto writer;
-    private List<QuestionTagDto> tagList;
+    private Long commentId;
+    private String content;
+    private UserProfileDto commentWriter;
     private LocalDateTime createdTime;
-    private int answerCnt;
-    private int meTooCnt;
-
+    private LocalDateTime updatedTime;
 }
