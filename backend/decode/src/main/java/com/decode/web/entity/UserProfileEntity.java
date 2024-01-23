@@ -61,4 +61,12 @@ public class UserProfileEntity {
         this.coin = coin;
     }
 
+    public void updateProfile(UserProfileEntity profile) {
+        this.nickname = profile.getNickname();
+        this.exp = profile.getExp();
+        this.tier = profile.getTier();
+        this.profileImg = profile.getProfileImg();
+        this.point = profile.getPoint();
+        this.coin = profile.getCoin();
+    }
 }
