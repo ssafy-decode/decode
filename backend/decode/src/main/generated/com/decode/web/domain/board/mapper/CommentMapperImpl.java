@@ -8,16 +8,16 @@ import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
-    value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-01-22T13:44:54+0900",
-    comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.9 (Oracle Corporation)"
+        value = "org.mapstruct.ap.MappingProcessor",
+        date = "2024-01-22T13:44:54+0900",
+        comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.9 (Oracle Corporation)"
 )
 @Component
 public class CommentMapperImpl implements CommentMapper {
 
     @Override
     public CommentDto toDto(CommonEntity entity) {
-        if ( entity == null ) {
+        if (entity == null) {
             return null;
         }
 
@@ -28,7 +28,7 @@ public class CommentMapperImpl implements CommentMapper {
 
     @Override
     public CommentEntity toEntity(CommentDto dto) {
-        if ( dto == null ) {
+        if (dto == null) {
             return null;
         }
 
@@ -39,13 +39,13 @@ public class CommentMapperImpl implements CommentMapper {
 
     @Override
     public CommentEntity toEntity(CreateCommentDto dto) {
-        if ( dto == null ) {
+        if (dto == null) {
             return null;
         }
 
         CommentEntity.CommentEntityBuilder commentEntity = CommentEntity.builder();
 
-        commentEntity.content( dto.getContent() );
+        commentEntity.content(dto.getContent());
 
         return commentEntity.build();
     }

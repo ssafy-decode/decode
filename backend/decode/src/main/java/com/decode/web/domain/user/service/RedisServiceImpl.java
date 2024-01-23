@@ -1,16 +1,16 @@
 package com.decode.web.domain.user.service;
 
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.concurrent.TimeUnit;
-
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class RedisServiceImpl implements RedisService {
+
     private final RedisTemplate<String, String> redisTemplate;
 
     @Transactional

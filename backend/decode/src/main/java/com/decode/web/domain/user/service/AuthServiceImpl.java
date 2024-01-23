@@ -11,8 +11,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -26,7 +24,8 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public AuthDto.TokenDto login(AuthDto.LoginDto loginDto) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                loginDto.getEmail(), loginDto.getPassword());
         Authentication authentication = authenticationManagerBuilder.getObject()
                 .authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);

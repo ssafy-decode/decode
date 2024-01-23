@@ -4,10 +4,18 @@ import com.decode.web.domain.user.service.RedisService;
 import com.decode.web.domain.user.service.UserDetailsImpl;
 import com.decode.web.domain.user.service.UserDetailsServiceImpl;
 import com.decode.web.domain.user.service.UserService;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.annotation.PostConstruct;
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
+import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,14 +23,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.charset.StandardCharsets;
-import java.security.Key;
-import java.util.Date;
-
 @Slf4j
 @Component
 @Transactional(readOnly = true)
 public class JwtTokenProvider {
+
     private final String PROVIDER = "Server";
     private static Key signingKey;
 
@@ -34,10 +39,10 @@ public class JwtTokenProvider {
 
 
     public JwtTokenProvider(RedisService redisService,
-                            UserService userService, UserDetailsServiceImpl userDetailsService,
-                            @Value("${jwt.secret}") String secretKey,
-                            @Value("${jwt.access-token-expire-length}") Long accessTokenValidityInMilliseconds,
-                            @Value("${jwt.refresh-token-expire-length}") Long refreshTokenValidityInMilliseconds) {
+            UserService userService, UserDetailsServiceImpl userDetailsService,
+            @Value("${jwt.secret}") String secretKey,
+            @Value("${jwt.access-token-expire-length}") Long accessTokenValidityInMilliseconds,
+            @Value("${jwt.refresh-token-expire-length}") Long refreshTokenValidityInMilliseconds) {
         this.redisService = redisService;
         this.userDetailsService = userDetailsService;
 
@@ -56,7 +61,8 @@ public class JwtTokenProvider {
 
     }
 
-    public String createToken(String email, String subject, Long validityInMilliseconds, String provider) {
+    public String createToken(String email, String subject, Long validityInMilliseconds,
+            String provider) {
         Long now = System.currentTimeMillis();
         Long userId = userDetailsService.loadUserByUsername(email).getId();
 
@@ -73,7 +79,7 @@ public class JwtTokenProvider {
     }
 
     public String createAccessToken(String email, String provider) {
-        return createToken(email, "access", accessTokenValidityInMilliseconds,provider);
+        return createToken(email, "access", accessTokenValidityInMilliseconds, provider);
     }
 
     public String createRefreshToken(String email, String provider) {
@@ -93,9 +99,11 @@ public class JwtTokenProvider {
         UserDetailsImpl userDetailsImpl = userDetailsService.loadUserByUsername(email);
         return new UsernamePasswordAuthenticationToken(userDetailsImpl, "");
     }
+
     public Long getAuthUserId(String token) {
-        if(token.startsWith("Bearer "))
+        if (token.startsWith("Bearer ")) {
             token = token.substring(7);
+        }
         return getClaims(token).get("userId", Long.class);
     }
 
@@ -110,7 +118,7 @@ public class JwtTokenProvider {
                     .build()
                     .parseClaimsJws(token);
             return true;
-        } catch(ExpiredJwtException e) {
+        } catch (ExpiredJwtException e) {
             log.error("access token expired");
         } catch (SignatureException e) {
             log.error("Invalid JWT signature.");
