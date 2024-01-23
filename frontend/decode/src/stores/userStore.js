@@ -3,6 +3,7 @@ import { defineStore } from 'pinia';
 import router from '@/router';
 import axios from 'axios';
 
+// 백엔드 서버 URL로 작성
 const URL = 'http://localhost:80/decode';
 
 export const useUserStore = defineStore('user', () => {
@@ -13,21 +14,18 @@ export const useUserStore = defineStore('user', () => {
   const userCnt = ref(0);
   const searchUserCnt = ref(0);
   const accessToken = ref('');
-  const registrationData = ref(null);
-  const withCredentials = ref(false);
+  const userId = ref('');
+  // const withCredentials = ref(false);
 
   // responseBody에서 토큰 값을 추출
   const parseToken = (response) => {
-    // const token = response.data.token;
-    // // 토큰 값에서 앞의 7자 이후를 파싱
-    // return token.substring(0, 7); // Authorization 헤더에 "Bearer"를 붙여서 요청
     console.log('Response:', response);
+
     if (response.data && response.data.data) {
       return response.data.data.substring(8);
     } else {
-      // Handle the case where token is not present or undefined
       console.error('Token is not present in the response data');
-      return ''; // or handle it according to your requirements
+      return '';
     }
   };
 
@@ -35,17 +33,23 @@ export const useUserStore = defineStore('user', () => {
   const createUser = (user) => {
     axios
       .post(`${URL}/regist`, user, {
-        withCredentials: true,
+        // withCredentials: true,
         headers: {
-          Authorization: `Bearer ${accessToken.value}`,
+          Authorization: `Bearer ${accessToken}`, // 추후 모든 메소드 headers에 이렇게 작성할 예정 => 일단 회원가입에만
         },
       })
       .then((res) => {
         const response = res.data;
-        console.log(res.data); // 작동 안 함 => CORS 문제로..
+
+        console.log('출력되나', res.data);
+        console.log('이게맞나', res.data.data);
+        console.log('아니면이건가', res.data.value);
+
         if (response.status === 'OK') {
-          registrationData.value = response.data;
-          console.log(registrationData.value); // 테스트용 => 안 뜸
+          userId.value = response.data;
+
+          console.log('확인', userId.value);
+
           users.value.push(response.data);
           userCnt.value = users.value.length;
           router.push({ name: 'techstack' });
@@ -62,12 +66,14 @@ export const useUserStore = defineStore('user', () => {
   const saveTechStack = async (selectedTechStack) => {
     try {
       // 1단계 정보가 비어있을 경우 에러 처리
-      if (!registrationData.value || !registrationData.value.email) {
-        console.error('User registration data is missing.'); // 뜨는 것 같다가 regist 강제 통과시켜서 그런가 갑자기 안 뜸
+      if (!userId.value) {
+        console.error('User registration data is missing.');
         return;
       }
-      console.log(registrationData.value); // 안 뜸
-      console.log(registrationData.value.email); // 안 뜸
+
+      // 여기서부터 추후 수정할 예정 (변수명도)
+      console.log('RegistrationData:', registrationData.value);
+      console.log('RegistrationData.email:', registrationData.value.email);
 
       const email = registrationData.value.email;
       const res = await axios.post(
@@ -88,21 +94,19 @@ export const useUserStore = defineStore('user', () => {
         throw new Error('Failed to save tech stack');
       }
     } catch (error) {
-      console.error('Error saving tech stack:', error.message); // 일단 테스트에서는 여기서 network error가 뜸 => CORS 문제..
+      console.error('Error saving tech stack:', error.message);
     }
   };
 
   // 토큰 + 로그인
   const setLoginUser = async (loginuser) => {
-    // loginform에서 login까지는 잘 작동하는데 store 들어와서 CORS 오류로 자꾸 콘솔 출력조차 안 됨..
-    // 그래서 결국 Login failed: Network error로 끝나버림..
     try {
-      const res = await axios.post(`${URL}/login`, loginuser);
-      console.log(res.data);
+      const res = await axios.post(`${URL}/login`, loginuser); // loginuser는 아직 안 쓰이지만, 로그인 상태로 data 불러와야할 때를 대비해서 일단은 집어넣음
       accessToken.value = parseToken(res);
-      console.log(accessToken.value);
-
       isLoggedIn.value = true;
+
+      console.log(res.data);
+      console.log(accessToken.value);
 
       router.push({ name: 'mainview' });
       alert('로그인되었습니다.');
@@ -113,11 +117,12 @@ export const useUserStore = defineStore('user', () => {
     }
   };
 
-  // 로그아웃
+  // 로그아웃 (아직 버튼 구현 안 함)
   const setLogout = () => {
     isLoggedIn.value = false;
     accessToken.value = '';
     router.push({ name: 'mainview' });
+    alert('로그아웃되었습니다.');
   };
 
   // 모든 회원 조회
@@ -211,7 +216,7 @@ export const useUserStore = defineStore('user', () => {
   };
 
   return {
-    withCredentials,
+    // withCredentials,
     accessToken,
     isLoggedIn,
     users,
@@ -219,6 +224,7 @@ export const useUserStore = defineStore('user', () => {
     user,
     userCnt,
     registrationData,
+    userId,
     searchUserCnt, // 애는 회원 이름 검색에서 쓸 일이 있나 추후 확인
     createUser,
     deleteUser,

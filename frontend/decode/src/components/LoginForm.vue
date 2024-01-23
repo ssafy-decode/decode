@@ -43,13 +43,12 @@
 
         <div style="display: flex; justify-content: end; margin-right: 15px">
           <span style="color: #34a080; font-size: x-small">이메일 찾기 | 비밀번호 찾기</span>
+          <!-- 추후 계정/비번 찾기 만들면 그 때 link 연결 -->
         </div>
         <br />
 
-        <!-- 추후 계정/비번 찾기 만들면 그 때 link 연결 -->
         <div style="text-align: center">
           <span>
-            <!-- 로그인 조건 만족/불만족 시 alert 띄우기 -->
             <router-link to="/">
               <v-row>
                 <v-col cols="8">
@@ -92,7 +91,6 @@
               @mouseenter="kakaoMouseEnter"
               @mouseleave="kakaomouseLeave"
               ><v-row>
-                <!-- 추가된 코드: 아이콘 이미지와 버튼 텍스트를 감싸는 v-col -->
                 <v-col cols="2">
                   <img src="./kakao.png" alt="카카오 아이콘" style="width: 24px; height: 24px" />
                 </v-col>
@@ -134,6 +132,7 @@ const email = ref('');
 const password = ref('');
 const showPassword = ref(false);
 
+// 필수 입력란 비어있을 때 빨간 경고
 const writeEmail = (value) => {
   return !!value || '이메일을 입력하세요.';
 };
@@ -142,9 +141,11 @@ const writePassword = (value) => {
   return !!value || '비밀번호를 입력하세요.';
 };
 
+// hover 전 색깔
 const kakaoButtonColor = ref('#d9d9d9');
 const googleButtonColor = ref('#d9d9d9');
 
+// hover 후 색깔
 const kakaoMouseEnter = () => {
   kakaoButtonColor.value = '#fae300';
 };
@@ -153,6 +154,7 @@ const googleMouseEnter = () => {
   googleButtonColor.value = '#ffffff';
 };
 
+// 커서 나가면 원래 색깔로
 const kakaomouseLeave = () => {
   kakaoButtonColor.value = '#d9d9d9';
 };
@@ -161,17 +163,17 @@ const googlemouseLeave = () => {
   googleButtonColor.value = '#d9d9d9';
 };
 
+// 눈 버튼으로 비밀번호 가리고 숨기고
 const toggleEye = () => {
   showPassword.value = !showPassword.value;
 };
 
+// 로그인 버튼 누르면 실행
 const login = async () => {
   const user = {
     email: email.value,
     password: password.value,
   };
-  // await는 async (비동기) 함수 안에서만 쓸수 있음.
-  // await : 프라미스(비동기, 시간이 걸림)를 값으로 바꿔줌 - 기다림.
   try {
     const result = await userStore.setLoginUser(user);
 

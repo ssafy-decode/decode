@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1 style="text-align: center">질문게시판</h1>
     <br />
     <QuestionList />
   </div>

@@ -31,12 +31,21 @@
     <!-- 마이페이지 nav -->
 
     <v-spacer></v-spacer>
-
-    <v-btn id="loginBtn"><router-link to="/login">로그인</router-link></v-btn>
+    <v-btn v-if="userStore.isLoggedIn" @click="logout">로그아웃</v-btn>
+    <v-btn id="loginBtn" v-else><router-link to="/login">로그인</router-link></v-btn>
   </v-toolbar>
 </template>
 
-<script setup></script>
+<script setup>
+// import { ref } from 'vue';
+import { useUserStore } from '@/stores/userStore';
+
+const userStore = useUserStore();
+
+const logout = () => {
+  userStore.setLogout();
+};
+</script>
 
 <style scoped>
 a {
