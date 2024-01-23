@@ -34,7 +34,7 @@ public class RecommendEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private UserInfoEntity userInfo;
+    private UserProfileEntity userProfile;
 
     @Column(name = "recommend")
     private boolean recommend;

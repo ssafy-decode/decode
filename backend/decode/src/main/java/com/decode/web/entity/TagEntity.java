@@ -6,14 +6,17 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
+@Builder
 @Table(name = "Tag")
 @NoArgsConstructor
+@AllArgsConstructor
 public class TagEntity {
 
     @Id
@@ -23,10 +26,4 @@ public class TagEntity {
 
     @Column(name = "tag_name", unique = true)
     private String tagName;
-
-    @Builder
-    public TagEntity(Long id, String tagName) {
-        this.id = id;
-        this.tagName = tagName;
-    }
 }

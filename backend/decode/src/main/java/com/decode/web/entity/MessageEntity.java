@@ -22,5 +22,5 @@ public class MessageEntity extends CommonEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private UserInfoEntity userInfo;
+    private UserProfileEntity userProfile;
 }
