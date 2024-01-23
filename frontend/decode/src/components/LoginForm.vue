@@ -9,7 +9,7 @@
         </div>
         <br />
 
-        <v-text-field v-model="email" :rules="[required]" label="이메일을 입력하세요." prepend-inner>
+        <v-text-field v-model="email" :rules="[writeEmail]" label="이메일을 입력하세요." prepend-inner>
           <template #prepend-inner>
             <img
               src="./person.png"
@@ -22,7 +22,7 @@
         <div class="main">
           <v-text-field
             v-model="password"
-            :rules="[required]"
+            :rules="[writePassword]"
             :type="showPassword ? 'text' : 'password'"
             label="비밀번호를 입력하세요."
             prepend-inner
@@ -43,19 +43,17 @@
 
         <div style="display: flex; justify-content: end; margin-right: 15px">
           <span style="color: #34a080; font-size: x-small">이메일 찾기 | 비밀번호 찾기</span>
+          <!-- 추후 계정/비번 찾기 만들면 그 때 link 연결 -->
         </div>
         <br />
 
-        <!-- 추후 계정/비번 찾기 만들면 그 때 link 연결 -->
         <div style="text-align: center">
           <span>
-            <!-- 로그인 조건 만족/불만족 시 alert 띄우기 -->
             <router-link to="/">
               <v-row>
                 <v-col cols="8">
                   <v-btn
                     @click="login"
-                    :loading="loading"
                     color="success"
                     size="large"
                     type="submit"
@@ -68,7 +66,6 @@
                 <v-col cols="4">
                   <router-link to="/regist">
                     <v-btn
-                      :loading="loading"
                       color="success"
                       size="large"
                       type="submit"
@@ -94,7 +91,6 @@
               @mouseenter="kakaoMouseEnter"
               @mouseleave="kakaomouseLeave"
               ><v-row>
-                <!-- 추가된 코드: 아이콘 이미지와 버튼 텍스트를 감싸는 v-col -->
                 <v-col cols="2">
                   <img src="./kakao.png" alt="카카오 아이콘" style="width: 24px; height: 24px" />
                 </v-col>
@@ -126,17 +122,30 @@
 
 <script setup>
 import { ref } from 'vue';
-// import { useUserStore } from '@/stores/userStore';
+import { useUserStore } from '@/stores/userStore';
 
-// const userStore = useUserStore();
+const userStore = useUserStore();
+
+const form = ref(null);
 
 const email = ref('');
 const password = ref('');
 const showPassword = ref(false);
 
+// 필수 입력란 비어있을 때 빨간 경고
+const writeEmail = (value) => {
+  return !!value || '이메일을 입력하세요.';
+};
+
+const writePassword = (value) => {
+  return !!value || '비밀번호를 입력하세요.';
+};
+
+// hover 전 색깔
 const kakaoButtonColor = ref('#d9d9d9');
 const googleButtonColor = ref('#d9d9d9');
 
+// hover 후 색깔
 const kakaoMouseEnter = () => {
   kakaoButtonColor.value = '#fae300';
 };
@@ -145,6 +154,7 @@ const googleMouseEnter = () => {
   googleButtonColor.value = '#ffffff';
 };
 
+// 커서 나가면 원래 색깔로
 const kakaomouseLeave = () => {
   kakaoButtonColor.value = '#d9d9d9';
 };
@@ -153,29 +163,29 @@ const googlemouseLeave = () => {
   googleButtonColor.value = '#d9d9d9';
 };
 
+// 눈 버튼으로 비밀번호 가리고 숨기고
 const toggleEye = () => {
   showPassword.value = !showPassword.value;
 };
 
-const login = () => {
+// 로그인 버튼 누르면 실행
+const login = async () => {
   const user = {
-    userId: email.value,
-    userPwd: password.value,
+    email: email.value,
+    password: password.value,
   };
 
-  // try {
-  //   const result = await userStore.setLoginUser(user);
+  try {
+    const result = await userStore.setLoginUser(user);
 
-  //   if (result.success) {
-  //     console.log('Login result:', result.data);
-  //   } else {
-  //     console.log('Login failed:', result.error);
-  //   }
-  // } catch (error) {
-  //   console.error('Login error:', error);
-  // }
-
-  alert('로그인되었습니다.');
+    if (result.success) {
+      console.log('Login result:', result.data);
+    } else {
+      console.log('Login failed:', result.error);
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+  }
 };
 </script>
 

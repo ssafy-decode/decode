@@ -26,7 +26,7 @@ const router = createRouter({
     },
     {
       path: '/question',
-      name: 'questionboardview',
+      name: 'questionview',
       component: QuestionBoardView,
     },
     {
