@@ -44,7 +44,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Slf4j
 @Tag(name = "UserController", description = "사용자 정보 관련 API")
-@CrossOrigin("*")
+@CrossOrigin
 public class UserController {
 
     private final UserService userService;
