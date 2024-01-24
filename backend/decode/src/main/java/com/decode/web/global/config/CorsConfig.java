@@ -13,6 +13,7 @@ public class CorsConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:8080")
+                .allowedOrigins("https://i10a507.p.ssafy.io")
                 .allowedMethods("*")
                 .allowCredentials(true)
                 .maxAge(3000);
