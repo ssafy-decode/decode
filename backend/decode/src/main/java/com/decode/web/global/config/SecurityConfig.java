@@ -49,7 +49,6 @@ public class SecurityConfig {
                 .httpBasic(httpBasic ->
                         httpBasic.disable()
                 )
-                .cors(withDefaults())
                 .csrf(csrf ->
                         csrf.disable()
                 )
