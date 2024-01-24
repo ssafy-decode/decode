@@ -1,5 +1,6 @@
 package com.decode.web.global.config;
 
+import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -20,7 +21,8 @@ public class CorsConfig {
         config.setAllowCredentials(true);
 
         // 개발 중에는 모든 오리진 허용
-        config.addAllowedOrigin("*");
+        config.setAllowedOriginPatterns(List.of("*"));
+//        config.addAllowedOrigin("*");
 
         config.addAllowedHeader("*");
         config.addAllowedMethod("*"); // 모든 메서드 허용
