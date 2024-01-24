@@ -71,11 +71,11 @@ public class UserController {
     @GetMapping("/user/{id}")
     @Operation(summary = "사용자 정보 조회", description = "사용자 1명의 정보를 조회합니다.")
     public ResponseDto getUserById(@PathVariable Long id, HttpServletRequest req) {
-        log.debug("I'm here");
-        log.debug("req header names : {}", req.getHeaderNames());
-        log.debug("req servlet path : {}", req.getServletPath());
-        log.debug("req URI: {}", req.getRequestURI());
-        log.debug("req URL: {}", req.getRequestURL());
+        log.info("I'm here");
+        log.info("req header names : {}", req.getHeaderNames());
+        log.info("req servlet path : {}", req.getServletPath());
+        log.info("req URI: {}", req.getRequestURI());
+        log.info("req URL: {}", req.getRequestURL());
         return new ResponseDto().builder()
                 .data(userMapper.toDto(userService.getUserById(id)))
                 .status(HttpStatus.OK)
