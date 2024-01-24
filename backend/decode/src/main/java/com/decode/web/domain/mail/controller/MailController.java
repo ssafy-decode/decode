@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class MailController {
+
     private final MailService mailService;
 
     @PostMapping("/mail")

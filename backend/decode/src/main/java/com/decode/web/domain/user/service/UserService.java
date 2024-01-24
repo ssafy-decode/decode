@@ -1,5 +1,6 @@
 package com.decode.web.domain.user.service;
 
+import com.decode.web.domain.user.dto.FindPasswordDto;
 import com.decode.web.domain.user.dto.RequestUserTagDto;
 import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.entity.UserProfileEntity;
@@ -40,7 +41,7 @@ public interface UserService {
 
     String findEmail(String name, String phoneNumber, String birth);
 
-    String findPassword(String email, String name, String phoneNumber, String birth);
+    boolean findUserByEmailAndNameAndPhoneNumberAndBirth(FindPasswordDto findPasswordDto);
 
 
     void addUserTag(RequestUserTagDto requestUserTagDto);
