@@ -17,12 +17,14 @@ import com.decode.web.global.ResponseDto;
 import com.decode.web.global.utils.authentication.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -70,7 +72,12 @@ public class UserController {
 
     @GetMapping("/user/{id}")
     @Operation(summary = "사용자 정보 조회", description = "사용자 1명의 정보를 조회합니다.")
-    public ResponseDto getUserById(@PathVariable Long id) {
+    public ResponseDto getUserById(@PathVariable Long id, HttpServletRequest req) {
+        log.info("I'm here");
+        log.info("req header names : {}", req.getHeaderNames());
+        log.info("req servlet path : {}", req.getServletPath());
+        log.info("req URI: {}", req.getRequestURI());
+        log.info("req URL: {}", req.getRequestURL());
         return new ResponseDto().builder()
                 .data(userMapper.toDto(userService.getUserById(id)))
                 .status(HttpStatus.OK)
