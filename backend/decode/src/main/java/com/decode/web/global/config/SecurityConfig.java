@@ -19,7 +19,7 @@ import org.springframework.web.cors.CorsUtils;
 @EnableWebSecurity
 @RequiredArgsConstructor
    
-public class SecurityConfig extends WebSecurityConfiguration {
+public class SecurityConfig {
 
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
