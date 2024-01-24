@@ -70,7 +70,7 @@ public class UserController {
     @Operation(summary = "사용자 정보 조회", description = "사용자 1명의 정보를 조회합니다.")
     public ResponseDto getUserById(@PathVariable Long id) {
         return new ResponseDto().builder()
-                .data(userService.getUserById(id))
+                .data(userMapper.toDto(userService.getUserById(id)))
                 .status(HttpStatus.OK)
                 .message("select user info").build();
     }
@@ -98,7 +98,7 @@ public class UserController {
     @Operation(summary = "사용자 프로필 조회", description = "사용자 프로필 정보를 조회합니다.")
     public ResponseDto getUserProfileById(@PathVariable Long id) {
         return new ResponseDto().builder()
-                .data(userService.getUserProfileById(id))
+                .data(userProfileMapper.toDto(userService.getUserProfileById(id)))
                 .status(HttpStatus.OK)
                 .message("select user profile info").build();
     }

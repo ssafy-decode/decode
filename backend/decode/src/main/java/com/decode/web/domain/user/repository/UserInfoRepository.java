@@ -14,4 +14,6 @@ public interface UserInfoRepository extends JpaRepository<UserInfoEntity, Long> 
             String birth);
 
 
+
+
 }

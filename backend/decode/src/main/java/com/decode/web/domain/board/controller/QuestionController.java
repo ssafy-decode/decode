@@ -4,6 +4,7 @@ import com.decode.web.domain.board.dto.CreateQuestionDto;
 import com.decode.web.domain.board.dto.QuestionListDto;
 import com.decode.web.domain.board.dto.ResponseQuestionDto;
 import com.decode.web.domain.board.dto.UpdateQuestionDto;
+import com.decode.web.domain.board.repository.QuestionRepository;
 import com.decode.web.domain.board.service.QuestionService;
 import com.decode.web.global.ResponseDto;
 import com.decode.web.global.utils.authentication.JwtTokenProvider;
@@ -31,6 +32,7 @@ public class QuestionController {
 
     private final QuestionService questionService;
     private final JwtTokenProvider jwtTokenProvider;
+    private final QuestionRepository questionRepository;
 
     @GetMapping
     @Operation(summary = "질문 검색(질문 목록 조회)", description = "keyword를 통한 질문 리스트 호출")
@@ -83,7 +85,9 @@ public class QuestionController {
     public ResponseDto deleteQuestion(@RequestHeader("Authorization") String jwtToken,
             @PathVariable Long questionId) {
         Long userId = jwtTokenProvider.getAuthUserId(jwtToken);
-        if (!userId.equals(questionId)) {
+        Long writerId = questionRepository.getReferenceById(questionId).getQuestionWriter().getId();
+        log.info("userID : {}, writerID : {}", userId, writerId);
+        if (!userId.equals(writerId)) {
             return ResponseDto.builder().status(HttpStatus.BAD_REQUEST).message("사용자 불일치").build();
         }
         questionService.deleteQuestion(questionId);
