@@ -1,10 +1,12 @@
 package com.decode.web.domain.user.service;
 
+import com.decode.web.domain.tag.repository.UserTagRepository;
 import com.decode.web.domain.user.dto.RequestUserTagDto;
 import com.decode.web.domain.user.repository.UserInfoRepository;
 import com.decode.web.domain.user.repository.UserProfileRepository;
 import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.entity.UserProfileEntity;
+import com.decode.web.entity.UserTagEntity;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +22,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserInfoRepository userInfoRepository;
     private final UserProfileRepository userProfileRepository;
+    private final UserTagRepository userTagRepository;
 
     @Override
     public UserInfoEntity getUserById(Long id) {
@@ -138,11 +141,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addUserTag(RequestUserTagDto requestUserTagDto) {
+        Long userId = requestUserTagDto.getUserId();
+        List<Long> tagIds = requestUserTagDto.getTagIdList();
+        for (Long tagId : tagIds) {
+            userTagRepository.save(UserTagEntity.builder()
+                    .userProfile(userProfileRepository.getReferenceById(userId)).tagId(tagId)
+                    .build());
+        }
+
 
     }
 
     @Override
     public void updateUserTag(RequestUserTagDto requestUserTagDto) {
+        Long userId = requestUserTagDto.getUserId();
+        List<Long> tagIds = requestUserTagDto.getTagIdList();
+        List<UserTagEntity> userTagEntities = userTagRepository.findAllByUserProfile(userProfileRepository.getReferenceById(userId));
+        userTagRepository.deleteAll(userTagEntities);
+        for (Long tagId : tagIds) {
+            userTagRepository.save(UserTagEntity.builder()
+                    .userProfile(userProfileRepository.getReferenceById(userId)).tagId(tagId)
+                    .build());
+        }
 
     }
 
