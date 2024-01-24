@@ -16,24 +16,16 @@ public class CorsConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
 
-        // 특정 경로에 대한 CORS 설정
+        // 자격 증명 허용
         config.setAllowCredentials(true);
 
-        // 실제 허용할 도메인
-        config.addAllowedOrigin("http://i10a507.p.ssafy.io");
-        config.addAllowedOrigin("https://i10a507.p.ssafy.io");
-        config.addAllowedOrigin("http://i10a507.p.ssafy.io:7777");
-        config.addAllowedOrigin("https://i10a507.p.ssafy.io:7777");
+        // 개발 중에는 모든 오리진 허용
+        config.addAllowedOrigin("*");
 
         config.addAllowedHeader("*");
-        config.addAllowedMethod("GET");
-        config.addAllowedMethod("POST");
-        config.addAllowedMethod("PUT");
-        config.addAllowedMethod("DELETE");
-        config.addAllowedMethod("OPTIONS"); // OPTIONS 메서드는 CORS 사전 검사 요청을 위해 필요할 수 있음
-        // 필요한 경우 다른 CORS 설정도 추가 가능
+        config.addAllowedMethod("*"); // 모든 메서드 허용
 
-        source.registerCorsConfiguration("/decode", config); // 특정 경로에만 설정 적용
+        source.registerCorsConfiguration("/**", config); // 모든 경로에서 CORS 허용
 
         return new CorsFilter(source);
     }
