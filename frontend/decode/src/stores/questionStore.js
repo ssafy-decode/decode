@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useRouter } from 'vue-router';
 
 export const useQuestionStore = defineStore('question', () => {
-  const API_URL = 'http://localhost:80/decode';
+  const API_URL = process.env.VUE_APP_BACKEND_URL;
   const router = useRouter();
   const accessToken = ref(null);
   const questions = ref([]);
