@@ -129,7 +129,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String findEmail(String name, String phoneNumber, String birth) {
-        UserInfoEntity user = userInfoRepository.findByNameAndPhoneNumberAndBirth(name, phoneNumber, birth)
+        UserInfoEntity user = userInfoRepository.findByNameAndPhoneNumberAndBirth(name, phoneNumber,
+                        birth)
                 .orElseThrow(() -> new UsernameNotFoundException("아이디 찾기 실패"));
         return user.getEmail();
     }
@@ -156,7 +157,8 @@ public class UserServiceImpl implements UserService {
     public void updateUserTag(RequestUserTagDto requestUserTagDto) {
         Long userId = requestUserTagDto.getUserId();
         List<Long> tagIds = requestUserTagDto.getTagIdList();
-        List<UserTagEntity> userTagEntities = userTagRepository.findAllByUserProfile(userProfileRepository.getReferenceById(userId));
+        List<UserTagEntity> userTagEntities = userTagRepository.findAllByUserProfile(
+                userProfileRepository.getReferenceById(userId));
         userTagRepository.deleteAll(userTagEntities);
         for (Long tagId : tagIds) {
             userTagRepository.save(UserTagEntity.builder()
