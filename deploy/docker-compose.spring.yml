@@ -8,6 +8,7 @@ services:
       - "7777:7777"
     volumes:
       - ./application.yml:/app/config/application.yml
+      - ./decode.p12:/app/config/decode.p12
   dockerhub-login:
     image: alpine
     entrypoint: /bin/sh
