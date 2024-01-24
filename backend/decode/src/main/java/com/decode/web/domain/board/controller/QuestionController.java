@@ -6,6 +6,7 @@ import com.decode.web.domain.board.dto.ResponseQuestionDto;
 import com.decode.web.domain.board.dto.UpdateQuestionDto;
 import com.decode.web.domain.board.repository.QuestionRepository;
 import com.decode.web.domain.board.service.QuestionService;
+import com.decode.web.entity.QuestionEntity;
 import com.decode.web.global.ResponseDto;
 import com.decode.web.global.utils.authentication.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +14,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("question")
 @RequiredArgsConstructor
 @Slf4j
+@CrossOrigin("*")
 public class QuestionController {
 
     private final QuestionService questionService;
@@ -72,7 +75,6 @@ public class QuestionController {
     public ResponseDto updateQuestion(@RequestHeader("Authorization") String jwtToken,
             @RequestBody UpdateQuestionDto updateQuestion) {
         Long userId = jwtTokenProvider.getAuthUserId(jwtToken);
-        log.info(userId + " " + updateQuestion.getUserId());
         if (!userId.equals(updateQuestion.getUserId())) {
             return ResponseDto.builder().status(HttpStatus.BAD_REQUEST).message("사용자 불일치").build();
         }
@@ -85,12 +87,11 @@ public class QuestionController {
     public ResponseDto deleteQuestion(@RequestHeader("Authorization") String jwtToken,
             @PathVariable Long questionId) {
         Long userId = jwtTokenProvider.getAuthUserId(jwtToken);
-        Long writerId = questionRepository.getReferenceById(questionId).getQuestionWriter().getId();
-        log.info("userID : {}, writerID : {}", userId, writerId);
-        if (!userId.equals(writerId)) {
+        QuestionEntity targetQuestion = questionRepository.getReferenceById(questionId);
+        if (!userId.equals(targetQuestion.getQuestionWriter().getId())) {
             return ResponseDto.builder().status(HttpStatus.BAD_REQUEST).message("사용자 불일치").build();
         }
-        questionService.deleteQuestion(questionId);
+        questionService.deleteQuestion(questionId, targetQuestion);
         return ResponseDto.builder().status(HttpStatus.OK).build();
     }
 
