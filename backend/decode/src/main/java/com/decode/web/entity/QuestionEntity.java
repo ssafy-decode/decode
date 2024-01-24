@@ -8,7 +8,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,6 +39,15 @@ public class QuestionEntity extends CommonEntity {
     @Setter
     @Column(name = "question_content")
     private String content;
+
+    @OneToMany(mappedBy = "question")
+    private List<AnswerEntity> answers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "question")
+    private List<QuestionTagEntity> questionTags = new ArrayList<>();
+
+    @OneToMany(mappedBy = "question")
+    private List<MetooEntity> metoos = new ArrayList<>();
 
     @Builder
     public QuestionEntity(Long id, String title, UserProfileEntity questionWriter, String content) {
