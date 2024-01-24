@@ -18,6 +18,7 @@ import com.decode.web.global.utils.authentication.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -74,7 +75,11 @@ public class UserController {
     @Operation(summary = "사용자 정보 조회", description = "사용자 1명의 정보를 조회합니다.")
     public ResponseDto getUserById(@PathVariable Long id, HttpServletRequest req) {
         log.info("I'm here");
-        log.info("req header names : {}", req.getHeaderNames());
+        Enumeration<String> test = req.getHeaderNames();
+        while(test.asIterator().hasNext()){
+            log.info("req header : {}", test.asIterator().next());
+        }
+        log.info("req header names : {}", test.toString());
         log.info("req servlet path : {}", req.getServletPath());
         log.info("req URI: {}", req.getRequestURI());
         log.info("req URL: {}", req.getRequestURL());
