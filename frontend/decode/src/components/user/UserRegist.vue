@@ -1,6 +1,10 @@
 <template>
   <div class="pa-5" rounded>
-    <v-card class="mx-auto px-4 py-8" max-width="500">
+    <v-card
+      class="mx-auto px-4 py-8"
+      max-width="500"
+      style="background-color: #f3f3f3; border-radius: 50px; box-shadow: 0 0px 36px rgba(0, 0, 0, 0.2)"
+    >
       <v-form ref="form" @submit.prevent="regist">
         <span style="margin-left: 20px"
           ><img src="../levelselected.png" />&nbsp;&nbsp;&nbsp;<img src="../levelunselected.png"
@@ -11,41 +15,49 @@
         <br />
         <div class="flex-container">
           <v-text-field
+            bg-color="#d9d9d9"
             :rules="[writeName]"
-            class="mx-5"
+            variant="solo"
+            class="textfield"
             clearable
             density="compact"
             v-model="name"
             label="이름"
             prepend-inner
+            style="margin-right: 5px"
             ><template #prepend-inner>
               <img
                 src="./person.png"
                 alt="이름 아이콘"
-                style="width: auto; height: auto; margin-left: 1px; margin-right: 10px"
+                style="width: auto; height: auto; margin-left: 6px; margin-right: 10px"
               /> </template
           ></v-text-field>
           <v-text-field
+            bg-color="#d9d9d9"
             :rules="[writeNickname]"
-            class="mx-5"
+            variant="solo"
+            class="textfield"
             clearable
             density="compact"
             v-model="nickname"
             label="닉네임"
             prepend-inner
+            style="margin-left: 5px"
             @blur="checkDuplicateNickname"
             ><template #prepend-inner>
               <img
                 src="./pencil.png"
                 alt="닉네임 아이콘"
-                style="width: auto; height: auto; margin-left: 1px; margin-right: 10px"
+                style="width: auto; height: auto; margin-left: 6px; margin-right: 10px"
               /> </template
           ></v-text-field>
         </div>
         <v-text-field
+          bg-color="#d9d9d9"
           :rules="[writeEmail]"
           v-model="email"
-          class="mx-5"
+          variant="solo"
+          class="textfield"
           clearable
           density="compact"
           label="이메일 계정"
@@ -55,14 +67,16 @@
             <img
               src="./email.png"
               alt="메일 아이콘"
-              style="width: auto; height: auto; margin-left: 1px; margin-right: 10px"
+              style="width: auto; height: auto; margin-left: 5px; margin-right: 10px"
             /> </template
         ></v-text-field>
         <!-- 비번 보이고 안 보이게 하기 -->
         <v-text-field
+          bg-color="#d9d9d9"
           :rules="[writePassword]"
           v-model="password"
-          class="mx-5"
+          variant="solo"
+          class="textfield"
           clearable
           density="compact"
           label="비밀번호"
@@ -82,9 +96,11 @@
           </template></v-text-field
         >
         <v-text-field
+          bg-color="#d9d9d9"
           :rules="[writePassword2]"
           v-model="password2"
-          class="mx-5"
+          variant="solo"
+          class="textfield"
           clearable
           density="compact"
           label="비밀번호 확인"
@@ -103,8 +119,10 @@
           </template></v-text-field
         >
         <v-text-field
+          bg-color="#d9d9d9"
           :rules="[writeBirthday]"
-          class="mx-5"
+          variant="solo"
+          class="textfield"
           clearable
           density="compact"
           label="생년월일 6자리 ex) 990101"
@@ -114,12 +132,14 @@
             <img
               src="./calendar.png"
               alt="달력 아이콘"
-              style="width: auto; height: auto; margin-left: 1px; margin-right: 10px"
+              style="width: auto; height: auto; margin-left: 4px; margin-right: 10px"
             /> </template
         ></v-text-field>
         <v-text-field
+          bg-color="#d9d9d9"
           :rules="[writePhone]"
-          class="mx-5"
+          variant="solo"
+          class="textfield"
           clearable
           density="compact"
           label="휴대폰 뒷 네 자리 ex) 1234"
@@ -129,12 +149,19 @@
             <img
               src="./phone.png"
               alt="전화 아이콘"
-              style="width: auto; height: auto; margin-left: 1px; margin-right: 10px"
+              style="width: auto; height: auto; margin-left: 4px; margin-right: 10px"
             /> </template
         ></v-text-field>
-        <span style="display: flex; justify-content: end; margin-right: 30px">
+        <span style="display: flex; justify-content: end; margin-right: 20px">
           <router-link to="/techstack"
-            ><v-btn @click.prevent="regist" color="success" size="large" type="submit" variant="elevated">
+            ><v-btn
+              @click.prevent="regist"
+              color="#62C0A6"
+              size="large"
+              type="submit"
+              variant="elevated"
+              style="font-weight: bolder; border-radius: 30px; color: #000000"
+            >
               확인
             </v-btn></router-link
           >
@@ -301,10 +328,12 @@ const regist = () => {
 
     if (!isBirthdayValid(birthday.value)) {
       alert('생년월일을 6자리로 입력해주세요.');
+      return;
     }
 
     if (!isPhoneValid(phone.value)) {
       alert('전화번호를 4자리로 입력해주세요.');
+      return;
     }
 
     const user = {
@@ -327,5 +356,13 @@ const regist = () => {
 .flex-container {
   display: flex;
   justify-content: space-between;
+}
+
+.textfield >>> label {
+  color: #ffffff;
+}
+
+.textfield ::v-deep(.v-field) {
+  border-radius: 30px;
 }
 </style>

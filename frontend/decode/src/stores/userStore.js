@@ -5,6 +5,7 @@ import axios from 'axios';
 
 // 백엔드 서버 URL로 작성
 const URL = 'http://localhost:80/decode';
+// const URL = 'http://i10a507.p.ssafy.io/decode';
 
 export const useUserStore = defineStore('user', () => {
   const isLoggedIn = ref(false); // 로그인 여부 확인용 T/F 변수 선언
@@ -161,6 +162,18 @@ export const useUserStore = defineStore('user', () => {
       });
   };
 
+  // 이메일 찾기
+  const findUserEmail = (user) => {
+    console.log('잘 작동한다잉'); // 함수 추가하기
+    router.push('/foundemail');
+  };
+
+  // 비밀번호 찾기
+  const findUserPwd = (user) => {
+    console.log('잘 작동한다잉'); // 함수 추가하기
+    router.push('/foundpwd');
+  };
+
   // 회원 이름 검색
   const searchName = (username) => {
     axios
@@ -229,6 +242,8 @@ export const useUserStore = defineStore('user', () => {
     deleteUser,
     setLogout,
     setUser,
+    findUserEmail,
+    findUserPwd,
     searchName,
     updateUser,
     setLoginUser,

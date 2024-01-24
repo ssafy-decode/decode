@@ -5,18 +5,13 @@
       <router-link to="/">
         <span style="display: flex; justify-content: space-between">
           <img src="./de;code_logo_jin.png" alt="로고이미지" height="30px" /><v-toolbar-title
-            >de;code</v-toolbar-title
+            ><span class="decode" style="font-size: x-large; font-weight: bold">de;code</span></v-toolbar-title
           ></span
         >
       </router-link>
     </v-btn>
 
-    <!-- 처음 버튼을 두 개로 했을 때의 코드 -->
-    <!-- <v-btn>
-      <router-link to="/">
-        <v-toolbar-title>de;code</v-toolbar-title>
-      </router-link>
-    </v-btn> -->
+    &nbsp;&nbsp;|&nbsp;&nbsp;
 
     <v-btn>
       <router-link to="/question">
@@ -48,6 +43,10 @@ const logout = () => {
 </script>
 
 <style scoped>
+.decode {
+  font-family: titlefont; /* 타이틀만 오아고딕체 */
+}
+
 a {
   text-decoration: none; /* 밑줄 제거 */
   color: inherit; /* 링크 색상 상속 */

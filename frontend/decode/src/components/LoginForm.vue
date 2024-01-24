@@ -1,6 +1,10 @@
 <template>
   <div class="pa-5" rounded>
-    <v-card class="mx-auto px-4 py-8" max-width="344">
+    <v-card
+      class="mx-auto px-4 py-8"
+      max-width="344"
+      style="background-color: #f3f3f3; border-radius: 50px; box-shadow: 0 0px 36px rgba(0, 0, 0, 0.2)"
+    >
       <v-form v-model="form" onsubmit.prevent="onSubmit">
         <br />
         <div style="text-align: center">
@@ -9,18 +13,29 @@
         </div>
         <br />
 
-        <v-text-field v-model="email" :rules="[writeEmail]" label="이메일을 입력하세요." prepend-inner>
+        <v-text-field
+          variant="solo"
+          class="textfield"
+          bg-color="#d9d9d9"
+          v-model="email"
+          :rules="[writeEmail]"
+          label="이메일을 입력하세요."
+          prepend-inner
+        >
           <template #prepend-inner>
             <img
               src="./person.png"
               alt="이메일 아이콘"
-              style="width: auto; height: auto; margin-left: 1px; margin-right: 10px"
+              style="width: auto; height: auto; margin-left: 6px; margin-right: 10px"
             />
           </template>
         </v-text-field>
 
         <div class="main">
           <v-text-field
+            variant="solo"
+            class="textfield"
+            bg-color="#d9d9d9"
             v-model="password"
             :rules="[writePassword]"
             :type="showPassword ? 'text' : 'password'"
@@ -42,8 +57,11 @@
         </div>
 
         <div style="display: flex; justify-content: end; margin-right: 15px">
-          <span style="color: #34a080; font-size: x-small">이메일 찾기 | 비밀번호 찾기</span>
-          <!-- 추후 계정/비번 찾기 만들면 그 때 link 연결 -->
+          <span style="color: #34a080; font-size: x-small"
+            ><a href="/email" style="text-decoration: none; color: #34a080">이메일 찾기</a> |
+            <a href="/password" style="text-decoration: none; color: #34a080">비밀번호 찾기</a></span
+          >
+          <!-- 추후 비번 찾기 만들면 그 때 link 연결 -->
         </div>
         <br />
 
@@ -54,11 +72,11 @@
                 <v-col cols="8">
                   <v-btn
                     @click="login"
-                    color="success"
+                    color="#62C0A6"
                     size="large"
                     type="submit"
                     variant="elevated"
-                    style="width: 100%; border-radius: 30px; font-size: smaller"
+                    style="width: 100%; border-radius: 30px; font-size: smaller; font-weight: bolder; color: #000000"
                   >
                     로그인
                   </v-btn>
@@ -66,11 +84,11 @@
                 <v-col cols="4">
                   <router-link to="/regist">
                     <v-btn
-                      color="success"
+                      color="#34A080"
                       size="large"
                       type="submit"
                       variant="elevated"
-                      style="width: 100%; border-radius: 30px; font-size: smaller"
+                      style="width: 100%; border-radius: 30px; font-size: smaller; font-weight: bolder; color: #000000"
                     >
                       회원가입
                     </v-btn>
@@ -189,6 +207,14 @@ const login = async () => {
 </script>
 
 <style scoped>
+.textfield >>> label {
+  color: #ffffff;
+}
+
+.textfield ::v-deep(.v-field) {
+  border-radius: 30px;
+}
+
 .kakaobtn:hover {
   background-color: #fae300;
 }

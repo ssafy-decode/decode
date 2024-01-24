@@ -11,6 +11,10 @@ import LoginForm from '@/components/LoginForm.vue';
 import UserRegistVue from '@/components/user/UserRegist.vue';
 import AuthenticationLoadingVue from '@/components/user/AuthenticationLoading.vue';
 import TechStackVue from '@/components/user/TechStack.vue';
+import FindEmailVue from '@/components/user/FindEmail.vue';
+import FindPwdVue from '@/components/user/FindPwd.vue';
+import FoundEmailVue from '@/components/user/FoundEmail.vue';
+import FoundPwdVue from '@/components/user/FoundPwd.vue';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -59,6 +63,26 @@ const router = createRouter({
       path: '/question/:id',
       name: 'question-detail',
       component: QuestionDetailView,
+    },
+    {
+      path: '/email',
+      name: 'findemail',
+      component: FindEmailVue,
+    },
+    {
+      path: '/password',
+      name: 'findpwd',
+      component: FindPwdVue,
+    },
+    {
+      path: '/foundemail',
+      name: 'foundemail',
+      component: FoundEmailVue,
+    },
+    {
+      path: '/foundpwd',
+      name: 'foundpwd',
+      component: FoundPwdVue,
     },
   ],
 });

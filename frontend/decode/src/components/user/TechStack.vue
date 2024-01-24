@@ -1,6 +1,10 @@
 <template>
   <div class="pa-5" rounded>
-    <v-card class="mx-auto px-4 py-8" max-width="500">
+    <v-card
+      class="mx-auto px-4 py-8"
+      max-width="500"
+      style="background-color: #f3f3f3; border-radius: 50px; box-shadow: 0 0px 36px rgba(0, 0, 0, 0.2)"
+    >
       <div>
         <span style="margin-left: 20px">
           <img src="../levelunselected.png" />&nbsp;&nbsp;&nbsp;<img src="../levelselected.png" />
@@ -17,6 +21,9 @@
           <v-row>
             <v-col cols="12">
               <v-combobox
+                variant="solo"
+                class="combo"
+                bg-color="#d9d9d9"
                 v-model="select"
                 :items="items"
                 placeholder="ex) java, spring boot, sql"
@@ -49,7 +56,14 @@
 
       <span style="display: flex; justify-content: end; margin-right: 30px">
         <router-link to="/"
-          ><v-btn @click="complete" color="success" size="large" type="submit" variant="elevated">
+          ><v-btn
+            @click="complete"
+            color="#62C0A6"
+            size="large"
+            type="submit"
+            variant="elevated"
+            style="width: 100%; border-radius: 30px; font-size: smaller; font-weight: bolder; color: #000000"
+          >
             완료
           </v-btn></router-link
         >
@@ -113,3 +127,9 @@ const toggleSelection = (item) => {
   }
 };
 </script>
+
+<style scoped>
+.combo ::v-deep(.v-field) {
+  border-radius: 30px;
+}
+</style>
