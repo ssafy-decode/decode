@@ -38,3 +38,5 @@ out/
 .vscode/
 
 src/main/resources/application.yml
+src/main/resources/application-oauth.yml
+src/main/generated

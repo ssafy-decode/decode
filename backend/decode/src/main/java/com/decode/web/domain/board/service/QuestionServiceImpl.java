@@ -20,6 +20,7 @@ import com.decode.web.entity.QuestionEntity;
 import com.decode.web.entity.QuestionTagEntity;
 import com.decode.web.entity.UserProfileEntity;
 import java.time.LocalDateTime;
+import java.util.LinkedList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,10 +50,11 @@ public class QuestionServiceImpl implements QuestionService {
             questionEntityList = questionRepository.findByTitleContainingOrderByCreatedTimeDesc(
                     keyword);
         }
-        List<QuestionListDto> questionListDtoList = new java.util.LinkedList<>(
+        List<QuestionListDto> questionListDtoList = new LinkedList<>(
                 questionEntityList.stream()
                         .map(this::convertToDto)
-                        .toList());
+                        .toList()
+        );
         for (int i = questionListDtoList.size() - 1; i >= 0; i--) {
             for (long tag : tagIds) {
                 if (!questionListDtoList.get(i).getTagList().contains(tag)) {
