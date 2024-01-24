@@ -7,6 +7,7 @@ import com.decode.web.domain.user.repository.UserProfileRepository;
 import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.entity.UserProfileEntity;
 import com.decode.web.entity.UserTagEntity;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -25,9 +26,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserInfoEntity getUserById(Long id) {
-        Optional<UserInfoEntity> user = userInfoRepository.findById(id);
-        if (user.isPresent()) {
-            return user.get();
+        UserInfoEntity user = userInfoRepository.getReferenceById(id);
+        if (user != null) {
+            return user;
         }
         return null;
     }
@@ -105,16 +106,14 @@ public class UserServiceImpl implements UserService {
         UserInfoEntity user = userInfoRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
         user.updateInfo(password);
-        userInfoRepository.save(user);
     }
 
 
     @Override
+    @Transactional
     public void updateUserProfile(Long id, UserProfileEntity profile) {
-        UserProfileEntity user = userProfileRepository.findById(id)
-                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        UserProfileEntity user = userProfileRepository.getReferenceById(id);
         user.updateProfile(profile);
-        userProfileRepository.save(user);
     }
 
     @Override
@@ -130,8 +129,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String findEmail(String name, String phoneNumber, String birth) {
-        UserInfoEntity user = userInfoRepository.findByNameAndPhoneNumberAndBirth(name, phoneNumber,
-                        birth)
+        UserInfoEntity user = userInfoRepository.findByNameAndPhoneNumberAndBirth(name, phoneNumber, birth)
                 .orElseThrow(() -> new UsernameNotFoundException("아이디 찾기 실패"));
         return user.getEmail();
     }
@@ -150,20 +148,22 @@ public class UserServiceImpl implements UserService {
                     .userProfile(userProfileRepository.getReferenceById(userId)).tagId(tagId)
                     .build());
         }
+
+
     }
 
     @Override
     public void updateUserTag(RequestUserTagDto requestUserTagDto) {
         Long userId = requestUserTagDto.getUserId();
         List<Long> tagIds = requestUserTagDto.getTagIdList();
-        List<UserTagEntity> userTagEntities = userTagRepository.findAllByUserProfile(
-                userProfileRepository.getReferenceById(userId));
+        List<UserTagEntity> userTagEntities = userTagRepository.findAllByUserProfile(userProfileRepository.getReferenceById(userId));
         userTagRepository.deleteAll(userTagEntities);
         for (Long tagId : tagIds) {
             userTagRepository.save(UserTagEntity.builder()
                     .userProfile(userProfileRepository.getReferenceById(userId)).tagId(tagId)
                     .build());
         }
+
     }
 
 }
