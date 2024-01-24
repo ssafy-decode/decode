@@ -17,6 +17,7 @@ import com.decode.web.global.ResponseDto;
 import com.decode.web.global.utils.authentication.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -69,10 +70,12 @@ public class UserController {
 
     @GetMapping("/user/{id}")
     @Operation(summary = "사용자 정보 조회", description = "사용자 1명의 정보를 조회합니다.")
-    public ResponseDto getUserById(@PathVariable Long id, HttpRequest req) {
+    public ResponseDto getUserById(@PathVariable Long id, HttpServletRequest req) {
         log.debug("I'm here");
-        log.debug("req url : {}", req.getURI());
-        log.debug("req headers : {}", req.getHeaders());
+        log.debug("req header names : {}", req.getHeaderNames());
+        log.debug("req servlet path : {}", req.getServletPath());
+        log.debug("req URI: {}", req.getRequestURI());
+        log.debug("req URL: {}", req.getRequestURL());
         return new ResponseDto().builder()
                 .data(userMapper.toDto(userService.getUserById(id)))
                 .status(HttpStatus.OK)
