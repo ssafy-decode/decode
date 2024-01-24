@@ -57,6 +57,7 @@ public class QuestionServiceImpl implements QuestionService {
             for (long tag : tagIds) {
                 if (!questionListDtoList.get(i).getTagList().contains(tag)) {
                     questionListDtoList.remove(i);
+                    break;
                 }
             }
         }
@@ -85,7 +86,6 @@ public class QuestionServiceImpl implements QuestionService {
         questionDto.setQuestionWriter(questionWriter);
         QuestionEntity questionEntity = questionMapper.toEntity(questionDto);
         questionRepository.save(questionEntity);
-
         List<QuestionTagDto> tagList = question.getTags();
         for (QuestionTagDto questionTag : tagList) {
             questionTagRepository.save(QuestionTagEntity.builder().question(questionEntity)
