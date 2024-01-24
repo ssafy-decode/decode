@@ -55,6 +55,11 @@ public class SecurityConfig {
                 .formLogin(formLogin ->
                         formLogin.disable()
                 )
+//                .oauth2Login(oauth2Login ->
+//                        oauth2Login.userInfoEndpoint(userInfoEndpoint ->
+//                                userInfoEndpoint.userService()
+//                        )
+//                )
                 .sessionManagement(sessionManagement ->
                         sessionManagement
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
