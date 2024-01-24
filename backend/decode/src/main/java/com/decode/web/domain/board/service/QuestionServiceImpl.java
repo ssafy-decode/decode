@@ -86,7 +86,6 @@ public class QuestionServiceImpl implements QuestionService {
         questionDto.setQuestionWriter(questionWriter);
         QuestionEntity questionEntity = questionMapper.toEntity(questionDto);
         questionRepository.save(questionEntity);
-        log.info("");
         List<QuestionTagDto> tagList = question.getTags();
         for (QuestionTagDto questionTag : tagList) {
             questionTagRepository.save(QuestionTagEntity.builder().question(questionEntity)
