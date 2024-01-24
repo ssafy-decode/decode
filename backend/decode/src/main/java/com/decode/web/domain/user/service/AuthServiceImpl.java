@@ -1,7 +1,6 @@
 package com.decode.web.domain.user.service;
 
 import com.decode.web.domain.user.dto.AuthDto;
-import com.decode.web.domain.user.dto.AuthDto.TokenDto;
 import com.decode.web.global.utils.authentication.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,23 +35,19 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public boolean validate(String token) {
         String requestAccessToken = resolveToken(token);
-        return jwtTokenProvider.validateTokenExpired(requestAccessToken);
+        return jwtTokenProvider.validateToken(requestAccessToken);
 
     }
 
     @Override
     @Transactional
-    // 이미 validate 메소드에서 토큰이 유효한지 검사했기 때문에 여기서는 토큰만 검사하면 된다.
-    public AuthDto.TokenDto reissue(String principal) {
+    public boolean validateRefreshTokenInRedis(String token) {
 
-        TokenDto tokenDto = generateToken(SERVER, principal);
-        Authentication authentication = jwtTokenProvider.getAuthentication(
-                tokenDto.getAccessToken());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String principal = jwtTokenProvider.getPrincipal(token);
+        String provider = jwtTokenProvider.getProvider(token);
+        String refreshTokenInRedis = redisService.getValues("RT(:" + provider + "):" + principal);
 
-        // 토큰 재발급 및 Redis 업데이트
-        redisService.deleteValues("RT(" + SERVER + "):" + principal); // 기존 RT 삭제
-        return tokenDto;
+        return refreshTokenInRedis != null && refreshTokenInRedis.equals(token);
     }
 
     @Override
@@ -77,6 +72,7 @@ public class AuthServiceImpl implements AuthService {
                 token,
                 jwtTokenProvider.getTokenExpirationTime(token));
     }
+
 
     @Override
     public String getPrincipal(String token) {
