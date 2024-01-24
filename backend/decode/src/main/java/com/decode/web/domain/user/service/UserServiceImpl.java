@@ -1,5 +1,6 @@
 package com.decode.web.domain.user.service;
 
+import com.decode.web.domain.user.dto.RequestUserTagDto;
 import com.decode.web.domain.user.repository.UserInfoRepository;
 import com.decode.web.domain.user.repository.UserProfileRepository;
 import com.decode.web.entity.UserInfoEntity;
@@ -22,9 +23,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserInfoEntity getUserById(Long id) {
-        Optional<UserInfoEntity> user = userInfoRepository.findById(id);
-        if (user.isPresent()) {
-            return user.get();
+        UserInfoEntity user = userInfoRepository.getReferenceById(id);
+        if (user != null) {
+            return user;
         }
         return null;
     }
@@ -98,12 +99,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public void updateUserInfo(Long id, String password) {
         UserInfoEntity user = userInfoRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
         user.updateInfo(password);
-
     }
 
 
@@ -112,7 +111,6 @@ public class UserServiceImpl implements UserService {
     public void updateUserProfile(Long id, UserProfileEntity profile) {
         UserProfileEntity user = userProfileRepository.getReferenceById(id);
         user.updateProfile(profile);
-
     }
 
     @Override
@@ -136,6 +134,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public String findPassword(String email, String name, String phoneNumber, String birth) {
         return null;
+    }
+
+    @Override
+    public void addUserTag(RequestUserTagDto requestUserTagDto) {
+
+    }
+
+    @Override
+    public void updateUserTag(RequestUserTagDto requestUserTagDto) {
+
     }
 
 }
