@@ -23,6 +23,7 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtTokenProvider jwtTokenProvider;
+    private final CorsFilterConfig corsFilterConfig;
 
 
     @Bean
@@ -55,6 +56,11 @@ public class SecurityConfig {
                 .formLogin(formLogin ->
                         formLogin.disable()
                 )
+//                .oauth2Login(oauth2Login ->
+//                        oauth2Login.userInfoEndpoint(userInfoEndpoint ->
+//                                userInfoEndpoint.userService()
+//                        )
+//                )
                 .sessionManagement(sessionManagement ->
                         sessionManagement
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -62,7 +68,8 @@ public class SecurityConfig {
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                         .accessDeniedHandler(jwtAccessDeniedHandler)
-                );
+                )
+                .addFilter(corsFilterConfig.corsFilter());
 //                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
