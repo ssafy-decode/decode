@@ -1,5 +1,7 @@
 package com.decode.web.global.config;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 import com.decode.web.global.utils.authentication.JwtAccessDeniedHandler;
 import com.decode.web.global.utils.authentication.JwtAuthenticationEntryPoint;
 import com.decode.web.global.utils.authentication.JwtTokenProvider;
@@ -46,6 +48,7 @@ public class SecurityConfig {
                 .httpBasic(httpBasic ->
                         httpBasic.disable()
                 )
+                .cors(withDefaults())
                 .csrf(csrf ->
                         csrf.disable()
                 )
