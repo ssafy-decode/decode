@@ -4,6 +4,7 @@ import com.decode.web.domain.board.dto.CreateQuestionDto;
 import com.decode.web.domain.board.dto.QuestionListDto;
 import com.decode.web.domain.board.dto.ResponseQuestionDto;
 import com.decode.web.domain.board.dto.UpdateQuestionDto;
+import com.decode.web.entity.QuestionEntity;
 import java.util.List;
 
 public interface QuestionService {
@@ -14,7 +15,7 @@ public interface QuestionService {
 
     ResponseQuestionDto questionDetail(Long questionId);
 
-    void deleteQuestion(Long questionId);
+    void deleteQuestion(Long questionId, QuestionEntity targetQuestion);
 
     ResponseQuestionDto updateQuestion(UpdateQuestionDto updateQuestion);
 }
