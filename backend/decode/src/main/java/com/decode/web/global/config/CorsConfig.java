@@ -25,15 +25,9 @@ public class CorsConfig {
         // 개발 중에는 모든 오리진 허용
         config.setAllowedOriginPatterns(List.of("*"));
 //        config.addAllowedOrigin("*");
-
-//        config.addAllowedHeader("*");
-//        config.setAllowedHeaders(List.of("*"));
-        config.addAllowedMethod(HttpMethod.POST); // 모든 메서드 허용
-        config.addAllowedMethod(HttpMethod.GET); // 모든 메서드 허용
-        config.addAllowedMethod(HttpMethod.OPTIONS); // 모든 메서드 허용
-        config.addAllowedMethod(HttpMethod.DELETE); // 모든 메서드 허용
-        config.addAllowedMethod(HttpMethod.PATCH); // 모든 메서드 허용
-        config.setAllowedHeaders(List.of("*"));
+        config.addExposedHeader("Authorization");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*"); // 모든 메서드 허용
 
         source.registerCorsConfiguration("/**", config); // 모든 경로에서 CORS 허용
 
