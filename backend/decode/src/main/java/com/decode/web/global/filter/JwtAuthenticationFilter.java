@@ -28,17 +28,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String accessToken = resolveToken(req);
         String refreshToken = null;
         Cookie[] list = req.getCookies();
-        for (Cookie cookie : list) {
-            if(cookie.getName().equals("refresh-token")) refreshToken = cookie.getValue();
+        if (list != null){
+            for (Cookie cookie : list) {
+                if (cookie.getName().equals("refresh-token"))
+                    refreshToken = cookie.getValue();
+            }
         }
         if(accessToken != null){
+
             if (jwtTokenProvider.validateToken(accessToken)) {
                 // token 유효성 검사 후 securityContext에 저장
                 Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                log.info("인증 정보 저장");
             }
             else if( refreshToken != null && jwtTokenProvider.validateToken(refreshToken) && authService.validateRefreshTokenInRedis(refreshToken)){
                 // 토큰 재발급
+                log.info("토큰 재발급");
                 String principal = jwtTokenProvider.getPrincipal(refreshToken);
                 String provider = jwtTokenProvider.getProvider(refreshToken);
                 String newAccessToken = jwtTokenProvider.createAccessToken(principal, provider);

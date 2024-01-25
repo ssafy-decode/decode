@@ -160,9 +160,10 @@ public class UserController {
         cookie.setSecure(true);
         cookie.setDomain("localhost");
         res.addCookie(cookie);
+        res.setHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
 
         return new ResponseDto().builder()
-                .data("Bearer " + tokenDto.getAccessToken())
+                .data("login success")
                 .status(HttpStatus.OK)
                 .headers(headers)
                 .message("login").build();
@@ -191,12 +192,9 @@ public class UserController {
     @PostMapping("/validate")
     @Operation(summary = "토큰 만료 검사", description = "토큰 만료 검사 API")
     public ResponseDto validate(@RequestHeader("Authorization") String token) {
-//        요청 -> AT 검사 -> AT 유효 -> 요청 실행
-//        요청 -> AT 검사 -> AT 기간만 만료 -> AT, RT로 재발급 요청 -> RT 유효 -> 재발급
-//        요청 -> AT 검사 -> AT 기간만 만료 -> AT, RT로 재발급 요청 -> RT 유효X -> 로그아웃
         log.info("validate");
-        // 만료되면 true, 유효하면 false
-        if (!authService.validate(token)) {
+        // 만료되면 false, 유효하면 true
+        if (authService.validate(token)) {
             log.info("validated");
             return new ResponseDto().builder()
                     .data(null)
