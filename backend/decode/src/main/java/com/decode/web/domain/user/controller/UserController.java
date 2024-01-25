@@ -1,6 +1,5 @@
 package com.decode.web.domain.user.controller;
 
-import com.amazonaws.Response;
 import com.decode.web.domain.mail.dto.MailDto;
 import com.decode.web.domain.mail.service.MailService;
 import com.decode.web.domain.user.dto.AuthDto.LoginDto;
@@ -18,7 +17,6 @@ import com.decode.web.domain.user.service.AuthService;
 import com.decode.web.domain.user.service.UserService;
 import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.global.ResponseDto;
-import com.decode.web.global.utils.authentication.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
@@ -28,10 +26,9 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpCookie;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -54,7 +51,6 @@ public class UserController {
     private final UserProfileMapper userProfileMapper;
     private final AuthService authService;
     private final BCryptPasswordEncoder encoder;
-    private final JwtTokenProvider jwtTokenProvider;
     private final MailService maillService;
 
     private final int COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30일
@@ -145,7 +141,7 @@ public class UserController {
 
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "로그인 API")
-    public ResponseDto login(@RequestBody LoginDto loginDto, HttpServletResponse res){
+    public ResponseDto login(@RequestBody LoginDto loginDto, HttpServletResponse res) {
         log.info("loginDto : {}", loginDto);
         TokenDto tokenDto = authService.login(loginDto);
 
@@ -174,12 +170,9 @@ public class UserController {
                 .maxAge(0)
                 .secure(true)
                 .build();
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.SET_COOKIE, httpcookie.toString());
         return new ResponseDto().builder()
                 .data(null)
                 .status(HttpStatus.OK)
-                .headers(headers)
                 .message("logout").build();
 
     }
@@ -234,11 +227,11 @@ public class UserController {
 
     @PostMapping("/confirm")
     @Operation(summary = "비밀번호 확인", description = "비밀번호 확인 API")
-    public ResponseDto pwConfirm(@RequestBody String password,
-            @RequestHeader("Authorization") String token) {
+    public ResponseDto pwConfirm(@RequestBody String password) {
 
         String encodedPassword = encoder.encode(password);
-        Long uid = jwtTokenProvider.getAuthUserId(token);
+        Long uid = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         return new ResponseDto().builder()
                 .data(userService.pwConfirm(uid, encodedPassword))
                 .status(HttpStatus.OK)
@@ -277,9 +270,8 @@ public class UserController {
 
     @PatchMapping("/updateUserTag")
     @Operation(summary = "유저 태그 수정", description = "기존 유저의 선후 기술 태그 수정")
-    public ResponseDto updateUserTag(@RequestHeader("Authorization") String jwtToken, @RequestBody
-    RequestUserTagDto requestUserTagDto) {
-        Long userId = jwtTokenProvider.getAuthUserId(jwtToken);
+    public ResponseDto updateUserTag(@RequestBody RequestUserTagDto requestUserTagDto) {
+        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (!userId.equals(requestUserTagDto.getUserId())) {
             return ResponseDto.builder().status(HttpStatus.BAD_REQUEST).message("사용자 불일치").build();
         }

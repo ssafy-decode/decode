@@ -74,7 +74,8 @@ public class SecurityConfig {
                         .accessDeniedHandler(jwtAccessDeniedHandler)
                 )
                 .addFilter(corsconfig.corsFilter())
-                .addFilterBefore(new JwtAuthenticationFilter(authservice,jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(authservice, jwtTokenProvider),
+                        UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
     }

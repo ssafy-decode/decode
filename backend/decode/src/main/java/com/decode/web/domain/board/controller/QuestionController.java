@@ -8,12 +8,12 @@ import com.decode.web.domain.board.repository.QuestionRepository;
 import com.decode.web.domain.board.service.QuestionService;
 import com.decode.web.entity.QuestionEntity;
 import com.decode.web.global.ResponseDto;
-import com.decode.web.global.utils.authentication.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +34,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class QuestionController {
 
     private final QuestionService questionService;
-    private final JwtTokenProvider jwtTokenProvider;
     private final QuestionRepository questionRepository;
 
     @GetMapping
@@ -49,9 +48,8 @@ public class QuestionController {
 
     @PostMapping
     @Operation(summary = "질문 생성", description = "질문 생성")
-    public ResponseDto createQuestion(@RequestHeader("Authorization") String jwtToken,
-            @RequestBody CreateQuestionDto question) {
-        Long userId = jwtTokenProvider.getAuthUserId(jwtToken);
+    public ResponseDto createQuestion(@RequestBody CreateQuestionDto question) {
+        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (!userId.equals(question.getQuestionWriterId())) {
             return ResponseDto.builder().status(HttpStatus.BAD_REQUEST).message("사용자 불일치").build();
         }
@@ -72,9 +70,8 @@ public class QuestionController {
 
     @PatchMapping
     @Operation(summary = "질문 수정", description = "작성자와 일치하는 사용자의 토큰을 식별 후 수정")
-    public ResponseDto updateQuestion(@RequestHeader("Authorization") String jwtToken,
-            @RequestBody UpdateQuestionDto updateQuestion) {
-        Long userId = jwtTokenProvider.getAuthUserId(jwtToken);
+    public ResponseDto updateQuestion(@RequestBody UpdateQuestionDto updateQuestion) {
+        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (!userId.equals(updateQuestion.getUserId())) {
             return ResponseDto.builder().status(HttpStatus.BAD_REQUEST).message("사용자 불일치").build();
         }
@@ -84,9 +81,8 @@ public class QuestionController {
 
     @DeleteMapping("/delete/{questionId}")
     @Operation(summary = "질문 삭제", description = "작성자와 일치하는 사용자의 토큰을 식별 후 삭제")
-    public ResponseDto deleteQuestion(@RequestHeader("Authorization") String jwtToken,
-            @PathVariable Long questionId) {
-        Long userId = jwtTokenProvider.getAuthUserId(jwtToken);
+    public ResponseDto deleteQuestion(@PathVariable Long questionId) {
+        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         QuestionEntity targetQuestion = questionRepository.getReferenceById(questionId);
         if (!userId.equals(targetQuestion.getQuestionWriter().getId())) {
             return ResponseDto.builder().status(HttpStatus.BAD_REQUEST).message("사용자 불일치").build();

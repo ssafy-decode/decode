@@ -28,25 +28,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String accessToken = resolveToken(req);
         String refreshToken = null;
         Cookie[] list = req.getCookies();
-        if (list != null){
+        if (list != null) {
             for (Cookie cookie : list) {
-                if (cookie.getName().equals("refresh-token"))
+                if (cookie.getName().equals("refresh-token")) {
                     refreshToken = cookie.getValue();
+                }
             }
         }
         log.info("accessToken : {}", accessToken);
-        if(accessToken != null){
-
-            log.info("Authentication : {} ", SecurityContextHolder.getContext().getAuthentication());
-
+        if (accessToken != null) {
             if (jwtTokenProvider.validateToken(accessToken)) {
                 // token 유효성 검사 후 securityContext에 저장
                 Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                log.info("Authentication : {} ", SecurityContextHolder.getContext().getAuthentication().isAuthenticated());
+                log.info("Authentication : {} ",
+                        SecurityContextHolder.getContext().getAuthentication().isAuthenticated());
                 log.info("인증 정보 저장");
-            }
-            else if( refreshToken != null && jwtTokenProvider.validateToken(refreshToken) && authService.validateRefreshTokenInRedis(refreshToken)){
+            } else if (refreshToken != null && jwtTokenProvider.validateToken(refreshToken)
+                    && authService.validateRefreshTokenInRedis(refreshToken)) {
+
                 // 토큰 재발급
                 log.info("토큰 재발급");
                 String principal = jwtTokenProvider.getPrincipal(refreshToken);
@@ -59,9 +59,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 // 헤더에 새로운 토큰 저장
                 res.setHeader("Authorization", "Bearer " + newAccessToken);
-                res.addCookie(new Cookie("access-token", newAccessToken));
-            }
-            else{
+            } else {
                 // 로그아웃 처리
                 SecurityContextHolder.clearContext();
             }
