@@ -20,6 +20,8 @@ import com.decode.web.global.ResponseDto;
 import com.decode.web.global.utils.authentication.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -141,7 +143,7 @@ public class UserController {
 
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "로그인 API")
-    public ResponseDto login(@RequestBody LoginDto loginDto) {
+    public ResponseDto login(@RequestBody LoginDto loginDto, HttpServletResponse res){
         log.info("loginDto : {}", loginDto);
         TokenDto tokenDto = authService.login(loginDto);
         // 로그인 성공하면 토큰을 헤더에 쿠키로 저장
@@ -153,8 +155,15 @@ public class UserController {
                 .build();
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.SET_COOKIE, httpcookie.toString());
+        Cookie cookie = new Cookie("refresh-token", tokenDto.getRefreshToken());
+        cookie.setMaxAge(COOKIE_MAX_AGE);
+        cookie.setSecure(true);
+        cookie.setDomain("localhost");
+        res.addCookie(cookie);
+        res.setHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
+
         return new ResponseDto().builder()
-                .data("Bearer " + tokenDto.getAccessToken())
+                .data("login success")
                 .status(HttpStatus.OK)
                 .headers(headers)
                 .message("login").build();
@@ -183,12 +192,9 @@ public class UserController {
     @PostMapping("/validate")
     @Operation(summary = "토큰 만료 검사", description = "토큰 만료 검사 API")
     public ResponseDto validate(@RequestHeader("Authorization") String token) {
-//        요청 -> AT 검사 -> AT 유효 -> 요청 실행
-//        요청 -> AT 검사 -> AT 기간만 만료 -> AT, RT로 재발급 요청 -> RT 유효 -> 재발급
-//        요청 -> AT 검사 -> AT 기간만 만료 -> AT, RT로 재발급 요청 -> RT 유효X -> 로그아웃
         log.info("validate");
-        // 만료되면 true, 유효하면 false
-        if (!authService.validate(token)) {
+        // 만료되면 false, 유효하면 true
+        if (authService.validate(token)) {
             log.info("validated");
             return new ResponseDto().builder()
                     .data(null)

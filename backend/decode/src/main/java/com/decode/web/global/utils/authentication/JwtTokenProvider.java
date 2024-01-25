@@ -112,44 +112,55 @@ public class JwtTokenProvider {
         }
         return getClaims(token).get("userId", Long.class);
     }
+    public String getProvider(String token) {
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        return getClaims(token).get("provider", String.class);
+    }
 
     public long getTokenExpirationTime(String token) {
         return getClaims(token).getExpiration().getTime();
     }
 
-    public boolean validateToken(String token) {
+    public boolean validateToken(String token){
         try {
-            Jwts.parserBuilder()
-                    .setSigningKey(signingKey)
-                    .build()
-                    .parseClaimsJws(token);
-            return true;
-        } catch (ExpiredJwtException e) {
+            return !getClaims(token).getExpiration().before(new Date());
+        } catch(ExpiredJwtException e) {
             log.error("access token expired");
-        } catch (SignatureException e) {
-            log.error("Invalid JWT signature.");
-        } catch (MalformedJwtException e) {
-            log.error("Invalid JWT token.");
-        } catch (UnsupportedJwtException e) {
-            log.error("Unsupported JWT token.");
-        } catch (IllegalArgumentException e) {
-            log.error("JWT claims string is empty.");
-        } catch (NullPointerException e) {
-            log.error("JWT Token is empty.");
-
-        }
-        return false;
-    }
-
-
-    public boolean validateTokenExpired(String token) {
-        try {
-            return getClaims(token).getExpiration().before(new Date());
-        } catch (ExpiredJwtException e) {
-            log.error("access token expired");
-            return true;
+            return false;
         }
     }
+
+    public String getPrincipal(String token) {
+        return getClaims(token).get("email", String.class);
+    }
+//    public boolean validateToken(String token) {
+//        try {
+//            Jwts.parserBuilder()
+//                    .setSigningKey(signingKey)
+//                    .build()
+//                    .parseClaimsJws(token);
+//            return true;
+//        } catch (ExpiredJwtException e) {
+//            log.error("access token expired");
+//        } catch (SignatureException e) {
+//            log.error("Invalid JWT signature.");
+//        } catch (MalformedJwtException e) {
+//            log.error("Invalid JWT token.");
+//        } catch (UnsupportedJwtException e) {
+//            log.error("Unsupported JWT token.");
+//        } catch (IllegalArgumentException e) {
+//            log.error("JWT claims string is empty.");
+//        } catch (NullPointerException e) {
+//            log.error("JWT Token is empty.");
+//
+//        }
+//        return false;
+//    }
+
+
+
 
 
 }
