@@ -1,6 +1,7 @@
 package com.decode.web.domain.user.service;
 
 import com.decode.web.domain.tag.repository.UserTagRepository;
+import com.decode.web.domain.user.dto.FindPasswordDto;
 import com.decode.web.domain.user.dto.RequestUserTagDto;
 import com.decode.web.domain.user.repository.UserInfoRepository;
 import com.decode.web.domain.user.repository.UserProfileRepository;
@@ -94,17 +95,13 @@ public class UserServiceImpl implements UserService {
     public UserInfoEntity getUserByEmail(String email) throws UsernameNotFoundException {
         UserInfoEntity user = userInfoRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
-        log.info("user: {}", user);
-        if (user != null) {
-            return user;
-        }
-        return null;
+        return user;
     }
 
     @Override
+    @Transactional
     public void updateUserInfo(Long id, String password) {
-        UserInfoEntity user = userInfoRepository.findById(id)
-                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        UserInfoEntity user = userInfoRepository.getReferenceById(id);
         user.updateInfo(password);
     }
 
@@ -129,15 +126,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String findEmail(String name, String phoneNumber, String birth) {
-        UserInfoEntity user = userInfoRepository.findByNameAndPhoneNumberAndBirth(name, phoneNumber, birth)
+        UserInfoEntity user = userInfoRepository.findByNameAndPhoneNumberAndBirth(name, phoneNumber,
+                        birth)
                 .orElseThrow(() -> new UsernameNotFoundException("아이디 찾기 실패"));
         return user.getEmail();
     }
 
     @Override
-    public String findPassword(String email, String name, String phoneNumber, String birth) {
-        return null;
+    public boolean findUserByEmailAndNameAndPhoneNumberAndBirth(FindPasswordDto findPasswordDto) {
+        return userInfoRepository.findByEmailAndNameAndPhoneNumberAndBirth(
+                findPasswordDto.getEmail(),
+                findPasswordDto.getName(),
+                findPasswordDto.getPhoneNumber(),
+                findPasswordDto.getBirth()
+        ).isPresent();
     }
+
 
     @Override
     public void addUserTag(RequestUserTagDto requestUserTagDto) {
@@ -156,7 +160,8 @@ public class UserServiceImpl implements UserService {
     public void updateUserTag(RequestUserTagDto requestUserTagDto) {
         Long userId = requestUserTagDto.getUserId();
         List<Long> tagIds = requestUserTagDto.getTagIdList();
-        List<UserTagEntity> userTagEntities = userTagRepository.findAllByUserProfile(userProfileRepository.getReferenceById(userId));
+        List<UserTagEntity> userTagEntities = userTagRepository.findAllByUserProfile(
+                userProfileRepository.getReferenceById(userId));
         userTagRepository.deleteAll(userTagEntities);
         for (Long tagId : tagIds) {
             userTagRepository.save(UserTagEntity.builder()

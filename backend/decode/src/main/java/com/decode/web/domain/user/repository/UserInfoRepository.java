@@ -14,6 +14,6 @@ public interface UserInfoRepository extends JpaRepository<UserInfoEntity, Long> 
             String birth);
 
 
-
-
+    Optional<UserInfoEntity> findByEmailAndNameAndPhoneNumberAndBirth(String email, String name,
+            String phoneNumber, String birth);
 }

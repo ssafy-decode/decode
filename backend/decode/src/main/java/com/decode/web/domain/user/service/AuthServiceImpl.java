@@ -1,7 +1,6 @@
 package com.decode.web.domain.user.service;
 
 import com.decode.web.domain.user.dto.AuthDto;
-import com.decode.web.domain.user.dto.AuthDto.TokenDto;
 import com.decode.web.global.utils.authentication.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,30 +35,26 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public boolean validate(String token) {
         String requestAccessToken = resolveToken(token);
-        return jwtTokenProvider.validateTokenExpired(requestAccessToken);
+        return jwtTokenProvider.validateToken(requestAccessToken);
 
     }
 
     @Override
     @Transactional
-    // 이미 validate 메소드에서 토큰이 유효한지 검사했기 때문에 여기서는 토큰만 검사하면 된다.
-    public AuthDto.TokenDto reissue(String principal) {
+    public boolean validateRefreshTokenInRedis(String token) {
 
-        TokenDto tokenDto = generateToken(SERVER, principal);
-        Authentication authentication = jwtTokenProvider.getAuthentication(
-                tokenDto.getAccessToken());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String principal = jwtTokenProvider.getPrincipal(token);
+        String provider = jwtTokenProvider.getProvider(token);
+        String refreshTokenInRedis = redisService.getValues("RT:" + provider + ":" + principal);
 
-        // 토큰 재발급 및 Redis 업데이트
-        redisService.deleteValues("RT(" + SERVER + "):" + principal); // 기존 RT 삭제
-        return tokenDto;
+        return refreshTokenInRedis != null && refreshTokenInRedis.equals(token);
     }
 
     @Override
     @Transactional
     public AuthDto.TokenDto generateToken(String provider, String email) {
-        if (redisService.getValues("RT(" + provider + "):" + email) != null) {
-            redisService.deleteValues("RT(" + provider + "):" + email);
+        if (redisService.getValues("RT:" + provider + ":" + email) != null) {
+            redisService.deleteValues("RT:" + provider + ":" + email);
         }
 
         AuthDto.TokenDto tokenDto = AuthDto.TokenDto.builder()
@@ -73,10 +68,11 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public void saveRefreshToken(String provider, String principal, String token) {
-        redisService.setValuesWithTimeout("RT(:" + provider + "):" + principal,
+        redisService.setValuesWithTimeout("RT:" + provider + ":" + principal,
                 token,
                 jwtTokenProvider.getTokenExpirationTime(token));
     }
+
 
     @Override
     public String getPrincipal(String token) {
@@ -97,9 +93,9 @@ public class AuthServiceImpl implements AuthService {
         String requestAccessToken = resolveToken(token);
         String principal = getPrincipal(requestAccessToken);
 
-        String refreshTokenInRedis = redisService.getValues("RT(:" + SERVER + "):" + principal);
+        String refreshTokenInRedis = redisService.getValues("RT:" + SERVER + ":" + principal);
         if (refreshTokenInRedis != null) {
-            redisService.deleteValues("RT(:" + SERVER + "):" + principal);
+            redisService.deleteValues("RT:" + SERVER + ":" + principal);
         }
 //        long expiration = jwtTokenProvider.getTokenExpirationTime(requestAccessToken) - new Date().getTime();
 //        redisService.setValuesWithTimeout(requestAccessToken, "logout", expiration);

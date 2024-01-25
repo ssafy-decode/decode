@@ -1,6 +1,7 @@
 package com.decode.web.domain.user.service;
 
 import com.decode.web.domain.user.dto.AuthDto;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface AuthService {
 
@@ -8,7 +9,9 @@ public interface AuthService {
 
     boolean validate(String token);
 
-    AuthDto.TokenDto reissue(String accessToken);
+    boolean validateRefreshTokenInRedis(String token);
+
+    // 이미 validate 메소드에서 토큰이 유효한지 검사했기 때문에 여기서는 토큰만 검사하면 된다.
 
     AuthDto.TokenDto generateToken(String provider, String email);
 
