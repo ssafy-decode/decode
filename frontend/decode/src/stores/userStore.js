@@ -87,7 +87,7 @@ export const useUserStore = defineStore('user', () => {
 
       const res = await axios.post(
         `${URL}/addUserTag`,
-        { userId: userId.value, techStack: tagNums },
+        { userId: userId.value, tagIdList: tagNums },
         {
           // withCredentials: true,
           headers: {
@@ -97,9 +97,9 @@ export const useUserStore = defineStore('user', () => {
         },
       );
 
-      if (res.data.status === 200) {
-        tagIdList.value.push(res.data.data);
-        console.log('Tech stack saved successfully:', res.data.data);
+      if (res.data.status === 'OK') {
+        tagIdList.value.push(...tagNums);
+        console.log('Tech stack saved successfully:', tagIdList.value);
       } else {
         throw new Error('Failed to save tech stack');
       }
