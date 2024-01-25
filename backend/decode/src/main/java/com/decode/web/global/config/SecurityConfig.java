@@ -1,5 +1,6 @@
 package com.decode.web.global.config;
 
+import com.decode.web.domain.user.service.AuthService;
 import com.decode.web.global.filter.JwtAuthenticationFilter;
 import com.decode.web.global.utils.authentication.JwtAccessDeniedHandler;
 import com.decode.web.global.utils.authentication.JwtAuthenticationEntryPoint;
@@ -26,6 +27,7 @@ public class SecurityConfig {
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtTokenProvider jwtTokenProvider;
     private final CorsFilterConfig corsFilterConfig;
+    private final AuthService authservice;
 
 
     @Bean
@@ -43,7 +45,6 @@ public class SecurityConfig {
                                 .requestMatchers("/**", "/decode/**").permitAll()
                                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                                 .anyRequest().authenticated()
-
                 )
                 .httpBasic(httpBasic ->
                         httpBasic.disable()
@@ -71,8 +72,8 @@ public class SecurityConfig {
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                         .accessDeniedHandler(jwtAccessDeniedHandler)
                 )
-                .addFilter(corsFilterConfig.corsFilter())
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilter(corsFilterConfig.corsFilter());
+//                .addFilterBefore(new JwtAuthenticationFilter(authservice,jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
     }
