@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1>질문 등록하기</h1>
     <br />
     <QuestionCreate />
     <br />

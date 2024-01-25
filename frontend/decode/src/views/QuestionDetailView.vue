@@ -19,6 +19,7 @@ import { useRoute, useRouter, RouterLink } from 'vue-router';
 import AnswerList from '@/components/answer/AnswerList.vue';
 
 const store = useQuestionStore();
+const router = useRouter();
 const route = useRoute();
 
 // store와 axios 통해 데이터를 불러옴

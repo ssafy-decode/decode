@@ -5,6 +5,7 @@ import MainView from '@/views/MainView.vue';
 import UserView from '@/views/UserView.vue';
 import QuestionBoardView from '@/views/QuestionBoardView.vue';
 import QuestionDetailView from '@/views/QuestionDetailView.vue';
+import QuestionCreateView from '@/views/QuestionCreateView.vue';
 
 // Components
 import LoginForm from '@/components/LoginForm.vue';
@@ -83,6 +84,9 @@ const router = createRouter({
       path: '/foundpwd',
       name: 'foundpwd',
       component: FoundPwdVue,
+      path: '/question-create',
+      name: 'question-create',
+      component: QuestionCreateView,
     },
   ],
 });

@@ -5,6 +5,8 @@
       <p @click="goDetail(question.id)">question title: {{ question.title }}</p>
       <p>question tags: {{ question.tagIds }}</p>
       <br />
+      <hr />
+      <br />
     </div>
   </div>
 </template>

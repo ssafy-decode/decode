@@ -119,7 +119,6 @@ export const useUserStore = defineStore('user', () => {
 
       console.log(res.data);
       console.log(accessToken.value);
-
       router.push({ name: 'mainview' });
       alert('로그인되었습니다.');
       return { success: true, data: accessToken };
