@@ -1,5 +1,6 @@
 package com.decode.web.dto;
 
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import lombok.ToString;
 @ToString
 public class UserDto {
 
-  private int userId;
+  private Long userId;
   private String email;
   private String nickname;
   private String password;
@@ -23,8 +24,8 @@ public class UserDto {
   private String phoneNumber;
   private int exp;
   private String tier;
-  private String createdTime;
-  private String updateTime;
+  private LocalDateTime createdTime;
+  private LocalDateTime updateTime;
   private String profileImg;
   private int followerNum;
   private int followeeNum;
