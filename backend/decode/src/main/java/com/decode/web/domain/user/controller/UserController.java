@@ -20,6 +20,8 @@ import com.decode.web.global.ResponseDto;
 import com.decode.web.global.utils.authentication.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.LinkedList;
@@ -28,9 +30,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,6 +49,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Slf4j
 @Tag(name = "UserController", description = "사용자 정보 관련 API")
+@CrossOrigin
 public class UserController {
 
     private final UserService userService;
@@ -74,7 +79,16 @@ public class UserController {
 
     @GetMapping("/user/{id}")
     @Operation(summary = "사용자 정보 조회", description = "사용자 1명의 정보를 조회합니다.")
-    public ResponseDto getUserById(@PathVariable Long id) {
+    public ResponseDto getUserById(@PathVariable Long id, HttpServletRequest req) {
+        log.info("I'm here");
+        Enumeration<String> test = req.getHeaderNames();
+        while(test.asIterator().hasNext()){
+            log.info("req header : {}", test.asIterator().next());
+        }
+        log.info("req header names : {}", test.toString());
+        log.info("req servlet path : {}", req.getServletPath());
+        log.info("req URI: {}", req.getRequestURI());
+        log.info("req URL: {}", req.getRequestURL());
         return new ResponseDto().builder()
                 .data(userMapper.toDto(userService.getUserById(id)))
                 .status(HttpStatus.OK)

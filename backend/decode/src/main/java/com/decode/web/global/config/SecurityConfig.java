@@ -1,7 +1,7 @@
 package com.decode.web.global.config;
 
+
 import com.decode.web.domain.user.service.AuthService;
-import com.decode.web.global.filter.JwtAuthenticationFilter;
 import com.decode.web.global.utils.authentication.JwtAccessDeniedHandler;
 import com.decode.web.global.utils.authentication.JwtAuthenticationEntryPoint;
 import com.decode.web.global.utils.authentication.JwtTokenProvider;
@@ -14,7 +14,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsUtils;
 
 @Configuration
@@ -26,7 +25,7 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtTokenProvider jwtTokenProvider;
-    private final CorsFilterConfig corsFilterConfig;
+    private final CorsConfig corsconfig;
     private final AuthService authservice;
 
 
@@ -72,8 +71,8 @@ public class SecurityConfig {
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                         .accessDeniedHandler(jwtAccessDeniedHandler)
                 )
-                .addFilter(corsFilterConfig.corsFilter());
-//                .addFilterBefore(new JwtAuthenticationFilter(authservice,jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilter(corsconfig.corsFilter());
+//                .addFilterBefore(new JwtAuthenticationFilter(authservice.jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
     }

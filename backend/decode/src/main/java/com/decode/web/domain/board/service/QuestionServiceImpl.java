@@ -90,6 +90,7 @@ public class QuestionServiceImpl implements QuestionService {
     public Long createQuestion(CreateQuestionDto question) {
         UserProfileEntity questionWriter = userProfileRepository.getReferenceById(
                 question.getQuestionWriterId());
+
         QuestionDto questionDto = new QuestionDto(question);
         questionDto.setQuestionWriter(questionWriter);
         QuestionEntity questionEntity = questionMapper.toEntity(questionDto);
@@ -121,9 +122,8 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public void deleteQuestion(Long questionId) {
-        QuestionEntity questionEntity = questionRepository.getReferenceById(questionId);
-        questionRepository.delete(questionEntity);
+    public void deleteQuestion(Long questionId, QuestionEntity targetQuestion) {
+        questionRepository.delete(targetQuestion);
     }
 
     @Override
