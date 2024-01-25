@@ -1,0 +1,26 @@
+<template>
+  <div style="text-align: center; margin-top: 8%; margin-bottom: 10%">
+    <img style="width: 3%" src="./LogoDecode3.png" />
+    <br />
+    <br />
+    <h1 style="color: #999999">회원님의 계정은 다음과 같습니다.</h1>
+    <br />
+    <h2 style="color: #34a080; text-decoration: underline">옛다 네 이메일이다 받아묵어라*****@*****.com</h2>
+    <br />
+    <br />
+    <router-link to="/login"
+      ><v-btn
+        color="#62C0A6"
+        size="x-large"
+        type="submit"
+        variant="elevated"
+        style="border-radius: 30px; font-size: smaller; font-weight: bolder; color: #000000"
+        >로그인 화면으로</v-btn
+      ></router-link
+    >
+  </div>
+</template>
+
+<script setup></script>
+
+<style scoped></style>
