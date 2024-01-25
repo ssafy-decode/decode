@@ -24,7 +24,7 @@ public class CorsConfig {
         // 개발 중에는 모든 오리진 허용
         config.setAllowedOriginPatterns(List.of("*"));
 //        config.addAllowedOrigin("*");
-
+        config.addExposedHeader("Authorization");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*"); // 모든 메서드 허용
 
