@@ -1,7 +1,6 @@
 package com.decode.web.domain.user.service;
 
 import com.decode.web.domain.user.dto.AuthDto;
-import org.springframework.transaction.annotation.Transactional;
 
 public interface AuthService {
 
