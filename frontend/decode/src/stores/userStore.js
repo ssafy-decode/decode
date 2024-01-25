@@ -4,8 +4,8 @@ import router from '@/router';
 import axios from 'axios';
 
 // 백엔드 서버 URL로 작성
-const URL = 'http://localhost:80/decode';
-// const URL = process.env.BACKEND_URL;
+// const URL = 'http://localhost:80/decode';
+const URL = process.env.BACKEND_URL;
 
 export const useUserStore = defineStore('user', () => {
   const isLoggedIn = ref(false); // 로그인 여부 확인용 T/F 변수 선언
@@ -111,16 +111,19 @@ export const useUserStore = defineStore('user', () => {
   // 토큰 + 로그인
   const setLoginUser = async (loginuser) => {
     try {
-      const res = await axios.post(`${URL}/login`, loginuser);
-      accessToken.value = parseToken(res);
-      console.log(accessToken.value);
+      console.log("hi")
+      const res = await axios.post(`${URL}/user/1`);
+      console.log(res);
+      // const res = await axios.post(`${URL}/login`, loginuser);
+      // accessToken.value = parseToken(res);
+      // console.log(accessToken.value);
 
-      isLoggedIn.value = true;
+      // isLoggedIn.value = true;
 
-      console.log(res.data);
-      console.log(accessToken.value);
-      router.push({ name: 'mainview' });
-      alert('로그인되었습니다.');
+      // console.log(res.data);
+      // console.log(accessToken.value);
+      // router.push({ name: 'mainview' });
+      // alert('로그인되었습니다.');
       return { success: true, data: accessToken };
     } catch (error) {
       alert('로그인에 실패했습니다.');
@@ -156,7 +159,7 @@ export const useUserStore = defineStore('user', () => {
 
   // 특정 회원 조회
   const setUser = (userid) => {
-    axios
+    axios 
       .get(`${URL}/user/${userid}`, {
         withCredentials: true,
         headers: {
@@ -176,6 +179,7 @@ export const useUserStore = defineStore('user', () => {
   const findUserEmail = (user) => {
     // axios.post(`${URL}/email`, user,
     // {
+    // 12
     //   // withCredentials: true,
     //   headers: {
     //     Authorization: `Bearer ${accessToken}`,
