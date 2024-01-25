@@ -5,7 +5,7 @@ import axios from 'axios';
 
 // 백엔드 서버 URL로 작성
 // const URL = 'http://localhost:80/decode';
-const URL = 'http://i10a507.p.ssafy.io/decode';
+const URL = 'https://i10a507.p.ssafy.io/decode';
 
 export const useUserStore = defineStore('user', () => {
   const isLoggedIn = ref(false); // 로그인 여부 확인용 T/F 변수 선언
