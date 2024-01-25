@@ -48,29 +48,36 @@ export const useUserStore = defineStore('user', () => {
   };
 
   // 회원 가입 1단계
-  const createUser = (user) => {
-    axios
-      .post(`${URL}/regist`, user, {
-        // withCredentials: true,
-        headers: {
-          Authorization: `Bearer ${accessToken}`, // 추후 모든 메소드 headers에 이렇게 작성할 예정 => 일단 회원가입에만
-        },
-      })
-      .then((res) => {
-        const response = res.data;
+  const createUser = async (user) => {
+    try{
+      
+      const res2 = await axios.post(`http://i10a507.p.ssafy.io/decode/user/1`);
+      console.log(res2);
+    }catch(error){
+      console.log(error);
+    }
+    // axios
+    //   .post(`${URL}/regist`, user, {
+    //     // withCredentials: true,
+    //     headers: {
+    //       Authorization: `Bearer ${accessToken}`, // 추후 모든 메소드 headers에 이렇게 작성할 예정 => 일단 회원가입에만
+    //     },
+    //   })
+    //   .then((res) => {
+    //     const response = res.data;
 
-        if (response.status === 'OK') {
-          users.value.push(response.data);
-          userId.value = response.data;
-          userCnt.value = users.value.length;
-          router.push({ name: 'techstack' });
-        } else {
-          throw new Error('Failed to create user');
-        }
-      })
-      .catch((error) => {
-        console.error('Error creating user:', error);
-      });
+    //     if (response.status === 'OK') {
+    //       users.value.push(response.data);
+    //       userId.value = response.data;
+    //       userCnt.value = users.value.length;
+    //       router.push({ name: 'techstack' });
+    //     } else {
+    //       throw new Error('Failed to create user');
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.error('Error creating user:', error);
+    //   });
   };
 
   // 회원 가입 2단계: 선택한 기술 스택 저장
@@ -112,8 +119,8 @@ export const useUserStore = defineStore('user', () => {
   const setLoginUser = async (loginuser) => {
     try {
       console.log("hi")
-      const res = await axios.post(`${URL}/user/1`);
-      console.log(res);
+      const res1 = await axios.post(`https://i10a507.p.ssafy.io/decode/user/1`);
+      console.log(res1);
       // const res = await axios.post(`${URL}/login`, loginuser);
       // accessToken.value = parseToken(res);
       // console.log(accessToken.value);
