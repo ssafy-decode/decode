@@ -22,7 +22,7 @@ export const useUserStore = defineStore('user', () => {
     console.log('Response:', response);
 
     if (response.data && response.data.data) {
-      return response.data.data.substring(8);
+      return response.data.data.substring(7);
     } else {
       console.error('Token is not present in the response data');
       return '';
@@ -107,7 +107,6 @@ export const useUserStore = defineStore('user', () => {
 
       console.log(res.data);
       console.log(accessToken.value);
-
       router.push({ name: 'mainview' });
       alert('로그인되었습니다.');
       return { success: true, data: accessToken };

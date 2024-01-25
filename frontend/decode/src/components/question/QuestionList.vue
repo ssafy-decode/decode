@@ -1,82 +1,121 @@
 <template>
-  <div>
-    <!-- <div>
-      <div class="text-center" style="display: flex; flex-direction: column; align-items: center">
-        <div class="search-container" style="width: 60%">
-          <span style="position: relative; margin: auto; display: flex; align-items: center">
-            <textarea
-              class="view"
-              :placeholder="switchLabel"
-              :style="{
-                height: model ? '300px' : '25px',
-                width: '100%',
-                border: '1px solid #bbb',
-                borderRadius: '8px',
-                fontSize: '15px',
-              }"
-            ></textarea>
-            <input
-              type="image"
-              src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png"
-              alt="검색"
-              style="
-                position: absolute;
-                width: 15px;
-                top: 50%;
-                transform: translateY(-50%);
-                right: 10px;
-                margin: 0;
-                cursor: pointer;
-              "
-            />
-          </span>
+  <div class="wholeContainer">
+    <h1 style="text-align: center">질문 게시판</h1>
+    <br />
+    <div class="text-center" style="display: flex; flex-direction: column; align-items: center">
+      <!--  -->
+      <div class="search-container" style="width: 60%">
+        <!-- <span style="position: relative; margin: auto; display: flex; align-items: center"> -->
+        <!-- <textarea
+          class="view"
+          :placeholder="switchLabel"
+          :style="{
+            height: model ? '300px' : '25px',
+            width: '100%',
+            border: '1px solid #bbb',
+            borderRadius: '8px',
+            fontSize: '15px',
+          }"
+        ></textarea> -->
+        <!-- <input
+          type="image"
+          src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png"
+          alt="검색"
+          style="
+            position: absolute;
+            width: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 10px;
+            margin: 0;
+            cursor: pointer;
+          "
+        /> -->
+        <div class="searchBox">
+          <v-text-field
+            variant="plain"
+            label="검색 키워드를 입력하세요"
+            class="searchInput"
+            v-model="keyword"
+            bg-color="fff"
+          ></v-text-field>
+          <!-- <v-text-field
+            label="검색 태그를 선택하세요"
+            class="searchInput"
+            v-model="tagIds"
+            bg-color="fff"
+          ></v-text-field> -->
+          <v-btn class="searchBtn" size="x-large" @click="searchParams(keyword, tagIds)">검색</v-btn>
         </div>
-        <div class="chips-switch-container" style="display: flex; align-items: center; width: 60%">
-          <span style="display: flex; align-items: center">
-            <v-if ="search">
-              <v-chip closable variant="elevated" style="background-color: cornflowerblue"> python </v-chip>
-              <v-chip closable variant="elevated" style="background-color: orangered"> java </v-chip>
-              <v-chip closable variant="elevated" style="background-color: gold"> C++ </v-chip>
-              <v-chip closable variant="elevated" style="background-color: mediumorchid"> javascript </v-chip>
-            </v-if>
-          </span>
-          <v-switch inset :label="switchLabel" v-model="model" style="margin-top: 3%"></v-switch>
-        </div>
+        <v-container>
+          <v-row class="d-flex justify-end">
+            <v-col cols="12" sm="6" md="4">
+              <v-combobox
+                variant="solo"
+                class="stackBox"
+                bg-color="fff"
+                v-model="select"
+                :items="items"
+                placeholder="ex) java, spring boot, sql"
+                label="기술 스택"
+                multiple
+                chips
+                clearable
+              ></v-combobox>
+            </v-col>
+          </v-row>
+        </v-container>
+        <!-- </span> -->
       </div>
+      <!-- <div class="chips-switch-container" style="display: flex; align-items: center; width: 60%">
+        <span style="display: flex; align-items: center">
+          <v-if ="search">
+          <v-chip closable variant="elevated" style="background-color: cornflowerblue"> python </v-chip>
+          <v-chip closable variant="elevated" style="background-color: orangered"> java </v-chip>
+          <v-chip closable variant="elevated" style="background-color: gold"> C++ </v-chip>
+          <v-chip closable variant="elevated" style="background-color: mediumorchid"> javascript </v-chip>
+          </v-if>
+        </span>
+        <v-switch inset :label="switchLabel" v-model="model" style="margin-top: 3%"></v-switch>
+      </div> -->
+    </div>
+    <div class="btnContainer d-flex justify-end">
+      <v-btn class="createBtn" @click="goCreateQuestion()">질문등록</v-btn>
+    </div>
+    <br />
 
-      <div id="app">
-        <div id="inspire">
-          <div>
-            <v-responsive max-width="400" class="mx-auto mb-4"> </v-responsive>
+    <div id="app">
+      <v-responsive max-width="400" class="mx-auto mb-4"> </v-responsive>
+      <v-card elevation="16" max-width="60%" class="mx-auto px-5 rounded-xl">
+        <v-row>
+          <v-col :cols="8">
+            <v-list-item :key="'question'">
+              <v-list-item-title class="text-center"> 질 문 </v-list-item-title>
+            </v-list-item>
+          </v-col>
 
-            <v-card elevation="16" max-width="60%" class="mx-auto">
-              <v-row>
-                <v-col :cols="8">
-                  <v-list-item :key="'question'">
-                    <v-list-item-content>
-                      <v-list-item-title class="text-center"> 질 문 </v-list-item-title>
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-col>
+          <v-col :cols="4">
+            <v-list-item :key="'author'">
+              <v-list-item-title class="text-center"> 작 성 </v-list-item-title>
+            </v-list-item>
+          </v-col>
+        </v-row>
+        <!-- <v-virtual-scroll id="virtualScroll" :bench="benched" :items="items" height="500" item-height="50"> -->
+        <QuestionListItem v-for="question in store.questions" :key="question.id" :question="question" />
+        <!-- </v-virtual-scroll> -->
+      </v-card>
+    </div>
 
-                <v-col :cols="4">
-                  <v-list-item :key="'author'">
-                    <v-list-item-content>
-                      <v-list-item-title class="text-center"> 작 성 </v-list-item-title>
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-col>
-              </v-row>
+    <!-- <v-list-item>
+      <v-list-item-action class="d-inline"> {{ item }} </v-list-item-action>
+      &nbsp;
+      <v-list-item-content>
+        <v-list-item-title class="d-inline">
+          예시 질문이예요 뾰로롱 <strong>뭐라고 적지 할 말이 없네 {{ item }}</strong>
+        </v-list-item-title>
+      </v-list-item-content>
+    </v-list-item> -->
 
-              <v-virtual-scroll id="virtualScroll" :bench="benched" :items="items" height="500" item-height="50">
-                <template v-slot:default="{ item }"> -->
-    <!-- Q List Item 들어갈 부분 -->
-    <input type="text" v-model="keyword" />
-    <input type="text" v-model="tagIds" />
-    <v-btn @click="searchParams(keyword, tagIds)">검색</v-btn>
-    <!-- <v-btn @click="myFunc(keyword, tagIds)">검색</v-btn> -->
-    <QuestionListItem v-for="question in store.questions" :key="question.id" :question="question" />
-    <!-- for문으로 -->
     <!-- <v-divider></v-divider>
                 </template>
               </v-virtual-scroll>
@@ -92,8 +131,14 @@
 import { useQuestionStore } from '@/stores/questionStore';
 import { ref, computed } from 'vue';
 import QuestionListItem from './QuestionListItem.vue';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const model = ref(false);
+
+const goCreateQuestion = function () {
+  router.push({ path: `/question-create` });
+};
 
 const switchLabel = computed(() => {
   return model.value ? '코드로 검색' : '키워드로 검색';
@@ -110,17 +155,36 @@ const store = useQuestionStore();
 const keyword = ref('');
 const tagIds = ref('');
 
-const myFunc = function (keyword, tagIds) {
-  console.log('keyword is: ', keyword);
-  console.log('tag id is: ', tagIds);
-};
-
 const searchParams = function (keyword, tagIds) {
   store.getQuestions(keyword, tagIds);
 };
+
+const select = ref([]);
+const items = ref([
+  'python',
+  'java',
+  'C++',
+  'javascript',
+  'django',
+  'spring',
+  'spring boot',
+  'kotlin',
+  'sql',
+  'react',
+  'vue',
+  'C#',
+]);
 </script>
 
 <style scoped>
+.wholeContainer {
+  margin-bottom: 40px;
+}
+
+input {
+  border-left: 1px solid black;
+}
+
 .chips-switch-container {
   align-items: center;
 }
@@ -146,5 +210,40 @@ span {
 
 ::-webkit-scrollbar-track {
   background-color: #e6e6e6;
+}
+
+.searchBox {
+  border: 2px solid black;
+  height: 70px;
+  border-radius: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 10px;
+}
+
+.searchInput {
+  width: 50%;
+  height: 60px;
+}
+
+.searchBtn {
+  position: relative;
+  background-color: #62c0a6;
+  margin-right: 0px;
+  border-radius: 30px;
+}
+
+.stackBox ::v-deep(.v-field) {
+  border-radius: 30px;
+}
+
+.btnContainer {
+  width: 80%;
+}
+
+.createBtn {
+  border-radius: 30px;
+  background-color: #62c0a6;
 }
 </style>
