@@ -45,7 +45,7 @@ public class AuthServiceImpl implements AuthService {
 
         String principal = jwtTokenProvider.getPrincipal(token);
         String provider = jwtTokenProvider.getProvider(token);
-        String refreshTokenInRedis = redisService.getValues("RT(:" + provider + "):" + principal);
+        String refreshTokenInRedis = redisService.getValues("RT:" + provider + ":" + principal);
 
         return refreshTokenInRedis != null && refreshTokenInRedis.equals(token);
     }
@@ -53,8 +53,8 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public AuthDto.TokenDto generateToken(String provider, String email) {
-        if (redisService.getValues("RT(" + provider + "):" + email) != null) {
-            redisService.deleteValues("RT(" + provider + "):" + email);
+        if (redisService.getValues("RT:" + provider + ":" + email) != null) {
+            redisService.deleteValues("RT:" + provider + ":" + email);
         }
 
         AuthDto.TokenDto tokenDto = AuthDto.TokenDto.builder()
@@ -68,7 +68,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public void saveRefreshToken(String provider, String principal, String token) {
-        redisService.setValuesWithTimeout("RT(:" + provider + "):" + principal,
+        redisService.setValuesWithTimeout("RT:" + provider + ":" + principal,
                 token,
                 jwtTokenProvider.getTokenExpirationTime(token));
     }
@@ -93,9 +93,9 @@ public class AuthServiceImpl implements AuthService {
         String requestAccessToken = resolveToken(token);
         String principal = getPrincipal(requestAccessToken);
 
-        String refreshTokenInRedis = redisService.getValues("RT(:" + SERVER + "):" + principal);
+        String refreshTokenInRedis = redisService.getValues("RT:" + SERVER + ":" + principal);
         if (refreshTokenInRedis != null) {
-            redisService.deleteValues("RT(:" + SERVER + "):" + principal);
+            redisService.deleteValues("RT:" + SERVER + ":" + principal);
         }
 //        long expiration = jwtTokenProvider.getTokenExpirationTime(requestAccessToken) - new Date().getTime();
 //        redisService.setValuesWithTimeout(requestAccessToken, "logout", expiration);
