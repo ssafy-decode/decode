@@ -207,11 +207,11 @@ const login = async () => {
 </script>
 
 <style scoped>
-.textfield >>> label {
+.textfield :deep(label) {
   color: #ffffff;
 }
 
-.textfield ::v-deep(.v-field) {
+.textfield :deep(.v-field) {
   border-radius: 30px;
 }
 

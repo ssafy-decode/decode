@@ -129,7 +129,7 @@ const toggleSelection = (item) => {
 </script>
 
 <style scoped>
-.combo ::v-deep(.v-field) {
+.combo :deep(.v-field) {
   border-radius: 30px;
 }
 </style>

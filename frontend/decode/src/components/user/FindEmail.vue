@@ -158,11 +158,11 @@ const findemail = () => {
   margin-left: 20px;
   margin-right: 20px;
 }
-.textfield >>> label {
+.textfield :deep(label) {
   color: #ffffff;
 }
 
-.textfield ::v-deep(.v-field) {
+.textfield :deep(.v-field) {
   border-radius: 30px;
 }
 </style>
