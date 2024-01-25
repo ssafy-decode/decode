@@ -9,7 +9,7 @@
     <h2 style="color: #34a080">de;code</h2>
     <!-- 인증 완료 시 alert를 띄워서 기술 스택 창으로 이동하게끔 할 것 (일단 보류) -->
     <br />
-    <router-link to="/techstack"
+    <router-link to="/addUserTag"
       ><btn @click="next">기술 스택 창으로 (화면 이동이 불가능해서 만든 임시 버튼: 구현 후에는 삭제)</btn></router-link
     >
   </div>

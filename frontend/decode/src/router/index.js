@@ -55,7 +55,7 @@ const router = createRouter({
       component: AuthenticationLoadingVue,
     },
     {
-      path: '/techstack',
+      path: '/addUserTag',
       name: 'techstack',
       component: TechStackVue,
     },

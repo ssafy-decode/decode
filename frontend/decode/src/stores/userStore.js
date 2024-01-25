@@ -5,25 +5,42 @@ import axios from 'axios';
 
 // 백엔드 서버 URL로 작성
 const URL = 'http://localhost:80/decode';
-// const URL = 'http://i10a507.p.ssafy.io/decode';
+// const URL = process.env.BACKEND_URL;
 
 export const useUserStore = defineStore('user', () => {
   const isLoggedIn = ref(false); // 로그인 여부 확인용 T/F 변수 선언
   const users = ref([]);
   const searchUsers = ref([]);
+  const tagIdList = ref([]);
   const user = ref(null);
   const userCnt = ref(0);
   const searchUserCnt = ref(0);
   const accessToken = ref('');
-  const userId = ref('');
+  const userId = ref(''); // 가입 시 회원 번호
+  const userEmail = ref('');
   // const withCredentials = ref(false);
+
+  const tagNum = {
+    python: 1,
+    java: 2,
+    'C++': 3,
+    javascript: 4,
+    django: 5,
+    spring: 6,
+    'spring boot': 7,
+    kotlin: 8,
+    sql: 9,
+    react: 10,
+    vue: 11,
+    'C#': 12,
+  };
 
   // responseBody에서 토큰 값을 추출
   const parseToken = (response) => {
     console.log('Response:', response);
 
     if (response.data && response.data.data) {
-      return response.data.data.substring(8);
+      return response.data.data.substring(7); // 8 -> 7 로 수정!
     } else {
       console.error('Token is not present in the response data');
       return '';
@@ -42,16 +59,9 @@ export const useUserStore = defineStore('user', () => {
       .then((res) => {
         const response = res.data;
 
-        console.log('출력되나', res.data);
-        console.log('이게맞나', res.data.data);
-        console.log('아니면이건가', res.data.value);
-
         if (response.status === 'OK') {
-          userId.value = response.data;
-
-          console.log('확인', userId.value);
-
           users.value.push(response.data);
+          userId.value = response.data;
           userCnt.value = users.value.length;
           router.push({ name: 'techstack' });
         } else {
@@ -63,7 +73,7 @@ export const useUserStore = defineStore('user', () => {
       });
   };
 
-  // 회원 가입 2단계: 선택한 기술 스택 저장 (필수 입력 정보는 아님)
+  // 회원 가입 2단계: 선택한 기술 스택 저장
   const saveTechStack = async (selectedTechStack) => {
     try {
       // 1단계 정보가 비어있을 경우 에러 처리
@@ -72,25 +82,24 @@ export const useUserStore = defineStore('user', () => {
         return;
       }
 
-      // 여기서부터 추후 수정할 예정 (변수명도)
-      console.log('RegistrationData:', registrationData.value);
-      console.log('RegistrationData.email:', registrationData.value.email);
+      const tagNums = selectedTechStack.map((item) => tagNum[item]);
+      console.log(tagNums);
 
-      const email = registrationData.value.email;
       const res = await axios.post(
-        `${URL}/techstack`,
-        { email, techStack: selectedTechStack },
+        `${URL}/addUserTag`,
+        { userId: userId.value, techStack: tagNums },
         {
-          withCredentials: true,
+          // withCredentials: true,
           headers: {
-            Authorization: accessToken.value,
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
           },
         },
       );
-      // 1단계 가입 때 혹은 소셜 로그인 때 작성한 이메일을 그대로 들고 와서
-      // 그 이메일이 추가된 db에 techstack도 같이 추가하고 싶음. 어떻게 구현?
+
       if (res.data.status === 200) {
-        console.log('Tech stack saved successfully:', res.data);
+        tagIdList.value.push(res.data.data);
+        console.log('Tech stack saved successfully:', res.data.data);
       } else {
         throw new Error('Failed to save tech stack');
       }
@@ -102,8 +111,10 @@ export const useUserStore = defineStore('user', () => {
   // 토큰 + 로그인
   const setLoginUser = async (loginuser) => {
     try {
-      const res = await axios.post(`${URL}/login`, loginuser); // loginuser는 아직 안 쓰이지만, 로그인 상태로 data 불러와야할 때를 대비해서 일단은 집어넣음
+      const res = await axios.post(`${URL}/login`, loginuser);
       accessToken.value = parseToken(res);
+      console.log(accessToken.value);
+
       isLoggedIn.value = true;
 
       console.log(res.data);
@@ -132,7 +143,7 @@ export const useUserStore = defineStore('user', () => {
       .get(`${URL}/user`, {
         withCredentials: true,
         headers: {
-          Authorization: accessToken.value,
+          Authorization: `Bearer ${accessToken}`,
         },
       })
       .then((res) => {
@@ -150,7 +161,7 @@ export const useUserStore = defineStore('user', () => {
       .get(`${URL}/user/${userid}`, {
         withCredentials: true,
         headers: {
-          Authorization: accessToken.value,
+          Authorization: `Bearer ${accessToken}`,
         },
       })
       .then((res) => {
@@ -164,24 +175,43 @@ export const useUserStore = defineStore('user', () => {
 
   // 이메일 찾기
   const findUserEmail = (user) => {
-    console.log('잘 작동한다잉'); // 함수 추가하기
-    router.push('/foundemail');
+    // axios.post(`${URL}/email`, user,
+    // {
+    //   // withCredentials: true,
+    //   headers: {
+    //     Authorization: `Bearer ${accessToken}`,
+    //   },
+    // })
+    // .then((res) => {
+    //   const response = res.data;
+    //   if (response.status === 'OK') {
+    //     userEmail.value = response.data;
+
+    //     console.log('확인', userEmail.value);
+
+    router.push({ name: 'foundemail' });
+    //   } else {
+    //     throw new Error('Failed to create user');
+    //   }).catch((error) => {
+    //     console.error('Error creating user:', error);
+    //   });
   };
 
   // 비밀번호 찾기
   const findUserPwd = (user) => {
-    console.log('잘 작동한다잉'); // 함수 추가하기
+    // 아직 작성 안 됨
+
     router.push('/foundpwd');
   };
 
-  // 회원 이름 검색
+  // 회원 이름 검색 (아직 구현 안 함)
   const searchName = (username) => {
     axios
       .get(`${URL}/user/search`, {
         withCredentials: true,
         params: { key: 'user_name', word: username },
         headers: {
-          Authorization: accessToken.value,
+          Authorization: `Bearer ${accessToken}`,
         },
       })
       .then((res) => {
@@ -193,13 +223,13 @@ export const useUserStore = defineStore('user', () => {
       });
   };
 
-  // 회원 정보 수정
-  const updateUser = () => {
+  // 회원 정보 수정 (아직 구현 안 함)
+  const updateUser = (userid) => {
     axios
-      .put(`${URL}/user`, user.value, {
+      .put(`${URL}/profile/${userid}`, user.value, {
         withCredentials: true,
         headers: {
-          Authorization: accessToken.value,
+          Authorization: `Bearer ${accessToken}`,
         },
       })
       .then(() => {
@@ -218,7 +248,7 @@ export const useUserStore = defineStore('user', () => {
       .delete(`${URL}/user/${userid}`, {
         withCredentials: true,
         headers: {
-          Authorization: accessToken.value,
+          Authorization: `Bearer ${accessToken}`,
         },
       })
       .then(() => {
@@ -234,9 +264,12 @@ export const useUserStore = defineStore('user', () => {
     isLoggedIn,
     users,
     searchUsers,
+    tagIdList,
+    tagNum,
     user,
     userCnt,
     userId,
+    userEmail,
     searchUserCnt, // 애는 회원 이름 검색에서 쓸 일이 있나 추후 확인
     createUser,
     deleteUser,

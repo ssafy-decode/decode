@@ -1,7 +1,6 @@
 <template>
   <v-toolbar color="transparent">
     <v-btn>
-      <!-- 피그마에서는 버튼이 두 개가 아닌 하나인 것 같아서 로고랑 사이트명이랑 하나로 합쳤습니다. 물론 수정해도 무방합니다.-->
       <router-link to="/">
         <span style="display: flex; justify-content: space-between">
           <img src="./de;code_logo_jin.png" alt="로고이미지" height="30px" /><v-toolbar-title

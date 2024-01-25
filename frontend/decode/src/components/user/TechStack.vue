@@ -109,7 +109,7 @@ const checkboxIcon = (item) => {
 const complete = async () => {
   try {
     console.log('셀렉트', select);
-    console.log('셀렉트밸류', select.value);
+    console.log('셀렉트밸류', select.value); // [0] java, [1] C++ ... Array 형태
     await userStore.saveTechStack(select.value);
     alert('회원가입이 완료되었습니다.\nde;code에 오신 것을 환영합니다!');
   } catch (error) {
