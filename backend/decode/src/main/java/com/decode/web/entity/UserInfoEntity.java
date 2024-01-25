@@ -33,7 +33,7 @@ public class UserInfoEntity extends CommonEntity {
     @Column(name = "user_email", unique = true)
     private String email;
 
-    @Column(name = "user_name", unique = true)
+    @Column(name = "user_name")
     private String name;
 
     @Column(name = "user_password")

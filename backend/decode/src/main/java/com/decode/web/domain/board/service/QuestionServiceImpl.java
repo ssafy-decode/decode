@@ -20,7 +20,9 @@ import com.decode.web.entity.QuestionEntity;
 import com.decode.web.entity.QuestionTagEntity;
 import com.decode.web.entity.UserProfileEntity;
 import java.time.LocalDateTime;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -49,10 +51,11 @@ public class QuestionServiceImpl implements QuestionService {
             questionEntityList = questionRepository.findByTitleContainingOrderByCreatedTimeDesc(
                     keyword);
         }
-        List<QuestionListDto> questionListDtoList = new java.util.LinkedList<>(
+        List<QuestionListDto> questionListDtoList = new LinkedList<>(
                 questionEntityList.stream()
                         .map(this::convertToDto)
-                        .toList());
+                        .toList()
+        );
         for (int i = questionListDtoList.size() - 1; i >= 0; i--) {
             for (long tag : tagIds) {
                 if (!questionListDtoList.get(i).getTagList().contains(tag)) {
@@ -65,16 +68,21 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     private QuestionListDto convertToDto(QuestionEntity question) {
-        List<Long> questionTagList = tagService.getQuestionTagIdList(question.getId());
         return new QuestionListDto(
                 question.getId(),
                 question.getTitle(),
                 responseUserProfileMapper.toDto(question.getQuestionWriter()),
-                questionTagList,
+                tagIds(question.getQuestionTags()),
                 question.getCreatedTime(),
-                answerRepository.countByQuestionId(question.getId()),
-                metooRepository.countByQuestionId(question.getId())
+                question.getAnswers().size(),
+                question.getMetoos().size()
         );
+    }
+
+    private List<Long> tagIds(List<QuestionTagEntity> questionTagEntityList) {
+        return questionTagEntityList.stream()
+                .map(QuestionTagEntity::getTagId)
+                .collect(Collectors.toList());
     }
 
 

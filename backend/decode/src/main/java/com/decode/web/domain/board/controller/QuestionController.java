@@ -39,8 +39,8 @@ public class QuestionController {
 
     @GetMapping
     @Operation(summary = "질문 검색(질문 목록 조회)", description = "keyword를 통한 질문 리스트 호출")
-    public ResponseDto questionSearch(@RequestParam String keyword,
-            @RequestParam List<Long> tagIds) {
+    public ResponseDto questionSearch(@RequestParam(name = "keyword") String keyword,
+            @RequestParam(name = "tagIds") List<Long> tagIds) {
         List<QuestionListDto> questionList = questionService.searchQuestionByKeyword(keyword,
                 tagIds);
         return ResponseDto.builder().status(HttpStatus.OK).message("조회 완료").data(questionList)

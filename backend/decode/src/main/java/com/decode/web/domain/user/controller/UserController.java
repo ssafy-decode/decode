@@ -1,8 +1,11 @@
 package com.decode.web.domain.user.controller;
 
+import com.decode.web.domain.mail.dto.MailDto;
+import com.decode.web.domain.mail.service.MailService;
 import com.decode.web.domain.user.dto.AuthDto.LoginDto;
 import com.decode.web.domain.user.dto.AuthDto.TokenDto;
 import com.decode.web.domain.user.dto.FindEmailDto;
+import com.decode.web.domain.user.dto.FindPasswordDto;
 import com.decode.web.domain.user.dto.InfoUpdateDto;
 import com.decode.web.domain.user.dto.RequestUserTagDto;
 import com.decode.web.domain.user.dto.UserInfoDto;
@@ -19,6 +22,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -53,6 +58,7 @@ public class UserController {
     private final AuthService authService;
     private final BCryptPasswordEncoder encoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final MailService maillService;
 
     private final int COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30일
 
@@ -151,7 +157,7 @@ public class UserController {
 
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "로그인 API")
-    public ResponseDto login(@RequestBody LoginDto loginDto) {
+    public ResponseDto login(@RequestBody LoginDto loginDto, HttpServletResponse res){
         log.info("loginDto : {}", loginDto);
         TokenDto tokenDto = authService.login(loginDto);
         // 로그인 성공하면 토큰을 헤더에 쿠키로 저장
@@ -163,8 +169,15 @@ public class UserController {
                 .build();
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.SET_COOKIE, httpcookie.toString());
+        Cookie cookie = new Cookie("refresh-token", tokenDto.getRefreshToken());
+        cookie.setMaxAge(COOKIE_MAX_AGE);
+        cookie.setSecure(true);
+        cookie.setDomain("localhost");
+        res.addCookie(cookie);
+        res.setHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
+
         return new ResponseDto().builder()
-                .data("Bearer " + tokenDto.getAccessToken())
+                .data("login success")
                 .status(HttpStatus.OK)
                 .headers(headers)
                 .message("login").build();
@@ -193,12 +206,9 @@ public class UserController {
     @PostMapping("/validate")
     @Operation(summary = "토큰 만료 검사", description = "토큰 만료 검사 API")
     public ResponseDto validate(@RequestHeader("Authorization") String token) {
-//        요청 -> AT 검사 -> AT 유효 -> 요청 실행
-//        요청 -> AT 검사 -> AT 기간만 만료 -> AT, RT로 재발급 요청 -> RT 유효 -> 재발급
-//        요청 -> AT 검사 -> AT 기간만 만료 -> AT, RT로 재발급 요청 -> RT 유효X -> 로그아웃
         log.info("validate");
-        // 만료되면 true, 유효하면 false
-        if (!authService.validate(token)) {
+        // 만료되면 false, 유효하면 true
+        if (authService.validate(token)) {
             log.info("validated");
             return new ResponseDto().builder()
                     .data(null)
@@ -294,6 +304,36 @@ public class UserController {
         }
         userService.updateUserTag(requestUserTagDto);
         return ResponseDto.builder().status(HttpStatus.OK).build();
+    }
+
+    @PostMapping("/password")
+    @Operation(summary = "비밀번호 찾기", description = "비밀번호 찾기 API")
+    public ResponseDto findPassword(@RequestBody FindPasswordDto findPasswordDto) {
+        // email로 유저 info를 조회했을 때, name, phoneNumber, birth가 일치하는 유저가 있으면
+        if (userService.findUserByEmailAndNameAndPhoneNumberAndBirth(findPasswordDto)) {
+            // 임시 비밀번호 생성
+            String tempPassword = encoder.encode(findPasswordDto.getBirth() + "decode!");
+            // 해당 유저의 비밀번호를 임시 비밀번호로 변경하고
+            userService.updateUserInfo(
+                    userService.getUserByEmail(findPasswordDto.getEmail()).getId(),
+                    encoder.encode(tempPassword));
+            // 해당 이메일로 임시 비밀번호 발송.
+            MailDto mailDto = MailDto.builder()
+                    .to(findPasswordDto.getEmail())
+                    .title("Decode 임시 비밀번호 발급")
+                    .message("임시 비밀번호는 생년월일(6자리) + decode! 입니다.")
+                    .build();
+            log.info("mailDto : {}", mailDto);
+            maillService.sendMail(mailDto);
+            return ResponseDto.builder()
+                    .status(HttpStatus.OK)
+                    .message("임시 비밀번호 발급 완료")
+                    .build();
+        }
+        return ResponseDto.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .message("유저 정보가 일치하지 않습니다.")
+                .build();
     }
 
 }

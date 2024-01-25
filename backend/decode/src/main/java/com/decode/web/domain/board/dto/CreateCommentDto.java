@@ -14,6 +14,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class CreateCommentDto {
+
     @NotEmpty
     private String content;
     @DecimalMin(value = "0", inclusive = true)
