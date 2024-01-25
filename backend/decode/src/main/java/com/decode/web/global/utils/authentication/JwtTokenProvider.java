@@ -103,7 +103,7 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String token) {
         String email = getClaims(token).get("email", String.class);
         UserDetailsImpl userDetailsImpl = userDetailsService.loadUserByUsername(email);
-        return new UsernamePasswordAuthenticationToken(userDetailsImpl, "");
+        return new UsernamePasswordAuthenticationToken(userDetailsImpl,userDetailsImpl.getPassword(), userDetailsImpl.getAuthorities());
     }
 
     public Long getAuthUserId(String token) {

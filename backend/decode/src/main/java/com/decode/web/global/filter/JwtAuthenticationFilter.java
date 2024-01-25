@@ -34,12 +34,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     refreshToken = cookie.getValue();
             }
         }
+        log.info("accessToken : {}", accessToken);
         if(accessToken != null){
+
+            log.info("Authentication : {} ", SecurityContextHolder.getContext().getAuthentication());
 
             if (jwtTokenProvider.validateToken(accessToken)) {
                 // token 유효성 검사 후 securityContext에 저장
                 Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                log.info("Authentication : {} ", SecurityContextHolder.getContext().getAuthentication().isAuthenticated());
                 log.info("인증 정보 저장");
             }
             else if( refreshToken != null && jwtTokenProvider.validateToken(refreshToken) && authService.validateRefreshTokenInRedis(refreshToken)){
@@ -53,8 +57,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 Authentication authentication = jwtTokenProvider.getAuthentication(newAccessToken);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
-                // 쿠키에 새로운 토큰 저장
+                // 헤더에 새로운 토큰 저장
                 res.setHeader("Authorization", "Bearer " + newAccessToken);
+                res.addCookie(new Cookie("access-token", newAccessToken));
             }
             else{
                 // 로그아웃 처리

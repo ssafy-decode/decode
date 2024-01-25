@@ -1,5 +1,6 @@
 package com.decode.web.domain.user.controller;
 
+import com.amazonaws.Response;
 import com.decode.web.domain.mail.dto.MailDto;
 import com.decode.web.domain.mail.service.MailService;
 import com.decode.web.domain.user.dto.AuthDto.LoginDto;
@@ -20,8 +21,6 @@ import com.decode.web.global.ResponseDto;
 import com.decode.web.global.utils.authentication.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
-import java.util.Enumeration;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.LinkedList;
@@ -30,11 +29,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,7 +47,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Slf4j
 @Tag(name = "UserController", description = "사용자 정보 관련 API")
-@CrossOrigin
 public class UserController {
 
     private final UserService userService;
@@ -79,16 +76,7 @@ public class UserController {
 
     @GetMapping("/user/{id}")
     @Operation(summary = "사용자 정보 조회", description = "사용자 1명의 정보를 조회합니다.")
-    public ResponseDto getUserById(@PathVariable Long id, HttpServletRequest req) {
-        log.info("I'm here");
-        Enumeration<String> test = req.getHeaderNames();
-        while(test.asIterator().hasNext()){
-            log.info("req header : {}", test.asIterator().next());
-        }
-        log.info("req header names : {}", test.toString());
-        log.info("req servlet path : {}", req.getServletPath());
-        log.info("req URI: {}", req.getRequestURI());
-        log.info("req URL: {}", req.getRequestURL());
+    public ResponseDto getUserById(@PathVariable Long id) {
         return new ResponseDto().builder()
                 .data(userMapper.toDto(userService.getUserById(id)))
                 .status(HttpStatus.OK)
@@ -160,26 +148,19 @@ public class UserController {
     public ResponseDto login(@RequestBody LoginDto loginDto, HttpServletResponse res){
         log.info("loginDto : {}", loginDto);
         TokenDto tokenDto = authService.login(loginDto);
-        // 로그인 성공하면 토큰을 헤더에 쿠키로 저장
 
-        HttpCookie httpcookie = ResponseCookie.from("refresh-token", tokenDto.getRefreshToken())
-                .httpOnly(true)
-                .maxAge(COOKIE_MAX_AGE)
-                .secure(true)
-                .build();
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.SET_COOKIE, httpcookie.toString());
+        // 로그인 성공하면 액세스토큰은 헤더, 리프레시토큰은 쿠키에 저장
         Cookie cookie = new Cookie("refresh-token", tokenDto.getRefreshToken());
         cookie.setMaxAge(COOKIE_MAX_AGE);
         cookie.setSecure(true);
         cookie.setDomain("localhost");
         res.addCookie(cookie);
+
         res.setHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
 
         return new ResponseDto().builder()
                 .data("login success")
                 .status(HttpStatus.OK)
-                .headers(headers)
                 .message("login").build();
     }
 
