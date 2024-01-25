@@ -2,7 +2,7 @@ version: "3"
 
 services:
   vue_app:
-    image: ggramgyo/decode-hub:frontend
+    image: ggramgyo/decode-hub:frontend:latest
     container_name: decode-client
     ports:
       - "3000:80"
