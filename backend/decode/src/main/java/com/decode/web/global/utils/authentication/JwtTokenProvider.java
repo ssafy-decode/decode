@@ -7,11 +7,8 @@ import com.decode.web.domain.user.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SignatureException;
 import jakarta.annotation.PostConstruct;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
@@ -103,7 +100,8 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String token) {
         String email = getClaims(token).get("email", String.class);
         UserDetailsImpl userDetailsImpl = userDetailsService.loadUserByUsername(email);
-        return new UsernamePasswordAuthenticationToken(userDetailsImpl, "");
+        return new UsernamePasswordAuthenticationToken(userDetailsImpl.getId(),
+                userDetailsImpl.getPassword(), userDetailsImpl.getAuthorities());
     }
 
     public Long getAuthUserId(String token) {
@@ -112,6 +110,7 @@ public class JwtTokenProvider {
         }
         return getClaims(token).get("userId", Long.class);
     }
+
     public String getProvider(String token) {
         if (token.startsWith("Bearer ")) {
             token = token.substring(7);
@@ -123,10 +122,10 @@ public class JwtTokenProvider {
         return getClaims(token).getExpiration().getTime();
     }
 
-    public boolean validateToken(String token){
+    public boolean validateToken(String token) {
         try {
             return !getClaims(token).getExpiration().before(new Date());
-        } catch(ExpiredJwtException e) {
+        } catch (ExpiredJwtException e) {
             log.error("access token expired");
             return false;
         }
@@ -158,9 +157,6 @@ public class JwtTokenProvider {
 //        }
 //        return false;
 //    }
-
-
-
 
 
 }

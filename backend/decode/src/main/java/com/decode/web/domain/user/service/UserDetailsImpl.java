@@ -1,6 +1,7 @@
 package com.decode.web.domain.user.service;
 
 import com.decode.web.entity.UserInfoEntity;
+import java.util.ArrayList;
 import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,7 +15,9 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(() -> "USER"); // key: ROLE_권한
+        return authorities;
     }
 
     @Override
