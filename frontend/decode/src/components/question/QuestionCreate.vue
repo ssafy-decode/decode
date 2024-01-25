@@ -2,6 +2,24 @@
   <v-sheet class="mx-auto createBox" width="1000">
     <v-form @submit.prevent="createQuestion">
       <v-text-field variant="solo" label="질문 제목" v-model.trim="questionTitle"></v-text-field>
+      <v-container>
+        <v-row class="d-flex justify-end">
+          <v-col cols="12" sm="6" md="4">
+            <v-combobox
+              variant="solo"
+              class="stackBox"
+              bg-color="fff"
+              v-model="select"
+              :items="items"
+              placeholder="ex) java, spring boot, sql"
+              label="기술 스택"
+              multiple
+              chips
+              clearable
+            ></v-combobox>
+          </v-col>
+        </v-row>
+      </v-container>
       <MyEditor @editor-content-updated="updateEditorContent" />
       <div id="btnBox">
         <v-btn id="submitBtn" type="submit">질문등록</v-btn>
@@ -19,16 +37,30 @@ import axios from 'axios';
 import { useRouter } from 'vue-router';
 
 const questionStore = useQuestionStore();
+const userStore = useUserStore();
 const router = useRouter();
 // 넘겨줄 데이터
 const questionTitle = ref('');
 const questionContent = ref('');
-const questionWriterId = ref(17); // 로그인된 사용자 id 가져와서 넣어야함
-const tagId = ref(0); // 임시 태그 id
-const version = ref('string'); // 임시 태그 버전
-// tags라는 array 안에 tagId와 version의 정보가 json 형태로 원소로 들어감
+const questionWriterId = ref(null); // 로그인된 사용자 id 가져와서 넣어야함
+const tagId = ref(null);
+const version = ref('');
 
-const userStore = useUserStore();
+const select = ref([]);
+const items = ref([
+  'python',
+  'java',
+  'C++',
+  'javascript',
+  'django',
+  'spring',
+  'spring boot',
+  'kotlin',
+  'sql',
+  'react',
+  'vue',
+  'C#',
+]);
 
 const updateEditorContent = function (content) {
   questionContent.value = content;
@@ -41,10 +73,7 @@ const createQuestion = function () {
     title: questionTitle.value,
     content: questionContent.value,
     questionWriterId: questionWriterId.value,
-    tags: [
-      { tagId: tagId.value, version: version.value },
-      { tagId: 1, version: '99.99.99' },
-    ],
+    tags: [{ tagId: tagId.value, version: version.value }],
   };
 
   console.log(data);
