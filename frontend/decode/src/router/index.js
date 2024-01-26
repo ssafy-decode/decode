@@ -26,11 +26,6 @@ const router = createRouter({
       component: MainView,
     },
     {
-      path: '/',
-      name: 'login',
-      component: LoginForm,
-    },
-    {
       path: '/user',
       name: 'userview',
       component: UserView,
@@ -84,6 +79,8 @@ const router = createRouter({
       path: '/foundpwd',
       name: 'foundpwd',
       component: FoundPwdVue,
+    },
+    {
       path: '/question-create',
       name: 'question-create',
       component: QuestionCreateView,
