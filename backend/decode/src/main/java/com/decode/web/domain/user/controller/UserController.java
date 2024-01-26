@@ -174,11 +174,12 @@ public class UserController {
     public ResponseDto logout(@RequestHeader("Authorization") String token) {
         // 로그아웃 성공하면 쿠키 삭제 및 redis에서 토큰 삭제, status 200 반환,
         authService.logout(token);
-        HttpCookie httpcookie = ResponseCookie.from("refresh-token", "")
-                .httpOnly(true)
-                .maxAge(0)
-                .secure(true)
-                .build();
+
+        Cookie cookie = new Cookie("refresh-token", null);
+        cookie.setMaxAge(0);
+        cookie.setSecure(true);
+        cookie.setDomain("localhost");
+
         return new ResponseDto().builder()
                 .data(null)
                 .status(HttpStatus.OK)
@@ -294,11 +295,12 @@ public class UserController {
         // email로 유저 info를 조회했을 때, name, phoneNumber, birth가 일치하는 유저가 있으면
         if (userService.findUserByEmailAndNameAndPhoneNumberAndBirth(findPasswordDto)) {
             // 임시 비밀번호 생성
-            String tempPassword = encoder.encode(findPasswordDto.getBirth() + "decode!");
+            String rawPasswrod = findPasswordDto.getBirth() + "decode!";
+            String tempPassword = encoder.encode(rawPasswrod);
             // 해당 유저의 비밀번호를 임시 비밀번호로 변경하고
             userService.updateUserInfo(
                     userService.getUserByEmail(findPasswordDto.getEmail()).getId(),
-                    encoder.encode(tempPassword));
+                    tempPassword);
             // 해당 이메일로 임시 비밀번호 발송.
             MailDto mailDto = MailDto.builder()
                     .to(findPasswordDto.getEmail())
