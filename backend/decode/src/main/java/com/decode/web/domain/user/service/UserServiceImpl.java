@@ -103,6 +103,7 @@ public class UserServiceImpl implements UserService {
     public void updateUserInfo(Long id, String password) {
         UserInfoEntity user = userInfoRepository.getReferenceById(id);
         user.updateInfo(password);
+
     }
 
 
@@ -115,13 +116,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean pwConfirm(Long id, String password) {
-        UserInfoEntity user = userInfoRepository.findById(id)
-                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
-        if (user.getPassword().equals(password)) {
-            return false;
-        }
-
-        return true;
+        UserInfoEntity user = userInfoRepository.getReferenceById(id);
+        log.info("user: {}", user.getPassword());
+        log.info("password: {}", password);
+        return user.getPassword().equals(password);
     }
 
     @Override
