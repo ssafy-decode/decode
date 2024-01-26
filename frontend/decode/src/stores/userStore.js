@@ -3,10 +3,16 @@ import { defineStore } from 'pinia';
 import router from '@/router';
 import axios from 'axios';
 
-// 백엔드 서버 URL로 작성
 const URL = process.env.VUE_APP_BACKEND_URL;
 
 export const useUserStore = defineStore('user', () => {
+  // headers: {
+  //   Authorization: `Bearer ${accessToken}`,
+  // }
+  // 필요한 곳:
+  // 로그아웃, 토큰재발급, 토큰검사, 비번확인, 모든유저조회(x),
+  // 비번수정, 프로필수정, 팔로우, 팔로우취소
+
   const isLoggedIn = ref(false); // 로그인 여부 확인용 T/F 변수 선언
   const users = ref([]);
   const searchUsers = ref([]);
@@ -16,9 +22,9 @@ export const useUserStore = defineStore('user', () => {
   const searchUserCnt = ref(0);
   const accessToken = ref('');
   const userId = ref(''); // 가입 시 회원 번호
-  const userEmail = ref('');
-  // const withCredentials = ref(false);
+  const foundEmail = ref(''); // 이메일 찾기에서의 회원 이메일
 
+  // 태그명 & 태그번호 매칭
   const tagNum = {
     python: 1,
     java: 2,
@@ -34,12 +40,13 @@ export const useUserStore = defineStore('user', () => {
     'C#': 12,
   };
 
-  // responseBody에서 토큰 값을 추출
+  // responseBody에서 토큰 값 추출
   const parseToken = (response) => {
-    console.log('Response:', response);
+    const res = response.headers.get('Authorization');
 
-    if (response.data && response.data.data) {
-      return response.data.data.substring(7); // 8 -> 7 로 수정!
+    if (res) {
+      console.log('Extracted Token:', res.substring(7));
+      return res.substring(7); // 'Bearer ' 파싱 작업
     } else {
       console.error('Token is not present in the response data');
       return '';
@@ -50,10 +57,7 @@ export const useUserStore = defineStore('user', () => {
   const createUser = (user) => {
     axios
       .post(`${URL}/regist`, user, {
-        // withCredentials: true,
-        headers: {
-          Authorization: `Bearer ${accessToken}`, // 추후 모든 메소드 headers에 이렇게 작성할 예정 => 일단 회원가입에만
-        },
+        withCredentials: true,
       })
       .then((res) => {
         const response = res.data;
@@ -82,15 +86,12 @@ export const useUserStore = defineStore('user', () => {
       }
 
       const tagNums = selectedTechStack.map((item) => tagNum[item]);
-      console.log(tagNums);
-
       const res = await axios.post(
         `${URL}/addUserTag`,
         { userId: userId.value, tagIdList: tagNums },
         {
-          // withCredentials: true,
+          withCredentials: true,
           headers: {
-            Authorization: `Bearer ${accessToken}`,
             'Content-Type': 'application/json',
           },
         },
@@ -110,19 +111,11 @@ export const useUserStore = defineStore('user', () => {
   // 토큰 + 로그인
   const setLoginUser = async (loginuser) => {
     try {
-      console.log('hi');
-      const res = await axios.post(`${URL}/user/1`);
-      console.log(res);
-      // const res = await axios.post(`${URL}/login`, loginuser);
-      // accessToken.value = parseToken(res);
-      // console.log(accessToken.value);
-
-      // isLoggedIn.value = true;
-
-      // console.log(res.data);
-      // console.log(accessToken.value);
-      // router.push({ name: 'mainview' });
-      // alert('로그인되었습니다.');
+      const res = await axios.post(`${URL}/login`, loginuser);
+      accessToken.value = parseToken(res);
+      isLoggedIn.value = true;
+      router.push({ name: 'mainview' });
+      alert('로그인되었습니다.');
       return { success: true, data: accessToken };
     } catch (error) {
       alert('로그인에 실패했습니다.');
@@ -130,7 +123,7 @@ export const useUserStore = defineStore('user', () => {
     }
   };
 
-  // 로그아웃 (아직 버튼 구현 안 함)
+  // 로그아웃
   const setLogout = () => {
     isLoggedIn.value = false;
     accessToken.value = '';
@@ -148,7 +141,7 @@ export const useUserStore = defineStore('user', () => {
         },
       })
       .then((res) => {
-        console.log(res.data); // 작동 안 함 cors?
+        console.log(res.data);
         users.value = res.data;
       })
       .catch((error) => {
@@ -161,9 +154,9 @@ export const useUserStore = defineStore('user', () => {
     axios
       .get(`${URL}/user/${userid}`, {
         withCredentials: true,
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+        // headers: {
+        //   Authorization: `Bearer ${accessToken}`,
+        // },
       })
       .then((res) => {
         console.log('Fetched user data:', res.data);
@@ -176,56 +169,65 @@ export const useUserStore = defineStore('user', () => {
 
   // 이메일 찾기
   const findUserEmail = (user) => {
-    // axios.post(`${URL}/email`, user,
-    // {
-    // 12
-    //   // withCredentials: true,
-    //   headers: {
-    //     Authorization: `Bearer ${accessToken}`,
-    //   },
-    // })
-    // .then((res) => {
-    //   const response = res.data;
-    //   if (response.status === 'OK') {
-    //     userEmail.value = response.data;
-
-    //     console.log('확인', userEmail.value);
-
-    router.push({ name: 'foundemail' });
-    //   } else {
-    //     throw new Error('Failed to create user');
-    //   }).catch((error) => {
-    //     console.error('Error creating user:', error);
-    //   });
-  };
-
-  // 비밀번호 찾기
-  const findUserPwd = (user) => {
-    // 아직 작성 안 됨
-
-    router.push('/foundpwd');
-  };
-
-  // 회원 이름 검색 (아직 구현 안 함)
-  const searchName = (username) => {
     axios
-      .get(`${URL}/user/search`, {
+      .post(`${URL}/email`, user, {
         withCredentials: true,
-        params: { key: 'user_name', word: username },
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
       })
       .then((res) => {
-        searchUsers.value = res.data;
-        searchUserCnt.value = searchUsers.value.length;
+        const response = res.data;
+        if (response.status === 'OK') {
+          foundEmail.value = response.data;
+          console.log('Found user email');
+          router.push({ name: 'foundemail' });
+        } else {
+          throw new Error('Failed to find user email');
+        }
       })
-      .catch(() => {
-        alert('검색 대상을 찾지 못했습니다.');
+      .catch((error) => {
+        console.error('Error finding user email:', error);
       });
   };
 
-  // 회원 정보 수정 (아직 구현 안 함)
+  // 비밀번호 찾기 (추후 우철이가 머지하면 임시 비번으로 로그인 테스트 다시 시도)
+  const findUserPwd = (user) => {
+    axios
+      .post(`${URL}/password`, user, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        const response = res.data;
+        if (response.status === 'OK') {
+          console.log('Sent temporary password');
+          router.push({ name: 'foundpwd' });
+        } else {
+          throw new Error('Failed to find user password');
+        }
+      })
+      .catch((error) => {
+        console.error('Error finding user password:', error);
+      });
+  };
+
+  // // 회원 이름 검색
+  // const searchName = (username) => {
+  //   axios
+  //     .get(`${URL}/user/search`, {
+  //       withCredentials: true,
+  //       params: { key: 'user_name', word: username },
+  //       headers: {
+  //         Authorization: `Bearer ${accessToken}`,
+  //       },
+  //     })
+  //     .then((res) => {
+  //       searchUsers.value = res.data;
+  //       searchUserCnt.value = searchUsers.value.length;
+  //     })
+  //     .catch(() => {
+  //       alert('검색 대상을 찾지 못했습니다.');
+  //     });
+  // };
+
+  // 회원 프로필 수정
   const updateUser = (userid) => {
     axios
       .put(`${URL}/profile/${userid}`, user.value, {
@@ -244,24 +246,23 @@ export const useUserStore = defineStore('user', () => {
       });
   };
 
-  // 회원 삭제
-  const deleteUser = (userid) => {
-    axios
-      .delete(`${URL}/user/${userid}`, {
-        withCredentials: true,
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-      .then(() => {
-        users.value = users.value.filter((u) => u.userId !== userid);
-        userCnt.value = users.value.length;
-        router.push({ name: 'userList' });
-      });
-  };
+  // // 회원 삭제
+  // const deleteUser = (userid) => {
+  //   axios
+  //     .delete(`${URL}/user/${userid}`, {
+  //       withCredentials: true,
+  //       headers: {
+  //         Authorization: `Bearer ${accessToken}`,
+  //       },
+  //     })
+  //     .then(() => {
+  //       users.value = users.value.filter((u) => u.userId !== userid);
+  //       userCnt.value = users.value.length;
+  //       router.push({ name: 'userList' });
+  //     });
+  // };
 
   return {
-    // withCredentials,
     accessToken,
     isLoggedIn,
     users,
@@ -271,15 +272,15 @@ export const useUserStore = defineStore('user', () => {
     user,
     userCnt,
     userId,
-    userEmail,
+    foundEmail,
     searchUserCnt, // 애는 회원 이름 검색에서 쓸 일이 있나 추후 확인
     createUser,
-    deleteUser,
+    // deleteUser,
     setLogout,
     setUser,
     findUserEmail,
     findUserPwd,
-    searchName,
+    // searchName,
     updateUser,
     setLoginUser,
     setUsers,

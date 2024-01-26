@@ -192,6 +192,8 @@ const login = async () => {
     email: email.value,
     password: password.value,
   };
+  console.log(user);
+
   try {
     const result = await userStore.setLoginUser(user);
 

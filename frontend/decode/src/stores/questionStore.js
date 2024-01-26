@@ -4,8 +4,8 @@ import axios from 'axios';
 import { useRouter } from 'vue-router';
 
 export const useQuestionStore = defineStore('question', () => {
-  // const API_URL = process.env.VUE_APP_BACKEND_URL;
-  const API_URL = 'http://localhost:80/decode'; // 테스트할 때는 로컬로
+  const API_URL = process.env.VUE_APP_BACKEND_URL;
+  // const API_URL = 'http://localhost:80/decode'; // 테스트할 때는 로컬로
   const router = useRouter();
   const accessToken = ref(null);
   const questions = ref([]);

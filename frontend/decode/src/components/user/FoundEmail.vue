@@ -5,7 +5,7 @@
     <br />
     <h1 style="color: #999999">회원님의 계정은 다음과 같습니다.</h1>
     <br />
-    <h2 style="color: #34a080; text-decoration: underline">옛다 네 이메일이다 받아묵어라*****@*****.com</h2>
+    <h2 style="color: #34a080; text-decoration: underline">{{ hideEmail(foundEmail) }}</h2>
     <br />
     <br />
     <router-link to="/login"
@@ -21,6 +21,23 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { useUserStore } from '@/stores/userStore';
+
+const userStore = useUserStore();
+
+const foundEmail = userStore.foundEmail;
+
+console.log('일단 가져왔는지');
+console.log(foundEmail);
+
+const hideEmail = (email) => {
+  const idx = email.indexOf('@');
+  return email.substring(0, 2) + '*'.repeat(idx - 2) + email.substring(idx);
+};
+
+console.log('제대로 잘렸는지');
+console.log(hideEmail(foundEmail));
+</script>
 
 <style scoped></style>

@@ -142,8 +142,8 @@ const findemail = () => {
 
     const user = {
       name: name.value,
-      birth: birthday.value,
       phoneNumber: phone.value,
+      birth: birthday.value,
     };
 
     userStore.findUserEmail(user);
