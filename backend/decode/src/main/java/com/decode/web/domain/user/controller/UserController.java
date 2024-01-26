@@ -237,10 +237,17 @@ public class UserController {
 
     @PostMapping("/confirm")
     @Operation(summary = "비밀번호 확인", description = "비밀번호 확인 API")
-    public ResponseDto pwConfirm(@RequestBody String password) {
+    public ResponseDto pwConfirm(@RequestBody Map<String, String> map){
 
-        String encodedPassword = encoder.encode(password);
-        Long uid = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String password = map.get("password");
+        String encodedPassword = SecurityContextHolder.getContext().getAuthentication().getCredentials().toString();
+
+        if (encoder.matches(password, encodedPassword)) {
+            return new ResponseDto().builder()
+                    .data(true)
+                    .status(HttpStatus.OK)
+                    .message("password confirm").build();
+        }
 
         return new ResponseDto().builder()
                 .data(userService.pwConfirm(uid, encodedPassword))
