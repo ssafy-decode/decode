@@ -21,8 +21,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import java.security.Security;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpCookie;
@@ -34,6 +38,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -81,9 +86,9 @@ public class UserController {
 
     @PostMapping("/user")
     @Operation(summary = "사용자 정보 수정", description = "사용자 1명의 정보를 수정합니다.(비밀번호 변경)")
-    public ResponseDto updateUserById(@RequestBody InfoUpdateDto infoUpdateDto) {
+    public ResponseDto updateUserById(@Valid @RequestBody InfoUpdateDto infoUpdateDto) {
         String password = infoUpdateDto.getPassword();
-        log.info("password : {}", password);
+
         if (userService.pwCheck(password)) {
             userService.updateUserInfo(infoUpdateDto.getId(), encoder.encode(password));
             return new ResponseDto().builder()
@@ -118,7 +123,7 @@ public class UserController {
 
     @PostMapping("/regist")
     @Operation(summary = "회원 가입", description = "회원 가입 API")
-    public ResponseDto createUser(@RequestBody UserRegistDto user) {
+    public ResponseDto createUser(@Valid @RequestBody UserRegistDto user) {
         log.debug("user : {}", user);
         Long id = null;
         if (userService.emailDupCheck(user.getEmail())
@@ -150,7 +155,7 @@ public class UserController {
 
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "로그인 API")
-    public ResponseDto login(@RequestBody LoginDto loginDto, HttpServletResponse res) {
+    public ResponseDto login(@Valid @RequestBody LoginDto loginDto, HttpServletResponse res) {
         log.info("loginDto : {}", loginDto);
         TokenDto tokenDto = authService.login(loginDto);
 
@@ -158,6 +163,7 @@ public class UserController {
         Cookie cookie = new Cookie("refresh-token", tokenDto.getRefreshToken());
         cookie.setMaxAge(COOKIE_MAX_AGE);
         cookie.setSecure(true);
+        cookie.setDomain("i10a507.p.ssafy.io");
         cookie.setDomain("localhost");
         res.addCookie(cookie);
 
@@ -171,14 +177,19 @@ public class UserController {
 
     @PostMapping("/logout")
     @Operation(summary = "로그아웃", description = "로그아웃 API")
-    public ResponseDto logout(@RequestHeader("Authorization") String token) {
-        // 로그아웃 성공하면 쿠키 삭제 및 redis에서 토큰 삭제, status 200 반환,
+    public ResponseDto logout(@RequestHeader("Authorization") String token, HttpServletResponse res) {
+        // 로그아웃 성공하면 쿠키 삭제 및 redis에서 토큰 삭제
         authService.logout(token);
 
+        //쿠키 삭제
         Cookie cookie = new Cookie("refresh-token", null);
         cookie.setMaxAge(0);
         cookie.setSecure(true);
         cookie.setDomain("localhost");
+        res.addCookie(cookie);
+
+        // 헤더에서 토큰 삭제
+        res.setHeader("Authorization", null);
 
         return new ResponseDto().builder()
                 .data(null)
@@ -211,8 +222,14 @@ public class UserController {
     @GetMapping("/email")
     @Operation(summary = "이메일 중복 체크", description = "이메일 중복 체크 API")
     public ResponseDto emailDupCheck(@RequestParam String keyword) {
+        if(keyword != null){
+            return new ResponseDto().builder()
+                    .data(userService.emailDupCheck(keyword))
+                    .status(HttpStatus.OK)
+                    .message("email duplicate check").build();
+        }
         return new ResponseDto().builder()
-                .data(userService.emailDupCheck(keyword))
+                .data(false)
                 .status(HttpStatus.OK)
                 .message("email duplicate check").build();
     }
@@ -220,8 +237,14 @@ public class UserController {
     @GetMapping("/nickname")
     @Operation(summary = "닉네임 중복 체크", description = "닉네임 중복 체크 API")
     public ResponseDto nickDupCheck(@RequestParam String keyword) {
+        if(keyword != null){
+            return new ResponseDto().builder()
+                    .data(userService.nickDupCheck(keyword))
+                    .status(HttpStatus.OK)
+                    .message("nickname duplicate check").build();
+        }
         return new ResponseDto().builder()
-                .data(userService.nickDupCheck(keyword))
+                .data(false)
                 .status(HttpStatus.OK)
                 .message("nickname duplicate check").build();
     }
@@ -250,7 +273,7 @@ public class UserController {
         }
 
         return new ResponseDto().builder()
-                .data(userService.pwConfirm(uid, encodedPassword))
+                .data(false)
                 .status(HttpStatus.OK)
                 .message("password confirm").build();
     }
@@ -268,7 +291,7 @@ public class UserController {
 
     @PostMapping("/email")
     @Operation(summary = "이메일 찾기", description = "이메일 찾기 API")
-    public ResponseDto findEmail(@RequestBody FindEmailDto findEmailDto) {
+    public ResponseDto findEmail(@Valid @RequestBody FindEmailDto findEmailDto) {
         return new ResponseDto().builder()
                 .data(userService.findEmail(findEmailDto.getName(), findEmailDto.getPhoneNumber(),
                         findEmailDto.getBirth()))
