@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <h1>My Profile Vue</h1>
-  </div>
+  <div>My Profile Vue</div>
 </template>
 
 <script setup></script>

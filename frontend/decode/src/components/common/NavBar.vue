@@ -22,7 +22,11 @@
 
     <!-- 랭킹 nav -->
 
-    <!-- 마이페이지 nav -->
+    <v-btn v-show="userStore.isLoggedIn">
+      <router-link to="/info">
+        <v-toolbar-items>마이페이지</v-toolbar-items>
+      </router-link>
+    </v-btn>
 
     <v-spacer></v-spacer>
     <v-btn id="loginBtn" v-if="userStore.isLoggedIn" @click="logout">로그아웃</v-btn>
