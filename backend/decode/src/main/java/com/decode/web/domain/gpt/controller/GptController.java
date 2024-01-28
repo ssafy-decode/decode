@@ -24,6 +24,7 @@ public class GptController {
         GptApiResponseDto gptApiResponseDto = new GptApiResponseDto();
         gptApiResponseDto.setTagIds(gptApiService.titlesByError(gptApiDto.getContent()));
         gptApiResponseDto.setTitles(gptApiService.keywordsByError(gptApiDto.getContent()));
+        
         return ResponseDto.builder()
                 .status(HttpStatus.OK)
                 .message("GPT 추천 완료")
