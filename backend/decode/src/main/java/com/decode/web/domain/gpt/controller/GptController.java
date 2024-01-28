@@ -5,6 +5,7 @@ import com.decode.web.domain.gpt.dto.GptApiResponseDto;
 import com.decode.web.domain.gpt.service.GptApiServiceImpl;
 import com.decode.web.global.ResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +28,7 @@ public class GptController {
                 .status(HttpStatus.OK)
                 .message("GPT 추천 완료")
                 .data(gptApiResponseDto)
+                .headers(HttpHeaders.EMPTY)
                 .build();
     }
 

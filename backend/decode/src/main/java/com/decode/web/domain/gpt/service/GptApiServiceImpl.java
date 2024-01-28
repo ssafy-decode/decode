@@ -41,8 +41,7 @@ public class GptApiServiceImpl {
 
     public List<String> titlesByError(String error) {
         return Arrays.stream(response(error, TITLE_VALUE).title().split("\n"))
-                .map(line -> line.substring(3))
-                .map(line -> line.replace("\"", ""))
+                .map(line -> line.substring(3).replace("\"", ""))
                 .toList();
     }
 
@@ -53,7 +52,10 @@ public class GptApiServiceImpl {
         messages.add(createMessageMap(USER_ROLE_VALUE, title));
         jsonObject.put(MODEL_KEY, MODEL_VALUE);
         jsonObject.put(MESSAGES_KEY, messages);
-        return webClient.post().bodyValue(jsonObject).retrieve().bodyToMono(GPTResponseDto.class)
+        return webClient.post()
+                .bodyValue(jsonObject)
+                .retrieve()
+                .bodyToMono(GPTResponseDto.class)
                 .block();
     }
 
