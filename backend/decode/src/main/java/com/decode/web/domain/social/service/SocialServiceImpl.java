@@ -70,16 +70,7 @@ public class SocialServiceImpl implements SocialService {
 
     @Override
     public boolean isFollow(Long fromUserId, Long toUserId) {
-        return false;
+        return followRepository.findByFromUserIdAndToUserId(fromUserId, toUserId).isPresent();
     }
 
-    @Override
-    public int getFollowerCount(Long userId) {
-        return 0;
-    }
-
-    @Override
-    public int getFollowingCount(Long userId) {
-        return 0;
-    }
 }
