@@ -2,8 +2,8 @@
   <div class="pa-5" rounded>
     <v-card
       class="mx-auto px-4 py-8"
-      max-width="344"
-      style="background-color: #f3f3f3; border-radius: 50px; box-shadow: 0 0px 36px rgba(0, 0, 0, 0.2)"
+      max-width="418"
+      style="background-color: #f3f3f3; border-radius: 68px; box-shadow: 0 0px 36px rgba(0, 0, 0, 0.2)"
     >
       <v-form v-model="form" onsubmit.prevent="onSubmit">
         <br />
@@ -51,44 +51,48 @@
               />
             </template>
             <template #append-inner>
-              <v-icon @click="toggleEye">{{ showPassword ? 'mdi-eye' : 'mdi-eye-off' }}</v-icon>
+              <v-icon @click="toggleEye" style="margin-right: 10px">{{
+                showPassword ? 'mdi-eye' : 'mdi-eye-off'
+              }}</v-icon>
             </template>
           </v-text-field>
         </div>
 
-        <div style="display: flex; justify-content: end; margin-right: 15px">
+        <div style="display: flex; justify-content: end; margin-right: 50px">
           <span style="color: #34a080; font-size: x-small"
-            ><a href="/email" style="text-decoration: none; color: #34a080">이메일 찾기</a> |
+            ><a href="/email" style="text-decoration: none; color: #34a080">이메일 찾기</a>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <a href="/password" style="text-decoration: none; color: #34a080">비밀번호 찾기</a></span
           >
-          <!-- 추후 비번 찾기 만들면 그 때 link 연결 -->
         </div>
         <br />
 
-        <div style="text-align: center">
+        <div class="buttons">
           <span>
             <router-link to="/">
               <v-row>
-                <v-col cols="8">
+                <v-col cols="78">
                   <v-btn
+                    class="loginbtn"
                     @click="login"
                     color="#62C0A6"
-                    size="large"
+                    size="x-large"
                     type="submit"
                     variant="elevated"
-                    style="width: 100%; border-radius: 30px; font-size: smaller; font-weight: bolder; color: #000000"
+                    style="color: #000000"
                   >
                     로그인
                   </v-btn>
                 </v-col>
-                <v-col cols="4">
+                <v-col cols="5">
                   <router-link to="/regist">
                     <v-btn
+                      class="registbtn"
                       color="#34A080"
-                      size="large"
+                      size="x-large"
                       type="submit"
                       variant="elevated"
-                      style="width: 100%; border-radius: 30px; font-size: smaller; font-weight: bolder; color: #000000"
+                      style="color: #000000"
                     >
                       회원가입
                     </v-btn>
@@ -104,32 +108,26 @@
           <router-link to="/loading"
             ><v-btn
               class="kakaobtn"
-              style="width: 300px; margin-bottom: 5px"
               :style="{ backgroundColor: kakaoButtonColor }"
               @mouseenter="kakaoMouseEnter"
               @mouseleave="kakaomouseLeave"
-              ><v-row>
-                <v-col cols="2">
-                  <img src="./kakao.png" alt="카카오 아이콘" style="width: 24px; height: 24px" />
-                </v-col>
-                <v-col cols="10" style="font-size: small">카카오 계정으로 로그인하기</v-col>
-              </v-row></v-btn
-            ></router-link
+              ><div class="icons">
+                <img class="kakaoicon" src="./kakao.png" alt="카카오 아이콘" />
+                <span class="texts">카카오 계정으로 로그인하기</span>
+              </div>
+            </v-btn></router-link
           >
 
           <router-link to="/loading"
             ><v-btn
               class="googlebtn"
-              style="width: 300px; margin-top: 5px"
               :style="{ backgroundColor: googleButtonColor }"
               @mouseenter="googleMouseEnter"
               @mouseleave="googlemouseLeave"
-              ><v-row>
-                <v-col cols="2">
-                  <img src="./google.png" alt="구글 아이콘" style="width: 24px; height: 24px" />
-                </v-col>
-                <v-col cols="10" style="font-size: small">Google 계정으로 로그인하기</v-col>
-              </v-row></v-btn
+              ><div class="icons">
+                <img class="googleicon" src="./google.png" alt="구글 아이콘" />
+                <span>Google 계정으로 로그인하기</span>
+              </div></v-btn
             ></router-link
           >
         </div>
@@ -192,6 +190,8 @@ const login = async () => {
     email: email.value,
     password: password.value,
   };
+  console.log(user);
+
   try {
     const result = await userStore.setLoginUser(user);
 
@@ -207,12 +207,62 @@ const login = async () => {
 </script>
 
 <style scoped>
+.textfield {
+  margin: 0 20px;
+  margin-bottom: 5px;
+  height: 63px;
+}
+.buttons {
+  text-align: center;
+  margin: 0 20px;
+}
+
+.loginbtn,
+.registbtn {
+  width: 100%;
+  border-radius: 30px;
+  font-size: smaller;
+  font-weight: bold;
+}
+
+.kakaobtn,
+.googlebtn {
+  margin: 0 20px;
+  height: 54px;
+  width: 349px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  justify-content: left;
+}
+
+.kakaoicon {
+  width: 39px;
+  height: 38px;
+  margin-right: 10px;
+}
+
+.googleicon {
+  width: 31px;
+  height: 31px;
+  margin-right: 15px;
+}
+
+.icons {
+  display: flex;
+  align-items: center;
+}
+
+.texts {
+  text-align: left;
+  flex: 1;
+}
+
 .textfield :deep(label) {
   color: #ffffff;
 }
 
 .textfield :deep(.v-field) {
-  border-radius: 30px;
+  border-radius: 55px;
 }
 
 .kakaobtn:hover {

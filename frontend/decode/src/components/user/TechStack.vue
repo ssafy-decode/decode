@@ -2,19 +2,17 @@
   <div class="pa-5" rounded>
     <v-card
       class="mx-auto px-4 py-8"
-      max-width="500"
-      style="background-color: #f3f3f3; border-radius: 50px; box-shadow: 0 0px 36px rgba(0, 0, 0, 0.2)"
+      max-width="426"
+      style="background-color: #f3f3f3; border-radius: 68px; box-shadow: 0 0px 36px rgba(0, 0, 0, 0.2)"
     >
       <div>
-        <span style="margin-left: 20px">
-          <img src="../levelunselected.png" />&nbsp;&nbsp;&nbsp;<img src="../levelselected.png" />
+        <span style="margin-left: 40px">
+          <img src="../levelunselected.png" />&nbsp;&nbsp;&nbsp;&nbsp;<img src="../levelselected.png" />
         </span>
         <div style="text-align: center">
           <img style="width: 8%" src="./LogoDecode3.png" />
         </div>
-        <br />
-        <h4 style="color: #999999; text-align: center">선호하는 기술 스택을 모두 선택해주세요.</h4>
-        <br />
+        <h4 style="font-size: 15px; color: #999999; text-align: center">선호하는 기술 스택을 모두 선택해주세요</h4>
       </div>
       <div>
         <v-container fluid>
@@ -43,7 +41,7 @@
                 />
                 <span
                   @click="toggleSelection(item)"
-                  style="cursor: pointer"
+                  style="cursor: pointer; font-size: 15px; font-weight: bold"
                   :style="{ color: isSelected(item) ? '#34A080' : '#999999' }"
                   class="ml-2"
                   >{{ item }}</span
@@ -59,10 +57,18 @@
           ><v-btn
             @click="complete"
             color="#62C0A6"
-            size="large"
+            size="x-large"
             type="submit"
             variant="elevated"
-            style="width: 100%; border-radius: 30px; font-size: smaller; font-weight: bolder; color: #000000"
+            style="
+              width: 95px;
+              height: 58px;
+              border-radius: 34px;
+              margin-right: 10px;
+              font-size: 15px;
+              font-weight: bold;
+              color: #000000;
+            "
           >
             완료
           </v-btn></router-link
@@ -108,8 +114,6 @@ const checkboxIcon = (item) => {
 
 const complete = async () => {
   try {
-    console.log('셀렉트', select);
-    console.log('셀렉트밸류', select.value); // [0] java, [1] C++ ... Array 형태
     await userStore.saveTechStack(select.value);
     alert('회원가입이 완료되었습니다.\nde;code에 오신 것을 환영합니다!');
   } catch (error) {
@@ -129,7 +133,13 @@ const toggleSelection = (item) => {
 </script>
 
 <style scoped>
+.combo {
+  width: 349px;
+  height: 63px;
+  margin-left: auto;
+  margin-right: auto;
+}
 .combo :deep(.v-field) {
-  border-radius: 30px;
+  border-radius: 55px;
 }
 </style>

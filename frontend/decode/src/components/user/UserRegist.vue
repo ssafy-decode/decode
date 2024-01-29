@@ -2,12 +2,12 @@
   <div class="pa-5" rounded>
     <v-card
       class="mx-auto px-4 py-8"
-      max-width="500"
-      style="background-color: #f3f3f3; border-radius: 50px; box-shadow: 0 0px 36px rgba(0, 0, 0, 0.2)"
+      max-width="448"
+      style="background-color: #f3f3f3; border-radius: 68px; box-shadow: 0 0px 36px rgba(0, 0, 0, 0.2)"
     >
       <v-form ref="form" @submit.prevent="regist">
-        <span style="margin-left: 20px"
-          ><img src="../levelselected.png" />&nbsp;&nbsp;&nbsp;<img src="../levelunselected.png"
+        <span style="margin-left: 40px"
+          ><img src="../levelselected.png" />&nbsp;&nbsp;&nbsp;&nbsp;<img src="../levelunselected.png"
         /></span>
         <div style="text-align: center">
           <img style="width: 8%" src="./LogoDecode3.png" />
@@ -18,13 +18,12 @@
             bg-color="#d9d9d9"
             :rules="[writeName]"
             variant="solo"
-            class="textfield"
+            class="smalltextfield"
             clearable
-            density="compact"
             v-model="name"
             label="이름"
             prepend-inner
-            style="margin-right: 5px"
+            style="width: 187px; margin-left: 20px; margin-right: 5px"
             ><template #prepend-inner>
               <img
                 src="./person.png"
@@ -36,13 +35,12 @@
             bg-color="#d9d9d9"
             :rules="[writeNickname]"
             variant="solo"
-            class="textfield"
+            class="smalltextfield"
             clearable
-            density="compact"
             v-model="nickname"
             label="닉네임"
             prepend-inner
-            style="margin-left: 5px"
+            style="width: 187px; margin-right: 20px; margin-left: 5px"
             @blur="checkDuplicateNickname"
             ><template #prepend-inner>
               <img
@@ -59,7 +57,6 @@
           variant="solo"
           class="textfield"
           clearable
-          density="compact"
           label="이메일 계정"
           prepend-inner
           @blur="checkDuplicateEmail"
@@ -78,7 +75,6 @@
           variant="solo"
           class="textfield"
           clearable
-          density="compact"
           label="비밀번호"
           hint="영문, 숫자, 특수문자 조합 8자리 이상"
           prepend-inner
@@ -92,7 +88,9 @@
             />
           </template>
           <template #append-inner>
-            <v-icon @click="toggleEye">{{ showPassword ? 'mdi-eye' : 'mdi-eye-off' }}</v-icon>
+            <v-icon @click="toggleEye" style="margin-right: 10px">{{
+              showPassword ? 'mdi-eye' : 'mdi-eye-off'
+            }}</v-icon>
           </template></v-text-field
         >
         <v-text-field
@@ -102,7 +100,6 @@
           variant="solo"
           class="textfield"
           clearable
-          density="compact"
           label="비밀번호 확인"
           prepend-inner
           append-inner
@@ -115,7 +112,9 @@
             />
           </template>
           <template #append-inner>
-            <v-icon @click="toggleEye2">{{ showPassword2 ? 'mdi-eye' : 'mdi-eye-off' }}</v-icon>
+            <v-icon @click="toggleEye2" style="margin-right: 10px">{{
+              showPassword2 ? 'mdi-eye' : 'mdi-eye-off'
+            }}</v-icon>
           </template></v-text-field
         >
         <v-text-field
@@ -124,7 +123,6 @@
           variant="solo"
           class="textfield"
           clearable
-          density="compact"
           label="생년월일 6자리 ex) 990101"
           v-model="birthday"
           prepend-inner
@@ -141,7 +139,6 @@
           variant="solo"
           class="textfield"
           clearable
-          density="compact"
           label="휴대폰 뒷 네 자리 ex) 1234"
           v-model="phone"
           prepend-inner
@@ -157,10 +154,18 @@
             ><v-btn
               @click.prevent="regist"
               color="#62C0A6"
-              size="large"
+              size="x-large"
               type="submit"
               variant="elevated"
-              style="font-weight: bolder; border-radius: 30px; color: #000000"
+              style="
+                width: 95px;
+                font-size: 15px;
+                font-weight: bold;
+                border-radius: 34px;
+                margin-top: 10px;
+                margin-right: 20px;
+                color: #000000;
+              "
             >
               확인
             </v-btn></router-link
@@ -175,9 +180,7 @@
 import { ref } from 'vue';
 import { useUserStore } from '@/stores/userStore';
 import axios from 'axios';
-// const URL = process.env.VUE_APP_BACKEND_URL;
-const URL = 'http://localhost:80/decode';
-// const URL = process.env.BACKEND_URL;
+const URL = process.env.VUE_APP_BACKEND_URL;
 
 const userStore = useUserStore();
 
@@ -357,7 +360,25 @@ const regist = () => {
 <style scoped>
 .flex-container {
   display: flex;
-  justify-content: space-between;
+}
+
+.smalltextfield {
+  margin-bottom: 5px;
+  height: 63px;
+}
+
+.smalltextfield :deep(label) {
+  color: #ffffff;
+}
+
+.smalltextfield :deep(.v-field) {
+  border-radius: 55px;
+}
+
+.textfield {
+  margin: 0 20px;
+  margin-bottom: 5px;
+  height: 63px;
 }
 
 .textfield :deep(label) {
@@ -365,6 +386,6 @@ const regist = () => {
 }
 
 .textfield :deep(.v-field) {
-  border-radius: 30px;
+  border-radius: 55px;
 }
 </style>

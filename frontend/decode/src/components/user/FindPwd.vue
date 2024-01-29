@@ -2,15 +2,15 @@
   <div class="pa-5" rounded>
     <v-card
       class="mx-auto px-4 py-8"
-      max-width="400"
-      style="background-color: #f3f3f3; border-radius: 50px; box-shadow: 0 0px 36px rgba(0, 0, 0, 0.2)"
+      max-width="418"
+      style="background-color: #f3f3f3; border-radius: 68px; box-shadow: 0 0px 36px rgba(0, 0, 0, 0.2)"
     >
       <v-form v-model="form">
         <br />
         <div style="text-align: center">
           <img style="width: 10%" src="./LogoDecode3.png" />
           <h2 style="color: #999999">비밀번호 찾기</h2>
-          <h4 style="color: #34a080">정보를 입력해주세요.</h4>
+          <h4 style="color: #34a080">정보를 입력해주세요</h4>
         </div>
         <br />
         <v-text-field
@@ -44,7 +44,7 @@
             <img
               src="./pencil.png"
               alt="이름 아이콘"
-              style="width: auto; height: auto; margin-left: 4px; margin-right: 10px"
+              style="width: auto; height: auto; margin-left: 3px; margin-right: 7px"
             />
           </template>
         </v-text-field>
@@ -86,15 +86,22 @@
         </v-text-field>
 
         <div style="text-align: center">
-          <span style="display: flex; justify-content: end; margin-right: 10px">
+          <span style="display: flex; justify-content: end; margin-right: 50px">
             <router-link to="/foundpwd"
               ><v-btn
                 @click.prevent="findpwd"
                 color="#62C0A6"
-                size="large"
+                size="x-large"
                 type="submit"
                 variant="elevated"
-                style="font-weight: bolder; border-radius: 30px; color: #000000"
+                style="
+                  width: 95px;
+                  font-size: 15px;
+                  font-weight: bold;
+                  margin-top: 10px;
+                  border-radius: 34px;
+                  color: #000000;
+                "
               >
                 확인
               </v-btn></router-link
@@ -193,14 +200,15 @@ const findpwd = () => {
 
 <style scoped>
 .textfield {
-  margin-left: 20px;
-  margin-right: 20px;
+  margin: 0 20px;
+  margin-bottom: 5px;
+  height: 63px;
 }
 .textfield :deep(label) {
   color: #ffffff;
 }
 
 .textfield :deep(.v-field) {
-  border-radius: 30px;
+  border-radius: 55px;
 }
 </style>

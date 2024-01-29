@@ -7,6 +7,9 @@ import QuestionBoardView from '@/views/QuestionBoardView.vue';
 import QuestionDetailView from '@/views/QuestionDetailView.vue';
 import QuestionTitleCreateView from '@/views/QuestionTitleCreateView.vue';
 import QuestionCreateView from '@/views/QuestionCreateView.vue';
+import MyProfileView from '@/views/MyProfileView.vue'; // 완성하면 components 로 이동
+import MyProfileUpdateCheckPwdView from '@/views/MyProfileUpdateCheckPwdView.vue'; // 완성하면 components 로 이동
+import MyProfileUpdateView from '@/views/MyProfileUpdateView.vue'; // 완성하면 components 로 이동
 
 // Components
 import LoginForm from '@/components/LoginForm.vue';
@@ -90,6 +93,21 @@ const router = createRouter({
       path: '/question-create',
       name: 'question-create',
       component: QuestionCreateView,
+    },
+    {
+      path: '/info',
+      name: 'myprofile',
+      component: MyProfileView, // 완성하면 components > profile 로 이동
+    },
+    {
+      path: '/confirm',
+      name: 'myprofileupdatecheckpwd',
+      component: MyProfileUpdateCheckPwdView, // 완성하면 components > profile 로 이동
+    },
+    {
+      path: '/profile',
+      name: 'myprofileupdate',
+      component: MyProfileUpdateView, // 완성하면 components > profile 로 이동
     },
   ],
 });

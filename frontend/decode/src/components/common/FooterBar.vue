@@ -14,6 +14,10 @@
   background-color: grey;
   color: white;
   padding: 20px;
+  height: 60px;
+  margin-top: 60px;
+  display: flex;
+  justify-content: center;
 }
 .copyright {
   font-size: 14px;
