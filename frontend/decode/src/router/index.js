@@ -20,6 +20,7 @@ import FindEmailVue from '@/components/user/FindEmail.vue';
 import FindPwdVue from '@/components/user/FindPwd.vue';
 import FoundEmailVue from '@/components/user/FoundEmail.vue';
 import FoundPwdVue from '@/components/user/FoundPwd.vue';
+import QuestionUpdate from '@/components/question/QuestionUpdate.vue';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -93,6 +94,11 @@ const router = createRouter({
       path: '/question-create',
       name: 'question-create',
       component: QuestionCreateView,
+    },
+    {
+      path: '/question-update/:id',
+      name: 'question-update',
+      component: QuestionUpdate,
     },
     {
       path: '/info',

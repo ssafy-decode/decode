@@ -11,14 +11,17 @@
     <p>질문 수정일: {{ question.updatedTime }}</p>
     <p>질문 나도 궁금 수: {{ question.meTooCnt }}</p>
     <br />
+    <div class="btnBox">
+      <v-btn class="btn" @click="goUpdate()">질문수정</v-btn>
+      <v-btn class="btn" @click="deleteQuestion()">질문삭제</v-btn>
+    </div>
     <hr />
     <br />
-    <h3>답변관련</h3>
-    <p>질문 답변 목록: {{ question.answerList }}</p>
-    <br />
-    <div>
-      <AnswerList />
+    <div class="answerRelatedBox">
+      <h3>답변관련</h3>
+      <v-btn>답변생성</v-btn>
     </div>
+    <p class="answerListBox">질문 답변 목록: {{ question.answerList }}</p>
   </div>
 </template>
 
@@ -26,17 +29,17 @@
 import axios from 'axios';
 import { onMounted, ref, computed } from 'vue';
 import { useQuestionStore } from '@/stores/questionStore';
+import { useUserStore } from '@/stores/userStore';
 import { useRoute, useRouter, RouterLink } from 'vue-router';
-import AnswerList from '@/components/answer/AnswerList.vue';
 
 const questionStore = useQuestionStore();
+const userStore = useUserStore();
 const router = useRouter();
 const route = useRoute();
 
 // store와 axios 통해 데이터를 불러옴
 
 const questionId = ref(0);
-
 const question = ref({});
 
 const getDetailQuestion = function () {
@@ -45,11 +48,11 @@ const getDetailQuestion = function () {
     url: `${questionStore.URL}/question/${route.params.id}`,
     headers: {
       'Access-Control-Allow-Origin': '*', // 이 부분을 추가하여 CORS 정책 우회
-      Authorization: `${questionStore.accessToken}`, // 만약 인증이 필요하다면 주석 해제
+      Authorization: `${userStore.accessToken}`, // 만약 인증이 필요하다면 주석 해제
     },
   })
     .then((res) => {
-      console.log(res.data.data);
+      questionId.value = route.params.id;
       question.value = res.data.data;
     })
     .catch((err) => {
@@ -58,10 +61,58 @@ const getDetailQuestion = function () {
     });
 };
 
-// 수정 필요
+const deleteQuestion = function () {
+  if (confirm('질문을 삭제하시겠습니까?')) {
+    axios({
+      method: 'delete',
+      url: `${questionStore.URL}/question/delete/${questionId.value}`,
+      headers: {
+        'Access-Control-Allow-Origin': '*', // 이 부분을 추가하여 CORS 정책 우회
+        Authorization: `Bearer ${userStore.accessToken}`, // 만약 인증이 필요하다면 주석 해제
+      },
+    })
+      .then((res) => {
+        alert('질문이 삭제되었습니다.');
+        router.push({
+          path: '/question',
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        alert('질문 삭제 오류.');
+        console.log('질문 삭제 오류');
+      });
+  } else {
+    alert('질문 삭제가 취소되었습니다.');
+  }
+};
+
+const goUpdate = function () {
+  questionStore.originalContent = question.value.content;
+  router.push({ path: `/question-update/${questionId.value}` });
+};
+
 onMounted(() => {
   getDetailQuestion();
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.answerRelatedBox {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.answerListBox {
+  padding: 20px;
+}
+.btnBox {
+  padding: 20px;
+}
+
+.btn {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+</style>

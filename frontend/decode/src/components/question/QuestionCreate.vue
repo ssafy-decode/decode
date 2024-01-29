@@ -3,10 +3,15 @@
     <v-form @submit.prevent="createQuestion">
       <v-text-field variant="solo" label="질문 제목" v-model.trim="questionTitle"></v-text-field>
       <v-container>
+        <v-row class="d-flex justify-end">
+          <v-col cols="12" sm="6" md="4">
+            <!-- <v-btn @click="removeTag(index)">태그 삭제</v-btn>
+            <v-btn @click="addTag">태그 추가</v-btn> -->
+          </v-col>
+        </v-row>
         <template v-for="(tag, index) in tagIds" :key="index">
           <v-row class="d-flex justify-end">
             <v-col cols="12" sm="6" md="4">
-              <!-- <v-text-field variant="solo" label="관련 태그" v-model.trim="tagId"></v-text-field> -->
               <v-text-field
                 variant="solo"
                 class="stackBox"
@@ -17,18 +22,6 @@
               ></v-text-field>
             </v-col>
             <v-col cols="12" sm="6" md="4">
-              <!-- <v-combobox
-                variant="solo"
-                class="stackBox"
-                bg-color="fff"
-                v-model="select"
-                :items="items"
-                placeholder="ex) java, spring boot, sql"
-                label="기술 스택"
-                multiple
-                chips
-                clearable
-              ></v-combobox> -->
               <v-text-field
                 variant="solo"
                 class="stackBox"
@@ -40,14 +33,8 @@
             </v-col>
           </v-row>
         </template>
-        <!-- <v-row>
-          <v-col cols="12" sm="6" md="4">
-            <div class="btnBox">
-              <v-btn class="submitBtn">태그추가</v-btn>
-            </div>
-          </v-col>
-        </v-row> -->
       </v-container>
+
       <br />
       <MyEditor @editor-content-updated="updateEditorContent" />
       <div class="btnBox">
@@ -77,22 +64,6 @@ const tagIds = ref([]);
 const questionContent = ref('');
 const versions = ref([]);
 
-const select = ref([]);
-// const items = ref([
-//   'python',
-//   'java',
-//   'C++',
-//   'javascript',
-//   'django',
-//   'spring',
-//   'spring boot',
-//   'kotlin',
-//   'sql',
-//   'react',
-//   'vue',
-//   'C#',
-// ]);
-
 const items = {
   python: 0,
   java: 1,
@@ -111,8 +82,6 @@ const items = {
 const updateEditorContent = function (content) {
   questionContent.value = content;
 };
-
-////////////////////////////  아래 개발중  //////////////////////////////
 
 const createQuestion = function () {
   // 태그와 버전 객체를 원소로 갖는 배열 생성
@@ -157,7 +126,6 @@ const createQuestion = function () {
       console.log('질문 생성 오류');
     });
 };
-////////////////////////////  위 개발중  //////////////////////////////
 
 onMounted(() => {
   questionTitle.value = questionStore.gptTitles.value;
