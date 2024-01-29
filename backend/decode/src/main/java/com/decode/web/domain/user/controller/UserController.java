@@ -29,6 +29,8 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -83,19 +85,21 @@ public class UserController {
 
     @PostMapping("/user")
     @Operation(summary = "사용자 정보 수정", description = "사용자 1명의 정보를 수정합니다.(비밀번호 변경)")
-    public ResponseDto updateUserById(@Valid @RequestBody InfoUpdateDto infoUpdateDto) {
+    public ResponseDto updateUserById(@Valid @RequestBody InfoUpdateDto infoUpdateDto, Authentication auth) {
+        Long userId = (Long) auth.getPrincipal();
         String password = infoUpdateDto.getPassword();
-
-        if (userService.pwCheck(password)) {
-            userService.updateUserInfo(infoUpdateDto.getId(), encoder.encode(password));
-            return ResponseDto.builder()
-                    .status(HttpStatus.OK)
-                    .message("update user info").build();
+        boolean result = false;
+        if (!userService.pwCheck(password)) {
+            throw new IllegalArgumentException("비밀번호는 8자리 이상, 영문자와 특수문자를 포함해야 합니다.");
+        }
+        if (userId != null) {
+            userService.updateUserInfo(userId, encoder.encode(password));
+            result = true;
         }
         return ResponseDto.builder()
-                .status(HttpStatus.BAD_REQUEST)
-                .message("update fail").build();
-
+                .data(result)
+                .status(HttpStatus.OK)
+                .message("update user info").build();
     }
 
     @GetMapping("/profile/{id}")

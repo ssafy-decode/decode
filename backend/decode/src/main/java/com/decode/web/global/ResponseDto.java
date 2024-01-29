@@ -14,7 +14,6 @@ public class ResponseDto {
     private HttpStatus status;
     private String message;
     private Object data;
-    private HttpHeaders headers;
 
 
     public ResponseDto() {
