@@ -10,9 +10,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @Table(name = "Follow")
+@NoArgsConstructor
 public class FollowEntity extends CommonEntity {
 
     @Id
@@ -27,4 +32,10 @@ public class FollowEntity extends CommonEntity {
     @ManyToOne
     @JoinColumn(name = "to_user_id")
     private UserProfileEntity toUser;
+
+    @Builder
+    public FollowEntity(UserProfileEntity fromUser, UserProfileEntity toUser) {
+        this.fromUser = fromUser;
+        this.toUser = toUser;
+    }
 }

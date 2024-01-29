@@ -59,6 +59,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 // 헤더에 새로운 토큰 저장
                 res.setHeader("Authorization", "Bearer " + newAccessToken);
+
             } else {
                 // 로그아웃 처리
                 SecurityContextHolder.clearContext();

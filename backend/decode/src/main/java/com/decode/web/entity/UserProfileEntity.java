@@ -52,10 +52,10 @@ public class UserProfileEntity {
     @Column(name = "user_coin")
     private int coin;
 
-    @OneToMany(mappedBy = "from_User", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "toUser", fetch = FetchType.LAZY)
     private List<FollowEntity> followings;
 
-    @OneToMany(mappedBy = "to_User", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "fromUser", fetch = FetchType.LAZY)
     private List<FollowEntity> followers;
 
 

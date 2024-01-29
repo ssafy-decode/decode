@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService {
                 .exp(0)
                 .tier("bronze")
                 .profileImg("default")
-                .point(0)
+                .point(5000)
                 .coin(0)
                 .build();
 

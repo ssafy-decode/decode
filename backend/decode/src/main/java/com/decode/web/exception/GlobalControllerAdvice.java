@@ -14,6 +14,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @Slf4j
 public class GlobalControllerAdvice {
 
+    @ExceptionHandler(FollowException.class)
+    private ResponseEntity<ResponseDto> followException(Exception e) {
+        log.error("{}", e.getMessage());
+        return new ResponseEntity<>(ResponseDto.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .message(e.getMessage())
+                .headers(new HttpHeaders())
+                .build(), HttpStatus.BAD_REQUEST);
+    }
     @ExceptionHandler(UserException.class)
     private ResponseEntity<ResponseDto> userException(Exception e) {
         log.error("{}", e.getMessage());
