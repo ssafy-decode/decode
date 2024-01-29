@@ -64,6 +64,17 @@ public class GlobalControllerAdvice {
                 .build(), HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(NotEnoughCoinException.class)
+    private ResponseEntity<ResponseDto> notEnoughCoinException(Exception e) {
+        log.error("{}", e.getMessage());
+        return new ResponseEntity<>(ResponseDto.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .message("코인이 부족합니다")
+                .data("")
+                .headers(new HttpHeaders())
+                .build(), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(Exception.class)
     private ResponseEntity<ResponseDto> handleException(Exception e) {
         log.error("{}", e.getMessage());
