@@ -4,6 +4,7 @@ import com.decode.web.domain.user.dto.AuthDto;
 import com.decode.web.global.utils.authentication.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -28,8 +29,8 @@ public class AuthServiceImpl implements AuthService {
                 loginDto.getEmail(), loginDto.getPassword());
         Authentication authentication = authenticationManagerBuilder.getObject()
                 .authenticate(authenticationToken);
-        if(!authentication.isAuthenticated()) {
-            return null;
+        if (!authentication.isAuthenticated()) {
+            throw new BadCredentialsException("Invalid username/password supplied");
         }
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -101,7 +102,6 @@ public class AuthServiceImpl implements AuthService {
         if (refreshTokenInRedis != null) {
             redisService.deleteValues("RT:" + SERVER + ":" + principal);
         }
-//        long expiration = jwtTokenProvider.getTokenExpirationTime(requestAccessToken) - new Date().getTime();
-//        redisService.setValuesWithTimeout(requestAccessToken, "logout", expiration);
+
     }
 }
