@@ -14,13 +14,15 @@ public interface AnswerService {
 
     Long save(CreateAnswerDto createAnswerDto);
 
-    AnswerEntity update(UpdateAnswerDto updateAnswerDto);
+    AnswerEntity update(UpdateAnswerDto updateAnswerDto, AnswerEntity answerEntity);
 
-    void delete(Long answerId);
+    void delete(AnswerEntity answer);
 
     List<ResponseAnswerDto> getResponseAnswerDtoList(QuestionEntity questionEntity);
 
     ResponseAnswerDto convertToResponseAnswerDto(AnswerEntity answerEntity);
 
-    Long recommend(Long answerId, RecommendDto recommendDto);
+    Long recommend(RecommendDto recommendDto);
+
+    Long unRecommend(Long userId, Long answerId);
 }
