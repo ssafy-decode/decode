@@ -17,6 +17,7 @@ import com.decode.web.domain.user.service.AuthService;
 import com.decode.web.domain.user.service.UserService;
 import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.global.ResponseDto;
+import com.decode.web.global.utils.authentication.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
@@ -57,6 +58,7 @@ public class UserController {
     private final AuthService authService;
     private final BCryptPasswordEncoder encoder;
     private final MailService maillService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     private final int COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30일
 
@@ -158,7 +160,12 @@ public class UserController {
     public ResponseDto login(@Valid @RequestBody LoginDto loginDto, HttpServletResponse res) {
         log.info("loginDto : {}", loginDto);
         TokenDto tokenDto = authService.login(loginDto);
-
+        if (tokenDto == null) {
+            return new ResponseDto().builder()
+                    .data(null)
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .message("login fail").build();
+        }
         // 로그인 성공하면 액세스토큰은 헤더, 리프레시토큰은 쿠키에 저장
         Cookie cookie = new Cookie("refresh-token", tokenDto.getRefreshToken());
         cookie.setMaxAge(COOKIE_MAX_AGE);
@@ -170,7 +177,7 @@ public class UserController {
         res.setHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
 
         return new ResponseDto().builder()
-                .data("login success")
+                .data(jwtTokenProvider.getAuthUserId(tokenDto.getAccessToken()))
                 .status(HttpStatus.OK)
                 .message("login").build();
     }
