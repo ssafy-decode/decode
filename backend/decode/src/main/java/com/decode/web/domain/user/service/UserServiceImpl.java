@@ -8,6 +8,7 @@ import com.decode.web.domain.user.repository.UserProfileRepository;
 import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.entity.UserProfileEntity;
 import com.decode.web.entity.UserTagEntity;
+import com.decode.web.exception.UserException;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
@@ -75,6 +76,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public Long createUser(UserInfoEntity user, String nickname) {
 
         UserProfileEntity profile = UserProfileEntity.builder()
@@ -82,12 +84,15 @@ public class UserServiceImpl implements UserService {
                 .exp(0)
                 .tier("bronze")
                 .profileImg("default")
-                .point(0)
+                .point(5000)
                 .coin(0)
                 .build();
 
         profile.setUserInfoEntity(user);
         userProfileRepository.save(profile);
+        if(user.getId() == null){
+            throw new UserException("회원가입 실패");
+        }
         return user.getId();
     }
 
@@ -142,6 +147,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
+    @Transactional
     public void addUserTag(RequestUserTagDto requestUserTagDto) {
         Long userId = requestUserTagDto.getUserId();
         List<Long> tagIds = requestUserTagDto.getTagIdList();
@@ -155,6 +161,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void updateUserTag(RequestUserTagDto requestUserTagDto) {
         Long userId = requestUserTagDto.getUserId();
         List<Long> tagIds = requestUserTagDto.getTagIdList();
