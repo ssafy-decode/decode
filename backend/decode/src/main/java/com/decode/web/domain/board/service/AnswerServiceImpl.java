@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -45,13 +46,16 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     public Long save(CreateAnswerDto createAnswerDto) {
-
+        UserProfileEntity userProfile = userProfileRepository.findById(
+                createAnswerDto.getUserId()).orElseThrow(
+                () -> new EntityNotFoundException(
+                        "User not found with id: " + createAnswerDto.getUserId()));
+        QuestionEntity question = questionRepository.findById(
+                createAnswerDto.getQuestionId()).orElseThrow(
+                () -> new EntityNotFoundException(
+                        "Question not found with id: " + createAnswerDto.getQuestionId()));
         // dto -> entity
         AnswerEntity answer = answerMapper.toEntity(createAnswerDto);
-        UserProfileEntity userProfile = userProfileRepository.getReferenceById(
-                createAnswerDto.getUserId());
-        QuestionEntity question = questionRepository.getReferenceById(
-                createAnswerDto.getQuestionId());
         answer.setAnswerWriter(userProfile);
         answer.setQuestion(question);
 
@@ -60,32 +64,31 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
-    public AnswerEntity update(UpdateAnswerDto updateAnswerDto) {
+    public AnswerEntity update(UpdateAnswerDto updateAnswerDto, AnswerEntity answerEntity) {
 
         // dto -> entity
-        AnswerEntity answer = answerRepository.findById(updateAnswerDto.getId()).orElseThrow(
-                () -> new EntityNotFoundException(
-                        "Answer not found with id: " + updateAnswerDto.getId()));
+//        AnswerEntity answer = answerRepository.findById(updateAnswerDto.getId()).orElseThrow(
+//                () -> new EntityNotFoundException(
+//                        "Answer not found with id: " + updateAnswerDto.getId()));
         // 기존의 answer content 내용 수정
-        log.debug("Before Update Answer Entity : {}", answer);
-        answer.setContent(updateAnswerDto.getContent());
-        log.debug("After Update Answer Entity : {}", answer);
+        log.debug("Before Update Answer Entity : {}", answerEntity);
+        answerEntity.setContent(updateAnswerDto.getContent());
+        log.debug("After Update Answer Entity : {}", answerEntity);
         // 저장해서 db에 update 하기
-        return answerRepository.save(answer);
+        return answerRepository.save(answerEntity);
     }
 
     @Override
-    public void delete(Long answerId) {
+    public void delete(AnswerEntity answer) {
         // 삭제하기
-        answerRepository.deleteById(answerId);
+        answerRepository.delete(answer);
     }
 
     @Override
     public List<ResponseAnswerDto> getResponseAnswerDtoList(QuestionEntity questionEntity) {
         List<AnswerEntity> answerList = answerRepository.findAllByQuestion(questionEntity);
 
-        return answerList.stream()
-                .map(this::convertToResponseAnswerDto)
+        return answerList.stream().map(this::convertToResponseAnswerDto)
                 .collect(Collectors.toList());
     }
 
@@ -110,22 +113,39 @@ public class AnswerServiceImpl implements AnswerService {
         return responseAnswerDto;
     }
 
-    public Long recommend(Long answerId, RecommendDto recommendDto) {
+    public Long recommend(RecommendDto recommendDto) {
         // redis cache hit 조사
         // ...
         // 후 expire 5분 설정 후 끝나면 DB 저장
         // 우선 단순 API 구현
 
         //dto -> entity
-        AnswerEntity answer = answerRepository.getReferenceById(answerId);
-        UserProfileEntity userProfile = userProfileRepository.getReferenceById(
-                recommendDto.getUserId());
+        AnswerEntity answer = answerRepository.findById(recommendDto.getAnswerId()).orElseThrow(
+                () -> new EntityNotFoundException(
+                        "Answer not found with id: " + recommendDto.getAnswerId()));
+        UserProfileEntity userProfile = userProfileRepository.findById(recommendDto.getUserId())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "User not found with id: " + recommendDto.getUserId()));
 
         RecommendEntity recommend = RecommendEntity.builder().answer(answer)
-                .userProfile(userProfile)
-                .recommend(
-                        recommendDto.isRecommend()).build();
+                .userProfile(userProfile).build();
         recommendRepository.save(recommend);
-        return null;
+        return recommend.getId();
+    }
+
+    @Override
+    public Long unRecommend(Long userId, Long answerId) {
+        UserProfileEntity userProfileEntity = userProfileRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "User not found with id: " + userId));
+        AnswerEntity answerEntity = answerRepository.findById(answerId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "User not found with id: " + answerId));
+        RecommendEntity recommendEntity = recommendRepository.findByAnswerAndUserProfile(answerEntity, userProfileEntity);
+        if(recommendEntity == null) {
+           throw new BadCredentialsException("Not exist such as recommend");
+        }
+        recommendRepository.delete(recommendEntity);
+        return recommendEntity.getId();
     }
 }
