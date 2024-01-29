@@ -4,6 +4,8 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+// '/profile' 완성되면 그 때 작성
+</script>
 
 <style scoped></style>
