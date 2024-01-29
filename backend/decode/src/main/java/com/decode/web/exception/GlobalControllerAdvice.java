@@ -39,7 +39,7 @@ public class GlobalControllerAdvice {
     @ExceptionHandler(Exception.class)
     private ResponseEntity<ResponseDto> handleException(Exception e) {
         log.error("{}", e.getMessage());
-        e.printStackTrace();
+        log.debug("{}", e.getStackTrace());
         return new ResponseEntity<>(ResponseDto.builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .message("Internal Server Error")
