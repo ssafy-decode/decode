@@ -278,6 +278,7 @@ export const useUserStore = defineStore('user', () => {
     user,
     userCnt,
     userId,
+    loginUserId,
     foundEmail,
     searchUserCnt, // 애는 회원 이름 검색에서 쓸 일이 있나 추후 확인
     createUser,
