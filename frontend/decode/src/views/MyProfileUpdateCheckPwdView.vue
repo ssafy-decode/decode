@@ -33,8 +33,7 @@
         <!-- <br /> -->
         <div class="buttons">
           <span>
-            <router-link to="/profile">
-              <!-- 추후 뒤에 userId 붙인 링크로 수정 -->
+            <router-link :to="`/profile/${userStore.loginUserId}`">
               <v-btn
                 class="btn"
                 @click="confirm"

@@ -44,7 +44,7 @@ export const useUserStore = defineStore('user', () => {
 
   // responseBody에서 토큰 값 추출
   const parseToken = (response) => {
-    const res = response.headers.get('Authorization');
+    // const res = response.headers.get('Authorization');
 
     if (response.data && response.headers) {
       return response.headers.authorization.substring(7);
