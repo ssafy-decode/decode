@@ -11,6 +11,8 @@ public interface QuestionService {
 
     List<QuestionListDto> searchQuestionByKeyword(String keyword, List<Long> tagIds);
 
+    QuestionListDto convertQuestionEntityToQuestionListDto(QuestionEntity question);
+
     Long createQuestion(CreateQuestionDto question);
 
     ResponseQuestionDto questionDetail(Long questionId);

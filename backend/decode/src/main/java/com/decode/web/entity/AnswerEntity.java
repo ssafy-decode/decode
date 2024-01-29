@@ -1,6 +1,7 @@
 package com.decode.web.entity;
 
 import com.decode.web.global.CommonEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -9,10 +10,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Getter
 @Entity
@@ -42,6 +48,12 @@ public class AnswerEntity extends CommonEntity {
     @Setter
     @Column(name = "is_adopted")
     private boolean isAdopted;
+
+    @OneToMany(mappedBy = "answer", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<RecommendEntity> recommends = new ArrayList<>();
+
+    @OneToMany(mappedBy = "answer", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<CommentEntity> comments = new ArrayList<>();
 
     public AnswerEntity(Long id, UserProfileEntity answerWriter, QuestionEntity question,
             String content, boolean idAdopted) {

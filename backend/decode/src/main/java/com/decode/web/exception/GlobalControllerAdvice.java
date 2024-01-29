@@ -2,6 +2,7 @@ package com.decode.web.exception;
 
 import com.decode.web.global.ResponseDto;
 import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,15 +15,32 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @Slf4j
 public class GlobalControllerAdvice {
 
-    @ExceptionHandler(BadCredentialsException.class)
-    private ResponseEntity<ResponseDto> credentialException(Exception e) {
+    @ExceptionHandler(FollowException.class)
+    private ResponseEntity<ResponseDto> followException(Exception e) {
         log.error("{}", e.getMessage());
         return new ResponseEntity<>(ResponseDto.builder()
                 .status(HttpStatus.BAD_REQUEST)
                 .message(e.getMessage())
-                .data("")
                 .headers(new HttpHeaders())
                 .build(), HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(UserException.class)
+    private ResponseEntity<ResponseDto> userException(Exception e) {
+        log.error("{}", e.getMessage());
+        return new ResponseEntity<>(ResponseDto.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .message(e.getMessage())
+                .headers(new HttpHeaders())
+                .build(), HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(BadCredentialsException.class)
+    private ResponseEntity<ResponseDto> credentialException(Exception e) {
+        log.error("{}", e.getMessage());
+        return new ResponseEntity<>(ResponseDto.builder()
+                .status(HttpStatus.UNAUTHORIZED)
+                .message(e.getMessage())
+                .headers(new HttpHeaders())
+                .build(), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(ExpiredJwtException.class)
@@ -31,6 +49,16 @@ public class GlobalControllerAdvice {
         return new ResponseEntity<>(ResponseDto.builder()
                 .status(HttpStatus.UNAUTHORIZED)
                 .message("Expired JWT")
+                .headers(new HttpHeaders())
+                .build(), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    private ResponseEntity<ResponseDto> EntityNotFoundException(Exception e) {
+        log.error("{}", e.getMessage());
+        return new ResponseEntity<>(ResponseDto.builder()
+                .status(HttpStatus.UNAUTHORIZED)
+                .message(e.getMessage())
                 .data("")
                 .headers(new HttpHeaders())
                 .build(), HttpStatus.UNAUTHORIZED);
