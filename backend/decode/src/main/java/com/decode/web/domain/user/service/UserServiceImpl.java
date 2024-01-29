@@ -8,6 +8,7 @@ import com.decode.web.domain.user.repository.UserProfileRepository;
 import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.entity.UserProfileEntity;
 import com.decode.web.entity.UserTagEntity;
+import com.decode.web.exception.UserException;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
@@ -89,6 +90,9 @@ public class UserServiceImpl implements UserService {
 
         profile.setUserInfoEntity(user);
         userProfileRepository.save(profile);
+        if(user.getId() == null){
+            throw new UserException("회원가입 실패");
+        }
         return user.getId();
     }
 

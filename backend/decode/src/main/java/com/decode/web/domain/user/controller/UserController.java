@@ -137,12 +137,6 @@ public class UserController {
 
             id = userService.createUser(userMapper.toEntity(userInfoDto), user.getNickname());
         }
-        if (id == null) {
-            return ResponseDto.builder()
-                    .data(id)
-                    .status(HttpStatus.BAD_REQUEST)
-                    .message("create user").build();
-        }
         return ResponseDto.builder()
                 .data(id)
                 .status(HttpStatus.OK)
@@ -154,11 +148,6 @@ public class UserController {
     public ResponseDto login(@Valid @RequestBody LoginDto loginDto, HttpServletResponse res) {
         log.info("loginDto : {}", loginDto);
         TokenDto tokenDto = authService.login(loginDto);
-        if (tokenDto == null) {
-            return ResponseDto.builder()
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .message("login fail").build();
-        }
         // 로그인 성공하면 액세스토큰은 헤더, 리프레시토큰은 쿠키에 저장
         Cookie cookie = new Cookie("refresh-token", tokenDto.getRefreshToken());
         cookie.setMaxAge(COOKIE_MAX_AGE);
@@ -220,14 +209,12 @@ public class UserController {
     @GetMapping("/email")
     @Operation(summary = "이메일 중복 체크", description = "이메일 중복 체크 API")
     public ResponseDto emailDupCheck(@RequestParam String keyword) {
+        boolean result = false;
         if (keyword != null) {
-            return ResponseDto.builder()
-                    .data(userService.emailDupCheck(keyword))
-                    .status(HttpStatus.OK)
-                    .message("email duplicate check").build();
+            result = userService.emailDupCheck(keyword);
         }
         return ResponseDto.builder()
-                .data(false)
+                .data(result)
                 .status(HttpStatus.OK)
                 .message("email duplicate check").build();
     }
@@ -235,14 +222,12 @@ public class UserController {
     @GetMapping("/nickname")
     @Operation(summary = "닉네임 중복 체크", description = "닉네임 중복 체크 API")
     public ResponseDto nickDupCheck(@RequestParam String keyword) {
+        boolean result = false;
         if (keyword != null) {
-            return ResponseDto.builder()
-                    .data(userService.nickDupCheck(keyword))
-                    .status(HttpStatus.OK)
-                    .message("nickname duplicate check").build();
+            result = userService.nickDupCheck(keyword);
         }
         return ResponseDto.builder()
-                .data(false)
+                .data(result)
                 .status(HttpStatus.OK)
                 .message("nickname duplicate check").build();
     }
@@ -260,19 +245,16 @@ public class UserController {
     @Operation(summary = "비밀번호 확인", description = "비밀번호 확인 API")
     public ResponseDto pwConfirm(@RequestBody Map<String, String> map) {
 
+        boolean result = false;
+
         String password = map.get("password");
         String encodedPassword = SecurityContextHolder.getContext().getAuthentication()
                 .getCredentials().toString();
-
         if (encoder.matches(password, encodedPassword)) {
-            return ResponseDto.builder()
-                    .data(true)
-                    .status(HttpStatus.OK)
-                    .message("password confirm").build();
+            result = true;
         }
-
         return ResponseDto.builder()
-                .data(false)
+                .data(result)
                 .status(HttpStatus.OK)
                 .message("password confirm").build();
     }
@@ -337,15 +319,10 @@ public class UserController {
                     .build();
             log.info("mailDto : {}", mailDto);
             mailService.sendMail(mailDto);
-            return ResponseDto.builder()
-                    .status(HttpStatus.OK)
-                    .message("임시 비밀번호 발급 완료")
-                    .build();
         }
         return ResponseDto.builder()
-                .status(HttpStatus.BAD_REQUEST)
-                .message("유저 정보가 일치하지 않습니다.")
-                .build();
+                .status(HttpStatus.OK)
+                .message("임시 비밀번호 발급").build();
     }
 
 }
