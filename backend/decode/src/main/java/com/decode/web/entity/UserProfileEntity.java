@@ -1,5 +1,6 @@
 package com.decode.web.entity;
 
+import com.decode.web.exception.NotEnoughCoinException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -68,5 +69,12 @@ public class UserProfileEntity {
         this.profileImg = profile.getProfileImg();
         this.point = profile.getPoint();
         this.coin = profile.getCoin();
+    }
+
+    public void decreaseCoin(int amount) {
+        if (amount > this.coin) {
+            throw new NotEnoughCoinException("amount = " + amount + " coin = " + coin);
+        }
+        this.coin -= amount;
     }
 }

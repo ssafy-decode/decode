@@ -10,9 +10,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import org.hibernate.annotations.ColumnDefault;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Setter
+@Getter
 @Table(name = "Item")
 public class ItemEntity extends CommonEntity {
 
@@ -30,9 +33,13 @@ public class ItemEntity extends CommonEntity {
     private ProductEntity product;
 
     @Column(name = "product_count")
-    private Integer product_count;
+    private Integer productCount;
 
-    @ColumnDefault("false")
-    @Column(columnDefinition = "TINYINT(1)", name = "is_using")
-    private boolean isUsing;
+    public void increaseProductCount(int count) {
+        this.productCount += count;
+    }
+
+//    @ColumnDefault("false")
+//    @Column(columnDefinition = "TINYINT(1)", name = "is_using")
+//    private boolean isUsing;
 }

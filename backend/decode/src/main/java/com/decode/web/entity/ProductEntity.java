@@ -8,9 +8,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "Product")
 public class ProductEntity extends CommonEntity {
 
@@ -37,4 +41,8 @@ public class ProductEntity extends CommonEntity {
     @Column(columnDefinition = "TINYINT(1)", name = "is_sale")
     private boolean isSale;
 
+    public void buy(int count, ItemEntity itemEntity, UserProfileEntity userProfile) {
+        userProfile.decreaseCoin(this.productPrice * count);
+        itemEntity.increaseProductCount(count);
+    }
 }
