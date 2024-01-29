@@ -1,6 +1,7 @@
 package com.decode.web.entity;
 
 import com.decode.web.global.CommonEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -40,14 +41,17 @@ public class QuestionEntity extends CommonEntity {
     @Column(name = "question_content")
     private String content;
 
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "question", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<AnswerEntity> answers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "question", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<QuestionTagEntity> questionTags = new ArrayList<>();
 
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "question", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<MetooEntity> metoos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "question", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<BookmarkEntity> bookmarks = new ArrayList<>();
 
     @Builder
     public QuestionEntity(Long id, String title, UserProfileEntity questionWriter, String content) {

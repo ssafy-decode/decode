@@ -8,6 +8,8 @@ import com.decode.web.domain.user.repository.UserProfileRepository;
 import com.decode.web.entity.BookmarkEntity;
 import com.decode.web.entity.QuestionEntity;
 import com.decode.web.entity.UserProfileEntity;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +56,7 @@ public class BookmarkServiceImpl implements BookmarkService {
     public List<QuestionListDto> getBookMarkQuetionList(Long userId) {
         UserProfileEntity userProfile = userProfileRepository.findById(userId)
                 .orElseThrow(
-                        () -> new BadCredentialsException("User not found with ID: " + userId));
+                        () -> new EntityNotFoundException("User not found with ID: " + userId));
 
         List<BookmarkEntity> bookmarks = bookmarkRepository.findByUserProfile(userProfile);
 

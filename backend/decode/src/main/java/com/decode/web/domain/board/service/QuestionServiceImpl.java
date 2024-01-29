@@ -7,7 +7,6 @@ import com.decode.web.domain.board.dto.ResponseAnswerDto;
 import com.decode.web.domain.board.dto.ResponseQuestionDto;
 import com.decode.web.domain.board.dto.UpdateQuestionDto;
 import com.decode.web.domain.board.mapper.QuestionMapper;
-import com.decode.web.domain.board.repository.AnswerRepository;
 import com.decode.web.domain.board.repository.MetooRepository;
 import com.decode.web.domain.board.repository.QuestionRepository;
 import com.decode.web.domain.tag.dto.QuestionTagDto;
@@ -19,6 +18,7 @@ import com.decode.web.domain.user.repository.UserProfileRepository;
 import com.decode.web.entity.QuestionEntity;
 import com.decode.web.entity.QuestionTagEntity;
 import com.decode.web.entity.UserProfileEntity;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
@@ -93,7 +93,7 @@ public class QuestionServiceImpl implements QuestionService {
     public Long createQuestion(CreateQuestionDto question) {
         UserProfileEntity questionWriter = userProfileRepository.findById(
                 question.getQuestionWriterId()).orElseThrow(
-                () -> new BadCredentialsException(
+                () -> new EntityNotFoundException(
                         "user not found with id: " + question.getQuestionWriterId()));
 
         QuestionDto questionDto = new QuestionDto(question);
@@ -109,9 +109,10 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    @Transactional
     public ResponseQuestionDto questionDetail(Long questionId) {
         QuestionEntity questionEntity = questionRepository.findById(questionId).orElseThrow(
-                () -> new BadCredentialsException(
+                () -> new EntityNotFoundException(
                         "Question not found with id: " + questionId));
         UserProfileEntity writerEntity = questionEntity.getQuestionWriter();
         ResponseUserProfileDto writerDto = responseUserProfileMapper.toDto(writerEntity);
@@ -134,10 +135,11 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    @Transactional
     public ResponseQuestionDto updateQuestion(UpdateQuestionDto updateQuestion) {
         QuestionEntity question = questionRepository.findById(updateQuestion.getQuestionId())
                 .orElseThrow(
-                        () -> new BadCredentialsException(
+                        () -> new EntityNotFoundException(
                                 "Question not found with id: " + updateQuestion.getQuestionId()));
         question.setTitle(updateQuestion.getTitle());
         question.setContent(updateQuestion.getContent());

@@ -8,9 +8,9 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface AnswerMapper {
 
-    public AnswerDto toDto(AnswerEntity entity);
+    AnswerDto toDto(AnswerEntity entity);
 
-    public AnswerEntity toEntity(AnswerDto dto);
+    AnswerEntity toEntity(AnswerDto dto);
 
     AnswerEntity toEntity(CreateAnswerDto createAnswerDto);
 }
