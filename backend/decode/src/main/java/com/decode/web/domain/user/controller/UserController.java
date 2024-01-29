@@ -17,12 +17,17 @@ import com.decode.web.domain.user.service.AuthService;
 import com.decode.web.domain.user.service.UserService;
 import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.global.ResponseDto;
+import com.decode.web.global.utils.authentication.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import java.security.Security;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpCookie;
@@ -34,6 +39,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -52,6 +58,7 @@ public class UserController {
     private final AuthService authService;
     private final BCryptPasswordEncoder encoder;
     private final MailService maillService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     private final int COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30일
 
@@ -81,9 +88,9 @@ public class UserController {
 
     @PostMapping("/user")
     @Operation(summary = "사용자 정보 수정", description = "사용자 1명의 정보를 수정합니다.(비밀번호 변경)")
-    public ResponseDto updateUserById(@RequestBody InfoUpdateDto infoUpdateDto) {
+    public ResponseDto updateUserById(@Valid @RequestBody InfoUpdateDto infoUpdateDto) {
         String password = infoUpdateDto.getPassword();
-        log.info("password : {}", password);
+
         if (userService.pwCheck(password)) {
             userService.updateUserInfo(infoUpdateDto.getId(), encoder.encode(password));
             return new ResponseDto().builder()
@@ -106,10 +113,19 @@ public class UserController {
                 .status(HttpStatus.OK)
                 .message("select user profile info").build();
     }
+    @GetMapping("/info")
+    @Operation(summary = "로그인한 사용자 조회", description = "현재 사용자 정보를 조회합니다.")
+    public ResponseDto getUserProfileNow() {
+        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return new ResponseDto().builder()
+                .data(userProfileMapper.toDto(userService.getUserProfileById(userId)))
+                .status(HttpStatus.OK)
+                .message("get user info").build();
+    }
 
     @PostMapping("/regist")
     @Operation(summary = "회원 가입", description = "회원 가입 API")
-    public ResponseDto createUser(@RequestBody UserRegistDto user) {
+    public ResponseDto createUser(@Valid @RequestBody UserRegistDto user) {
         log.debug("user : {}", user);
         Long id = null;
         if (userService.emailDupCheck(user.getEmail())
@@ -141,35 +157,47 @@ public class UserController {
 
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "로그인 API")
-    public ResponseDto login(@RequestBody LoginDto loginDto, HttpServletResponse res) {
+    public ResponseDto login(@Valid @RequestBody LoginDto loginDto, HttpServletResponse res) {
         log.info("loginDto : {}", loginDto);
         TokenDto tokenDto = authService.login(loginDto);
-
+        if (tokenDto == null) {
+            return new ResponseDto().builder()
+                    .data(null)
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .message("login fail").build();
+        }
         // 로그인 성공하면 액세스토큰은 헤더, 리프레시토큰은 쿠키에 저장
         Cookie cookie = new Cookie("refresh-token", tokenDto.getRefreshToken());
         cookie.setMaxAge(COOKIE_MAX_AGE);
         cookie.setSecure(true);
+        cookie.setDomain("i10a507.p.ssafy.io");
         cookie.setDomain("localhost");
         res.addCookie(cookie);
 
         res.setHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
 
         return new ResponseDto().builder()
-                .data("login success")
+                .data(jwtTokenProvider.getAuthUserId(tokenDto.getAccessToken()))
                 .status(HttpStatus.OK)
                 .message("login").build();
     }
 
     @PostMapping("/logout")
     @Operation(summary = "로그아웃", description = "로그아웃 API")
-    public ResponseDto logout(@RequestHeader("Authorization") String token) {
-        // 로그아웃 성공하면 쿠키 삭제 및 redis에서 토큰 삭제, status 200 반환,
+    public ResponseDto logout(@RequestHeader("Authorization") String token, HttpServletResponse res) {
+        // 로그아웃 성공하면 쿠키 삭제 및 redis에서 토큰 삭제
         authService.logout(token);
-        HttpCookie httpcookie = ResponseCookie.from("refresh-token", "")
-                .httpOnly(true)
-                .maxAge(0)
-                .secure(true)
-                .build();
+
+        //쿠키 삭제
+        Cookie cookie = new Cookie("refresh-token", null);
+        cookie.setMaxAge(0);
+        cookie.setSecure(true);
+        cookie.setDomain("localhost");
+        res.addCookie(cookie);
+
+        // 헤더에서 토큰 삭제
+        res.setHeader("Authorization", null);
+
         return new ResponseDto().builder()
                 .data(null)
                 .status(HttpStatus.OK)
@@ -201,8 +229,14 @@ public class UserController {
     @GetMapping("/email")
     @Operation(summary = "이메일 중복 체크", description = "이메일 중복 체크 API")
     public ResponseDto emailDupCheck(@RequestParam String keyword) {
+        if(keyword != null){
+            return new ResponseDto().builder()
+                    .data(userService.emailDupCheck(keyword))
+                    .status(HttpStatus.OK)
+                    .message("email duplicate check").build();
+        }
         return new ResponseDto().builder()
-                .data(userService.emailDupCheck(keyword))
+                .data(false)
                 .status(HttpStatus.OK)
                 .message("email duplicate check").build();
     }
@@ -210,8 +244,14 @@ public class UserController {
     @GetMapping("/nickname")
     @Operation(summary = "닉네임 중복 체크", description = "닉네임 중복 체크 API")
     public ResponseDto nickDupCheck(@RequestParam String keyword) {
+        if(keyword != null){
+            return new ResponseDto().builder()
+                    .data(userService.nickDupCheck(keyword))
+                    .status(HttpStatus.OK)
+                    .message("nickname duplicate check").build();
+        }
         return new ResponseDto().builder()
-                .data(userService.nickDupCheck(keyword))
+                .data(false)
                 .status(HttpStatus.OK)
                 .message("nickname duplicate check").build();
     }
@@ -227,13 +267,20 @@ public class UserController {
 
     @PostMapping("/confirm")
     @Operation(summary = "비밀번호 확인", description = "비밀번호 확인 API")
-    public ResponseDto pwConfirm(@RequestBody String password) {
+    public ResponseDto pwConfirm(@RequestBody Map<String, String> map){
 
-        String encodedPassword = encoder.encode(password);
-        Long uid = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String password = map.get("password");
+        String encodedPassword = SecurityContextHolder.getContext().getAuthentication().getCredentials().toString();
+
+        if (encoder.matches(password, encodedPassword)) {
+            return new ResponseDto().builder()
+                    .data(true)
+                    .status(HttpStatus.OK)
+                    .message("password confirm").build();
+        }
 
         return new ResponseDto().builder()
-                .data(userService.pwConfirm(uid, encodedPassword))
+                .data(false)
                 .status(HttpStatus.OK)
                 .message("password confirm").build();
     }
@@ -251,7 +298,7 @@ public class UserController {
 
     @PostMapping("/email")
     @Operation(summary = "이메일 찾기", description = "이메일 찾기 API")
-    public ResponseDto findEmail(@RequestBody FindEmailDto findEmailDto) {
+    public ResponseDto findEmail(@Valid @RequestBody FindEmailDto findEmailDto) {
         return new ResponseDto().builder()
                 .data(userService.findEmail(findEmailDto.getName(), findEmailDto.getPhoneNumber(),
                         findEmailDto.getBirth()))
@@ -285,11 +332,12 @@ public class UserController {
         // email로 유저 info를 조회했을 때, name, phoneNumber, birth가 일치하는 유저가 있으면
         if (userService.findUserByEmailAndNameAndPhoneNumberAndBirth(findPasswordDto)) {
             // 임시 비밀번호 생성
-            String tempPassword = encoder.encode(findPasswordDto.getBirth() + "decode!");
+            String rawPasswrod = findPasswordDto.getBirth() + "decode!";
+            String tempPassword = encoder.encode(rawPasswrod);
             // 해당 유저의 비밀번호를 임시 비밀번호로 변경하고
             userService.updateUserInfo(
                     userService.getUserByEmail(findPasswordDto.getEmail()).getId(),
-                    encoder.encode(tempPassword));
+                    tempPassword);
             // 해당 이메일로 임시 비밀번호 발송.
             MailDto mailDto = MailDto.builder()
                     .to(findPasswordDto.getEmail())

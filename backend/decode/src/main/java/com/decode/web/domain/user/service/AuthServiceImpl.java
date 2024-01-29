@@ -28,6 +28,10 @@ public class AuthServiceImpl implements AuthService {
                 loginDto.getEmail(), loginDto.getPassword());
         Authentication authentication = authenticationManagerBuilder.getObject()
                 .authenticate(authenticationToken);
+        if(!authentication.isAuthenticated()) {
+            return null;
+        }
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return generateToken(SERVER, authentication.getName());
     }
