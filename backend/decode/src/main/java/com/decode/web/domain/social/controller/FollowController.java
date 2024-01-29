@@ -56,5 +56,13 @@ public class FollowController {
                 .build();
     }
 
+    @GetMapping("/isfollow/{toUserId}")
+    public ResponseDto isFollow(@PathVariable Long toUserId, Authentication auth) {
+        return ResponseDto.builder()
+                .data(socialService.isFollow((Long) auth.getPrincipal(), toUserId))
+                .message("팔로우 여부 조회 성공")
+                .build();
+    }
+
 
 }

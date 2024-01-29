@@ -14,8 +14,4 @@ public interface SocialService {
 
     boolean isFollow(Long fromUserId, Long toUserId);
 
-    int getFollowerCount(Long userId);
-
-    int getFollowingCount(Long userId);
-
 }
