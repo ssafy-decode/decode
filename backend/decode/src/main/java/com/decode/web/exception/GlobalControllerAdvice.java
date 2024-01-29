@@ -2,6 +2,7 @@ package com.decode.web.exception;
 
 import com.decode.web.global.ResponseDto;
 import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -52,10 +53,21 @@ public class GlobalControllerAdvice {
                 .build(), HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(EntityNotFoundException.class)
+    private ResponseEntity<ResponseDto> EntityNotFoundException(Exception e) {
+        log.error("{}", e.getMessage());
+        return new ResponseEntity<>(ResponseDto.builder()
+                .status(HttpStatus.UNAUTHORIZED)
+                .message(e.getMessage())
+                .data("")
+                .headers(new HttpHeaders())
+                .build(), HttpStatus.UNAUTHORIZED);
+    }
+
     @ExceptionHandler(Exception.class)
     private ResponseEntity<ResponseDto> handleException(Exception e) {
         log.error("{}", e.getMessage());
-        e.printStackTrace();
+        log.debug("{}", e.getStackTrace());
         return new ResponseEntity<>(ResponseDto.builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .message("Internal Server Error")

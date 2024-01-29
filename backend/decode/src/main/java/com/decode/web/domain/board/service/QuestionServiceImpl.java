@@ -7,7 +7,6 @@ import com.decode.web.domain.board.dto.ResponseAnswerDto;
 import com.decode.web.domain.board.dto.ResponseQuestionDto;
 import com.decode.web.domain.board.dto.UpdateQuestionDto;
 import com.decode.web.domain.board.mapper.QuestionMapper;
-import com.decode.web.domain.board.repository.AnswerRepository;
 import com.decode.web.domain.board.repository.MetooRepository;
 import com.decode.web.domain.board.repository.QuestionRepository;
 import com.decode.web.domain.tag.dto.QuestionTagDto;
@@ -19,12 +18,15 @@ import com.decode.web.domain.user.repository.UserProfileRepository;
 import com.decode.web.entity.QuestionEntity;
 import com.decode.web.entity.QuestionTagEntity;
 import com.decode.web.entity.UserProfileEntity;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -37,7 +39,6 @@ public class QuestionServiceImpl implements QuestionService {
     private final QuestionMapper questionMapper;
     private final TagService tagService;
     private final QuestionTagRepository questionTagRepository;
-    private final AnswerRepository answerRepository;
     private final MetooRepository metooRepository;
     private final AnswerService answerService;
     private final ResponseUserProfileMapper responseUserProfileMapper;
@@ -53,7 +54,7 @@ public class QuestionServiceImpl implements QuestionService {
         }
         List<QuestionListDto> questionListDtoList = new LinkedList<>(
                 questionEntityList.stream()
-                        .map(this::convertToDto)
+                        .map(this::convertQuestionEntityToQuestionListDto)
                         .toList()
         );
         for (int i = questionListDtoList.size() - 1; i >= 0; i--) {
@@ -67,7 +68,8 @@ public class QuestionServiceImpl implements QuestionService {
         return questionListDtoList;
     }
 
-    private QuestionListDto convertToDto(QuestionEntity question) {
+    @Override
+    public QuestionListDto convertQuestionEntityToQuestionListDto(QuestionEntity question) {
         return new QuestionListDto(
                 question.getId(),
                 question.getTitle(),
@@ -87,9 +89,12 @@ public class QuestionServiceImpl implements QuestionService {
 
 
     @Override
+    @Transactional
     public Long createQuestion(CreateQuestionDto question) {
-        UserProfileEntity questionWriter = userProfileRepository.getReferenceById(
-                question.getQuestionWriterId());
+        UserProfileEntity questionWriter = userProfileRepository.findById(
+                question.getQuestionWriterId()).orElseThrow(
+                () -> new EntityNotFoundException(
+                        "user not found with id: " + question.getQuestionWriterId()));
 
         QuestionDto questionDto = new QuestionDto(question);
         questionDto.setQuestionWriter(questionWriter);
@@ -104,8 +109,11 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    @Transactional
     public ResponseQuestionDto questionDetail(Long questionId) {
-        QuestionEntity questionEntity = questionRepository.getReferenceById(questionId);
+        QuestionEntity questionEntity = questionRepository.findById(questionId).orElseThrow(
+                () -> new EntityNotFoundException(
+                        "Question not found with id: " + questionId));
         UserProfileEntity writerEntity = questionEntity.getQuestionWriter();
         ResponseUserProfileDto writerDto = responseUserProfileMapper.toDto(writerEntity);
         String title = questionEntity.getTitle();
@@ -127,20 +135,27 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    @Transactional
     public ResponseQuestionDto updateQuestion(UpdateQuestionDto updateQuestion) {
-        QuestionEntity question = questionRepository.getReferenceById(
-                updateQuestion.getQuestionId());
+        QuestionEntity question = questionRepository.findById(updateQuestion.getQuestionId())
+                .orElseThrow(
+                        () -> new EntityNotFoundException(
+                                "Question not found with id: " + updateQuestion.getQuestionId()));
         question.setTitle(updateQuestion.getTitle());
         question.setContent(updateQuestion.getContent());
 
         List<QuestionTagEntity> questionTagEntityList = questionTagRepository.findAllByQuestionId(
                 updateQuestion.getQuestionId());
-        questionTagRepository.deleteAll(questionTagEntityList);
+        if (!questionTagEntityList.isEmpty()) {
+            questionTagRepository.deleteAll(questionTagEntityList);
+        }
         List<QuestionTagDto> tagList = updateQuestion.getTagList();
 
-        for (QuestionTagDto questionTag : tagList) {
-            questionTagRepository.save(QuestionTagEntity.builder().question(question)
-                    .tagId(questionTag.getTagId()).version(questionTag.getVersion()).build());
+        if (!tagList.isEmpty()) {
+            for (QuestionTagDto questionTag : tagList) {
+                questionTagRepository.save(QuestionTagEntity.builder().question(question)
+                        .tagId(questionTag.getTagId()).version(questionTag.getVersion()).build());
+            }
         }
 
         return questionDetail(updateQuestion.getQuestionId());
