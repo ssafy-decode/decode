@@ -13,7 +13,10 @@ public class ProductRepository {
     private final EntityManager entityManager;
 
     public List<ProductEntity> findAll() {
-        return entityManager.createQuery("select p from ProductEntity p where p.isSale = true")
+        return entityManager.createQuery("select p "
+                        + "from ProductEntity p "
+                        + "where p.isSale = true", ProductEntity.class)
                 .getResultList();
     }
+
 }

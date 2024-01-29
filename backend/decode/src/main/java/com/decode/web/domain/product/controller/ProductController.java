@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,6 +25,17 @@ public class ProductController {
         return ResponseDto.builder()
                 .status(HttpStatus.OK)
                 .data(data)
+                .headers(HttpHeaders.EMPTY)
+                .message("상품 조회 완료")
+                .build();
+    }
+
+    @PostMapping
+    public ResponseDto buyProduct() {
+//        productService.buyProduct(1, 2L, 124L);
+        return ResponseDto.builder()
+                .status(HttpStatus.OK)
+                .data(0)
                 .headers(HttpHeaders.EMPTY)
                 .message("상품 조회 완료")
                 .build();

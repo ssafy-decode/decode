@@ -42,7 +42,8 @@ public class ProductEntity extends CommonEntity {
     private boolean isSale;
 
     public void buy(int count, ItemEntity itemEntity, UserProfileEntity userProfile) {
-        userProfile.decreaseCoin(this.productPrice * count);
+        int totalAmount = this.productPrice * count;
+        userProfile.decreaseCoin(totalAmount);
         itemEntity.increaseProductCount(count);
     }
 }

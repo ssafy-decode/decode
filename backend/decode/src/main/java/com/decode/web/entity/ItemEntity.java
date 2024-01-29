@@ -26,7 +26,7 @@ public class ItemEntity extends CommonEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private UserProfileEntity userProfile;
+    private UserInfoEntity userInfo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
