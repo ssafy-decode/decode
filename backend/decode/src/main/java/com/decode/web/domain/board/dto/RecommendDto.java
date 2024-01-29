@@ -14,5 +14,6 @@ import lombok.ToString;
 public class RecommendDto {
 
     private Long userId;
-    private boolean recommend;
+    private Long answerId;
+
 }

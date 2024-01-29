@@ -5,6 +5,7 @@ import com.decode.web.domain.board.service.MetooService;
 import com.decode.web.global.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,14 +22,19 @@ public class MetooController {
 
     @PostMapping()
     public ResponseDto save(@RequestBody MetooDto metooDto) {
-        Long metooId = metooService.save(metooDto);
-        return ResponseDto.builder().status(HttpStatus.OK).data(metooId).message("나도 궁금해요 성공")
+        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!userId.equals(metooDto.getUserId())) {
+            return ResponseDto.builder().status(HttpStatus.BAD_REQUEST).message("사용자 불일치").build();
+        }
+        Long meTooId = metooService.save(metooDto);
+        return ResponseDto.builder().status(HttpStatus.OK).data(meTooId).message(meTooId + ": 나도 궁금해요 성공")
                 .build();
     }
 
     @DeleteMapping("/{metooId}")
-    public ResponseDto delete(@PathVariable String metooId) {
-        return ResponseDto.builder().status(HttpStatus.OK).message("나도 궁금해요 취소").build();
+    public ResponseDto delete(@PathVariable Long metooId) {
+        metooService.delete(metooId);
+        return ResponseDto.builder().status(HttpStatus.OK).message(metooId + ": 나도 궁금해요 취소").build();
     }
 
 }

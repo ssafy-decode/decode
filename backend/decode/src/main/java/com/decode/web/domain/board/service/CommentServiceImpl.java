@@ -34,10 +34,12 @@ public class CommentServiceImpl implements CommentService {
     public Long save(CreateCommentDto createCommentDto) {
 
         // dto -> entity
-        AnswerEntity answer = answerRepository.getReferenceById(
-                createCommentDto.getAnswerId());
-        UserProfileEntity userInfo = userProfileRepository.getReferenceById(
-                createCommentDto.getUserId());
+        AnswerEntity answer = answerRepository.findById(createCommentDto.getAnswerId()).orElseThrow(
+                () -> new EntityNotFoundException(
+                        "Comment not found with id: " + createCommentDto.getAnswerId()));
+        UserProfileEntity userInfo = userProfileRepository.findById(createCommentDto.getUserId())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "User not found with id: " + createCommentDto.getUserId()));
         CommentEntity comment = commentMapper.toEntity(createCommentDto);
         comment.setCommentWriter(userInfo);
         comment.setAnswer(answer);
@@ -54,8 +56,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentEntity update(UpdateCommentDto updateCommentDto) {
-        CommentEntity comment = commentRepository.findById(updateCommentDto.getId())
-                .orElseThrow(() -> new EntityNotFoundException(
+        CommentEntity comment = commentRepository.findById(updateCommentDto.getId()).orElseThrow(
+                () -> new EntityNotFoundException(
                         "Comment not found with id: " + updateCommentDto.getId()));
         // 기존의 comment content 내용 수정
         log.debug("Before Update Comment Entity : {}", comment);
@@ -75,8 +77,7 @@ public class CommentServiceImpl implements CommentService {
     public List<ResponseCommentDto> getResponseAnswerDtoList(AnswerEntity answerEntity) {
         List<CommentEntity> commentList = commentRepository.findAllByAnswer(answerEntity);
 
-        return commentList.stream()
-                .map(this::convertToResponseCommentDto)
+        return commentList.stream().map(this::convertToResponseCommentDto)
                 .collect(Collectors.toList());
     }
 
