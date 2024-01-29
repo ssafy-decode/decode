@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "Item")
@@ -27,4 +28,11 @@ public class ItemEntity extends CommonEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private ProductEntity product;
+
+    @Column(name = "product_count")
+    private Integer product_count;
+
+    @ColumnDefault("false")
+    @Column(columnDefinition = "TINYINT(1)", name = "is_using")
+    private boolean isUsing;
 }
