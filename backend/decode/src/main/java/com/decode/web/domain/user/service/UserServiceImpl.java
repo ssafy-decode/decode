@@ -75,6 +75,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public Long createUser(UserInfoEntity user, String nickname) {
 
         UserProfileEntity profile = UserProfileEntity.builder()
@@ -142,6 +143,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
+    @Transactional
     public void addUserTag(RequestUserTagDto requestUserTagDto) {
         Long userId = requestUserTagDto.getUserId();
         List<Long> tagIds = requestUserTagDto.getTagIdList();
@@ -155,6 +157,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void updateUserTag(RequestUserTagDto requestUserTagDto) {
         Long userId = requestUserTagDto.getUserId();
         List<Long> tagIds = requestUserTagDto.getTagIdList();

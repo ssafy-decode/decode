@@ -28,7 +28,7 @@ public class AuthServiceImpl implements AuthService {
                 loginDto.getEmail(), loginDto.getPassword());
         Authentication authentication = authenticationManagerBuilder.getObject()
                 .authenticate(authenticationToken);
-        if(!authentication.isAuthenticated()) {
+        if (!authentication.isAuthenticated()) {
             return null;
         }
 
@@ -101,7 +101,6 @@ public class AuthServiceImpl implements AuthService {
         if (refreshTokenInRedis != null) {
             redisService.deleteValues("RT:" + SERVER + ":" + principal);
         }
-//        long expiration = jwtTokenProvider.getTokenExpirationTime(requestAccessToken) - new Date().getTime();
-//        redisService.setValuesWithTimeout(requestAccessToken, "logout", expiration);
+
     }
 }
