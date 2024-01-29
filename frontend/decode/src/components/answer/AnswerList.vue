@@ -15,7 +15,7 @@
 // import { useQuestionStore } from '@/stores/question';
 // import AnswerListItem from '@/components/AnswerListItem.vue';
 
-// const store = useQuestionStore();
+// const questionStore = useQuestionStore();
 
 // defineProps({
 //   questionId: Number,

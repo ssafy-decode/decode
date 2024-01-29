@@ -5,6 +5,7 @@ import MainView from '@/views/MainView.vue';
 import UserView from '@/views/UserView.vue';
 import QuestionBoardView from '@/views/QuestionBoardView.vue';
 import QuestionDetailView from '@/views/QuestionDetailView.vue';
+import QuestionTitleCreateView from '@/views/QuestionTitleCreateView.vue';
 import QuestionCreateView from '@/views/QuestionCreateView.vue';
 
 // Components
@@ -24,11 +25,6 @@ const router = createRouter({
       path: '/',
       name: 'mainview',
       component: MainView,
-    },
-    {
-      path: '/',
-      name: 'login',
-      component: LoginForm,
     },
     {
       path: '/user',
@@ -84,6 +80,13 @@ const router = createRouter({
       path: '/foundpwd',
       name: 'foundpwd',
       component: FoundPwdVue,
+    },
+    {
+      path: '/question-title-create',
+      name: 'question-title-create',
+      component: QuestionTitleCreateView,
+    },
+    {
       path: '/question-create',
       name: 'question-create',
       component: QuestionCreateView,

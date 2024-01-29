@@ -8,7 +8,6 @@
 import Editor from '@toast-ui/editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import $ from 'jquery';
-
 export default {
   data() {
     return {
@@ -16,13 +15,12 @@ export default {
     };
   },
   mounted() {
-    ///////////////////// 개발 중 /////////////////////
     this.editor = new Editor({
       el: document.querySelector('#editor'),
       // minHeight: '600px',
-      height: '600px',
-      initialEditType: 'markdown',
-      initialValue: '내용을 마크다운 형식으로 작성해주세요!',
+      height: '500px',
+      initialEditType: 'wysiwyg',
+      initialValue: '이 문장을 지우고 에러를 붙여넣어주세요!',
       previewStyle: 'vertical',
       // 추가된 내용
       hooks: {
@@ -32,11 +30,12 @@ export default {
 
           const formData = new FormData();
           formData.append('image', blob);
-          let url = `${process.env.VUE_APP_BACKEND_URL}/image`;
+          // 아래 경로 수정 필요
+          let url = '/images/';
           $.ajax({
             type: 'POST',
             enctype: 'multipart/form-data',
-            url: `${process.env.VUE_APP_BACKEND_URL}/image`,
+            url: '/writeTest.do',
             data: formData,
             dataType: 'json',
             processData: false,
@@ -67,7 +66,6 @@ export default {
       // 변경된 내용을 부모 컴포넌트로 전달
       this.$emit('editor-content-updated', this.editor.getMarkdown());
     });
-    ///////////////////// 개발 중 /////////////////////
   },
 };
 </script>

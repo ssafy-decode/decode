@@ -17,6 +17,7 @@ export const useUserStore = defineStore('user', () => {
   const accessToken = ref('');
   const userId = ref(''); // 가입 시 회원 번호
   const userEmail = ref('');
+  const loginUserId = ref(null);
   // const withCredentials = ref(false);
 
   const tagNum = {
@@ -38,8 +39,8 @@ export const useUserStore = defineStore('user', () => {
   const parseToken = (response) => {
     console.log('Response:', response);
 
-    if (response.data && response.data.data) {
-      return response.data.data.substring(7); // 8 -> 7 로 수정!
+    if (response.data && response.headers) {
+      return response.headers.authorization.substring(7);
     } else {
       console.error('Token is not present in the response data');
       return '';
@@ -110,19 +111,17 @@ export const useUserStore = defineStore('user', () => {
   // 토큰 + 로그인
   const setLoginUser = async (loginuser) => {
     try {
-      console.log('hi');
-      const res = await axios.post(`${URL}/user/1`);
-      console.log(res);
-      // const res = await axios.post(`${URL}/login`, loginuser);
-      // accessToken.value = parseToken(res);
-      // console.log(accessToken.value);
+      const res = await axios.post(`${URL}/login`, loginuser);
+      // console.log('이게 내가 출력하는 res.data임', res.data);
+      // console.log('이게 내가 출력하는 res.headers임', res.headers);
 
-      // isLoggedIn.value = true;
+      accessToken.value = parseToken(res);
+      isLoggedIn.value = true;
+      loginUserId.value = res.data.data;
+      console.log('로그인유저아이디', loginUserId.value);
 
-      // console.log(res.data);
-      // console.log(accessToken.value);
-      // router.push({ name: 'mainview' });
-      // alert('로그인되었습니다.');
+      router.push({ name: 'mainview' });
+      alert('로그인되었습니다.');
       return { success: true, data: accessToken };
     } catch (error) {
       alert('로그인에 실패했습니다.');

@@ -3,22 +3,35 @@
     <v-form @submit.prevent="createQuestion">
       <v-text-field variant="solo" label="질문 제목" v-model.trim="questionTitle"></v-text-field>
       <v-container>
-        <v-row class="d-flex justify-end">
-          <v-col cols="12" sm="6" md="4">
-            <v-combobox
-              variant="solo"
-              class="stackBox"
-              bg-color="fff"
-              v-model="select"
-              :items="items"
-              placeholder="ex) java, spring boot, sql"
-              label="기술 스택"
-              multiple
-              chips
-              clearable
-            ></v-combobox>
-          </v-col>
-        </v-row>
+        <template v-for="(tag, index) in tagId" :key="index">
+          <v-row class="d-flex justify-end">
+            <v-col cols="12" sm="6" md="4">
+              <!-- <v-text-field variant="solo" label="관련 태그" v-model.trim="tagId"></v-text-field> -->
+              <v-text-field
+                variant="solo"
+                class="stackBox"
+                bg-color="fff"
+                v-model.trim="tagId[index]"
+                placeholder="ex) java, spring boot, sql"
+                label="관련 태그"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="6" md="4">
+              <v-combobox
+                variant="solo"
+                class="stackBox"
+                bg-color="fff"
+                v-model="select"
+                :items="items"
+                placeholder="ex) java, spring boot, sql"
+                label="기술 스택"
+                multiple
+                chips
+                clearable
+              ></v-combobox>
+            </v-col>
+          </v-row>
+        </template>
       </v-container>
       <MyEditor @editor-content-updated="updateEditorContent" />
       <div id="btnBox">
@@ -30,20 +43,23 @@
 
 <script setup>
 import MyEditor from '@/components/common/MyEditor.vue';
-import { ref } from 'vue';
 import { useQuestionStore } from '@/stores/questionStore';
 import { useUserStore } from '@/stores/userStore';
+import { useRouter, useRoute } from 'vue-router';
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
-import { useRouter } from 'vue-router';
 
 const questionStore = useQuestionStore();
 const userStore = useUserStore();
 const router = useRouter();
-// 넘겨줄 데이터
+const route = useRoute();
+
+// 받아와서 넘겨줄 데이터
 const questionTitle = ref('');
+const tagId = ref('');
+// 만들어서 넘겨줄 데이터
 const questionContent = ref('');
 const questionWriterId = ref(null); // 로그인된 사용자 id 가져와서 넣어야함
-const tagId = ref(null);
 const version = ref('');
 
 const select = ref([]);
@@ -66,7 +82,7 @@ const updateEditorContent = function (content) {
   questionContent.value = content;
 };
 
-////////////////////////////  개발중  //////////////////////////////
+////////////////////////////  아래 개발중  //////////////////////////////
 
 const createQuestion = function () {
   let data = {
@@ -98,7 +114,14 @@ const createQuestion = function () {
       console.log('질문 생성 오류');
     });
 };
-////////////////////////////  개발중  //////////////////////////////
+////////////////////////////  위 개발중  //////////////////////////////
+
+onMounted(() => {
+  questionTitle.value = questionStore.gptTitles.value;
+  tagId.value = questionStore.gptTagIds.value;
+  console.log('옮겨진타이틀:', questionTitle.value);
+  console.log('옮겨진태그들:', tagId.value);
+});
 </script>
 
 <style scoped>
