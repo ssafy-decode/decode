@@ -22,7 +22,6 @@ export const useUserStore = defineStore('user', () => {
   const searchUserCnt = ref(0);
   const accessToken = ref('');
   const userId = ref(''); // 가입 시 회원 번호
-  const userEmail = ref('');
   const loginUserId = ref(null);
   // const withCredentials = ref(false);
   const foundEmail = ref(''); // 이메일 찾기에서의 회원 이메일
@@ -118,7 +117,6 @@ export const useUserStore = defineStore('user', () => {
       accessToken.value = parseToken(res);
       isLoggedIn.value = true;
       loginUserId.value = res.data.data;
-      console.log('로그인유저아이디', loginUserId.value);
 
       router.push({ name: 'mainview' });
       alert('로그인되었습니다.');
@@ -278,6 +276,7 @@ export const useUserStore = defineStore('user', () => {
     user,
     userCnt,
     userId,
+    loginUserId,
     foundEmail,
     searchUserCnt, // 애는 회원 이름 검색에서 쓸 일이 있나 추후 확인
     createUser,

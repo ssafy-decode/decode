@@ -46,12 +46,12 @@ const createQuestionTitle = function () {
 
   axios({
     method: 'post',
-    url: `${questionStore.API_URL}/gpt`,
+    url: `${questionStore.URL}/gpt`,
     data: data,
     headers: {
       'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*', // 이 부분을 추가하여 CORS 정책 우회
-      Authorization: userStore.accessToken, // 만약 인증이 필요하다면 주석 해제
+      Authorization: `Bearer ${userStore.accessToken}`, // 만약 인증이 필요하다면 주석 해제
     },
   })
     .then((res) => {
@@ -59,8 +59,8 @@ const createQuestionTitle = function () {
       console.log(res.data);
       // 토큰이 없는 것인지 모르지만
       // 500 서버에러 발생
-      questionStore.gptTitles.value = res.data.titles;
-      questionStore.gptTagIds.value = res.data.tagIds;
+      questionStore.gptTagIds.value = res.data.data.titles;
+      questionStore.gptTitles.value = res.data.data.tagIds;
       // 디버깅용
       console.log('gptTitles:', questionStore.gptTitles.value);
       console.log('gptTagIds:', questionStore.gptTagIds.value);
@@ -70,8 +70,12 @@ const createQuestionTitle = function () {
       console.log('질문 생성 오류');
       console.log(err);
       // 디버깅용
-      questionStore.gptTitles.value = ['temp Title111', 'temp Title222'];
-      questionStore.gptTagIds.value = ['temp TagIds111', 'temp TagIds222'];
+      questionStore.gptTitles.value = [
+        "Missing module './date.js' in ReactJS project",
+        "Compilation error: Unable to find './date.js' module",
+        "Error: './date.js' not found in ReactJS project",
+      ];
+      questionStore.gptTagIds.value = ['java', 'spring'];
       console.log('gptTitles:', questionStore.gptTitles.value);
       console.log('gptTagIds:', questionStore.gptTagIds.value);
       router.push({

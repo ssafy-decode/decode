@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useRouter } from 'vue-router';
 
 export const useQuestionStore = defineStore('question', () => {
-  const API_URL = process.env.VUE_APP_BACKEND_URL;
+  const URL = process.env.VUE_APP_BACKEND_URL;
   const router = useRouter();
   const accessToken = ref(null);
   const questions = ref([]);
@@ -14,11 +14,11 @@ export const useQuestionStore = defineStore('question', () => {
   const getQuestions = function (keyword = '', tagIds = '') {
     axios({
       method: 'get',
-      url: `${API_URL}/question`,
+      url: `${URL}/question`,
       params: { keyword, tagIds },
       headers: {
         'Access-Control-Allow-Origin': '*', // 이 부분을 추가하여 CORS 정책 우회
-        Authorization: `${accessToken.value}`, // 만약 인증이 필요하다면 주석 해제
+        Authorization: `Bearer ${userStore.accessToken}`, // 만약 인증이 필요하다면 주석 해제
       },
     })
       .then((res) => {
@@ -32,7 +32,7 @@ export const useQuestionStore = defineStore('question', () => {
   };
 
   return {
-    API_URL,
+    URL,
     accessToken,
     questions,
     gptTitles,
