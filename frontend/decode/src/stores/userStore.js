@@ -22,7 +22,6 @@ export const useUserStore = defineStore('user', () => {
   const searchUserCnt = ref(0);
   const accessToken = ref('');
   const userId = ref(''); // 가입 시 회원 번호
-  const userEmail = ref('');
   const loginUserId = ref(null);
   // const withCredentials = ref(false);
   const foundEmail = ref(''); // 이메일 찾기에서의 회원 이메일
@@ -45,7 +44,7 @@ export const useUserStore = defineStore('user', () => {
 
   // responseBody에서 토큰 값 추출
   const parseToken = (response) => {
-    const res = response.headers.get('Authorization');
+    // const res = response.headers.get('Authorization');
 
     if (response.data && response.headers) {
       return response.headers.authorization.substring(7);

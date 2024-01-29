@@ -105,7 +105,7 @@ const router = createRouter({
       component: MyProfileUpdateCheckPwdView, // 완성하면 components > profile 로 이동
     },
     {
-      path: '/profile', // 추후 userId 전달 가능해지면 /profile/:id로 수정
+      path: '/profile/:id',
       name: 'myprofileupdate',
       component: MyProfileUpdateView, // 완성하면 components > profile 로 이동
     },
