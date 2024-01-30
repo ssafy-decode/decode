@@ -22,9 +22,7 @@ public class MailController {
     public ResponseDto sendMail(@RequestBody MailDto mailDto) {
         mailService.sendMail(mailDto);
         return ResponseDto.builder()
-                .data(null)
                 .message("메일 전송 성공")
-                .headers(null)
                 .status(HttpStatus.OK)
                 .build();
 

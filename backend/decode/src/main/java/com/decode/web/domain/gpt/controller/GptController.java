@@ -29,7 +29,6 @@ public class GptController {
                 .status(HttpStatus.OK)
                 .message("GPT 추천 완료")
                 .data(gptApiResponseDto)
-                .headers(HttpHeaders.EMPTY)
                 .build();
     }
 
