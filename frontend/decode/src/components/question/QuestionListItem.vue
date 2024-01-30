@@ -24,7 +24,7 @@ const questionStore = useQuestionStore();
 
 const goDetail = function (questionId) {
   questionStore.questionId = questionId;
-  router.push({ path: `/question/${questionId}` });
+  router.push({ path: `/board/${questionId}` });
 };
 
 defineProps({

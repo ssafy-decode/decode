@@ -18,7 +18,6 @@ export default {
   mounted() {
     this.editor = new Editor({
       el: document.querySelector('#editor'),
-      // minHeight: '600px',
       height: '600px',
       initialEditType: 'markdown',
       initialValue: '내용을 마크다운 형식으로 입력해주세요!',

@@ -1,10 +1,6 @@
 <template>
-  <!-- <div> -->
   <v-card class="mx-auto d-flex justify-space-between py-5 px-3" width="1550" height="750">
-    <!-- 왼쪽 질문 상세 조회 부분 -->
     <v-sheet width="600" style="border: 2px solid black">왼쪽 질문 상세 조회 부분</v-sheet>
-
-    <!-- 오른쪽 답변 생성 부분 -->
     <v-sheet class="mx-auto" width="900" style="border: 2px solid black">
       <h5>답변 작성 중...</h5>
       <br />
@@ -16,7 +12,6 @@
       </form>
     </v-sheet>
   </v-card>
-  <!-- </div> -->
 </template>
 
 <script setup>

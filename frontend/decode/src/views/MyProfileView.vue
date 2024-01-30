@@ -48,7 +48,6 @@
       <div class="buttons">
         <span>
           <router-link to="/info">
-            <!-- 추후 인벤토리로 수정 -->
             <v-btn
               class="btn"
               @click="confirm"

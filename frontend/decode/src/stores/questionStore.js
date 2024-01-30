@@ -49,12 +49,10 @@ export const useQuestionStore = defineStore('question', () => {
       url: `${URL}/question`,
       params: { keyword, tagIds },
       headers: {
-        'Access-Control-Allow-Origin': '*', // 이 부분을 추가하여 CORS 정책 우회
-        // Authorization: `${userStore.accessToken}`, // 만약 인증이 필요하다면 주석 해제
+        'Access-Control-Allow-Origin': '*',
       },
     })
       .then((res) => {
-        console.log(res.data.data);
         questions.value = res.data.data;
       })
       .catch((err) => {

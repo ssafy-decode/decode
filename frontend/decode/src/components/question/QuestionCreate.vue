@@ -4,10 +4,7 @@
       <v-text-field variant="solo" label="질문 제목" v-model.trim="questionTitle"></v-text-field>
       <v-container>
         <v-row class="d-flex justify-end">
-          <v-col cols="12" sm="6" md="4">
-            <!-- <v-btn @click="removeTag(index)">태그 삭제</v-btn>
-            <v-btn @click="addTag">태그 추가</v-btn> -->
-          </v-col>
+          <v-col cols="12" sm="6" md="4"> </v-col>
         </v-row>
         <template v-for="(tag, index) in tagIds" :key="index">
           <v-row class="d-flex justify-end">
@@ -57,10 +54,8 @@ const userStore = useUserStore();
 const router = useRouter();
 const route = useRoute();
 
-// 받아와서 넘겨줄 데이터
 const questionTitle = ref('');
 const tagIds = ref([]);
-// 만들어서 넘겨줄 데이터
 const questionContent = ref('');
 const versions = ref([]);
 
@@ -84,17 +79,12 @@ const updateEditorContent = function (content) {
 };
 
 const createQuestion = function () {
-  // 태그와 버전 객체를 원소로 갖는 배열 생성
   const tags = tagIds.value.map((tagId, index) => {
-    console.log('태그', items[tagId]);
-    console.log('버전', versions.value[index]);
     return {
       tagId: items[tagId],
       version: versions.value[index],
     };
   });
-
-  console.log('태그객체배열 출력: ', tags);
 
   let data = {
     title: questionTitle.value,
@@ -103,21 +93,17 @@ const createQuestion = function () {
     tags: tags,
   };
 
-  console.log('데이터출력: ', data);
-  console.log(userStore.accessToken);
-
   axios({
     method: 'post',
     url: `${questionStore.URL}/question`,
     data: data,
     headers: {
       'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*', // 이 부분을 추가하여 CORS 정책 우회
-      Authorization: `Bearer ${userStore.accessToken}`, // 만약 인증이 필요하다면 주석 해제
+      'Access-Control-Allow-Origin': '*',
+      Authorization: `Bearer ${userStore.accessToken}`,
     },
   })
     .then((res) => {
-      console.log(res);
       console.log('질문 생성 완료');
       router.push({ name: 'questionview' });
     })

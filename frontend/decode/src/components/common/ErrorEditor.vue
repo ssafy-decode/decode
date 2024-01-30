@@ -17,17 +17,12 @@ export default {
   mounted() {
     this.editor = new Editor({
       el: document.querySelector('#editor'),
-      // minHeight: '600px',
       height: '500px',
       initialEditType: 'wysiwyg',
       initialValue: '이 문장을 지우고 에러를 붙여넣어주세요!',
       previewStyle: 'vertical',
-      // 추가된 내용
       hooks: {
         addImageBlobHook: (blob, callback) => {
-          // blob : Java Script 파일 객체
-          //console.log(blob);
-
           const formData = new FormData();
           formData.append('image', blob);
           // 아래 경로 수정 필요

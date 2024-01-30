@@ -37,8 +37,6 @@ const userStore = useUserStore();
 const router = useRouter();
 const route = useRoute();
 
-// store와 axios 통해 데이터를 불러옴
-
 const questionId = ref(0);
 const question = ref({});
 
@@ -47,8 +45,8 @@ const getDetailQuestion = function () {
     method: 'get',
     url: `${questionStore.URL}/question/${route.params.id}`,
     headers: {
-      'Access-Control-Allow-Origin': '*', // 이 부분을 추가하여 CORS 정책 우회
-      Authorization: `${userStore.accessToken}`, // 만약 인증이 필요하다면 주석 해제
+      'Access-Control-Allow-Origin': '*',
+      Authorization: `${userStore.accessToken}`,
     },
   })
     .then((res) => {
@@ -67,23 +65,20 @@ const deleteQuestion = function () {
       method: 'delete',
       url: `${questionStore.URL}/question/delete/${questionId.value}`,
       headers: {
-        'Access-Control-Allow-Origin': '*', // 이 부분을 추가하여 CORS 정책 우회
-        Authorization: `Bearer ${userStore.accessToken}`, // 만약 인증이 필요하다면 주석 해제
+        'Access-Control-Allow-Origin': '*',
+        Authorization: `Bearer ${userStore.accessToken}`,
       },
     })
       .then((res) => {
-        alert('질문이 삭제되었습니다.');
         router.push({
-          path: '/question',
+          path: '/board',
         });
       })
       .catch((err) => {
         console.log(err);
-        alert('질문 삭제 오류.');
         console.log('질문 삭제 오류');
       });
   } else {
-    alert('질문 삭제가 취소되었습니다.');
   }
 };
 

@@ -20,7 +20,6 @@ export default {
     const questionStore = useQuestionStore();
     this.editor = new Editor({
       el: document.querySelector('#editor'),
-      // minHeight: '600px',
       height: '600px',
       initialEditType: 'markdown',
       initialValue: questionStore.originalContent,

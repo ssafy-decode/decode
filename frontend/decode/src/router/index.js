@@ -7,9 +7,6 @@ import QuestionBoardView from '@/views/QuestionBoardView.vue';
 import QuestionDetailView from '@/views/QuestionDetailView.vue';
 import QuestionTitleCreateView from '@/views/QuestionTitleCreateView.vue';
 import QuestionCreateView from '@/views/QuestionCreateView.vue';
-import MyProfileView from '@/views/MyProfileView.vue'; // 완성하면 components 로 이동
-import MyProfileUpdateCheckPwdView from '@/views/MyProfileUpdateCheckPwdView.vue'; // 완성하면 components 로 이동
-import MyProfileUpdateView from '@/views/MyProfileUpdateView.vue'; // 완성하면 components 로 이동
 
 // Components
 import LoginForm from '@/components/LoginForm.vue';
@@ -20,6 +17,12 @@ import FindEmailVue from '@/components/user/FindEmail.vue';
 import FindPwdVue from '@/components/user/FindPwd.vue';
 import FoundEmailVue from '@/components/user/FoundEmail.vue';
 import FoundPwdVue from '@/components/user/FoundPwd.vue';
+import MyProfileVue from '@/components/profile/MyProfile.vue';
+import MyProfileUpdateCheckPwdVue from '@/components/profile/MyProfileUpdateCheckPwd.vue';
+import MyProfileUpdateVue from '@/components/profile/MyProfileUpdate.vue';
+import RankListVue from '@/components/rank/RankList.vue';
+import ItemShopVue from '@/components/shop/ItemShop.vue';
+import MyInventoryVue from '@/components/shop/MyInventory.vue';
 import QuestionUpdate from '@/components/question/QuestionUpdate.vue';
 
 const router = createRouter({
@@ -36,7 +39,7 @@ const router = createRouter({
       component: UserView,
     },
     {
-      path: '/question',
+      path: '/board',
       name: 'questionview',
       component: QuestionBoardView,
     },
@@ -46,7 +49,7 @@ const router = createRouter({
       component: LoginForm,
     },
     {
-      path: '/regist',
+      path: '/regist/1',
       name: 'userregist',
       component: UserRegistVue,
     },
@@ -56,22 +59,22 @@ const router = createRouter({
       component: AuthenticationLoadingVue,
     },
     {
-      path: '/addUserTag',
+      path: '/regist/2',
       name: 'techstack',
       component: TechStackVue,
     },
     {
-      path: '/question/:id',
+      path: '/board/:id',
       name: 'question-detail',
       component: QuestionDetailView,
     },
     {
-      path: '/email',
+      path: '/findemail',
       name: 'findemail',
       component: FindEmailVue,
     },
     {
-      path: '/password',
+      path: '/findpwd',
       name: 'findpwd',
       component: FindPwdVue,
     },
@@ -101,19 +104,34 @@ const router = createRouter({
       component: QuestionUpdate,
     },
     {
-      path: '/info',
+      path: '/mypage',
       name: 'myprofile',
-      component: MyProfileView, // 완성하면 components > profile 로 이동
+      component: MyProfileVue,
     },
     {
-      path: '/confirm',
+      path: '/checkpwd',
       name: 'myprofileupdatecheckpwd',
-      component: MyProfileUpdateCheckPwdView, // 완성하면 components > profile 로 이동
+      component: MyProfileUpdateCheckPwdVue,
     },
     {
-      path: '/profile/:id',
+      path: '/updatepwd',
       name: 'myprofileupdate',
-      component: MyProfileUpdateView, // 완성하면 components > profile 로 이동
+      component: MyProfileUpdateVue,
+    },
+    {
+      path: '/rank',
+      name: 'ranklist',
+      component: RankListVue,
+    },
+    {
+      path: '/shop',
+      name: 'itemshop',
+      component: ItemShopVue,
+    },
+    {
+      path: '/inventory',
+      name: 'myinventory',
+      component: MyInventoryVue,
     },
   ],
 });

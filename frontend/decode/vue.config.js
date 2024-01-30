@@ -22,16 +22,4 @@ module.exports = defineConfig({
       return args;
     });
   },
-  // 웹소켓을 쓰지 않는다면 주석 풀기
-  // target = 백엔드 port
-  // changeorigin = true면 cors 문제 해결
-  // devServer: {
-  //   proxy: {
-  //     '/': {
-  //       target: 'http://localhost:80/decode',
-  //       changeOrigin: true,
-  //       ws: false,
-  //     },
-  //   },
-  // },
 });

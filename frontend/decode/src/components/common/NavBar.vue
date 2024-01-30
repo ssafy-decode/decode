@@ -13,14 +13,10 @@
     &nbsp;&nbsp;|&nbsp;&nbsp;
 
     <v-btn>
-      <router-link to="/question">
+      <router-link to="/board">
         <v-toolbar-items>질문게시판</v-toolbar-items>
       </router-link>
     </v-btn>
-
-    <!-- 상점 nav -->
-
-    <!-- 랭킹 nav -->
 
     <v-btn v-show="userStore.isLoggedIn">
       <router-link to="/info">
@@ -35,7 +31,6 @@
 </template>
 
 <script setup>
-// import { ref } from 'vue';
 import { useUserStore } from '@/stores/userStore';
 
 const userStore = useUserStore();
@@ -47,12 +42,12 @@ const logout = () => {
 
 <style scoped>
 .decode {
-  font-family: titlefont; /* 타이틀만 오아고딕체 */
+  font-family: titlefont;
 }
 
 a {
-  text-decoration: none; /* 밑줄 제거 */
-  color: inherit; /* 링크 색상 상속 */
+  text-decoration: none;
+  color: inherit;
 }
 
 #loginBtn {
