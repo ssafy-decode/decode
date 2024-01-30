@@ -25,6 +25,7 @@ import MyProfileUpdateVue from '@/components/profile/MyProfileUpdate.vue';
 import RankListVue from '@/components/rank/RankList.vue';
 import ItemShopVue from '@/components/shop/ItemShop.vue';
 import MyInventoryVue from '@/components/shop/MyInventory.vue';
+import QuestionUpdate from '@/components/question/QuestionUpdate.vue';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -98,6 +99,11 @@ const router = createRouter({
       path: '/question-create',
       name: 'question-create',
       component: QuestionCreateView,
+    },
+    {
+      path: '/question-update/:id',
+      name: 'question-update',
+      component: QuestionUpdate,
     },
     {
       path: '/mypage',
