@@ -59,7 +59,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
     implementation 'org.springframework.boot:spring-boot-starter-validation:3.2.1'
     implementation 'org.springframework.boot:spring-boot-starter-security'
-
+    implementation 'io.openvidu:openvidu-java-client:2.29.0'
 }
 
 tasks.named('test') {
