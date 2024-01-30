@@ -29,8 +29,7 @@ public class GptApiServiceImpl {
     private static final String TITLE_VALUE =
             "Got an error programming, but going to post it on the board to fix the error. Please recommend a suitable title."
                     + "Don't do a simple translation."
-                    + "The title should be no more than 30 characters exclude quotation marks."
-                    + "Give me three options."
+                    + "The result should be no more than 30 characters exclude quotation marks."
                     + "Only title.";
 
     public List<String> keywordsByError(String error) {
@@ -39,10 +38,10 @@ public class GptApiServiceImpl {
                 .toList();
     }
 
-    public List<String> titlesByError(String error) {
-        return Arrays.stream(response(error, TITLE_VALUE).title().split("\n"))
-                .map(line -> line.substring(3).replace("\"", ""))
-                .toList();
+    public String titlesByError(String error) {
+        return response(error, TITLE_VALUE)
+                .title()
+                .trim();
     }
 
     private GPTResponseDto response(String title, String type) {
