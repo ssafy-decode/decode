@@ -22,8 +22,8 @@ public class GptController {
     @PostMapping
     public ResponseDto generateGptAnswer(@RequestBody GptApiRequestDto gptApiDto) {
         GptApiResponseDto gptApiResponseDto = new GptApiResponseDto();
-        gptApiResponseDto.setTagIds(gptApiService.titlesByError(gptApiDto.getContent()));
-        gptApiResponseDto.setTitles(gptApiService.keywordsByError(gptApiDto.getContent()));
+        gptApiResponseDto.setTagIds(gptApiService.keywordsByError(gptApiDto.getContent()));
+        gptApiResponseDto.setTitles(gptApiService.titlesByError(gptApiDto.getContent()));
         
         return ResponseDto.builder()
                 .status(HttpStatus.OK)

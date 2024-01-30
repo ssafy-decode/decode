@@ -7,11 +7,10 @@ import lombok.Data;
 @Data
 public class GptApiResponseDto {
 
-    private List<String> titles;
+    private String titles;
     private List<String> tagIds;
 
     public GptApiResponseDto() {
-        titles = new ArrayList<>();
         tagIds = new ArrayList<>();
     }
 
