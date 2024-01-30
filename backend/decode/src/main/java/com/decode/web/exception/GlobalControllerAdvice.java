@@ -21,7 +21,6 @@ public class GlobalControllerAdvice {
         return new ResponseEntity<>(ResponseDto.builder()
                 .status(HttpStatus.BAD_REQUEST)
                 .message(e.getMessage())
-                .headers(new HttpHeaders())
                 .build(), HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(UserException.class)
@@ -30,7 +29,6 @@ public class GlobalControllerAdvice {
         return new ResponseEntity<>(ResponseDto.builder()
                 .status(HttpStatus.BAD_REQUEST)
                 .message(e.getMessage())
-                .headers(new HttpHeaders())
                 .build(), HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(BadCredentialsException.class)
@@ -39,7 +37,6 @@ public class GlobalControllerAdvice {
         return new ResponseEntity<>(ResponseDto.builder()
                 .status(HttpStatus.UNAUTHORIZED)
                 .message(e.getMessage())
-                .headers(new HttpHeaders())
                 .build(), HttpStatus.UNAUTHORIZED);
     }
 
@@ -49,7 +46,6 @@ public class GlobalControllerAdvice {
         return new ResponseEntity<>(ResponseDto.builder()
                 .status(HttpStatus.UNAUTHORIZED)
                 .message("Expired JWT")
-                .headers(new HttpHeaders())
                 .build(), HttpStatus.UNAUTHORIZED);
     }
 
@@ -60,7 +56,6 @@ public class GlobalControllerAdvice {
                 .status(HttpStatus.UNAUTHORIZED)
                 .message(e.getMessage())
                 .data("")
-                .headers(new HttpHeaders())
                 .build(), HttpStatus.UNAUTHORIZED);
     }
 
@@ -72,7 +67,6 @@ public class GlobalControllerAdvice {
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .message("Internal Server Error")
                 .data("")
-                .headers(new HttpHeaders())
                 .build(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
