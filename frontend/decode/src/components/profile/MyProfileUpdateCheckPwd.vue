@@ -30,22 +30,20 @@
             </template>
           </v-text-field>
         </div>
-        <!-- <br /> -->
+
         <div class="buttons">
           <span>
-            <router-link :to="`/profile/${userStore.loginUserId}`">
-              <v-btn
-                class="btn"
-                @click="confirm"
-                color="#62C0A6"
-                size="x-large"
-                type="submit"
-                variant="elevated"
-                style="color: #000000"
-              >
-                다음
-              </v-btn>
-            </router-link>
+            <v-btn
+              class="btn"
+              @click="confirmpwd"
+              color="#62C0A6"
+              size="x-large"
+              type="submit"
+              variant="elevated"
+              style="color: #000000"
+            >
+              다음
+            </v-btn>
           </span>
         </div>
       </v-card>
@@ -67,8 +65,15 @@ const toggleEye = () => {
   showPassword.value = !showPassword.value;
 };
 
-const confirm = () => {
-  // 추후 작성
+const writePassword = (value) => {
+  return !!value || '비밀번호를 입력하세요.';
+};
+
+const confirmpwd = () => {
+  const confirmuserpwd = {
+    password: password.value,
+  };
+  userStore.checkPwd(confirmuserpwd);
 };
 </script>
 

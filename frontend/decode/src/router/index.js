@@ -1,5 +1,7 @@
 import { createWebHistory, createRouter } from 'vue-router';
 
+// **백엔드 명세서 url과 다르게 작성할 것!**
+
 // Views
 import MainView from '@/views/MainView.vue';
 import UserView from '@/views/UserView.vue';

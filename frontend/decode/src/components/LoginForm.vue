@@ -60,9 +60,9 @@
 
         <div style="display: flex; justify-content: end; margin-right: 50px">
           <span style="color: #34a080; font-size: x-small"
-            ><a href="/email" style="text-decoration: none; color: #34a080">이메일 찾기</a>
+            ><a href="/findemail" style="text-decoration: none; color: #34a080">이메일 찾기</a>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <a href="/password" style="text-decoration: none; color: #34a080">비밀번호 찾기</a></span
+            <a href="/findpwd" style="text-decoration: none; color: #34a080">비밀번호 찾기</a></span
           >
         </div>
         <br />
@@ -85,7 +85,7 @@
                   </v-btn>
                 </v-col>
                 <v-col cols="5">
-                  <router-link to="/regist">
+                  <router-link to="/regist/1">
                     <v-btn
                       class="registbtn"
                       color="#34A080"
@@ -103,6 +103,7 @@
           </span>
         </div>
 
+        <!-- 깃허브 계정으로 로그인 => 수정될 수도? 보류 -->
         <br />
         <div style="text-align: center">
           <router-link to="/loading"
@@ -150,11 +151,11 @@ const showPassword = ref(false);
 
 // 필수 입력란 비어있을 때 빨간 경고
 const writeEmail = (value) => {
-  return !!value || '이메일을 입력하세요.';
+  return !!value;
 };
 
 const writePassword = (value) => {
-  return !!value || '비밀번호를 입력하세요.';
+  return !!value;
 };
 
 // hover 전 색깔

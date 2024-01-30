@@ -10,7 +10,7 @@
           <img src="../levelunselected.png" />&nbsp;&nbsp;&nbsp;&nbsp;<img src="../levelselected.png" />
         </span>
         <div style="text-align: center">
-          <img style="width: 8%" src="./LogoDecode3.png" />
+          <img style="width: 8%" src="../LogoDecode3.png" />
         </div>
         <h4 style="font-size: 15px; color: #999999; text-align: center">선호하는 기술 스택을 모두 선택해주세요</h4>
       </div>
