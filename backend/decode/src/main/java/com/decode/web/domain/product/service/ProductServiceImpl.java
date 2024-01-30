@@ -1,5 +1,6 @@
 package com.decode.web.domain.product.service;
 
+import com.decode.web.domain.product.dto.ProductBuyRequestDto;
 import com.decode.web.domain.product.dto.ProductDto;
 import com.decode.web.domain.product.repository.ItemRepository;
 import com.decode.web.domain.product.repository.ProductRepository;
@@ -32,9 +33,10 @@ public class ProductServiceImpl {
     }
 
     @Transactional
-    public void buyProduct(int count, Long productId, Long userInfoId) {
-        ItemEntity item = itemRepository.findByProductIdAndUserInfoId(productId, userInfoId);
+    public void buyProduct(ProductBuyRequestDto dto) {
+        ItemEntity item = itemRepository.findByProductIdAndUserInfoId(dto.getProductId(),
+                dto.getUserId());
         ProductEntity product = item.getProduct();
-        product.buy(count, item, item.getUserInfo().getUserProfileEntity());
+        product.buy(dto.getCount(), item, item.getUserInfo().getUserProfileEntity());
     }
 }
