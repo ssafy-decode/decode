@@ -10,7 +10,7 @@
           ><img src="../levelselected.png" />&nbsp;&nbsp;&nbsp;&nbsp;<img src="../levelunselected.png"
         /></span>
         <div style="text-align: center">
-          <img style="width: 8%" src="./LogoDecode3.png" />
+          <img style="width: 8%" src="../LogoDecode3.png" />
         </div>
         <br />
         <div class="flex-container">
@@ -26,7 +26,7 @@
             style="width: 187px; margin-left: 20px; margin-right: 5px"
             ><template #prepend-inner>
               <img
-                src="./person.png"
+                src="../person.png"
                 alt="이름 아이콘"
                 style="width: auto; height: auto; margin-left: 6px; margin-right: 10px"
               /> </template
@@ -44,7 +44,7 @@
             @blur="checkDuplicateNickname"
             ><template #prepend-inner>
               <img
-                src="./pencil.png"
+                src="../pencil.png"
                 alt="닉네임 아이콘"
                 style="width: auto; height: auto; margin-left: 6px; margin-right: 10px"
               /> </template
@@ -62,7 +62,7 @@
           @blur="checkDuplicateEmail"
           ><template #prepend-inner>
             <img
-              src="./email.png"
+              src="../email.png"
               alt="메일 아이콘"
               style="width: auto; height: auto; margin-left: 5px; margin-right: 10px"
             /> </template
@@ -75,14 +75,14 @@
           variant="solo"
           class="textfield"
           clearable
+          placeholder="영문, 숫자, 특수문자 조합 8자리 이상"
           label="비밀번호"
-          hint="영문, 숫자, 특수문자 조합 8자리 이상"
           prepend-inner
           append-inner
           :type="showPassword ? 'text' : 'password'"
           ><template #prepend-inner>
             <img
-              src="./pwd.png"
+              src="../pwd.png"
               alt="비밀번호 아이콘"
               style="width: auto; height: auto; margin-left: 1px; margin-right: 10px"
             />
@@ -106,7 +106,7 @@
           :type="showPassword2 ? 'text' : 'password'"
           ><template #prepend-inner>
             <img
-              src="./pwd.png"
+              src="../pwd.png"
               alt="비밀번호 아이콘"
               style="width: auto; height: auto; margin-left: 1px; margin-right: 10px"
             />
@@ -128,7 +128,7 @@
           prepend-inner
           ><template #prepend-inner>
             <img
-              src="./calendar.png"
+              src="../calendar.png"
               alt="달력 아이콘"
               style="width: auto; height: auto; margin-left: 4px; margin-right: 10px"
             /> </template
@@ -144,13 +144,13 @@
           prepend-inner
           ><template #prepend-inner>
             <img
-              src="./phone.png"
+              src="../phone.png"
               alt="전화 아이콘"
               style="width: auto; height: auto; margin-left: 4px; margin-right: 10px"
             /> </template
         ></v-text-field>
         <span style="display: flex; justify-content: end; margin-right: 20px">
-          <router-link to="/addUserTag"
+          <router-link to="/regist/2"
             ><v-btn
               @click.prevent="regist"
               color="#62C0A6"
@@ -206,31 +206,31 @@ const toggleEye2 = () => {
 
 // 필수 입력란에 입력 없을 경우 빨간 경고
 const writeName = (value) => {
-  return !!value || '이름을 입력하세요.';
+  return !!value;
 };
 
 const writeNickname = (value) => {
-  return !!value || '닉네임을 입력하세요.';
+  return !!value;
 };
 
 const writeEmail = (value) => {
-  return !!value || '이메일을 입력하세요.';
+  return !!value;
 };
 
 const writePassword = (value) => {
-  return !!value || '비밀번호를 입력하세요.';
+  return !!value;
 };
 
 const writePassword2 = (value) => {
-  return !!value || '비밀번호 확인을 입력하세요.';
+  return !!value;
 };
 
 const writeBirthday = (value) => {
-  return !!value || '생년월일을 입력하세요.';
+  return !!value;
 };
 
 const writePhone = (value) => {
-  return !!value || '전화번호를 입력하세요.';
+  return !!value;
 };
 
 // 이메일 형식 올바른지

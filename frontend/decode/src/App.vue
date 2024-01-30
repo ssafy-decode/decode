@@ -1,6 +1,5 @@
 <template>
   <div class="app">
-    <!-- 일부 화면에는 navbar가 없기 때문에 추후 app.vue에서 navbar를 없애고 있는 화면들에 직접 넣는 방식으로 할 지 상의해봅시다.-->
     <NavBar />
     <br />
     <router-view></router-view>

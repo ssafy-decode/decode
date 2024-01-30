@@ -3,7 +3,7 @@
     <v-btn>
       <router-link to="/">
         <span style="display: flex; justify-content: space-between">
-          <img src="./de;code_logo_jin.png" alt="로고이미지" height="30px" /><v-toolbar-title
+          <img src="../de;code_logo_jin.png" alt="로고이미지" height="30px" /><v-toolbar-title
             ><span class="decode" style="font-size: x-large; font-weight: bold">de;code</span></v-toolbar-title
           ></span
         >
@@ -18,12 +18,20 @@
       </router-link>
     </v-btn>
 
-    <!-- 상점 nav -->
-
-    <!-- 랭킹 nav -->
+    <v-btn v-show="userStore.isLoggedIn">
+      <router-link to="/shop">
+        <v-toolbar-items>상점</v-toolbar-items>
+      </router-link>
+    </v-btn>
 
     <v-btn v-show="userStore.isLoggedIn">
-      <router-link to="/info">
+      <router-link to="/rank">
+        <v-toolbar-items>랭킹</v-toolbar-items>
+      </router-link>
+    </v-btn>
+
+    <v-btn v-show="userStore.isLoggedIn">
+      <router-link to="/mypage">
         <v-toolbar-items>마이페이지</v-toolbar-items>
       </router-link>
     </v-btn>

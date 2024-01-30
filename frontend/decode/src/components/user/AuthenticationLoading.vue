@@ -11,9 +11,9 @@
 
 <script setup>
 // 인증 연결시키고 추후 인증 완료 시 next 함수 발동시키기
-const next = () => {
-  alert('소셜 인증이 완료되었습니다.\n다음 단계로 넘어갑니다.');
-};
+// const next = () => {
+//   alert('소셜 인증이 완료되었습니다.\n다음 단계로 넘어갑니다.');
+// };
 </script>
 
 <style scoped></style>

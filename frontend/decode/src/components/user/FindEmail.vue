@@ -109,15 +109,15 @@ const phone = ref('');
 
 // 필수 입력란 비어있을 때 빨간 경고
 const writeName = (value) => {
-  return !!value || '이름을 입력하세요.';
+  return !!value;
 };
 
 const writeBirthday = (value) => {
-  return !!value || '생년월일을 입력하세요.';
+  return !!value;
 };
 
 const writePhone = (value) => {
-  return !!value || '휴대번호를 입력하세요.';
+  return !!value;
 };
 
 // 생년월일 형식 올바른지
