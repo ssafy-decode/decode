@@ -1,9 +1,9 @@
-package com.decode.web.domain.product.service;
+package com.decode.web.domain.store.service;
 
-import com.decode.web.domain.product.dto.ProductBuyRequestDto;
-import com.decode.web.domain.product.dto.ProductDto;
-import com.decode.web.domain.product.repository.ItemRepository;
-import com.decode.web.domain.product.repository.ProductRepository;
+import com.decode.web.domain.store.dto.ProductBuyRequestDto;
+import com.decode.web.domain.store.dto.ProductDto;
+import com.decode.web.domain.store.repository.ItemRepository;
+import com.decode.web.domain.store.repository.ProductRepository;
 import com.decode.web.entity.ItemEntity;
 import com.decode.web.entity.ProductEntity;
 import jakarta.transaction.Transactional;

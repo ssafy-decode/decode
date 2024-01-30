@@ -1,8 +1,8 @@
-package com.decode.web.domain.product.controller;
+package com.decode.web.domain.store.controller;
 
-import com.decode.web.domain.product.dto.ProductBuyRequestDto;
-import com.decode.web.domain.product.dto.ProductDto;
-import com.decode.web.domain.product.service.ProductServiceImpl;
+import com.decode.web.domain.store.dto.ProductBuyRequestDto;
+import com.decode.web.domain.store.dto.ProductDto;
+import com.decode.web.domain.store.service.ProductServiceImpl;
 import com.decode.web.global.ResponseDto;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -22,7 +22,7 @@ public class ProductController {
 
     private final ProductServiceImpl productService;
 
-    @GetMapping
+    @GetMapping("/list")
     public ResponseDto findAllProducts() {
         List<ProductDto> data = productService.findAll();
         return ResponseDto.builder()

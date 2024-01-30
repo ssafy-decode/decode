@@ -1,4 +1,4 @@
-package com.decode.web.domain.product.dto;
+package com.decode.web.domain.store.dto;
 
 import lombok.Builder;
 import lombok.Data;

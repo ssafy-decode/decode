@@ -1,4 +1,4 @@
-package com.decode.web.domain.product.repository;
+package com.decode.web.domain.store.repository;
 
 import com.decode.web.entity.ItemEntity;
 import jakarta.persistence.EntityManager;

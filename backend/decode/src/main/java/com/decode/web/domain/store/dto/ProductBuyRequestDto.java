@@ -1,4 +1,4 @@
-package com.decode.web.domain.product.dto;
+package com.decode.web.domain.store.dto;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -8,6 +8,7 @@ import lombok.Getter;
 @Data
 @Getter
 public class ProductBuyRequestDto {
+
 
     @Min(value = 0, message = "상품ID는 0 이상이어야 합니다.")
     private Long productId;
