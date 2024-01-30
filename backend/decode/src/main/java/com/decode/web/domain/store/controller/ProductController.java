@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +30,17 @@ public class ProductController {
                 .status(HttpStatus.OK)
                 .data(data)
                 .headers(HttpHeaders.EMPTY)
+                .message("상품 전체 조회 완료")
+                .build();
+    }
+
+    @GetMapping("/{productName}")
+    public ResponseDto findProductByName(@PathVariable String productName) {
+        List<ProductDto> data = productService.findByName(productName);
+        return ResponseDto.builder()
+                .status(HttpStatus.OK)
+                .data(data)
+                .headers(HttpHeaders.EMPTY)
                 .message("상품 조회 완료")
                 .build();
     }
@@ -40,7 +52,7 @@ public class ProductController {
                 .status(HttpStatus.OK)
                 .data(0)
                 .headers(HttpHeaders.EMPTY)
-                .message("상품 조회 완료")
+                .message("상품 구매 완료")
                 .build();
     }
 }

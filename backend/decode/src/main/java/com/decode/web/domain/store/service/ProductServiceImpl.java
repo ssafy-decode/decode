@@ -1,5 +1,6 @@
 package com.decode.web.domain.store.service;
 
+import com.amazonaws.services.kms.model.NotFoundException;
 import com.decode.web.domain.store.dto.ProductBuyRequestDto;
 import com.decode.web.domain.store.dto.ProductDto;
 import com.decode.web.domain.store.repository.ItemRepository;
@@ -22,13 +23,17 @@ public class ProductServiceImpl {
     public List<ProductDto> findAll() {
         return productRepository.findAll()
                 .stream()
-                .map(p -> ProductDto.builder()
-                        .productId(p.getId())
-                        .productDetail(p.getProductDetail())
-                        .productName(p.getProductName())
-                        .productPrice(p.getProductPrice())
-                        .productType(p.getProductType())
-                        .build())
+                .map(ProductEntity::toDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<ProductDto> findByName(String productName) {
+        List<ProductEntity> productList = productRepository.findByName(productName);
+        if (productList.isEmpty()) {
+            throw new NotFoundException("상품 찾기 실패");
+        }
+        return productList.stream()
+                .map(ProductEntity::toDto)
                 .collect(Collectors.toList());
     }
 

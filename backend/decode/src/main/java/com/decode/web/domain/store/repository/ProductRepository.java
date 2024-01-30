@@ -19,4 +19,11 @@ public class ProductRepository {
                 .getResultList();
     }
 
+    public List<ProductEntity> findByName(String productName) {
+        return entityManager.createQuery("select p from ProductEntity p "
+                        + "where p.productName like :productName", ProductEntity.class)
+                .setParameter("productName", productName)
+                .getResultList();
+    }
+
 }

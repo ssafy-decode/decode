@@ -1,5 +1,6 @@
 package com.decode.web.entity;
 
+import com.decode.web.domain.store.dto.ProductDto;
 import com.decode.web.global.CommonEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -45,5 +46,15 @@ public class ProductEntity extends CommonEntity {
         int totalAmount = this.productPrice * count;
         userProfile.decreaseCoin(totalAmount);
         itemEntity.increaseProductCount(count);
+    }
+
+    public ProductDto toDto() {
+        return ProductDto.builder()
+                .productId(id)
+                .productDetail(productDetail)
+                .productName(productName)
+                .productPrice(productPrice)
+                .productType(productType)
+                .build();
     }
 }
