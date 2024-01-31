@@ -33,6 +33,17 @@
           <span>휴대폰 뒷자리: {{ userPhone }}</span>
           <br />
           <br />
+        </div>
+        <br />
+        <div>
+          기술 스택 변경
+          <br />
+          {{ userStore.tagIdList.value }} (값이 없어서 빈칸이 뜨는 중입니다)
+          <br />
+          <router-link to="/updatetechstack"><v-btn>기술 스택 변경</v-btn></router-link>
+        </div>
+        <br />
+        <div>
           비밀번호 변경
           <br />
           <br />

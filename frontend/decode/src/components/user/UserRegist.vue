@@ -258,8 +258,6 @@ const isPhoneValid = (phone) => {
 
 // 이메일 중복체크
 const checkDuplicateEmail = async () => {
-  console.log(email);
-  console.log(email.value);
   try {
     const res = await axios.get(`${URL}/email?keyword=${email.value}`, {
       withCredentials: true,
@@ -268,7 +266,6 @@ const checkDuplicateEmail = async () => {
         'Access-Control-Allow-Credentials': 'true',
       },
     });
-
     const isDuplicate = res.data.data;
     if (!isDuplicate) {
       alert('이미 존재하는 이메일입니다.');
@@ -280,8 +277,6 @@ const checkDuplicateEmail = async () => {
 
 // 닉네임 중복체크
 const checkDuplicateNickname = async () => {
-  console.log(nickname);
-  console.log(nickname.value);
   try {
     const res = await axios.get(`${URL}/nickname?keyword=${nickname.value}`, {
       withCredentials: true,
@@ -290,7 +285,6 @@ const checkDuplicateNickname = async () => {
         'Access-Control-Allow-Credentials': 'true',
       },
     });
-
     const isDuplicate = res.data.data;
     if (!isDuplicate) {
       alert('이미 존재하는 닉네임입니다.');

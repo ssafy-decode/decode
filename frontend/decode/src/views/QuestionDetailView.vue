@@ -71,6 +71,7 @@ const deleteQuestion = function () {
       },
     })
       .then((res) => {
+        console.log('삭제됨');
         router.push({
           path: '/board',
         });
