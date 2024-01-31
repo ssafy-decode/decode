@@ -27,12 +27,9 @@ public class ProductServiceImpl {
                 .collect(Collectors.toList());
     }
 
-    public List<ProductDto> findByName(String productName) {
-        List<ProductEntity> productList = productRepository.findByName(productName);
-        if (productList.isEmpty()) {
-            throw new NotFoundException("상품 찾기 실패");
-        }
-        return productList.stream()
+    public List<ProductDto> findAllByName(String productName) {
+        return productRepository.findByName(productName)
+                .stream()
                 .map(ProductEntity::toDto)
                 .collect(Collectors.toList());
     }

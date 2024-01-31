@@ -35,8 +35,8 @@ public class ProductController {
     }
 
     @GetMapping("/{productName}")
-    public ResponseDto findProductByName(@PathVariable String productName) {
-        List<ProductDto> data = productService.findByName(productName);
+    public ResponseDto findAllByName(@PathVariable String productName) {
+        List<ProductDto> data = productService.findAllByName(productName);
         return ResponseDto.builder()
                 .status(HttpStatus.OK)
                 .data(data)
