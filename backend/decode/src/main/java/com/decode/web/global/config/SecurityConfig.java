@@ -6,7 +6,10 @@ import com.decode.web.global.filter.JwtAuthenticationFilter;
 import com.decode.web.global.utils.authentication.JwtAccessDeniedHandler;
 import com.decode.web.global.utils.authentication.JwtAuthenticationEntryPoint;
 import com.decode.web.global.utils.authentication.JwtTokenProvider;
+import com.decode.web.global.utils.oauth2.OAuth2AuthenticationFailureHandler;
+import com.decode.web.global.utils.oauth2.OAuth2AuthenticationSuccessHandler;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -15,15 +18,19 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsUtils;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@Slf4j
 
 public class SecurityConfig {
 
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtTokenProvider jwtTokenProvider;
@@ -40,12 +47,11 @@ public class SecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
         httpSecurity
-                .authorizeHttpRequests(authorizeRequests ->
-                        authorizeRequests
-                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                                .requestMatchers("/**", "/decode/**").permitAll()
-                                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                                .anyRequest().authenticated()
+                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/**", "/decode/**").permitAll()
+                        .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                        .anyRequest().authenticated()
                 )
                 .httpBasic(httpBasic ->
                         httpBasic.disable()
@@ -60,14 +66,17 @@ public class SecurityConfig {
                 .formLogin(formLogin ->
                         formLogin.disable()
                 )
-//                .oauth2Login(oauth2Login ->
-//                        oauth2Login.userInfoEndpoint(userInfoEndpoint ->
-//                                userInfoEndpoint.userService()
-//                        )
-//                )
-                .sessionManagement(sessionManagement ->
-                        sessionManagement
-                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .oauth2Login(oauth2Login -> oauth2Login
+                        .authorizationEndpoint(authorizationEndpoint -> authorizationEndpoint
+                                .baseUri("/oauth2/authorization")
+                        )
+
+                        .successHandler(oAuth2AuthenticationSuccessHandler)
+                        .failureHandler(oAuth2AuthenticationFailureHandler)
+
+                )
+                .sessionManagement(sessionManagement -> sessionManagement
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint)
