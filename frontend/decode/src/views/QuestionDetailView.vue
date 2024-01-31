@@ -25,13 +25,15 @@
 
 <script setup>
 import axios from 'axios';
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useQuestionStore } from '@/stores/questionStore';
+import { useAnswerStore } from '@/stores/answerStore';
 import { useUserStore } from '@/stores/userStore';
-import { useRoute, useRouter, RouterLink } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import AnswerList from '@/components/answer/AnswerList.vue';
 
 const questionStore = useQuestionStore();
+const answerStore = useAnswerStore();
 const userStore = useUserStore();
 const router = useRouter();
 const route = useRoute();
@@ -87,6 +89,7 @@ const goUpdate = function () {
 };
 
 const goCreateAnswer = function () {
+  answerStore.questionId = questionId.value;
   router.push({ path: `/answer-create` });
 };
 

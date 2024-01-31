@@ -45,14 +45,13 @@
 import MyEditor from '@/components/common/MyEditor.vue';
 import { useQuestionStore } from '@/stores/questionStore';
 import { useUserStore } from '@/stores/userStore';
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
 const questionStore = useQuestionStore();
 const userStore = useUserStore();
 const router = useRouter();
-const route = useRoute();
 
 const questionTitle = ref('');
 const tagIds = ref([]);

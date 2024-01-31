@@ -9,7 +9,7 @@ import QuestionBoardView from '@/views/QuestionBoardView.vue';
 import QuestionDetailView from '@/views/QuestionDetailView.vue';
 import QuestionTitleCreateView from '@/views/QuestionTitleCreateView.vue';
 import QuestionCreateView from '@/views/QuestionCreateView.vue';
-import AnswerCreateView from '@/views/QuestionCreateView.vue';
+import AnswerCreateView from '@/views/AnswerCreateView.vue';
 
 // Components
 import LoginForm from '@/components/LoginForm.vue';
