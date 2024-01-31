@@ -8,12 +8,12 @@ export const useQuestionStore = defineStore(
   'question',
   () => {
     const URL = process.env.VUE_APP_BACKEND_URL;
+    const userStore = useUserStore();
     const router = useRouter();
     const accessToken = ref(null);
     const questions = ref([]);
     const gptTitles = ref([]);
     const gptTagIds = ref([]);
-    const userStore = useUserStore();
     const originalContent = ref('');
     const items = {
       python: 0,
