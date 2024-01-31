@@ -102,36 +102,9 @@
             </router-link>
           </span>
         </div>
-
-        <!-- 깃허브 계정으로 로그인 => 수정될 수도? 보류 -->
         <br />
-        <div style="text-align: center">
-          <router-link to="/loading"
-            ><v-btn
-              class="kakaobtn"
-              :style="{ backgroundColor: kakaoButtonColor }"
-              @mouseenter="kakaoMouseEnter"
-              @mouseleave="kakaomouseLeave"
-              ><div class="icons">
-                <img class="kakaoicon" src="./kakao.png" alt="카카오 아이콘" />
-                <span class="texts">카카오 계정으로 로그인하기</span>
-              </div>
-            </v-btn></router-link
-          >
-
-          <router-link to="/loading"
-            ><v-btn
-              class="googlebtn"
-              :style="{ backgroundColor: googleButtonColor }"
-              @mouseenter="googleMouseEnter"
-              @mouseleave="googlemouseLeave"
-              ><div class="icons">
-                <img class="googleicon" src="./google.png" alt="구글 아이콘" />
-                <span>Google 계정으로 로그인하기</span>
-              </div></v-btn
-            ></router-link
-          >
-        </div>
+        <GithubLoginBtn />
+        <!-- 깃허브로 로그인하기 버튼 -->
       </v-form>
     </v-card>
   </div>
@@ -140,6 +113,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useUserStore } from '@/stores/userStore';
+import GithubLoginBtn from '@/components/user/GithubLoginBtn.vue';
 
 const userStore = useUserStore();
 
@@ -156,28 +130,6 @@ const writeEmail = (value) => {
 
 const writePassword = (value) => {
   return !!value;
-};
-
-// hover 전 색깔
-const kakaoButtonColor = ref('#d9d9d9');
-const googleButtonColor = ref('#d9d9d9');
-
-// hover 후 색깔
-const kakaoMouseEnter = () => {
-  kakaoButtonColor.value = '#fae300';
-};
-
-const googleMouseEnter = () => {
-  googleButtonColor.value = '#ffffff';
-};
-
-// 커서 나가면 원래 색깔로
-const kakaomouseLeave = () => {
-  kakaoButtonColor.value = '#d9d9d9';
-};
-
-const googlemouseLeave = () => {
-  googleButtonColor.value = '#d9d9d9';
 };
 
 // 눈 버튼으로 비밀번호 가리고 숨기고
@@ -226,51 +178,11 @@ const login = async () => {
   font-weight: bold;
 }
 
-.kakaobtn,
-.googlebtn {
-  margin: 0 20px;
-  height: 54px;
-  width: 349px;
-  margin-bottom: 15px;
-  border-radius: 10px;
-  justify-content: left;
-}
-
-.kakaoicon {
-  width: 39px;
-  height: 38px;
-  margin-right: 10px;
-}
-
-.googleicon {
-  width: 31px;
-  height: 31px;
-  margin-right: 15px;
-}
-
-.icons {
-  display: flex;
-  align-items: center;
-}
-
-.texts {
-  text-align: left;
-  flex: 1;
-}
-
 .textfield :deep(label) {
   color: #ffffff;
 }
 
 .textfield :deep(.v-field) {
   border-radius: 55px;
-}
-
-.kakaobtn:hover {
-  background-color: #fae300;
-}
-
-.googlebtn:hover {
-  background-color: #ffffff;
 }
 </style>
