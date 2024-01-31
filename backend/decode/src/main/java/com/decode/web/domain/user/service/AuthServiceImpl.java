@@ -1,6 +1,8 @@
 package com.decode.web.domain.user.service;
 
+import com.decode.web.domain.common.redis.RedisService;
 import com.decode.web.domain.user.dto.AuthDto;
+import com.decode.web.exception.CustomLoginException;
 import com.decode.web.global.utils.authentication.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final RedisService redisService;
+    private final UserService userService;
     private final String SERVER = "Server";
 
     @Override
@@ -27,14 +30,15 @@ public class AuthServiceImpl implements AuthService {
     public AuthDto.TokenDto login(AuthDto.LoginDto loginDto) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 loginDto.getEmail(), loginDto.getPassword());
-        Authentication authentication = authenticationManagerBuilder.getObject()
-                .authenticate(authenticationToken);
-        if (!authentication.isAuthenticated()) {
-            throw new BadCredentialsException("Invalid username/password supplied");
+        try {
+            Authentication authentication = authenticationManagerBuilder.getObject()
+                    .authenticate(authenticationToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            userService.setAttendance(loginDto.getEmail());
+            return generateToken(SERVER, authentication.getName());
+        } catch (BadCredentialsException e) {
+            throw new CustomLoginException("아이디/비밀번호가 일치하지 않아요.");
         }
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        return generateToken(SERVER, authentication.getName());
     }
 
     @Override
@@ -96,7 +100,7 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public void logout(String token) {
         String requestAccessToken = resolveToken(token);
-        String principal = getPrincipal(requestAccessToken);
+        String principal = jwtTokenProvider.getPrincipal(requestAccessToken);
 
         String refreshTokenInRedis = redisService.getValues("RT:" + SERVER + ":" + principal);
         if (refreshTokenInRedis != null) {

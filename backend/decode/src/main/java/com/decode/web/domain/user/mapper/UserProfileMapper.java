@@ -8,8 +8,9 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface UserProfileMapper {
 
-    public UserProfileEntity toEntity(UserProfileDto dto);
+    UserProfileEntity toEntity(UserProfileDto dto);
 
-    public UserProfileDto toDto(UserProfileEntity entity);
-    public List<UserProfileDto> toDto(List<UserProfileEntity> entityList);
+    UserProfileDto toDto(UserProfileEntity entity);
+
+    List<UserProfileDto> toDto(List<UserProfileEntity> entityList);
 }

@@ -1,5 +1,6 @@
 package com.decode.web.domain.user.service;
 
+import com.decode.web.domain.common.redis.RedisService;
 import com.decode.web.domain.tag.repository.UserTagRepository;
 import com.decode.web.domain.user.dto.FindPasswordDto;
 import com.decode.web.domain.user.dto.RequestUserTagDto;
@@ -10,8 +11,10 @@ import com.decode.web.entity.UserProfileEntity;
 import com.decode.web.entity.UserTagEntity;
 import com.decode.web.exception.UserException;
 import jakarta.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,14 +28,12 @@ public class UserServiceImpl implements UserService {
     private final UserInfoRepository userInfoRepository;
     private final UserProfileRepository userProfileRepository;
     private final UserTagRepository userTagRepository;
+    private final RedisService redisService;
 
     @Override
     public UserInfoEntity getUserById(Long id) {
         UserInfoEntity user = userInfoRepository.getReferenceById(id);
-        if (user != null) {
-            return user;
-        }
-        return null;
+        return user;
     }
 
     @Override
@@ -65,14 +66,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean pwCheck(String password) {
         // 영어/숫자/특수문자 조합으로 8자리 이상
-        if (password.length() < 8
-                || !password.matches(".*[a-zA-Z].*")
-                || !password.matches(".*[0-9].*")
-                || !password.matches(".*[~!@#$%^&*()_+|<>?:{}].*")) {
-            return false;
-        }
-
-        return true;
+        return password.length() >= 8
+                && password.matches(".*[a-zA-Z].*")
+                && password.matches(".*[0-9].*")
+                && password.matches(".*[~!@#$%^&*()_+|<>?:{}].*");
     }
 
     @Override
@@ -90,7 +87,7 @@ public class UserServiceImpl implements UserService {
 
         profile.setUserInfoEntity(user);
         userProfileRepository.save(profile);
-        if(user.getId() == null){
+        if (user.getId() == null) {
             throw new UserException("회원가입 실패");
         }
         return user.getId();
@@ -175,5 +172,21 @@ public class UserServiceImpl implements UserService {
         }
 
     }
+
+    @Override
+    public void setAttendance(String email) {
+        LocalDate date = LocalDate.now();
+        String key = "ATD:" + email;
+        String value = date.toString();
+        redisService.setValueForSet(key, value);
+    }
+
+    @Override
+    public Set<String> getAttendance(Long id) {
+        String key = "ATD:" + userInfoRepository.getReferenceById(id).getEmail();
+        return redisService.getValuesForSet(key);
+    }
+
+//    public void
 
 }

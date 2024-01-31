@@ -17,8 +17,6 @@ import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 @Getter
 @Entity
@@ -50,10 +48,10 @@ public class AnswerEntity extends CommonEntity {
     private boolean isAdopted;
 
     @OneToMany(mappedBy = "answer", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<RecommendEntity> recommends = new ArrayList<>();
+    private final List<RecommendEntity> recommends = new ArrayList<>();
 
     @OneToMany(mappedBy = "answer", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<CommentEntity> comments = new ArrayList<>();
+    private final List<CommentEntity> comments = new ArrayList<>();
 
     public AnswerEntity(Long id, UserProfileEntity answerWriter, QuestionEntity question,
             String content, boolean idAdopted) {

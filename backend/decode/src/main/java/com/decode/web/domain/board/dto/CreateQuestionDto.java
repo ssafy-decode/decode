@@ -3,7 +3,6 @@ package com.decode.web.domain.board.dto;
 import com.decode.web.domain.tag.dto.QuestionTagDto;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
