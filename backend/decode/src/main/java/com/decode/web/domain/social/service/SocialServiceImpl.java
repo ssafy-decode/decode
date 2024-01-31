@@ -16,12 +16,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 public class SocialServiceImpl implements SocialService {
+
     private final FollowRepository followRepository;
     private final UserProfileRepository userProfileRepository;
+
     @Override
     @Transactional
     public void follow(Long fromUserId, Long toUserId) {
-        if(fromUserId.equals(toUserId)){
+        if (fromUserId.equals(toUserId)) {
             throw new FollowException("자기 자신을 팔로우 할 수 없습니다.");
         }
         if (followRepository.findByFromUserIdAndToUserId(fromUserId, toUserId).isPresent()) {
@@ -40,7 +42,8 @@ public class SocialServiceImpl implements SocialService {
     @Override
     @Transactional
     public void followCancel(Long fromUserId, Long toUserId) {
-        FollowEntity followEntity = followRepository.findByFromUserIdAndToUserId(fromUserId, toUserId)
+        FollowEntity followEntity = followRepository.findByFromUserIdAndToUserId(fromUserId,
+                        toUserId)
                 .orElseThrow(() -> new FollowException("팔로우를 취소할 수 없습니다."));
         followRepository.delete(followEntity);
     }
@@ -51,7 +54,7 @@ public class SocialServiceImpl implements SocialService {
     public List<UserProfileEntity> getFollowers(Long userId) {
         List<FollowEntity> followEntityList = followRepository.findByToUserId(userId);
         List<UserProfileEntity> followerList = new LinkedList<>();
-        for(FollowEntity followEntity: followEntityList){
+        for (FollowEntity followEntity : followEntityList) {
             followerList.add(followEntity.getFromUser());
         }
         return followerList;
@@ -62,7 +65,7 @@ public class SocialServiceImpl implements SocialService {
     public List<UserProfileEntity> getFollowings(Long userId) {
         List<FollowEntity> followEntityList = followRepository.findByFromUserId(userId);
         List<UserProfileEntity> followingList = new LinkedList<>();
-        for(FollowEntity followEntity: followEntityList){
+        for (FollowEntity followEntity : followEntityList) {
             followingList.add(followEntity.getToUser());
         }
         return followingList;

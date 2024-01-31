@@ -24,8 +24,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 @Table(
-        name="Bookmark",
-        uniqueConstraints={
+        name = "Bookmark",
+        uniqueConstraints = {
                 @UniqueConstraint(
                         name = "UniqueUserAndAnswer",
                         columnNames = {

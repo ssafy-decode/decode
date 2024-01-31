@@ -43,16 +43,16 @@ public class QuestionEntity extends CommonEntity {
     private String content;
 
     @OneToMany(mappedBy = "question", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<AnswerEntity> answers = new ArrayList<>();
+    private final List<AnswerEntity> answers = new ArrayList<>();
 
     @OneToMany(mappedBy = "question", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<QuestionTagEntity> questionTags = new ArrayList<>();
+    private final List<QuestionTagEntity> questionTags = new ArrayList<>();
 
     @OneToMany(mappedBy = "question", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<MetooEntity> metoos = new ArrayList<>();
+    private final List<MetooEntity> metoos = new ArrayList<>();
 
     @OneToMany(mappedBy = "question", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<BookmarkEntity> bookmarks = new ArrayList<>();
+    private final List<BookmarkEntity> bookmarks = new ArrayList<>();
 
     @Builder
     public QuestionEntity(Long id, String title, UserProfileEntity questionWriter, String content) {

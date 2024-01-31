@@ -12,7 +12,6 @@ import com.decode.web.entity.UserTagEntity;
 import com.decode.web.exception.UserException;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -34,10 +33,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserInfoEntity getUserById(Long id) {
         UserInfoEntity user = userInfoRepository.getReferenceById(id);
-        if (user != null) {
-            return user;
-        }
-        return null;
+        return user;
     }
 
     @Override
@@ -70,14 +66,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean pwCheck(String password) {
         // 영어/숫자/특수문자 조합으로 8자리 이상
-        if (password.length() < 8
-                || !password.matches(".*[a-zA-Z].*")
-                || !password.matches(".*[0-9].*")
-                || !password.matches(".*[~!@#$%^&*()_+|<>?:{}].*")) {
-            return false;
-        }
-
-        return true;
+        return password.length() >= 8
+                && password.matches(".*[a-zA-Z].*")
+                && password.matches(".*[0-9].*")
+                && password.matches(".*[~!@#$%^&*()_+|<>?:{}].*");
     }
 
     @Override
@@ -95,7 +87,7 @@ public class UserServiceImpl implements UserService {
 
         profile.setUserInfoEntity(user);
         userProfileRepository.save(profile);
-        if(user.getId() == null){
+        if (user.getId() == null) {
             throw new UserException("회원가입 실패");
         }
         return user.getId();

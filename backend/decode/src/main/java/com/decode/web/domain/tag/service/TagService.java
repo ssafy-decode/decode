@@ -6,10 +6,10 @@ import java.util.List;
 
 public interface TagService {
 
-    public boolean addTag(TagDto tagName);
+    boolean addTag(TagDto tagName);
 
     List<Long> getQuestionTagIdList(Long questionId);
 
-    public List<QuestionTagDto> getQuestionTagList(Long questionId);
+    List<QuestionTagDto> getQuestionTagList(Long questionId);
 
 }

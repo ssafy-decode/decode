@@ -145,9 +145,10 @@ public class AnswerServiceImpl implements AnswerService {
         AnswerEntity answerEntity = answerRepository.findById(answerId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "User not found with id: " + answerId));
-        RecommendEntity recommendEntity = recommendRepository.findByAnswerAndUserProfile(answerEntity, userProfileEntity);
-        if(recommendEntity == null) {
-           throw new BadCredentialsException("Not exist such as recommend");
+        RecommendEntity recommendEntity = recommendRepository.findByAnswerAndUserProfile(
+                answerEntity, userProfileEntity);
+        if (recommendEntity == null) {
+            throw new BadCredentialsException("Not exist such as recommend");
         }
         recommendRepository.delete(recommendEntity);
         return recommendEntity.getId();

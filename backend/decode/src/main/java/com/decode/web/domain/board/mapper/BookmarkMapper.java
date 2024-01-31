@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface BookmarkMapper {
 
-    public BookmarkDto toDto(BookmarkEntity entity);
+    BookmarkDto toDto(BookmarkEntity entity);
 
-    public BookmarkEntity toEntity(BookmarkDto dto);
+    BookmarkEntity toEntity(BookmarkDto dto);
 }
