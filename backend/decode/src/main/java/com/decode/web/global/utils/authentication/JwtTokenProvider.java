@@ -30,7 +30,6 @@ public class JwtTokenProvider {
 
     private final UserDetailsServiceImpl userDetailsService;
     private final String secretKey;
-    private final RedisService redisService;
     private final Long accessTokenValidityInMilliseconds;
     private final Long refreshTokenValidityInMilliseconds;
 
@@ -40,7 +39,6 @@ public class JwtTokenProvider {
             @Value("${jwt.secret}") String secretKey,
             @Value("${jwt.access-token-expire-length}") Long accessTokenValidityInMilliseconds,
             @Value("${jwt.refresh-token-expire-length}") Long refreshTokenValidityInMilliseconds) {
-        this.redisService = redisService;
         this.userDetailsService = userDetailsService;
 
         this.secretKey = secretKey;
