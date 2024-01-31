@@ -1,6 +1,8 @@
 package com.decode.web.domain.user.service;
 
+import com.decode.web.domain.common.redis.RedisService;
 import com.decode.web.domain.user.dto.AuthDto;
+import com.decode.web.exception.CustomLoginException;
 import com.decode.web.global.utils.authentication.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,14 +29,14 @@ public class AuthServiceImpl implements AuthService {
     public AuthDto.TokenDto login(AuthDto.LoginDto loginDto) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 loginDto.getEmail(), loginDto.getPassword());
-        Authentication authentication = authenticationManagerBuilder.getObject()
-                .authenticate(authenticationToken);
-        if (!authentication.isAuthenticated()) {
-            throw new BadCredentialsException("Invalid username/password supplied");
+        try{
+            Authentication authentication = authenticationManagerBuilder.getObject()
+                    .authenticate(authenticationToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            return generateToken(SERVER, authentication.getName());
+        } catch (BadCredentialsException e) {
+            throw new CustomLoginException("아이디/비밀번호가 일치하지 않아요.");
         }
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        return generateToken(SERVER, authentication.getName());
     }
 
     @Override
