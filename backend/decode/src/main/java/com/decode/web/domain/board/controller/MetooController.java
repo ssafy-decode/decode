@@ -5,6 +5,7 @@ import com.decode.web.domain.board.service.MetooService;
 import com.decode.web.global.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,8 +22,8 @@ public class MetooController {
     private final MetooService metooService;
 
     @PostMapping()
-    public ResponseDto save(@RequestBody MetooDto metooDto) {
-        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public ResponseDto save(@RequestBody MetooDto metooDto, Authentication auth) {
+        Long userId = (Long) auth.getPrincipal();
         if (!userId.equals(metooDto.getUserId())) {
             return ResponseDto.builder().status(HttpStatus.BAD_REQUEST).message("사용자 불일치").build();
         }

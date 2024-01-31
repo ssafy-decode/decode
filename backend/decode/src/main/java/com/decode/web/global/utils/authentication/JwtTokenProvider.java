@@ -1,6 +1,6 @@
 package com.decode.web.global.utils.authentication;
 
-import com.decode.web.domain.user.service.RedisService;
+import com.decode.web.domain.common.redis.RedisService;
 import com.decode.web.domain.user.service.UserDetailsImpl;
 import com.decode.web.domain.user.service.UserDetailsServiceImpl;
 import com.decode.web.domain.user.service.UserService;
@@ -98,7 +98,6 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String token) {
         String email = getClaims(token).get("email", String.class);
         UserDetailsImpl userDetailsImpl = userDetailsService.loadUserByUsername(email);
-        log.info(userDetailsImpl.toString());
         return new UsernamePasswordAuthenticationToken(userDetailsImpl.getId(),
                 userDetailsImpl.getPassword(), userDetailsImpl.getAuthorities());
     }
