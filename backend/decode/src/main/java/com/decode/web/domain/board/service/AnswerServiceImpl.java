@@ -1,11 +1,14 @@
 package com.decode.web.domain.board.service;
 
+import com.decode.web.domain.board.dto.BoardProfileDto;
+import com.decode.web.domain.board.dto.BoardProfileResponseDto;
 import com.decode.web.domain.board.dto.CreateAnswerDto;
 import com.decode.web.domain.board.dto.RecommendDto;
 import com.decode.web.domain.board.dto.ResponseAnswerDto;
 import com.decode.web.domain.board.dto.ResponseCommentDto;
 import com.decode.web.domain.board.dto.UpdateAnswerDto;
 import com.decode.web.domain.board.mapper.AnswerMapper;
+import com.decode.web.domain.board.repository.AnswerJpaRepository;
 import com.decode.web.domain.board.repository.AnswerRepository;
 import com.decode.web.domain.board.repository.QuestionRepository;
 import com.decode.web.domain.board.repository.RecommendRepository;
@@ -36,6 +39,7 @@ public class AnswerServiceImpl implements AnswerService {
     private final CommentService commentService;
     private final ResponseUserProfileMapper responseUserProfileMapper;
     private final RecommendRepository recommendRepository;
+    private final AnswerJpaRepository answerJpaRepository;
 
 
     @Override
@@ -147,5 +151,18 @@ public class AnswerServiceImpl implements AnswerService {
         }
         recommendRepository.delete(recommendEntity);
         return recommendEntity.getId();
+    }
+
+    @Override
+    public BoardProfileResponseDto findAllByUserId(Long userId) {
+        List<BoardProfileDto> questions = answerJpaRepository.findAllByUserId(userId)
+                .stream()
+                .map(answer -> answer.getQuestion().toDto())
+                .distinct()
+                .collect(Collectors.toList());
+        return BoardProfileResponseDto.builder()
+                .list(questions)
+                .size(questions.size())
+                .build();
     }
 }
