@@ -113,8 +113,8 @@ public class UserController {
 
     @GetMapping("/info")
     @Operation(summary = "로그인한 사용자 조회", description = "현재 사용자 정보를 조회합니다.")
-    public ResponseDto getUserProfileNow() {
-        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public ResponseDto getUserProfileNow(Authentication auth) {
+        Long userId = (Long) auth.getPrincipal();
         return ResponseDto.builder()
                 .data(userProfileMapper.toDto(userService.getUserProfileById(userId)))
                 .status(HttpStatus.OK)
@@ -327,6 +327,14 @@ public class UserController {
         return ResponseDto.builder()
                 .status(HttpStatus.OK)
                 .message("임시 비밀번호 발급").build();
+    }
+    @GetMapping("/attendance/{id}")
+    @Operation(summary = "출석 로그 확인", description = "출석 로그 확인 API")
+    public ResponseDto getAttendance(@PathVariable Long id) {
+        return ResponseDto.builder()
+                .data(userService.getAttendance(id))
+                .status(HttpStatus.OK)
+                .message("출석 로그 확인").build();
     }
 
 }
