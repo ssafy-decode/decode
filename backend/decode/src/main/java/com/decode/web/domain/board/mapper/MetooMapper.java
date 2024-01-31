@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface MetooMapper {
 
-    public MetooDto toDto(MetooEntity entity);
+    MetooDto toDto(MetooEntity entity);
 
-    public MetooEntity toEntity(MetooDto dto);
+    MetooEntity toEntity(MetooDto dto);
 }

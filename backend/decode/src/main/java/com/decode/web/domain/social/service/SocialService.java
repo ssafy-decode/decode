@@ -4,6 +4,7 @@ import com.decode.web.entity.UserProfileEntity;
 import java.util.List;
 
 public interface SocialService {
+
     void follow(Long fromUserId, Long toUserId);
 
     void followCancel(Long fromUserId, Long toUserId);

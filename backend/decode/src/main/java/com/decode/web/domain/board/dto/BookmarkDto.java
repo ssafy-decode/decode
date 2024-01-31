@@ -13,6 +13,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class BookmarkDto {
+
     @DecimalMin(value = "0", inclusive = true)
     private Long userId;
     @DecimalMin(value = "0", inclusive = true)

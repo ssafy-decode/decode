@@ -1,7 +1,6 @@
 package com.decode.web.domain.board.repository;
 
 import com.decode.web.entity.AnswerEntity;
-import com.decode.web.entity.QuestionEntity;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

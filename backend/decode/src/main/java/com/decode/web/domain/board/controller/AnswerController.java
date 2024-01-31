@@ -1,7 +1,7 @@
 package com.decode.web.domain.board.controller;
 
-import com.decode.web.domain.board.dto.CreateAnswerDto;
 import com.decode.web.domain.board.dto.BoardProfileResponseDto;
+import com.decode.web.domain.board.dto.CreateAnswerDto;
 import com.decode.web.domain.board.dto.RecommendDto;
 import com.decode.web.domain.board.dto.UpdateAnswerDto;
 import com.decode.web.domain.board.repository.AnswerRepository;
@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -82,7 +81,8 @@ public class AnswerController {
             return ResponseDto.builder().status(HttpStatus.BAD_REQUEST).message("사용자 불일치").build();
         }
         Long recommendId = answerService.recommend(recommendDto);
-        return ResponseDto.builder().status(HttpStatus.OK).message(recommendId + "추천 등록 성공").build();
+        return ResponseDto.builder().status(HttpStatus.OK).message(recommendId + "추천 등록 성공")
+                .build();
     }
 
     @DeleteMapping("/unrecommend/{answerId}")
