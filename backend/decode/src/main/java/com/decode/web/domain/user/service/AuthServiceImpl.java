@@ -1,6 +1,5 @@
 package com.decode.web.domain.user.service;
 
-import com.decode.web.domain.common.redis.RedisService;
 import com.decode.web.domain.user.dto.AuthDto;
 import com.decode.web.exception.CustomLoginException;
 import com.decode.web.global.utils.authentication.JwtTokenProvider;
@@ -29,7 +28,7 @@ public class AuthServiceImpl implements AuthService {
     public AuthDto.TokenDto login(AuthDto.LoginDto loginDto) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 loginDto.getEmail(), loginDto.getPassword());
-        try{
+        try {
             Authentication authentication = authenticationManagerBuilder.getObject()
                     .authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);

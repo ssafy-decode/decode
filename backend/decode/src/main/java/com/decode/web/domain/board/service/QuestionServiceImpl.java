@@ -3,11 +3,14 @@ package com.decode.web.domain.board.service;
 import com.decode.web.domain.board.dto.CreateQuestionDto;
 import com.decode.web.domain.board.dto.QuestionDto;
 import com.decode.web.domain.board.dto.QuestionListDto;
+import com.decode.web.domain.board.dto.QuestionProfileDto;
+import com.decode.web.domain.board.dto.QuestionProfileResponseDto;
 import com.decode.web.domain.board.dto.ResponseAnswerDto;
 import com.decode.web.domain.board.dto.ResponseQuestionDto;
 import com.decode.web.domain.board.dto.UpdateQuestionDto;
 import com.decode.web.domain.board.mapper.QuestionMapper;
 import com.decode.web.domain.board.repository.MetooRepository;
+import com.decode.web.domain.board.repository.QuestionJpaRepository;
 import com.decode.web.domain.board.repository.QuestionRepository;
 import com.decode.web.domain.tag.dto.QuestionTagDto;
 import com.decode.web.domain.tag.repository.QuestionTagRepository;
@@ -42,6 +45,7 @@ public class QuestionServiceImpl implements QuestionService {
     private final MetooRepository metooRepository;
     private final AnswerService answerService;
     private final ResponseUserProfileMapper responseUserProfileMapper;
+    private final QuestionJpaRepository questionJpaRepository;
 
     @Override
     public List<QuestionListDto> searchQuestionByKeyword(String keyword, List<Long> tagIds) {
@@ -159,5 +163,17 @@ public class QuestionServiceImpl implements QuestionService {
         }
 
         return questionDetail(updateQuestion.getQuestionId());
+    }
+
+    @Override
+    public QuestionProfileResponseDto findAllByUserId(Long userId) {
+        List<QuestionProfileDto> questions = questionJpaRepository.findAllByUserId(userId)
+                .stream()
+                .map(QuestionEntity::toDto)
+                .collect(Collectors.toList());
+        return QuestionProfileResponseDto.builder()
+                .questions(questions)
+                .size(questions.size())
+                .build();
     }
 }
