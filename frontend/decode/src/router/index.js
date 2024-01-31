@@ -9,6 +9,7 @@ import QuestionBoardView from '@/views/QuestionBoardView.vue';
 import QuestionDetailView from '@/views/QuestionDetailView.vue';
 import QuestionTitleCreateView from '@/views/QuestionTitleCreateView.vue';
 import QuestionCreateView from '@/views/QuestionCreateView.vue';
+import AnswerCreateView from '@/views/QuestionCreateView.vue';
 
 // Components
 import LoginForm from '@/components/LoginForm.vue';
@@ -107,6 +108,11 @@ const router = createRouter({
       path: '/question-create',
       name: 'question-create',
       component: QuestionCreateView,
+    },
+    {
+      path: '/answer-create',
+      name: 'answer-create',
+      component: AnswerCreateView,
     },
     {
       path: '/question-update/:id',

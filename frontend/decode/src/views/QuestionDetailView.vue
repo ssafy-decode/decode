@@ -1,6 +1,5 @@
 <template>
-  <div>
-    <h1>Question Detail View</h1>
+  <div class="detailContainer">
     <br />
     <p>질문 번호: {{ question.id }}</p>
     <p>질문 제목: {{ question.title }}</p>
@@ -18,10 +17,9 @@
     <hr />
     <br />
     <div class="answerRelatedBox">
-      <h3>답변관련</h3>
-      <v-btn>답변생성</v-btn>
+      <v-btn @click="goCreateAnswer()">답변생성</v-btn>
     </div>
-    <p class="answerListBox">질문 답변 목록: {{ question.answerList }}</p>
+    <AnswerList :answer-list="question.answerList" />
   </div>
 </template>
 
@@ -31,6 +29,7 @@ import { onMounted, ref, computed } from 'vue';
 import { useQuestionStore } from '@/stores/questionStore';
 import { useUserStore } from '@/stores/userStore';
 import { useRoute, useRouter, RouterLink } from 'vue-router';
+import AnswerList from '@/components/answer/AnswerList.vue';
 
 const questionStore = useQuestionStore();
 const userStore = useUserStore();
@@ -87,6 +86,10 @@ const goUpdate = function () {
   router.push({ path: `/question-update/${questionId.value}` });
 };
 
+const goCreateAnswer = function () {
+  router.push({ path: `/answer-create` });
+};
+
 onMounted(() => {
   getDetailQuestion();
 });
@@ -109,5 +112,9 @@ onMounted(() => {
 .btn {
   margin-left: 10px;
   margin-right: 10px;
+}
+
+.detailContainer {
+  margin: 40px;
 }
 </style>

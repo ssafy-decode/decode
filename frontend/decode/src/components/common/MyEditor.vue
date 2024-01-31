@@ -30,7 +30,7 @@ export default {
 
           const formData = new FormData();
           formData.append('image', blob);
-          let url = `${process.env.VUE_APP_BACKEND_URL}/image`;
+          let url = ``;
           $.ajax({
             type: 'POST',
             enctype: 'multipart/form-data',
