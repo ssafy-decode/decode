@@ -40,14 +40,6 @@ public class GlobalControllerAdvice {
                 .message(e.getMessage())
                 .build(), HttpStatus.BAD_REQUEST);
     }
-    @ExceptionHandler(BadCredentialsException.class)
-    private ResponseEntity<ResponseDto> credentialException(Exception e) {
-        log.error("{}", e.getMessage());
-        return new ResponseEntity<>(ResponseDto.builder()
-                .status(HttpStatus.UNAUTHORIZED)
-                .message(e.getMessage())
-                .build(), HttpStatus.UNAUTHORIZED);
-    }
 
     @ExceptionHandler(ExpiredJwtException.class)
     private ResponseEntity<ResponseDto> expiredJwtException(Exception e) {

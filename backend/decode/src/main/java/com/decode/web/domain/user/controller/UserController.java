@@ -328,5 +328,13 @@ public class UserController {
                 .status(HttpStatus.OK)
                 .message("임시 비밀번호 발급").build();
     }
+    @GetMapping("/attendance/{id}")
+    @Operation(summary = "출석 로그 확인", description = "출석 로그 확인 API")
+    public ResponseDto getAttendance(@PathVariable Long id) {
+        return ResponseDto.builder()
+                .data(userService.getAttendance(id))
+                .status(HttpStatus.OK)
+                .message("출석 로그 확인").build();
+    }
 
 }

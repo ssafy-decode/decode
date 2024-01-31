@@ -22,6 +22,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final RedisService redisService;
+    private final UserService userService;
     private final String SERVER = "Server";
 
     @Override
@@ -33,6 +34,7 @@ public class AuthServiceImpl implements AuthService {
             Authentication authentication = authenticationManagerBuilder.getObject()
                     .authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            userService.setAttendance(loginDto.getEmail());
             return generateToken(SERVER, authentication.getName());
         } catch (BadCredentialsException e) {
             throw new CustomLoginException("아이디/비밀번호가 일치하지 않아요.");
