@@ -11,6 +11,6 @@ import lombok.Getter;
 public class BoardProfileResponseDto {
 
     private Integer size;
-    private List<BoardProfileDto> questions;
+    private List<BoardProfileDto> list;
 
 }

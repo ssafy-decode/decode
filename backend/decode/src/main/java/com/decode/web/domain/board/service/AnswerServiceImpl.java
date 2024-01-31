@@ -158,9 +158,10 @@ public class AnswerServiceImpl implements AnswerService {
         List<BoardProfileDto> questions = answerJpaRepository.findAllByUserId(userId)
                 .stream()
                 .map(answer -> answer.getQuestion().toDto())
+                .distinct()
                 .collect(Collectors.toList());
         return BoardProfileResponseDto.builder()
-                .questions(questions)
+                .list(questions)
                 .size(questions.size())
                 .build();
     }

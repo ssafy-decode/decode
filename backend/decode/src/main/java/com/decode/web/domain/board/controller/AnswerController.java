@@ -96,7 +96,7 @@ public class AnswerController {
         BoardProfileResponseDto data = answerService.findAllByUserId(userId);
         return ResponseDto.builder()
                 .status(HttpStatus.OK)
-                .message("답변 목록 조회 완료")
+                .message("질문 목록 조회 완료")
                 .data(data)
                 .build();
     }

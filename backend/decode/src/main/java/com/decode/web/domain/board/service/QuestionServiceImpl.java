@@ -171,7 +171,7 @@ public class QuestionServiceImpl implements QuestionService {
                 .map(QuestionEntity::toDto)
                 .collect(Collectors.toList());
         return BoardProfileResponseDto.builder()
-                .questions(questions)
+                .list(questions)
                 .size(questions.size())
                 .build();
     }
