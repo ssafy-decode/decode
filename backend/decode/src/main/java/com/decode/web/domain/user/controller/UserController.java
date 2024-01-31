@@ -113,8 +113,8 @@ public class UserController {
 
     @GetMapping("/info")
     @Operation(summary = "로그인한 사용자 조회", description = "현재 사용자 정보를 조회합니다.")
-    public ResponseDto getUserProfileNow() {
-        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public ResponseDto getUserProfileNow(Authentication auth) {
+        Long userId = (Long) auth.getPrincipal();
         return ResponseDto.builder()
                 .data(userProfileMapper.toDto(userService.getUserProfileById(userId)))
                 .status(HttpStatus.OK)

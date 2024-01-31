@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -37,8 +38,8 @@ public class AnswerController {
 
 
     @PostMapping
-    public ResponseDto save(@RequestBody CreateAnswerDto createAnswerDto) {
-        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public ResponseDto save(@RequestBody CreateAnswerDto createAnswerDto, Authentication auth) {
+        Long userId = (Long) auth.getPrincipal();
         log.info("createAnswerDto : {}", createAnswerDto.toString());
         if (!userId.equals(createAnswerDto.getUserId())) {
             log.info("writer : {}, user : {}", userId, createAnswerDto.getUserId());
@@ -50,8 +51,8 @@ public class AnswerController {
     }
 
     @PatchMapping
-    public ResponseDto update(UpdateAnswerDto updateAnswerDto) {
-        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public ResponseDto update(UpdateAnswerDto updateAnswerDto, Authentication auth) {
+        Long userId = (Long) auth.getPrincipal();
         AnswerEntity answerEntity = answerRepository.findById(updateAnswerDto.getId()).orElseThrow(
                 () -> new BadCredentialsException(
                         "Answer not found with id: " + updateAnswerDto.getId()));
@@ -64,8 +65,8 @@ public class AnswerController {
     }
 
     @DeleteMapping("/{answerId}")
-    public ResponseDto delete(@PathVariable Long answerId) {
-        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public ResponseDto delete(@PathVariable Long answerId, Authentication auth) {
+        Long userId = (Long) auth.getPrincipal();
         AnswerEntity answerEntity = answerRepository.findById(answerId).orElseThrow(
                 () -> new BadCredentialsException(
                         "Answer not found with id: " + answerId));
@@ -77,8 +78,8 @@ public class AnswerController {
     }
 
     @PostMapping("/recommend")
-    public ResponseDto recommend(@RequestBody RecommendDto recommendDto) {
-        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public ResponseDto recommend(@RequestBody RecommendDto recommendDto, Authentication auth) {
+        Long userId = (Long) auth.getPrincipal();
         if (!userId.equals(recommendDto.getUserId())) {
             return ResponseDto.builder().status(HttpStatus.BAD_REQUEST).message("사용자 불일치").build();
         }
@@ -87,8 +88,8 @@ public class AnswerController {
     }
 
     @DeleteMapping("/unrecommend/{answerId}")
-    public ResponseDto unRecommend(@PathVariable Long answerId){
-        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public ResponseDto unRecommend(@PathVariable Long answerId, Authentication auth) {
+        Long userId = (Long) auth.getPrincipal();
         Long deletedId = answerService.unRecommend(userId, answerId);
         return ResponseDto.builder().status(HttpStatus.OK).message(deletedId + "추천 취소 성공").build();
     }

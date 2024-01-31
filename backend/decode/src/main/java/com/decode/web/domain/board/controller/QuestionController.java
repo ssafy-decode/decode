@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -48,8 +49,8 @@ public class QuestionController {
 
     @PostMapping
     @Operation(summary = "질문 생성", description = "질문 생성")
-    public ResponseDto createQuestion(@RequestBody CreateQuestionDto question) {
-        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public ResponseDto createQuestion(@RequestBody CreateQuestionDto question, Authentication auth) {
+        Long userId = (Long) auth.getPrincipal();
         if (!userId.equals(question.getQuestionWriterId())) {
             return ResponseDto.builder().status(HttpStatus.BAD_REQUEST).message("사용자 불일치").build();
         }
@@ -70,8 +71,8 @@ public class QuestionController {
 
     @PatchMapping
     @Operation(summary = "질문 수정", description = "작성자와 일치하는 사용자의 토큰을 식별 후 수정")
-    public ResponseDto updateQuestion(@RequestBody UpdateQuestionDto updateQuestion) {
-        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public ResponseDto updateQuestion(@RequestBody UpdateQuestionDto updateQuestion, Authentication auth) {
+        Long userId = (Long) auth.getPrincipal();
         if (!userId.equals(updateQuestion.getUserId())) {
             return ResponseDto.builder().status(HttpStatus.BAD_REQUEST).message("사용자 불일치").build();
         }
@@ -81,8 +82,8 @@ public class QuestionController {
 
     @DeleteMapping("/delete/{questionId}")
     @Operation(summary = "질문 삭제", description = "작성자와 일치하는 사용자의 토큰을 식별 후 삭제")
-    public ResponseDto deleteQuestion(@PathVariable Long questionId) {
-        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public ResponseDto deleteQuestion(@PathVariable Long questionId, Authentication auth) {
+        Long userId = (Long) auth.getPrincipal();
         QuestionEntity targetQuestion = questionRepository.findById(questionId).orElseThrow(
                 () -> new BadCredentialsException(
                         "Question not found with id: " + questionId));
