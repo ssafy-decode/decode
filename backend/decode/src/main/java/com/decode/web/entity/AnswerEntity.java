@@ -1,5 +1,6 @@
 package com.decode.web.entity;
 
+import com.decode.web.domain.board.dto.BoardProfileDto;
 import com.decode.web.global.CommonEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -17,8 +18,6 @@ import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 @Getter
 @Entity

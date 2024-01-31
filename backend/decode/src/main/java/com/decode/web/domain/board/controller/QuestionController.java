@@ -2,6 +2,7 @@ package com.decode.web.domain.board.controller;
 
 import com.decode.web.domain.board.dto.CreateQuestionDto;
 import com.decode.web.domain.board.dto.QuestionListDto;
+import com.decode.web.domain.board.dto.BoardProfileResponseDto;
 import com.decode.web.domain.board.dto.ResponseQuestionDto;
 import com.decode.web.domain.board.dto.UpdateQuestionDto;
 import com.decode.web.domain.board.repository.QuestionRepository;
@@ -93,4 +94,14 @@ public class QuestionController {
         return ResponseDto.builder().status(HttpStatus.OK).build();
     }
 
+
+    @GetMapping("/list/{userId}")
+    public ResponseDto getQuestionListByUserId(@PathVariable Long userId) {
+        BoardProfileResponseDto data = questionService.findAllByUserId(userId);
+        return ResponseDto.builder()
+                .status(HttpStatus.OK)
+                .message("질문 목록 조회 완료")
+                .data(data)
+                .build();
+    }
 }
