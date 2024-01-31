@@ -3,8 +3,8 @@ package com.decode.web.domain.board.service;
 import com.decode.web.domain.board.dto.CreateQuestionDto;
 import com.decode.web.domain.board.dto.QuestionDto;
 import com.decode.web.domain.board.dto.QuestionListDto;
-import com.decode.web.domain.board.dto.QuestionProfileDto;
-import com.decode.web.domain.board.dto.QuestionProfileResponseDto;
+import com.decode.web.domain.board.dto.BoardProfileDto;
+import com.decode.web.domain.board.dto.BoardProfileResponseDto;
 import com.decode.web.domain.board.dto.ResponseAnswerDto;
 import com.decode.web.domain.board.dto.ResponseQuestionDto;
 import com.decode.web.domain.board.dto.UpdateQuestionDto;
@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -166,12 +165,12 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public QuestionProfileResponseDto findAllByUserId(Long userId) {
-        List<QuestionProfileDto> questions = questionJpaRepository.findAllByUserId(userId)
+    public BoardProfileResponseDto findAllByUserId(Long userId) {
+        List<BoardProfileDto> questions = questionJpaRepository.findAllByUserId(userId)
                 .stream()
                 .map(QuestionEntity::toDto)
                 .collect(Collectors.toList());
-        return QuestionProfileResponseDto.builder()
+        return BoardProfileResponseDto.builder()
                 .questions(questions)
                 .size(questions.size())
                 .build();

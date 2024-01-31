@@ -15,7 +15,7 @@ public class QuestionJpaRepository {
     public List<QuestionEntity> findAllByUserId(Long userId) {
         return entityManager.createQuery("select q from QuestionEntity q "
                         + "where q.questionWriter.id =:userId "
-                        + "order by q.createdTime", QuestionEntity.class)
+                        + "order by q.createdTime desc ", QuestionEntity.class)
                 .setParameter("userId", userId)
                 .getResultList();
     }

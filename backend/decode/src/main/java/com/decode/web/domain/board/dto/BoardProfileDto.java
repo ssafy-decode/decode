@@ -7,7 +7,7 @@ import lombok.Getter;
 @Data
 @Getter
 @Builder
-public class QuestionProfileDto {
+public class BoardProfileDto {
 
     private String title;
     private Long questionId;

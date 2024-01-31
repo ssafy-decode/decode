@@ -1,6 +1,6 @@
 package com.decode.web.entity;
 
-import com.decode.web.domain.board.dto.QuestionProfileDto;
+import com.decode.web.domain.board.dto.BoardProfileDto;
 import com.decode.web.global.CommonEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -62,8 +62,8 @@ public class QuestionEntity extends CommonEntity {
         this.content = content;
     }
 
-    public QuestionProfileDto toDto() {
-        return QuestionProfileDto.builder()
+    public BoardProfileDto toDto() {
+        return BoardProfileDto.builder()
                 .questionId(id)
                 .title(title)
                 .build();

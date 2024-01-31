@@ -8,9 +8,9 @@ import lombok.Getter;
 @Data
 @Builder
 @Getter
-public class QuestionProfileResponseDto {
+public class BoardProfileResponseDto {
 
     private Integer size;
-    private List<QuestionProfileDto> questions;
+    private List<BoardProfileDto> questions;
 
 }
