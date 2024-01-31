@@ -1,9 +1,7 @@
 package com.decode.web.entity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,15 +14,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 @Getter
 @Entity
 @Table(
-        name="Recommend",
-        uniqueConstraints={
+        name = "Recommend",
+        uniqueConstraints = {
                 @UniqueConstraint(
                         name = "UniqueUserAndAnswer",
                         columnNames = {

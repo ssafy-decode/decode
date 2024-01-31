@@ -30,7 +30,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -85,7 +84,8 @@ public class UserController {
 
     @PostMapping("/user")
     @Operation(summary = "사용자 정보 수정", description = "사용자 1명의 정보를 수정합니다.(비밀번호 변경)")
-    public ResponseDto updateUserById(@Valid @RequestBody InfoUpdateDto infoUpdateDto, Authentication auth) {
+    public ResponseDto updateUserById(@Valid @RequestBody InfoUpdateDto infoUpdateDto,
+            Authentication auth) {
         Long userId = (Long) auth.getPrincipal();
         String password = infoUpdateDto.getPassword();
         boolean result = false;
@@ -287,7 +287,7 @@ public class UserController {
     @PostMapping("/addUserTag")
     @Operation(summary = "유저 태그 선택", description = "신규 유저의 선호 기술 태그 추가")
     public ResponseDto addUserTag(@RequestBody
-    RequestUserTagDto requestUserTagDto) {
+            RequestUserTagDto requestUserTagDto) {
         userService.addUserTag(requestUserTagDto);
         return ResponseDto.builder().status(HttpStatus.OK).build();
     }
@@ -328,6 +328,7 @@ public class UserController {
                 .status(HttpStatus.OK)
                 .message("임시 비밀번호 발급").build();
     }
+
     @GetMapping("/attendance/{id}")
     @Operation(summary = "출석 로그 확인", description = "출석 로그 확인 API")
     public ResponseDto getAttendance(@PathVariable Long id) {

@@ -3,7 +3,6 @@ package com.decode.web.global;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 @Builder

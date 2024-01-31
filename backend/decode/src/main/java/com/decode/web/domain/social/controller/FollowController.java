@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,7 +39,7 @@ public class FollowController {
     }
 
     @GetMapping("/followerlist/{userId}")
-    public ResponseDto getFollowers(@PathVariable Long userId   ) {
+    public ResponseDto getFollowers(@PathVariable Long userId) {
         return ResponseDto.builder()
                 .data(userProfileMapper.toDto(socialService.getFollowers(userId)))
                 .message("팔로워 리스트 조회 성공")

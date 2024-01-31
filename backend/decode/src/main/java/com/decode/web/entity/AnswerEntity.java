@@ -1,6 +1,5 @@
 package com.decode.web.entity;
 
-import com.decode.web.domain.board.dto.BoardProfileDto;
 import com.decode.web.global.CommonEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -49,10 +48,10 @@ public class AnswerEntity extends CommonEntity {
     private boolean isAdopted;
 
     @OneToMany(mappedBy = "answer", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<RecommendEntity> recommends = new ArrayList<>();
+    private final List<RecommendEntity> recommends = new ArrayList<>();
 
     @OneToMany(mappedBy = "answer", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<CommentEntity> comments = new ArrayList<>();
+    private final List<CommentEntity> comments = new ArrayList<>();
 
     public AnswerEntity(Long id, UserProfileEntity answerWriter, QuestionEntity question,
             String content, boolean idAdopted) {
