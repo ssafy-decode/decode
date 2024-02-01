@@ -47,7 +47,7 @@ import { useQuestionStore } from '@/stores/questionStore';
 import { useUserStore } from '@/stores/userStore';
 import { useRouter, useRoute } from 'vue-router';
 import { ref, onMounted } from 'vue';
-import axios from 'axios';
+import axios from '@/utils/common-axios';
 
 const questionStore = useQuestionStore();
 const userStore = useUserStore();
@@ -73,11 +73,7 @@ const updateEditorContent = function (content) {
 const getOriginalQuestion = function () {
   axios({
     method: 'get',
-    url: `${questionStore.URL}/question/${route.params.id}`,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      Authorization: `${userStore.accessToken}`,
-    },
+    url: `question/${route.params.id}`,
   })
     .then((res) => {
       question.value = res.data.data;
@@ -118,11 +114,9 @@ const updateQuestion = function () {
   };
   axios({
     method: 'patch',
-    url: `${questionStore.URL}/question`,
+    url: `/question`,
     data: data,
     headers: {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
       Authorization: `Bearer ${userStore.accessToken}`,
     },
   })

@@ -32,7 +32,7 @@ import { useAnswerStore } from '@/stores/answerStore';
 import { useQuestionStore } from '@/stores/questionStore';
 import { useRoute, useRouter } from 'vue-router';
 import { ref, onMounted } from 'vue';
-import axios from 'axios';
+import axios from '@/utils/common-axios';
 
 const userStore = useUserStore();
 const answserStore = useAnswerStore();
@@ -62,9 +62,8 @@ const updateEditorContent = function (content) {
 const getDetailQuestion = function () {
   axios({
     method: 'get',
-    url: `${questionStore.URL}/question/${questionId}`,
+    url: `/question/${questionId}`,
     headers: {
-      'Access-Control-Allow-Origin': '*',
       Authorization: `${userStore.accessToken}`,
     },
   })
@@ -97,11 +96,9 @@ const createAnswer = function () {
   console.log(data);
   axios({
     method: 'post',
-    url: `${questionStore.URL}/answer`,
+    url: `/answer`,
     data: data,
     headers: {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
       Authorization: `Bearer ${userStore.accessToken}`,
     },
   })

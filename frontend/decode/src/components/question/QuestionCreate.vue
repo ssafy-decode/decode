@@ -48,7 +48,7 @@ import { useQuestionStore } from '@/stores/questionStore';
 import { useUserStore } from '@/stores/userStore';
 import { useRouter } from 'vue-router';
 import { ref, onMounted } from 'vue';
-import axios from 'axios';
+import axios from '@/utils/common-axios';
 
 const questionStore = useQuestionStore();
 const userStore = useUserStore();
@@ -82,11 +82,9 @@ const createQuestion = function () {
 
   axios({
     method: 'post',
-    url: `${questionStore.URL}/question`,
+    url: `/question`,
     data: data,
     headers: {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
       Authorization: `Bearer ${userStore.accessToken}`,
     },
   })

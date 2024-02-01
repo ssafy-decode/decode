@@ -11,17 +11,18 @@
       <v-responsive max-width="400" class="mx-auto mb-4"> </v-responsive>
       <v-card elevation="16" max-width="60%" class="mx-auto px-5 rounded-xl">
         <v-row>
-          <v-col :cols="8">
-            <v-list-item :key="'question'">
+          <v-col :cols="12">
+            <!-- <v-col :cols="8"> -->
+            <v-list-item>
               <v-list-item-title class="text-center"> 질 문 </v-list-item-title>
             </v-list-item>
           </v-col>
 
-          <v-col :cols="4">
+          <!-- <v-col :cols="4">
             <v-list-item :key="'author'">
               <v-list-item-title class="text-center"> 작 성 </v-list-item-title>
             </v-list-item>
-          </v-col>
+          </v-col> -->
         </v-row>
         <QuestionListItem v-for="question in questionStore.questions" :key="question.id" :question="question" />
       </v-card>

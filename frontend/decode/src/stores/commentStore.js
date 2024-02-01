@@ -1,12 +1,11 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
-import axios from 'axios';
+import axios from '@/utils/common-axios';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/userStore';
 
 export const useCommentStore = defineStore('comment', () => {
   const userStore = useUserStore();
-  const URL = process.env.VUE_APP_BACKEND_URL;
   const answerId = ref(null);
   const router = useRouter();
 
@@ -14,9 +13,8 @@ export const useCommentStore = defineStore('comment', () => {
     if (confirm('댓글을 삭제하시겠습니까?')) {
       axios({
         method: 'delete',
-        url: `${URL}/comment/${commentId}`,
+        url: `comment/${commentId}`,
         headers: {
-          'Access-Control-Allow-Origin': '*',
           Authorization: `Bearer ${userStore.accessToken}`,
         },
       })
@@ -37,7 +35,6 @@ export const useCommentStore = defineStore('comment', () => {
   };
 
   return {
-    URL,
     answerId,
     deleteComment,
     updateComment,
