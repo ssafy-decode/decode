@@ -4,15 +4,15 @@
     <br />
     <v-form @submit.prevent="updateQuestion">
       <v-text-field variant="solo" label="질문 제목" v-model.trim="questionTitle"></v-text-field>
-      <v-container>
-        <template v-for="(tag, index) in tagIds" :key="index">
+      <v-container v-if="numToStr.length > 0">
+        <template v-for="(tag, index) in numToStr" :key="index">
           <v-row class="d-flex justify-end">
             <v-col cols="12" sm="6" md="4">
               <v-text-field
                 variant="solo"
                 class="stackBox"
                 bg-color="fff"
-                v-model.trim="reverseItems[tag]"
+                v-model.trim="numToStr[index]"
                 placeholder="ex) java, spring boot, sql"
                 label="관련 태그"
               ></v-text-field>
@@ -27,9 +27,13 @@
                 label="태그 버전"
               ></v-text-field>
             </v-col>
+            <v-col cols="12" sm="6" md="4">
+              <v-btn @click="removeField(index)">삭제</v-btn>
+            </v-col>
           </v-row>
         </template>
       </v-container>
+      <v-btn @click="addEmptyFields">추가</v-btn>
       <p class="tagAlert">주의) 태그를 입력할 땐, react.js, vue.js 등은 뒤에 ".js"를 지워주세요</p>
 
       <br />
@@ -59,10 +63,13 @@ const questionId = ref(null);
 const questionWriterId = ref(null);
 const questionTitle = ref('');
 const questionContent = ref('');
-const tagList = ref([]);
-
+const tagList = ref([]); // DB에 있는 태그리스트를 불러와서
+// 아래 두 배열에 각각 저장
 const tagIds = ref([]);
 const versions = ref([]);
+
+// tagIds의 id를 문자열로 변경
+const numToStr = ref([]);
 
 const items = questionStore.items;
 const reverseItems = questionStore.reverseItems;
@@ -82,6 +89,7 @@ const getOriginalQuestion = function () {
       tagList.value = question.value.tagList;
       tagList.value.forEach((item) => {
         tagIds.value.push(item.tagId);
+        numToStr.value.push(reverseItems[item.tagId]);
         versions.value.push(item.version);
       });
     })
@@ -96,11 +104,23 @@ onMounted(() => {
   getOriginalQuestion(); // 기존 변수들이 담김
 });
 
+// 태그 입력 칸 추가 코드
+const addEmptyFields = function () {
+  numToStr.value.push('');
+  versions.value.push('');
+};
+
+// 태그 입력 칸 삭제 코드
+const removeField = function (index) {
+  numToStr.value.splice(index, 1);
+  versions.value.splice(index, 1);
+};
+
 const updateQuestion = function () {
-  const tags = tagIds.value.map((tagId, index) => {
+  const tags = numToStr.value.map((tag, index) => {
     return {
-      tagId: tagId,
-      tagName: questionStore.reverseItems[tagId],
+      tagId: items[tag],
+      tagName: tag,
       version: versions.value[index],
     };
   });
