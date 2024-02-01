@@ -2,6 +2,39 @@
   <div class="wholeContainer">
     <h1 style="text-align: center">질문 게시판</h1>
     <br />
+    <div class="text-center" style="display: flex; flex-direction: column; align-items: center">
+      <div class="search-container" style="width: 60%">
+        <div class="searchBox">
+          <v-text-field
+            variant="plain"
+            label="검색 키워드를 입력하세요"
+            class="searchInput"
+            v-model="keyword"
+            bg-color="fff"
+            clearable
+          ></v-text-field>
+          <v-btn class="searchBtn" size="x-large" @click="searchParams(keyword, tagIds)">검색</v-btn>
+        </div>
+        <v-container>
+          <v-row class="d-flex justify-end">
+            <v-col cols="12" sm="6" md="4">
+              <v-combobox
+                variant="solo"
+                class="stackBox"
+                bg-color="fff"
+                v-model="tagIds"
+                :items="Object.keys(items)"
+                placeholder="ex) java, spring boot, sql"
+                label="기술 스택"
+                multiple
+                chips
+                clearable
+              ></v-combobox>
+            </v-col>
+          </v-row>
+        </v-container>
+      </div>
+    </div>
     <div class="btnContainer d-flex justify-end">
       <v-btn class="createBtn" @click="goCreateQuestion()">질문등록</v-btn>
     </div>
@@ -11,17 +44,18 @@
       <v-responsive max-width="400" class="mx-auto mb-4"> </v-responsive>
       <v-card elevation="16" max-width="60%" class="mx-auto px-5 rounded-xl">
         <v-row>
-          <v-col :cols="8">
-            <v-list-item :key="'question'">
+          <v-col :cols="12">
+            <!-- <v-col :cols="8"> -->
+            <v-list-item>
               <v-list-item-title class="text-center"> 질 문 </v-list-item-title>
             </v-list-item>
           </v-col>
 
-          <v-col :cols="4">
+          <!-- <v-col :cols="4">
             <v-list-item :key="'author'">
               <v-list-item-title class="text-center"> 작 성 </v-list-item-title>
             </v-list-item>
-          </v-col>
+          </v-col> -->
         </v-row>
         <QuestionListItem v-for="question in questionStore.questions" :key="question.id" :question="question" />
       </v-card>
@@ -50,13 +84,12 @@ const goCreateQuestion = function () {
 
 const questionStore = useQuestionStore();
 const keyword = ref('');
-const tagIds = ref('');
+const tagIds = ref([]);
 
 const searchParams = function (keyword, tagIds) {
   questionStore.getQuestions(keyword, tagIds);
 };
 
-const select = ref([]);
 const items = questionStore.items;
 </script>
 

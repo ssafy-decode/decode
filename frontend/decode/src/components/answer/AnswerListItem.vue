@@ -33,7 +33,7 @@ import { useCommentStore } from '@/stores/commentStore';
 import { useUserStore } from '@/stores/userStore';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
-import axios from 'axios';
+import axios from '@/utils/common-axios';
 
 const router = useRouter();
 
@@ -58,10 +58,9 @@ const createComment = function () {
 
   axios({
     method: 'post',
-    url: `${commentStore.URL}/comment`,
+    url: `/comment`,
     data: data,
     headers: {
-      'Access-Control-Allow-Origin': '*',
       Authorization: `Bearer ${userStore.accessToken}`,
     },
   })

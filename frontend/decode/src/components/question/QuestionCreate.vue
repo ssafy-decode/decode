@@ -2,7 +2,7 @@
   <v-sheet class="mx-auto createBox" width="1000">
     <v-form @submit.prevent="createQuestion">
       <v-text-field variant="solo" label="질문 제목" v-model.trim="questionTitle"></v-text-field>
-      <v-container>
+      <v-container v-if="tagIds.length > 0">
         <v-row class="d-flex justify-end">
           <v-col cols="12" sm="6" md="4"> </v-col>
         </v-row>
@@ -28,9 +28,13 @@
                 label="태그 버전"
               ></v-text-field>
             </v-col>
+            <v-col cols="12" sm="6" md="4">
+              <v-btn @click="removeField(index)">삭제</v-btn>
+            </v-col>
           </v-row>
         </template>
       </v-container>
+      <v-btn @click="addEmptyFields">추가</v-btn>
       <p class="tagAlert">주의) 태그를 입력할 땐, react.js, vue.js 등은 뒤에 ".js"를 지워주세요</p>
 
       <br />
@@ -48,15 +52,15 @@ import { useQuestionStore } from '@/stores/questionStore';
 import { useUserStore } from '@/stores/userStore';
 import { useRouter } from 'vue-router';
 import { ref, onMounted } from 'vue';
-import axios from 'axios';
+import axios from '@/utils/common-axios';
 
 const questionStore = useQuestionStore();
 const userStore = useUserStore();
 const router = useRouter();
 
 const questionTitle = ref('');
-const tagIds = ref([]);
 const questionContent = ref('');
+const tagIds = ref([]);
 const versions = ref([]);
 
 const items = questionStore.items;
@@ -82,17 +86,16 @@ const createQuestion = function () {
 
   axios({
     method: 'post',
-    url: `${questionStore.URL}/question`,
+    url: `/question`,
     data: data,
     headers: {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
       Authorization: `Bearer ${userStore.accessToken}`,
     },
   })
     .then((res) => {
       console.log('질문 생성 완료');
       router.push({ name: 'questionview' });
+      router.go(0);
     })
     .catch((err) => {
       console.log(err);
@@ -102,9 +105,22 @@ const createQuestion = function () {
 
 onMounted(() => {
   questionTitle.value = questionStore.gptTitles.value;
+
   tagIds.value = questionStore.gptTagIds.value;
   versions.value = Array.from({ length: tagIds.value.length }, () => '');
 });
+
+// 태그 입력 칸 추가 코드
+const addEmptyFields = function () {
+  tagIds.value.push('');
+  versions.value.push('');
+};
+
+// 태그 입력 칸 삭제 코드
+const removeField = function (index) {
+  tagIds.value.splice(index, 1);
+  versions.value.splice(index, 1);
+};
 </script>
 
 <style scoped>

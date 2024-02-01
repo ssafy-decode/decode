@@ -1,12 +1,11 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
-import axios from 'axios';
+import axios from '@/utils/common-axios';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/userStore';
 
 export const useAnswerStore = defineStore('answer', () => {
   const userStore = useUserStore();
-  const URL = process.env.VUE_APP_BACKEND_URL;
   const questionId = ref(null);
   const router = useRouter();
 
@@ -14,9 +13,8 @@ export const useAnswerStore = defineStore('answer', () => {
     if (confirm('답변을 삭제하시겠습니까?')) {
       axios({
         method: 'delete',
-        url: `${URL}/answer/${answerId}`,
+        url: `/answer/${answerId}`,
         headers: {
-          'Access-Control-Allow-Origin': '*',
           Authorization: `Bearer ${userStore.accessToken}`,
         },
       })
@@ -36,7 +34,6 @@ export const useAnswerStore = defineStore('answer', () => {
   };
 
   return {
-    URL,
     questionId,
     deleteAnswer,
     updateAnswer,

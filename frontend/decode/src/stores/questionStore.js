@@ -1,13 +1,12 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
-import axios from 'axios';
+import axios from '@/utils/common-axios';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/userStore';
 
 export const useQuestionStore = defineStore(
   'question',
   () => {
-    const URL = process.env.VUE_APP_BACKEND_URL;
     const userStore = useUserStore();
     const router = useRouter();
     const accessToken = ref(null);
@@ -48,11 +47,8 @@ export const useQuestionStore = defineStore(
     const getQuestions = function (keyword = '', tagIds = '') {
       axios({
         method: 'get',
-        url: `${URL}/question`,
+        url: `/question`,
         params: { keyword, tagIds },
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-        },
       })
         .then((res) => {
           questions.value = res.data.data;
@@ -64,7 +60,6 @@ export const useQuestionStore = defineStore(
     };
 
     return {
-      URL,
       accessToken,
       questions,
       gptTitles,
