@@ -1,6 +1,9 @@
 <template>
   <v-container class="main">
-    <UserInfo></UserInfo>
+    <div style="border: 5px solid #cfcfcf; text-align: center; width: 1250px">
+      <UserInfo></UserInfo>
+    </div>
+    <br />
     <Search></Search>
     <RankingTable></RankingTable>
   </v-container>
@@ -27,8 +30,7 @@ export default {
 <style>
 .main {
   text-align: center;
-  width: 70%;
-  margin: 0 auto;
+  /* margin: 0 auto; */
 }
 
 .user-info {

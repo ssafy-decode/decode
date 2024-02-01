@@ -11,10 +11,11 @@
             <img style="width: 70%" src="../default.png" />
             <br />
             <v-btn class="photobtn" color="#62C0A6" type="submit" variant="elevated">사진 변경</v-btn>
+            <!-- 추후 API 연결 -->
           </v-col>
           <v-col cols="8">
             <div style="font-size: 16px">
-              <span> 이 &nbsp;&nbsp; 름: {{ userName }}</span>
+              <span> 이 &nbsp;&nbsp; 름: {{ userStore.loginUserProfile.nickname }}</span>
               <br />
               <br />
               <span>닉 네 임: {{ userNickName }}</span>
@@ -38,7 +39,12 @@
         <div>
           기술 스택 변경
           <br />
-          {{ userStore.tagIdList.value }} (값이 없어서 빈칸이 뜨는 중입니다)
+          <div v-if="selectedTags.length > 0">
+            <v-chip v-for="tag in selectedTags" :key="tag" label color="primary" class="mr-2 mb-2">{{ tag }}</v-chip>
+            <p>나오는가{{ selectedTags }}</p>
+            <!-- {{ userStore.tagIdList.value }} (값이 없어서 빈칸이 뜨는 중입니다) -->
+          </div>
+          <div v-else>선택한 기술 스택이 없습니다.</div>
           <br />
           <router-link to="/updatetechstack"><v-btn>기술 스택 변경</v-btn></router-link>
         </div>
@@ -98,6 +104,24 @@ import { onMounted, ref } from 'vue';
 import { useUserStore } from '@/stores/userStore';
 
 const userStore = useUserStore();
+
+// DB에 수정된 번호를 다시 태그명으로 전환
+const tagNum = {
+  1: 'python',
+  2: 'java',
+  3: 'C++',
+  4: 'javascript',
+  5: 'django',
+  6: 'spring',
+  7: 'spring boot',
+  8: 'kotlin',
+  9: 'sql',
+  10: 'react',
+  11: 'vue',
+  12: 'C#',
+};
+
+const selectedTags = ref([]);
 const password = ref('');
 const password2 = ref('');
 const showPassword = ref(false);
@@ -131,14 +155,50 @@ const userBirthday = userStore.loginUserBirthday;
 const userEmail = userStore.loginUserEmail;
 const userPhone = userStore.loginUserPhone;
 
-console.log('닉넴', userNickName);
-console.log('이름', userName);
-console.log('생일', userBirthday);
-console.log('메일', userEmail);
-console.log('전번', userPhone);
-
+// 기술 스택 get 메소드 이따가 추가되면 쓰기
 onMounted(() => {
   userStore.setUser(userStore.loginUserId);
+  // console.log('작동은 되는 건가');
+  // console.log(userStore.tagIdList);
+  // onUpdated(() => {
+  // selectedTags.value = userStore.user.tagIdList.value.map((tagId) => tagNum[tagId]);
+  // });
+
+  // 디버깅 테스트
+  // console.log('===');
+  // console.log(selectedTags); //RefImpl {__v_isShallow: false, dep: Map(1), __v_isRef: true, _rawValue: Array(0), _value: Proxy(Array)}
+  // console.log('***');
+  // console.log(selectedTags.value); //Proxy(Array) {}
+  // console.log('---');
+  // 왜 값이 안 들어가지..
+
+  // watch(
+  //   () => userStore,
+  //   (updated) => {
+  //     if (updated.user && updated.user.tagIdList && updated.user.tagIdList.value) {
+  //       selectedTags.value = updated.user.tagIdList.value.map((tagId) => tagNum[tagId]);
+  //     }
+  //     // console.log(tagIdList);
+  //   },
+  //   { deep: true },
+  // );
+
+  // watch(
+  //   () => userStore,
+  //   (updated) => {
+  //     console.log('여기까지 왔나');
+  //     if (updated.user && updated.user.tagIdList && updated.user.tagIdList.value) {
+  //       selectedTags.value = updated.user.tagIdList.value.map((tagId) => tagNum[tagId]);
+  //       console.log('출력', selectedTags.value);
+  //     }
+  //   },
+  //   { deep: true },
+  // );
+
+  // if (userStore.tagIdList && userStore.tagIdList.value) {
+  //   selectedTags.value = userStore.tagIdList.value.map((tagId) => tagNum[tagId]);
+  //   console.log('출력', selectedTags.value);
+  // }
 });
 
 const updatepwd = () => {
