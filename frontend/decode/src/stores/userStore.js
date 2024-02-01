@@ -122,14 +122,11 @@ export const useUserStore = defineStore(
 
     // responseBody에서 토큰 값 추출
     const parseToken = (response) => {
-      if (response.data && response.headers && response.headers.authorization) {
-        const newToken = response.headers.authorization.substring(7); // 파싱한 새 accessToken 값 갱신
-        if (newToken === null) {
-          // 새 토큰 값 없으면 기존 토큰 값 유지
-          return accessToken.value;
-        }
-        return newToken;
-      } else {
+      if (response.headers.authorization)
+        return response.headers.authorization.split(' ')[1];
+      else if (accessToken.value)
+        return accessToken.value;
+      else {
         console.error('Token is not present in the response data');
         return accessToken.value;
       }
