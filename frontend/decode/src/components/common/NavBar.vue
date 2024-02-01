@@ -3,7 +3,7 @@
     <v-btn>
       <router-link to="/">
         <span style="display: flex; justify-content: space-between">
-          <img src="./de;code_logo_jin.png" alt="로고이미지" height="30px" /><v-toolbar-title
+          <img src="../de;code_logo_jin.png" alt="로고이미지" height="30px" /><v-toolbar-title
             ><span class="decode" style="font-size: x-large; font-weight: bold">de;code</span></v-toolbar-title
           ></span
         >
@@ -13,16 +13,28 @@
     &nbsp;&nbsp;|&nbsp;&nbsp;
 
     <v-btn>
-      <router-link to="/question">
+      <router-link to="/board">
         <v-toolbar-items>질문게시판</v-toolbar-items>
       </router-link>
     </v-btn>
 
-    <!-- 상점 nav -->
+    <v-btn v-show="userStore.isLoggedIn">
+      <router-link to="/shop">
+        <v-toolbar-items>상점</v-toolbar-items>
+      </router-link>
+    </v-btn>
 
-    <!-- 랭킹 nav -->
+    <v-btn v-show="userStore.isLoggedIn">
+      <router-link to="/rank">
+        <v-toolbar-items>랭킹</v-toolbar-items>
+      </router-link>
+    </v-btn>
 
-    <!-- 마이페이지 nav -->
+    <v-btn v-show="userStore.isLoggedIn">
+      <router-link to="/mypage">
+        <v-toolbar-items>마이페이지</v-toolbar-items>
+      </router-link>
+    </v-btn>
 
     <v-spacer></v-spacer>
     <v-btn id="loginBtn" v-if="userStore.isLoggedIn" @click="logout">로그아웃</v-btn>
@@ -31,7 +43,6 @@
 </template>
 
 <script setup>
-// import { ref } from 'vue';
 import { useUserStore } from '@/stores/userStore';
 
 const userStore = useUserStore();
@@ -43,12 +54,12 @@ const logout = () => {
 
 <style scoped>
 .decode {
-  font-family: titlefont; /* 타이틀만 오아고딕체 */
+  font-family: titlefont;
 }
 
 a {
-  text-decoration: none; /* 밑줄 제거 */
-  color: inherit; /* 링크 색상 상속 */
+  text-decoration: none;
+  color: inherit;
 }
 
 #loginBtn {

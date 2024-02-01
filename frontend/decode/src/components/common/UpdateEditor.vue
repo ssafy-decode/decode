@@ -8,6 +8,7 @@
 import Editor from '@toast-ui/editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import $ from 'jquery';
+import { useQuestionStore } from '@/stores/questionStore';
 
 export default {
   data() {
@@ -16,11 +17,12 @@ export default {
     };
   },
   mounted() {
+    const questionStore = useQuestionStore();
     this.editor = new Editor({
       el: document.querySelector('#editor'),
       height: '600px',
       initialEditType: 'markdown',
-      initialValue: '내용을 마크다운 형식으로 입력해주세요!',
+      initialValue: questionStore.originalContent,
       previewStyle: 'vertical',
       // 추가된 내용
       hooks: {
@@ -30,7 +32,7 @@ export default {
 
           const formData = new FormData();
           formData.append('image', blob);
-          let url = ``;
+          let url = `${process.env.VUE_APP_BACKEND_URL}/image`;
           $.ajax({
             type: 'POST',
             enctype: 'multipart/form-data',

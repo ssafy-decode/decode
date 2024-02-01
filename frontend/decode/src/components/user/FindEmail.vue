@@ -2,18 +2,17 @@
   <div class="pa-5" rounded>
     <v-card
       class="mx-auto px-4 py-8"
-      max-width="400"
-      style="background-color: #f3f3f3; border-radius: 50px; box-shadow: 0 0px 36px rgba(0, 0, 0, 0.2)"
+      max-width="418"
+      style="background-color: #f3f3f3; border-radius: 68px; box-shadow: 0 0px 36px rgba(0, 0, 0, 0.2)"
     >
       <v-form v-model="form">
         <br />
         <div style="text-align: center">
           <img style="width: 10%" src="./LogoDecode3.png" />
           <h2 style="color: #999999">계정 찾기</h2>
-          <h4 style="color: #34a080">정보를 입력해주세요.</h4>
+          <h4 style="color: #34a080">정보를 입력해주세요</h4>
         </div>
         <br />
-
         <v-text-field
           variant="solo"
           class="textfield"
@@ -69,15 +68,22 @@
         </v-text-field>
 
         <div style="text-align: center">
-          <span style="display: flex; justify-content: end; margin-right: 10px">
+          <span style="display: flex; justify-content: end; margin-right: 20px">
             <router-link to="/foundemail"
               ><v-btn
                 @click.prevent="findemail"
                 color="#62C0A6"
-                size="large"
+                size="x-large"
                 type="submit"
                 variant="elevated"
-                style="font-weight: bolder; border-radius: 30px; color: #000000"
+                style="
+                  width: 95px;
+                  font-size: 15px;
+                  font-weight: bold;
+                  margin-top: 10px;
+                  border-radius: 34px;
+                  color: #000000;
+                "
               >
                 확인
               </v-btn></router-link
@@ -103,15 +109,15 @@ const phone = ref('');
 
 // 필수 입력란 비어있을 때 빨간 경고
 const writeName = (value) => {
-  return !!value || '이름을 입력하세요.';
+  return !!value;
 };
 
 const writeBirthday = (value) => {
-  return !!value || '생년월일을 입력하세요.';
+  return !!value;
 };
 
 const writePhone = (value) => {
-  return !!value || '휴대번호를 입력하세요.';
+  return !!value;
 };
 
 // 생년월일 형식 올바른지
@@ -142,8 +148,8 @@ const findemail = () => {
 
     const user = {
       name: name.value,
-      birth: birthday.value,
       phoneNumber: phone.value,
+      birth: birthday.value,
     };
 
     userStore.findUserEmail(user);
@@ -155,14 +161,15 @@ const findemail = () => {
 
 <style scoped>
 .textfield {
-  margin-left: 20px;
-  margin-right: 20px;
+  margin: 0 20px;
+  margin-bottom: 5px;
+  height: 63px;
 }
 .textfield :deep(label) {
   color: #ffffff;
 }
 
 .textfield :deep(.v-field) {
-  border-radius: 30px;
+  border-radius: 55px;
 }
 </style>

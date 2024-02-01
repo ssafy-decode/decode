@@ -6,9 +6,7 @@
       style="background-color: #f3f3f3; border-radius: 68px; box-shadow: 0 0px 36px rgba(0, 0, 0, 0.2)"
     >
       <div>
-        <span style="margin-left: 40px">
-          <img src="../levelunselected.png" />&nbsp;&nbsp;&nbsp;&nbsp;<img src="../levelselected.png" />
-        </span>
+        <br />
         <div style="text-align: center">
           <img style="width: 8%" src="../LogoDecode3.png" />
         </div>
@@ -53,26 +51,24 @@
       </div>
 
       <span style="display: flex; justify-content: end; margin-right: 30px">
-        <router-link to="/"
-          ><v-btn
-            @click="complete"
-            color="#62C0A6"
-            size="x-large"
-            type="submit"
-            variant="elevated"
-            style="
-              width: 95px;
-              height: 58px;
-              border-radius: 34px;
-              margin-right: 10px;
-              font-size: 15px;
-              font-weight: bold;
-              color: #000000;
-            "
-          >
-            완료
-          </v-btn></router-link
+        <v-btn
+          @click="complete"
+          color="#62C0A6"
+          size="x-large"
+          type="submit"
+          variant="elevated"
+          style="
+            width: 95px;
+            height: 58px;
+            border-radius: 34px;
+            margin-right: 10px;
+            font-size: 15px;
+            font-weight: bold;
+            color: #000000;
+          "
         >
+          수정
+        </v-btn>
       </span>
     </v-card>
   </div>
@@ -112,13 +108,15 @@ const checkboxIcon = (item) => {
     : require('../../../public/checkboxunchecked.png');
 };
 
-const complete = async () => {
+const complete = () => {
+  const updateuser = {
+    userId: userStore.loginUserId,
+    tagIdList: select.value,
+  };
   try {
-    await userStore.saveTechStack(select.value);
-    alert('회원가입이 완료되었습니다.\nde;code에 오신 것을 환영합니다!');
+    userStore.updateTechStack(updateuser);
   } catch (error) {
     console.error('Error saving tech stack:', error);
-    alert('회원가입이 완료되었지만, 기술 스택 저장에 문제가 발생했습니다.');
   }
 };
 

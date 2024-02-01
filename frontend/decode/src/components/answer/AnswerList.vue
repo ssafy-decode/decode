@@ -1,25 +1,15 @@
 <template>
   <div>
-    <h3>답변 목록</h3>
-    <br />
-    <!-- <AnswerListItem
-    v-for="answer in store.answers"
-    :key="answer.id"
-    :answer="answer"
-    :question-id="questionId"
-    /> -->
+    <AnswerListItem v-for="answer in answerList" :key="answer.answerId" :answer="answer" />
   </div>
 </template>
 
 <script setup>
-// import { useQuestionStore } from '@/stores/question';
-// import AnswerListItem from '@/components/AnswerListItem.vue';
+import AnswerListItem from '@/components/answer/AnswerListItem.vue';
 
-// const store = useQuestionStore();
-
-// defineProps({
-//   questionId: Number,
-// });
+defineProps({
+  answerList: Array,
+});
 </script>
 
 <style scoped></style>

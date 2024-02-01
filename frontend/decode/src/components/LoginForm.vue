@@ -2,8 +2,8 @@
   <div class="pa-5" rounded>
     <v-card
       class="mx-auto px-4 py-8"
-      max-width="344"
-      style="background-color: #f3f3f3; border-radius: 50px; box-shadow: 0 0px 36px rgba(0, 0, 0, 0.2)"
+      max-width="418"
+      style="background-color: #f3f3f3; border-radius: 68px; box-shadow: 0 0px 36px rgba(0, 0, 0, 0.2)"
     >
       <v-form v-model="form" onsubmit.prevent="onSubmit">
         <br />
@@ -51,44 +51,48 @@
               />
             </template>
             <template #append-inner>
-              <v-icon @click="toggleEye">{{ showPassword ? 'mdi-eye' : 'mdi-eye-off' }}</v-icon>
+              <v-icon @click="toggleEye" style="margin-right: 10px">{{
+                showPassword ? 'mdi-eye' : 'mdi-eye-off'
+              }}</v-icon>
             </template>
           </v-text-field>
         </div>
 
-        <div style="display: flex; justify-content: end; margin-right: 15px">
+        <div style="display: flex; justify-content: end; margin-right: 50px">
           <span style="color: #34a080; font-size: x-small"
-            ><a href="/email" style="text-decoration: none; color: #34a080">이메일 찾기</a> |
-            <a href="/password" style="text-decoration: none; color: #34a080">비밀번호 찾기</a></span
+            ><a href="/findemail" style="text-decoration: none; color: #34a080">이메일 찾기</a>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="/findpwd" style="text-decoration: none; color: #34a080">비밀번호 찾기</a></span
           >
-          <!-- 추후 비번 찾기 만들면 그 때 link 연결 -->
         </div>
         <br />
 
-        <div style="text-align: center">
+        <div class="buttons">
           <span>
             <router-link to="/">
               <v-row>
-                <v-col cols="8">
+                <v-col cols="78">
                   <v-btn
+                    class="loginbtn"
                     @click="login"
                     color="#62C0A6"
-                    size="large"
+                    size="x-large"
                     type="submit"
                     variant="elevated"
-                    style="width: 100%; border-radius: 30px; font-size: smaller; font-weight: bolder; color: #000000"
+                    style="color: #000000"
                   >
                     로그인
                   </v-btn>
                 </v-col>
-                <v-col cols="4">
-                  <router-link to="/regist">
+                <v-col cols="5">
+                  <router-link to="/regist/1">
                     <v-btn
+                      class="registbtn"
                       color="#34A080"
-                      size="large"
+                      size="x-large"
                       type="submit"
                       variant="elevated"
-                      style="width: 100%; border-radius: 30px; font-size: smaller; font-weight: bolder; color: #000000"
+                      style="color: #000000"
                     >
                       회원가입
                     </v-btn>
@@ -98,41 +102,9 @@
             </router-link>
           </span>
         </div>
-
         <br />
-        <div style="text-align: center">
-          <router-link to="/loading"
-            ><v-btn
-              class="kakaobtn"
-              style="width: 300px; margin-bottom: 5px"
-              :style="{ backgroundColor: kakaoButtonColor }"
-              @mouseenter="kakaoMouseEnter"
-              @mouseleave="kakaomouseLeave"
-              ><v-row>
-                <v-col cols="2">
-                  <img src="./kakao.png" alt="카카오 아이콘" style="width: 24px; height: 24px" />
-                </v-col>
-                <v-col cols="10" style="font-size: small">카카오 계정으로 로그인하기</v-col>
-              </v-row></v-btn
-            ></router-link
-          >
-
-          <router-link to="/loading"
-            ><v-btn
-              class="googlebtn"
-              style="width: 300px; margin-top: 5px"
-              :style="{ backgroundColor: googleButtonColor }"
-              @mouseenter="googleMouseEnter"
-              @mouseleave="googlemouseLeave"
-              ><v-row>
-                <v-col cols="2">
-                  <img src="./google.png" alt="구글 아이콘" style="width: 24px; height: 24px" />
-                </v-col>
-                <v-col cols="10" style="font-size: small">Google 계정으로 로그인하기</v-col>
-              </v-row></v-btn
-            ></router-link
-          >
-        </div>
+        <GithubLoginBtn />
+        <!-- 깃허브로 로그인하기 버튼 -->
       </v-form>
     </v-card>
   </div>
@@ -141,6 +113,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useUserStore } from '@/stores/userStore';
+import GithubLoginBtn from '@/components/user/GithubLoginBtn.vue';
 
 const userStore = useUserStore();
 
@@ -152,33 +125,11 @@ const showPassword = ref(false);
 
 // 필수 입력란 비어있을 때 빨간 경고
 const writeEmail = (value) => {
-  return !!value || '이메일을 입력하세요.';
+  return !!value;
 };
 
 const writePassword = (value) => {
-  return !!value || '비밀번호를 입력하세요.';
-};
-
-// hover 전 색깔
-const kakaoButtonColor = ref('#d9d9d9');
-const googleButtonColor = ref('#d9d9d9');
-
-// hover 후 색깔
-const kakaoMouseEnter = () => {
-  kakaoButtonColor.value = '#fae300';
-};
-
-const googleMouseEnter = () => {
-  googleButtonColor.value = '#ffffff';
-};
-
-// 커서 나가면 원래 색깔로
-const kakaomouseLeave = () => {
-  kakaoButtonColor.value = '#d9d9d9';
-};
-
-const googlemouseLeave = () => {
-  googleButtonColor.value = '#d9d9d9';
+  return !!value;
 };
 
 // 눈 버튼으로 비밀번호 가리고 숨기고
@@ -192,6 +143,8 @@ const login = async () => {
     email: email.value,
     password: password.value,
   };
+  console.log(user);
+
   try {
     const result = await userStore.setLoginUser(user);
 
@@ -207,19 +160,29 @@ const login = async () => {
 </script>
 
 <style scoped>
+.textfield {
+  margin: 0 20px;
+  margin-bottom: 5px;
+  height: 63px;
+}
+.buttons {
+  text-align: center;
+  margin: 0 20px;
+}
+
+.loginbtn,
+.registbtn {
+  width: 100%;
+  border-radius: 30px;
+  font-size: smaller;
+  font-weight: bold;
+}
+
 .textfield :deep(label) {
   color: #ffffff;
 }
 
 .textfield :deep(.v-field) {
-  border-radius: 30px;
-}
-
-.kakaobtn:hover {
-  background-color: #fae300;
-}
-
-.googlebtn:hover {
-  background-color: #ffffff;
+  border-radius: 55px;
 }
 </style>

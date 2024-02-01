@@ -10,10 +10,10 @@ import { onMounted } from 'vue';
 import { useQuestionStore } from '@/stores/questionStore';
 import QuestionList from '@/components/question/QuestionList.vue';
 
-const store = useQuestionStore();
+const questionStore = useQuestionStore();
 
 onMounted(() => {
-  store.getQuestions();
+  questionStore.getQuestions();
 });
 </script>
 

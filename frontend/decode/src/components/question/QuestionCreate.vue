@@ -2,9 +2,41 @@
   <v-sheet class="mx-auto createBox" width="1000">
     <v-form @submit.prevent="createQuestion">
       <v-text-field variant="solo" label="질문 제목" v-model.trim="questionTitle"></v-text-field>
+      <v-container>
+        <v-row class="d-flex justify-end">
+          <v-col cols="12" sm="6" md="4"> </v-col>
+        </v-row>
+        <template v-for="(tag, index) in tagIds" :key="index">
+          <v-row class="d-flex justify-end">
+            <v-col cols="12" sm="6" md="4">
+              <v-text-field
+                variant="solo"
+                class="stackBox"
+                bg-color="fff"
+                v-model.trim="tagIds[index]"
+                placeholder="ex) java, spring boot, sql"
+                label="관련 태그"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="6" md="4">
+              <v-text-field
+                variant="solo"
+                class="stackBox"
+                bg-color="fff"
+                v-model.trim="versions[index]"
+                placeholder="ex) 1.0.1"
+                label="태그 버전"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+        </template>
+      </v-container>
+      <p class="tagAlert">주의) 태그를 입력할 땐, react.js, vue.js 등은 뒤에 ".js"를 지워주세요</p>
+
+      <br />
       <MyEditor @editor-content-updated="updateEditorContent" />
-      <div id="btnBox">
-        <v-btn id="submitBtn" type="submit">질문등록</v-btn>
+      <div class="btnBox">
+        <v-btn class="submitBtn" type="submit">질문등록</v-btn>
       </div>
     </v-form>
   </v-sheet>
@@ -12,55 +44,53 @@
 
 <script setup>
 import MyEditor from '@/components/common/MyEditor.vue';
-import { ref } from 'vue';
 import { useQuestionStore } from '@/stores/questionStore';
 import { useUserStore } from '@/stores/userStore';
-import axios from 'axios';
 import { useRouter } from 'vue-router';
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
 
 const questionStore = useQuestionStore();
-const router = useRouter();
-// 넘겨줄 데이터
-const questionTitle = ref('');
-const questionContent = ref('');
-const questionWriterId = ref(17); // 로그인된 사용자 id 가져와서 넣어야함
-const tagId = ref(0); // 임시 태그 id
-const version = ref('string'); // 임시 태그 버전
-// tags라는 array 안에 tagId와 version의 정보가 json 형태로 원소로 들어감
-
 const userStore = useUserStore();
+const router = useRouter();
+
+const questionTitle = ref('');
+const tagIds = ref([]);
+const questionContent = ref('');
+const versions = ref([]);
+
+const items = questionStore.items;
 
 const updateEditorContent = function (content) {
   questionContent.value = content;
 };
 
-////////////////////////////  개발중  //////////////////////////////
-
 const createQuestion = function () {
+  const tags = tagIds.value.map((tagId, index) => {
+    return {
+      tagId: items[tagId],
+      version: versions.value[index],
+    };
+  });
+
   let data = {
     title: questionTitle.value,
     content: questionContent.value,
-    questionWriterId: questionWriterId.value,
-    tags: [
-      { tagId: tagId.value, version: version.value },
-      { tagId: 1, version: '99.99.99' },
-    ],
+    questionWriterId: userStore.loginUserId,
+    tags: tags,
   };
-
-  console.log(data);
 
   axios({
     method: 'post',
-    url: `${questionStore.API_URL}/question`,
+    url: `${questionStore.URL}/question`,
     data: data,
     headers: {
       'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*', // 이 부분을 추가하여 CORS 정책 우회
-      Authorization: userStore.accessToken, // 만약 인증이 필요하다면 주석 해제
+      'Access-Control-Allow-Origin': '*',
+      Authorization: `Bearer ${userStore.accessToken}`,
     },
   })
     .then((res) => {
-      console.log(res);
       console.log('질문 생성 완료');
       router.push({ name: 'questionview' });
     })
@@ -69,15 +99,20 @@ const createQuestion = function () {
       console.log('질문 생성 오류');
     });
 };
-////////////////////////////  개발중  //////////////////////////////
+
+onMounted(() => {
+  questionTitle.value = questionStore.gptTitles.value;
+  tagIds.value = questionStore.gptTagIds.value;
+  versions.value = Array.from({ length: tagIds.value.length }, () => '');
+});
 </script>
 
 <style scoped>
-#btnBox {
+.btnBox {
   position: relative;
 }
 
-#submitBtn {
+.submitBtn {
   position: absolute;
   right: 10px;
   top: 5px;

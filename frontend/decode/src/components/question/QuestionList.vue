@@ -2,83 +2,6 @@
   <div class="wholeContainer">
     <h1 style="text-align: center">질문 게시판</h1>
     <br />
-    <div class="text-center" style="display: flex; flex-direction: column; align-items: center">
-      <!--  -->
-      <div class="search-container" style="width: 60%">
-        <!-- <span style="position: relative; margin: auto; display: flex; align-items: center"> -->
-        <!-- <textarea
-          class="view"
-          :placeholder="switchLabel"
-          :style="{
-            height: model ? '300px' : '25px',
-            width: '100%',
-            border: '1px solid #bbb',
-            borderRadius: '8px',
-            fontSize: '15px',
-          }"
-        ></textarea> -->
-        <!-- <input
-          type="image"
-          src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png"
-          alt="검색"
-          style="
-            position: absolute;
-            width: 50px;
-            top: 50%;
-            transform: translateY(-50%);
-            right: 10px;
-            margin: 0;
-            cursor: pointer;
-          "
-        /> -->
-        <div class="searchBox">
-          <v-text-field
-            variant="plain"
-            label="검색 키워드를 입력하세요"
-            class="searchInput"
-            v-model="keyword"
-            bg-color="fff"
-          ></v-text-field>
-          <!-- <v-text-field
-            label="검색 태그를 선택하세요"
-            class="searchInput"
-            v-model="tagIds"
-            bg-color="fff"
-          ></v-text-field> -->
-          <v-btn class="searchBtn" size="x-large" @click="searchParams(keyword, tagIds)">검색</v-btn>
-        </div>
-        <v-container>
-          <v-row class="d-flex justify-end">
-            <v-col cols="12" sm="6" md="4">
-              <v-combobox
-                variant="solo"
-                class="stackBox"
-                bg-color="fff"
-                v-model="select"
-                :items="items"
-                placeholder="ex) java, spring boot, sql"
-                label="기술 스택"
-                multiple
-                chips
-                clearable
-              ></v-combobox>
-            </v-col>
-          </v-row>
-        </v-container>
-        <!-- </span> -->
-      </div>
-      <!-- <div class="chips-switch-container" style="display: flex; align-items: center; width: 60%">
-        <span style="display: flex; align-items: center">
-          <v-if ="search">
-          <v-chip closable variant="elevated" style="background-color: cornflowerblue"> python </v-chip>
-          <v-chip closable variant="elevated" style="background-color: orangered"> java </v-chip>
-          <v-chip closable variant="elevated" style="background-color: gold"> C++ </v-chip>
-          <v-chip closable variant="elevated" style="background-color: mediumorchid"> javascript </v-chip>
-          </v-if>
-        </span>
-        <v-switch inset :label="switchLabel" v-model="model" style="margin-top: 3%"></v-switch>
-      </div> -->
-    </div>
     <div class="btnContainer d-flex justify-end">
       <v-btn class="createBtn" @click="goCreateQuestion()">질문등록</v-btn>
     </div>
@@ -100,30 +23,9 @@
             </v-list-item>
           </v-col>
         </v-row>
-        <!-- <v-virtual-scroll id="virtualScroll" :bench="benched" :items="items" height="500" item-height="50"> -->
-        <QuestionListItem v-for="question in store.questions" :key="question.id" :question="question" />
-        <!-- </v-virtual-scroll> -->
+        <QuestionListItem v-for="question in questionStore.questions" :key="question.id" :question="question" />
       </v-card>
     </div>
-
-    <!-- <v-list-item>
-      <v-list-item-action class="d-inline"> {{ item }} </v-list-item-action>
-      &nbsp;
-      <v-list-item-content>
-        <v-list-item-title class="d-inline">
-          예시 질문이예요 뾰로롱 <strong>뭐라고 적지 할 말이 없네 {{ item }}</strong>
-        </v-list-item-title>
-      </v-list-item-content>
-    </v-list-item> -->
-
-    <!-- <v-divider></v-divider>
-                </template>
-              </v-virtual-scroll>
-            </v-card>
-          </div>
-        </div>
-      </div>
-    </div> -->
   </div>
 </template>
 
@@ -134,46 +36,28 @@ import QuestionListItem from './QuestionListItem.vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-const model = ref(false);
+// const model = ref(false);
 
 const goCreateQuestion = function () {
-  router.push({ path: `/question-create` });
+  router.push({ path: `/question-title-create` });
 };
 
-const switchLabel = computed(() => {
-  return model.value ? '코드로 검색' : '키워드로 검색';
-});
-
-const benched = ref(0);
-
-// const items = computed(() => {
-//   return Array.from({ length: 7000 }, (k, v) => v + 1);
+// const switchLabel = computed(() => {
+//   return model.value ? '코드로 검색' : '키워드로 검색';
 // });
 
-// 진영 작성
-const store = useQuestionStore();
+// const benched = ref(0);
+
+const questionStore = useQuestionStore();
 const keyword = ref('');
 const tagIds = ref('');
 
 const searchParams = function (keyword, tagIds) {
-  store.getQuestions(keyword, tagIds);
+  questionStore.getQuestions(keyword, tagIds);
 };
 
 const select = ref([]);
-const items = ref([
-  'python',
-  'java',
-  'C++',
-  'javascript',
-  'django',
-  'spring',
-  'spring boot',
-  'kotlin',
-  'sql',
-  'react',
-  'vue',
-  'C#',
-]);
+const items = questionStore.items;
 </script>
 
 <style scoped>
@@ -192,11 +76,6 @@ input {
 span {
   margin: 5px;
 }
-
-/* 스크롤바 안 보이게 할 거면 주석 제거 */
-/* #virtualScroll::-webkit-scrollbar {
-  display: none;
-} */
 
 ::-webkit-scrollbar {
   width: 15px;
