@@ -336,5 +336,22 @@ public class UserController {
                 .status(HttpStatus.OK)
                 .message("출석 로그 확인").build();
     }
+    @GetMapping("/exp/{id}")
+    @Operation(summary = "경험치 로그", description = "경험치로그 API")
+    public ResponseDto getExp(@PathVariable Long id) {
+        return ResponseDto.builder()
+                .data(userService.getExp(id))
+                .status(HttpStatus.OK)
+                .message("경험치 로그").build();
+    }
+
+    @GetMapping("/rank")
+    @Operation(summary = "랭킹", description = "랭킹 API")
+    public ResponseDto getRank() {
+        return ResponseDto.builder()
+                .data(userProfileMapper.toDto(userService.getRank()))
+                .status(HttpStatus.OK)
+                .message("랭킹").build();
+    }
 
 }

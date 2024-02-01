@@ -22,6 +22,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Setter
 public class UserProfileEntity {
 
     @OneToOne
