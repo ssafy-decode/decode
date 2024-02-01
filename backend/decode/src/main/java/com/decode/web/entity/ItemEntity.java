@@ -1,5 +1,7 @@
 package com.decode.web.entity;
 
+import com.decode.web.domain.store.dto.ItemDto;
+import com.decode.web.exception.NotEnoughCountException;
 import com.decode.web.global.CommonEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,4 +44,20 @@ public class ItemEntity extends CommonEntity {
 //    @ColumnDefault("false")
 //    @Column(columnDefinition = "TINYINT(1)", name = "is_using")
 //    private boolean isUsing;
+
+    public ItemDto toDto() {
+        return ItemDto.builder()
+                .itemName(product.getProductName())
+                .itemDetail(product.getProductDetail())
+                .itemId(id)
+                .itemCount(productCount)
+                .build();
+    }
+
+    public void buy(int count) {
+        if (productCount - count < 0) {
+            throw new NotEnoughCountException("아이템 개수가 부족합니다.");
+        }
+        productCount -= count;
+    }
 }

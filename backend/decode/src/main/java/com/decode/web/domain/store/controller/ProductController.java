@@ -29,7 +29,6 @@ public class ProductController {
         return ResponseDto.builder()
                 .status(HttpStatus.OK)
                 .data(data)
-                .headers(HttpHeaders.EMPTY)
                 .message("상품 전체 조회 완료")
                 .build();
     }
@@ -40,8 +39,7 @@ public class ProductController {
         return ResponseDto.builder()
                 .status(HttpStatus.OK)
                 .data(data)
-                .headers(HttpHeaders.EMPTY)
-                .message("상품 조회 완료")
+                .message("상품 상세 조회 완료")
                 .build();
     }
 
@@ -51,7 +49,6 @@ public class ProductController {
         return ResponseDto.builder()
                 .status(HttpStatus.OK)
                 .data(0)
-                .headers(HttpHeaders.EMPTY)
                 .message("상품 구매 완료")
                 .build();
     }
