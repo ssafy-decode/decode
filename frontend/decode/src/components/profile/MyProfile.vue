@@ -23,7 +23,7 @@
         </v-col>
 
         <v-col :cols="3">
-          <ExpLog></ExpLog>
+          <ExpLog :uid="uid"></ExpLog>
         </v-col>
       </v-row>
 
