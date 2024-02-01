@@ -2,6 +2,7 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import router from '@/router';
 import axios from 'axios';
+import myaxios from '@/utils/common-axios';
 
 const URL = process.env.VUE_APP_BACKEND_URL;
 
@@ -107,9 +108,9 @@ export const useUserStore = defineStore(
     // 추후 쿠키에 저장할 것 <= 새로고침해도 로그인 안 풀리게!
     const setLoginUser = async (loginuser) => {
       try {
-        const res = await axios.post(`${URL}/login`, loginuser);
+        const res = await myaxios.post(`/login`, loginuser);
         accessToken.value = parseToken(res);
-        console.log(accessToken.value); // 테스트를 위해 꼭 필요한 토큰값
+
         isLoggedIn.value = true; // 로그인 여부
         loginUserId.value = res.data.data; // 로그인 사용자 번호
         // loginUserPwd.value = loginuser.password; // 로그인 사용자 비번 (디버깅된 ver.)
@@ -122,10 +123,8 @@ export const useUserStore = defineStore(
 
     // responseBody에서 토큰 값 추출
     const parseToken = (response) => {
-      if (response.headers.authorization)
-        return response.headers.authorization.split(' ')[1];
-      else if (accessToken.value)
-        return accessToken.value;
+      if (response.headers.authorization) return response.headers.authorization.split(' ')[1];
+      else if (accessToken.value) return accessToken.value;
       else {
         console.error('Token is not present in the response data');
         return accessToken.value;
