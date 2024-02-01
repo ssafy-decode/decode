@@ -10,6 +10,7 @@ import QuestionDetailView from '@/views/QuestionDetailView.vue';
 import QuestionTitleCreateView from '@/views/QuestionTitleCreateView.vue';
 import QuestionCreateView from '@/views/QuestionCreateView.vue';
 import AnswerCreateView from '@/views/AnswerCreateView.vue';
+import RankListVue from '@/views/RankView.vue';
 
 // Components
 import LoginForm from '@/components/LoginForm.vue';
@@ -24,7 +25,6 @@ import MyProfileVue from '@/components/profile/MyProfile.vue';
 import MyProfileUpdateCheckPwdVue from '@/components/profile/MyProfileUpdateCheckPwd.vue';
 import MyTagUpdateVue from '@/components/profile/MyTagUpdate.vue';
 import MyProfileUpdateVue from '@/components/profile/MyProfileUpdate.vue';
-import RankListVue from '@/components/rank/RankList.vue';
 // import ItemShopVue from '@/components/shop/ItemShop.vue';
 import MyInventoryVue from '@/components/shop/MyInventory.vue';
 import QuestionUpdate from '@/components/question/QuestionUpdate.vue';
@@ -32,8 +32,8 @@ import OtherProfileVue from '@/components/rank/OtherProfile.vue';
 
 // 재화 거 : 추후 수정
 import ShopView from '@/views/ShopView.vue';
-import ExchangeTabVue from '@/components/shop/ExchangeTab.vue';
-import ShopTabVue from '@/components/shop/ShopTab.vue';
+// import ExchangeTabVue from '@/components/shop/ExchangeTab.vue';
+// import ShopTabVue from '@/components/shop/ShopTab.vue';
 import ProductComponentVue from '@/components/shop/ProductComponent.vue';
 
 const router = createRouter({

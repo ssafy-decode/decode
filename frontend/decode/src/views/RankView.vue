@@ -1,9 +1,51 @@
 <template>
-  <div>
-    <router-view></router-view>
-  </div>
+  <v-container class="main">
+    <UserInfo></UserInfo>
+    <Search></Search>
+    <RankingTable></RankingTable>
+  </v-container>
 </template>
 
-<script setup></script>
+<script>
+import Search from '@/components/rank/Search.vue';
+import UserInfo from '@/components/rank/UserInfo.vue';
+import RankingTable from '@/components/rank/RankingTable.vue';
 
-<style scoped></style>
+export default {
+  data() {
+    return {};
+  },
+  methods: {},
+  components: {
+    Search,
+    RankingTable,
+    UserInfo,
+  },
+};
+</script>
+
+<style>
+.main {
+  text-align: center;
+  width: 70%;
+  margin: 0 auto;
+}
+
+.user-info {
+  display: flex;
+  margin-top: 20px;
+}
+
+.ranking-list {
+  margin-top: 20px;
+  border: 1px solid #ccc;
+  background-color: white;
+  border-radius: 15px;
+}
+
+.rounded-border {
+  border-radius: 15px;
+  border: 1px solid #ccc;
+  overflow: hidden;
+}
+</style>

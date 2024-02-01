@@ -31,32 +31,30 @@
           </template>
         </v-text-field>
 
-        <div class="main">
-          <v-text-field
-            variant="solo"
-            class="textfield"
-            bg-color="#d9d9d9"
-            v-model="password"
-            :rules="[writePassword]"
-            :type="showPassword ? 'text' : 'password'"
-            label="비밀번호를 입력하세요."
-            prepend-inner
-            append-inner
-          >
-            <template #prepend-inner>
-              <img
-                src="./pwd.png"
-                alt="비밀번호 아이콘"
-                style="width: auto; height: auto; margin-left: 1px; margin-right: 10px"
-              />
-            </template>
-            <template #append-inner>
-              <v-icon @click="toggleEye" style="margin-right: 10px">{{
-                showPassword ? 'mdi-eye' : 'mdi-eye-off'
-              }}</v-icon>
-            </template>
-          </v-text-field>
-        </div>
+        <v-text-field
+          variant="solo"
+          class="textfield"
+          bg-color="#d9d9d9"
+          v-model="password"
+          :rules="[writePassword]"
+          :type="showPassword ? 'text' : 'password'"
+          label="비밀번호를 입력하세요."
+          prepend-inner
+          append-inner
+        >
+          <template #prepend-inner>
+            <img
+              src="./pwd.png"
+              alt="비밀번호 아이콘"
+              style="width: auto; height: auto; margin-left: 1px; margin-right: 10px"
+            />
+          </template>
+          <template #append-inner>
+            <v-icon @click="toggleEye" style="margin-right: 10px">{{
+              showPassword ? 'mdi-eye' : 'mdi-eye-off'
+            }}</v-icon>
+          </template>
+        </v-text-field>
 
         <div style="display: flex; justify-content: end; margin-right: 50px">
           <span style="color: #34a080; font-size: x-small"
