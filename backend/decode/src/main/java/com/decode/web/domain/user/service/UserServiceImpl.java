@@ -4,12 +4,15 @@ import com.decode.web.domain.common.redis.RedisService;
 import com.decode.web.domain.tag.repository.UserTagRepository;
 import com.decode.web.domain.user.dto.FindPasswordDto;
 import com.decode.web.domain.user.dto.RequestUserTagDto;
+import com.decode.web.domain.user.dto.ResponseUserProfileDto;
+import com.decode.web.domain.user.mapper.ResponseUserProfileMapper;
 import com.decode.web.domain.user.repository.UserInfoRepository;
 import com.decode.web.domain.user.repository.UserProfileRepository;
 import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.entity.UserProfileEntity;
 import com.decode.web.entity.UserTagEntity;
 import com.decode.web.exception.UserException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
@@ -30,6 +33,7 @@ public class UserServiceImpl implements UserService {
     private final UserProfileRepository userProfileRepository;
     private final UserTagRepository userTagRepository;
     private final RedisService redisService;
+    private final ResponseUserProfileMapper responseUserProfileMapper;
 
     @Override
     public UserInfoEntity getUserById(Long id) {
@@ -198,7 +202,8 @@ public class UserServiceImpl implements UserService {
         String hashKey = date.toString();
         redisService.incrementValueForHash(key, hashKey, exp);
         // 지금까지 경험치 총합에 += exp 해야함
-        UserProfileEntity profile = userProfileRepository.findById(id).orElseThrow(() -> new UserException("유저 정보가 없습니다."));
+        UserProfileEntity profile = userProfileRepository.findById(id)
+                .orElseThrow(() -> new UserException("유저 정보가 없습니다."));
         profile.setExp(profile.getExp() + exp);
     }
 
@@ -214,6 +219,21 @@ public class UserServiceImpl implements UserService {
         List<UserProfileEntity> rank = userProfileRepository.findAll();
         rank.sort((o1, o2) -> o2.getExp() - o1.getExp());
         return rank;
+    }
+
+    @Override
+    public ResponseUserProfileDto getUserProfileDtoById(Long userId) {
+        UserProfileEntity userProfileEntity = userProfileRepository.findById(userId).orElseThrow(
+                () -> new EntityNotFoundException(
+                        "user not found with id: " + userId));
+        ResponseUserProfileDto userProfileDto = responseUserProfileMapper.toDto(userProfileEntity);
+        List<UserTagEntity> userTagEntities = userProfileEntity.getUserTags();
+        List<Long> userTagIdList = userTagEntities.stream()
+                .map(UserTagEntity::getTagId)
+                .toList();
+        userProfileDto.setUserTagList(userTagIdList);
+
+        return userProfileDto;
     }
 
 }

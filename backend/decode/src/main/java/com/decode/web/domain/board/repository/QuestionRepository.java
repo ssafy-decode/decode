@@ -10,4 +10,8 @@ public interface QuestionRepository extends JpaRepository<QuestionEntity, Long> 
     List<QuestionEntity> findByTitleContainingOrderByCreatedTimeDesc(String keyword);
 
     List<QuestionEntity> findAllByOrderByCreatedTimeDesc();
+
+    List<QuestionEntity> findAllByOrderByIdDesc();
+
+    List<QuestionEntity> findByTitleContainingOrderByIdDesc(String keyword);
 }

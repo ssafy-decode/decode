@@ -50,9 +50,9 @@ public class QuestionServiceImpl implements QuestionService {
     public List<QuestionListDto> searchQuestionByKeyword(String keyword, List<Long> tagIds) {
         List<QuestionEntity> questionEntityList;
         if ("".equals(keyword)) {
-            questionEntityList = questionRepository.findAllByOrderByCreatedTimeDesc();
+            questionEntityList = questionRepository.findAllByOrderByIdDesc();
         } else {
-            questionEntityList = questionRepository.findByTitleContainingOrderByCreatedTimeDesc(
+            questionEntityList = questionRepository.findByTitleContainingOrderByIdDesc(
                     keyword);
         }
         List<QuestionListDto> questionListDtoList = new LinkedList<>(

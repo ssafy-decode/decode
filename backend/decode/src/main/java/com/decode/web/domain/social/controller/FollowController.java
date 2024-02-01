@@ -39,18 +39,18 @@ public class FollowController {
     }
 
     @GetMapping("/followerlist/{userId}")
-    public ResponseDto getFollowers(@PathVariable Long userId) {
+    public ResponseDto getFollowers(@PathVariable(name = "userId") Long userId) {
         return ResponseDto.builder()
-                .data(userProfileMapper.toDto(socialService.getFollowers(userId)))
+                .data(socialService.getFollowers(userId))
                 .message("팔로워 리스트 조회 성공")
                 .build();
 
     }
 
     @GetMapping("/followinglist/{userId}")
-    public ResponseDto getFollowings(@PathVariable Long userId) {
+    public ResponseDto getFollowings(@PathVariable(name = "userId") Long userId) {
         return ResponseDto.builder()
-                .data(userProfileMapper.toDto(socialService.getFollowings(userId)))
+                .data(socialService.getFollowings(userId))
                 .message("팔로잉 리스트 조회 성공")
                 .build();
     }

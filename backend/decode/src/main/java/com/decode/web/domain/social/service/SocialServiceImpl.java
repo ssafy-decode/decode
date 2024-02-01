@@ -1,10 +1,14 @@
 package com.decode.web.domain.social.service;
 
 import com.decode.web.domain.social.repository.FollowRepository;
+import com.decode.web.domain.user.dto.ResponseUserProfileDto;
+import com.decode.web.domain.user.mapper.ResponseUserProfileMapper;
 import com.decode.web.domain.user.repository.UserProfileRepository;
 import com.decode.web.entity.FollowEntity;
 import com.decode.web.entity.UserProfileEntity;
+import com.decode.web.entity.UserTagEntity;
 import com.decode.web.exception.FollowException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,6 +23,8 @@ public class SocialServiceImpl implements SocialService {
 
     private final FollowRepository followRepository;
     private final UserProfileRepository userProfileRepository;
+    private final ResponseUserProfileMapper responseUserProfileMapper;
+
 
     @Override
     @Transactional
@@ -51,22 +57,32 @@ public class SocialServiceImpl implements SocialService {
 
     //userId 를 갖는 사용자의 팔로워 리스트 반환
     @Override
-    public List<UserProfileEntity> getFollowers(Long userId) {
+    public List<ResponseUserProfileDto> getFollowers(Long userId) {
         List<FollowEntity> followEntityList = followRepository.findByToUserId(userId);
-        List<UserProfileEntity> followerList = new LinkedList<>();
+        List<ResponseUserProfileDto> followerList = new LinkedList<>();
         for (FollowEntity followEntity : followEntityList) {
-            followerList.add(followEntity.getFromUser());
+            UserProfileEntity following = userProfileRepository.findById(followEntity.getFromUser().getId())
+                    .orElseThrow(() -> new EntityNotFoundException(
+                            "user not found with id: " + followEntity.getToUser().getId()));
+            ResponseUserProfileDto userProfileDto = responseUserProfileMapper.toDto(following);
+            userProfileDto.setUserTagList(following.getUserTags().stream().map(UserTagEntity::getTagId).toList());
+            followerList.add(userProfileDto);
         }
         return followerList;
     }
 
     //userId 를 갖는 사용자의 팔로잉 리스트 반환
     @Override
-    public List<UserProfileEntity> getFollowings(Long userId) {
+    public List<ResponseUserProfileDto> getFollowings(Long userId) {
         List<FollowEntity> followEntityList = followRepository.findByFromUserId(userId);
-        List<UserProfileEntity> followingList = new LinkedList<>();
+        List<ResponseUserProfileDto> followingList = new LinkedList<>();
         for (FollowEntity followEntity : followEntityList) {
-            followingList.add(followEntity.getToUser());
+            UserProfileEntity following = userProfileRepository.findById(followEntity.getToUser().getId())
+                    .orElseThrow(() -> new EntityNotFoundException(
+                    "user not found with id: " + followEntity.getToUser().getId()));
+            ResponseUserProfileDto userProfileDto = responseUserProfileMapper.toDto(following);
+            userProfileDto.setUserTagList(following.getUserTags().stream().map(UserTagEntity::getTagId).toList());
+            followingList.add(userProfileDto);
         }
         return followingList;
     }
