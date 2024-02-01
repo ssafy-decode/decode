@@ -8,6 +8,7 @@ import com.decode.web.domain.user.dto.FindEmailDto;
 import com.decode.web.domain.user.dto.FindPasswordDto;
 import com.decode.web.domain.user.dto.InfoUpdateDto;
 import com.decode.web.domain.user.dto.RequestUserTagDto;
+import com.decode.web.domain.user.dto.ResponseUserProfileDto;
 import com.decode.web.domain.user.dto.UserInfoDto;
 import com.decode.web.domain.user.dto.UserProfileDto;
 import com.decode.web.domain.user.dto.UserRegistDto;
@@ -80,6 +81,13 @@ public class UserController {
                 .data(userMapper.toDto(userService.getUserById(id)))
                 .status(HttpStatus.OK)
                 .message("select user info").build();
+    }
+
+    @GetMapping("/user/profile/{userId}")
+    @Operation(summary = "UserProfile 조회", description = "userId에 해당하는 유저의 프로필 조회")
+    public ResponseDto getUserProfile(@PathVariable Long userId){
+        ResponseUserProfileDto userProfile = userService.getUserProfileDtoById(userId);
+        return ResponseDto.builder().data(userProfile).status(HttpStatus.OK).build();
     }
 
     @PostMapping("/user")

@@ -60,6 +60,9 @@ public class UserProfileEntity {
     @OneToMany(mappedBy = "fromUser", fetch = FetchType.LAZY)
     private List<FollowEntity> followers;
 
+    @OneToMany(mappedBy = "userProfile", fetch = FetchType.LAZY)
+    private List<UserTagEntity> userTags;
+
 
     @Builder
     public UserProfileEntity(String nickname, int exp, String tier, String profileImg, int point,
