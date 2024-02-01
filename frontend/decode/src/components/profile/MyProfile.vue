@@ -17,37 +17,13 @@
           <img style="width: 40%" src="./커마아이콘샘플.png" />
           <!-- 추후 수정 -->
         </v-col>
-
-        <v-col :cols="7">
-          출석 캘린더
-          <br />
-          <div class="pa-5" rounded>
-            <v-card
-              class="mx-auto px-4 py-8"
-              max-width="569"
-              style="background-color: #ffffff; border-radius: 31px; border: 5px solid #d9d9d9"
-            >
-              <img width="490" src="./잔디샘플.png" />
-              <!-- 추후 수정 -->
-            </v-card>
-          </div>
+        <v-col :cols="2"> 기술스택 </v-col>
+        <v-col :cols="5">
+          <AttendanceLog :uid="uid"></AttendanceLog>
         </v-col>
 
         <v-col :cols="3">
-          내 경험치
-          <div class="pa-5" rounded>
-            <v-card
-              class="mx-auto px-4 py-8"
-              max-width="199"
-              style="background-color: #ffffff; border-radius: 31px; border: 5px solid #d9d9d9"
-            >
-              <img width="150" src="./그래프샘플.png" />
-              <!-- 추후 수정 -->
-              <!-- vue-chartjs로 추후 디자인 -->
-              {{ userStore.loginUserProfile.exp }}
-              <!-- 디자인에서 수치는 필요없긴 한데 혹시 몰라서 일단 표기 -->
-            </v-card>
-          </div>
+          <ExpLog></ExpLog>
         </v-col>
       </v-row>
 
@@ -190,6 +166,9 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { useUserStore } from '@/stores/userStore';
+import AttendanceLog from './AttendanceLog.vue';
+import ExpLog from './ExpLog.vue';
+import { storeToRefs } from 'pinia';
 
 const userStore = useUserStore();
 
@@ -199,6 +178,8 @@ const questionList = ref([]);
 const answerList = ref([]);
 const followerList = ref([]);
 const followingList = ref([]);
+
+const { loginUserId: uid } = storeToRefs(userStore);
 
 // 테스트용으로 임시 만든 배열
 const testquestionList = ref([]);
