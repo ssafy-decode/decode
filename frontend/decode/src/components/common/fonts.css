@@ -1,0 +1,28 @@
+@font-face {
+  /* SpoqaHanSansNeo-Regular */
+  font-family: 'decodefont';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SpoqaHanSansNeo-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  /* OAGothic-Medium */
+  font-family: 'titlefont';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/OAGothic-ExtraBold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  /* OAGothic-Light */
+  font-family: 'titlelightfont';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/OAGothic-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+}
+
+/* sans-serif는 decodefont 로드가 안 될 때의 폰트 */
+* {
+  font-family: 'decodefont', sans-serif;
+}
