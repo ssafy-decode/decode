@@ -1,6 +1,5 @@
 <template>
   <v-container>
-    <h2>포인트 환전 탭</h2>
     <v-row>
       <v-col cols="12" md="6">
         <!-- 환전 부분 -->
@@ -11,15 +10,19 @@
           <v-form @submit.prevent="exchangePoints">
             <v-row style="margin-left: 5px; margin-right: 5px">
               <v-col cols="12" md="6">
-                <v-text-field v-model="pointAmount" label="포인트" type="number"></v-text-field>
+                <v-text-field v-model="pointAmount" label="포인트" type="number" @input="onPointInput"></v-text-field>
               </v-col>
               <v-col cols="12" md="6">
-                <v-text-field v-model="coinAmount" label="코인" type="number"></v-text-field>
+                <v-text-field v-model="coinAmount" label="코인" type="number" @input="onCoinInput"></v-text-field>
               </v-col>
             </v-row>
+            <div v-if="userStore.loginUserProfile">
+              보유 포인트: {{ userStore.loginUserProfile.point }}&nbsp;&nbsp; 보유 코인:
+              {{ userStore.loginUserProfile.coin }}
+            </div>
             <br />
             <!-- 색상 변경된 버튼 -->
-            <v-btn type="submit" color="#34A080">환전</v-btn>
+            <v-btn @click="exchange" type="submit" color="#34A080">환전</v-btn>
           </v-form>
         </v-card>
       </v-col>
@@ -29,7 +32,7 @@
           <div style="color: #34a080">환율 그래프</div>
           <br />
           <v-container class="chart-container">
-            <canvas ref="lineChart" height="200px" width="600px"></canvas>
+            <canvas ref="lineChart" height="100px"></canvas>
           </v-container>
         </v-card>
       </v-col>
@@ -39,14 +42,21 @@
 
 <script>
 import axios from 'axios';
+import { useUserStore } from '@/stores/userStore';
 import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
 
 let chart;
 
 export default {
+  setup() {
+    const userStore = useUserStore();
+    return { userStore };
+  },
   data() {
     return {
+      writeCoinInput: false,
+      writePointInput: false,
       pointAmount: 0,
       coinAmount: 0,
       chartData: {
@@ -80,14 +90,46 @@ export default {
       },
     };
   },
+  beforeMount() {
+    const state = async () => {
+      await this.userStore.myProfile(); // 포인트, 코인 조회
+    };
+    state();
+  },
   mounted() {
-    this.createChart();
+    // 화면 이동 직후 바로 렌더링되지 않는 문제로 이전 차트 파괴
+    if (chart) {
+      chart.destroy();
+    }
+
+    // 새 차트 인스턴스 생성
+    // this.createChart();
+    chart = new Chart(this.$refs.lineChart, {
+      type: 'line',
+      data: this.chartData,
+      options: this.options,
+    });
+
     // 3초마다 createChart 함수 호출
     setInterval(this.createChart, 3000);
   },
   methods: {
     async exchangePoints() {
-      // 생략: 포인트 환전 처리 로직
+      // 포인트 환전 처리 로직
+      const rate = this.chartData.datasets[0].data.slice(-1)[0];
+      this.pointAmount = 0;
+      this.coinAmount = 0;
+
+      if (rate && !isNaN(rate)) {
+        if (this.pointAmount) {
+          this.coinAmount = Math.floor(this.pointAmount / rate);
+        }
+        if (this.coinAmount) {
+          this.pointAmount = Math.floor(this.coinAmount * rate);
+        }
+      } else {
+        console.error('환율이 유효하지 않습니다.');
+      }
     },
     async createChart() {
       try {
@@ -125,6 +167,47 @@ export default {
         chart.update();
       } catch (error) {
         console.error('환율 정보를 가져오는 중 오류 발생:', error);
+      }
+    },
+    onPointInput() {
+      // 포인트 입력 값이 변경될 때 호출되는 메서드
+      const rate = this.chartData.datasets[0].data.slice(-1)[0];
+      if (rate && !isNaN(rate)) {
+        this.coinAmount = Math.floor(this.pointAmount / rate);
+        this.writePointInput = true;
+      }
+    },
+    onCoinInput() {
+      // 코인 입력 값이 변경될 때 호출되는 메서드
+      const rate = this.chartData.datasets[0].data.slice(-1)[0];
+      if (rate && !isNaN(rate)) {
+        this.pointAmount = Math.floor(this.coinAmount * rate);
+        this.writeCoinInput = true;
+      }
+    },
+    exchange() {
+      // 환전 버튼 누르면 환전이 이루어지는 메서드
+      const rate = this.chartData.datasets[0].data.slice(-1)[0];
+      if (rate && !isNaN(rate)) {
+        if (this.coinAmount > 0 && this.writeCoinInput) {
+          const minusCoins = Math.floor(this.coinAmount);
+          const plusPoints = Math.floor(this.pointAmount);
+          if (minusCoins > 0 && minusCoins <= this.userStore.loginUserProfile.coin) {
+            this.userStore.loginUserProfile.coin -= minusCoins;
+            this.userStore.loginUserProfile.point += plusPoints;
+          } else {
+            alert('보유 코인이 부족합니다.');
+          }
+        } else if (this.pointAmount > 0 && this.writePointInput) {
+          const minusPoints = Math.floor(this.pointAmount);
+          const plusCoins = Math.floor(this.coinAmount);
+          if (minusPoints > 0 && minusPoints <= this.userStore.loginUserProfile.point) {
+            this.userStore.loginUserProfile.point -= minusPoints;
+            this.userStore.loginUserProfile.coin += plusCoins;
+          } else {
+            alert('보유 포인트가 부족합니다.');
+          }
+        }
       }
     },
   },

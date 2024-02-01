@@ -77,6 +77,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useUserStore } from '@/stores/userStore';
+import router from '@/router';
 
 const userStore = useUserStore();
 
@@ -115,6 +116,7 @@ const complete = () => {
   };
   try {
     userStore.updateTechStack(updateuser);
+    router.push({ name: 'myprofileupdate' });
   } catch (error) {
     console.error('Error saving tech stack:', error);
   }

@@ -1,7 +1,8 @@
 <template>
-  <v-container>
-    <h2>{{ storeName }}</h2>
-
+  <v-container style="text-align: center">
+    <!-- <h2>{{ storeName }}</h2> -->
+    <h2>상점</h2>
+    <br />
     <v-row>
       <v-col>
         <v-row>
@@ -61,7 +62,7 @@ import ProductComponent from './ProductComponent.vue';
 export default {
   data() {
     return {
-      storeName: '상점 이름',
+      // storeName: '상점 이름',
       searchKeyword: '',
       selectedTab: 'all-product', // 초기값 설정
       tabs: ['전체', '착장아이템', '소비아이템'],

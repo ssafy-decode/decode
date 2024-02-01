@@ -47,9 +47,7 @@ import { useUserStore } from '@/stores/userStore';
 
 const userStore = useUserStore();
 
-const logout = () => {
-  userStore.setLogout();
-};
+const { setLogout: logout } = userStore;
 </script>
 
 <style scoped>
