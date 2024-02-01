@@ -2,38 +2,6 @@
   <div class="wholeContainer">
     <h1 style="text-align: center">질문 게시판</h1>
     <br />
-    <!-- <div class="text-center" style="display: flex; flex-direction: column; align-items: center">
-      <div class="search-container" style="width: 60%">
-        <div class="searchBox">
-          <v-text-field
-            variant="plain"
-            label="검색 키워드를 입력하세요"
-            class="searchInput"
-            v-model="keyword"
-            bg-color="fff"
-          ></v-text-field>
-          <v-btn class="searchBtn" size="x-large" @click="searchParams(keyword, tagIds)">검색</v-btn>
-        </div>
-        <v-container>
-          <v-row class="d-flex justify-end">
-            <v-col cols="12" sm="6" md="4">
-              <v-combobox
-                variant="solo"
-                class="stackBox"
-                bg-color="fff"
-                v-model="select"
-                :items="items"
-                placeholder="ex) java, spring boot, sql"
-                label="기술 스택"
-                multiple
-                chips
-                clearable
-              ></v-combobox>
-            </v-col>
-          </v-row>
-        </v-container>
-      </div>
-    </div> -->
     <div class="btnContainer d-flex justify-end">
       <v-btn class="createBtn" @click="goCreateQuestion()">질문등록</v-btn>
     </div>
