@@ -18,9 +18,9 @@
     <hr />
     <div class="commentBox">
       <CommentList :comment-list="answer.commentList" />
-      <v-form class="commentInputArea" onsubmit.prevent="onSubmit">
+      <v-form @submit.prevent="createComment" class="commentInputArea">
         <v-textarea v-model="commentContent" clearable label="댓글을 작성해주세요"></v-textarea>
-        <v-btn class="btn" type="submit" @click="commentStore.createComment(data)">댓글등록</v-btn>
+        <v-btn class="btn" type="submit">댓글등록</v-btn>
       </v-form>
     </div>
   </div>
@@ -30,17 +30,50 @@
 import CommentList from '@/components/comment/CommentList.vue';
 import { useAnswerStore } from '@/stores/answerStore';
 import { useCommentStore } from '@/stores/commentStore';
+import { useUserStore } from '@/stores/userStore';
+import { useRouter } from 'vue-router';
 import { ref } from 'vue';
+import axios from 'axios';
+
+const router = useRouter();
 
 const answerStore = useAnswerStore();
 const commentStore = useCommentStore();
-
-const commentContent = ref('');
-const data = ref({});
+const userStore = useUserStore();
 
 const props = defineProps({
   answer: Object,
 });
+
+const commentContent = ref('');
+
+const createComment = function () {
+  let data = {
+    content: commentContent.value,
+    userId: userStore.loginUserId,
+    answerId: props.answer.answerId,
+  };
+
+  console.log('data내용!!!!', data);
+
+  axios({
+    method: 'post',
+    url: `${commentStore.URL}/comment`,
+    data: data,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      Authorization: `Bearer ${userStore.accessToken}`,
+    },
+  })
+    .then((res) => {
+      console.log('댓글 생성됨');
+      router.go(0);
+    })
+    .catch((err) => {
+      console.log(err);
+      console.log('댓글 생성 오류');
+    });
+};
 </script>
 
 <style scoped>

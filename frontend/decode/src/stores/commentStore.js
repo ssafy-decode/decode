@@ -36,34 +36,10 @@ export const useCommentStore = defineStore('comment', () => {
     console.log(commentId);
   };
 
-  const createComment = function (data) {
-    // userId, answerId, content 필요
-    console.log(data);
-    // 작성 중
-    // axios({
-    //   method: 'post',
-    //   url: `${URL}/comment/`,
-    //   data: data,
-    //   headers: {
-    //     'Access-Control-Allow-Origin': '*',
-    //     Authorization: `Bearer ${userStore.accessToken}`,
-    //   },
-    // })
-    //   .then((res) => {
-    //     console.log('댓글 삭제됨');
-    //     router.go(0);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //     console.log('댓글 삭제 오류');
-    //   });
-  };
-
   return {
     URL,
     answerId,
     deleteComment,
     updateComment,
-    createComment,
   };
 });
