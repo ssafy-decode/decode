@@ -55,7 +55,8 @@ export default {
   },
   data() {
     return {
-      // userStore,
+      writeCoinInput: false,
+      writePointInput: false,
       pointAmount: 0,
       coinAmount: 0,
       chartData: {
@@ -173,6 +174,7 @@ export default {
       const rate = this.chartData.datasets[0].data.slice(-1)[0];
       if (rate && !isNaN(rate)) {
         this.coinAmount = Math.floor(this.pointAmount / rate);
+        this.writePointInput = true;
       }
     },
     onCoinInput() {
@@ -180,13 +182,14 @@ export default {
       const rate = this.chartData.datasets[0].data.slice(-1)[0];
       if (rate && !isNaN(rate)) {
         this.pointAmount = Math.floor(this.coinAmount * rate);
+        this.writeCoinInput = true;
       }
     },
     exchange() {
       // 환전 버튼 누르면 환전이 이루어지는 메서드
       const rate = this.chartData.datasets[0].data.slice(-1)[0];
       if (rate && !isNaN(rate)) {
-        if (this.coinAmount > 0) {
+        if (this.coinAmount > 0 && this.writeCoinInput) {
           const minusCoins = Math.floor(this.coinAmount);
           const plusPoints = Math.floor(this.pointAmount);
           if (minusCoins > 0 && minusCoins <= this.userStore.loginUserProfile.coin) {
@@ -195,7 +198,7 @@ export default {
           } else {
             alert('보유 코인이 부족합니다.');
           }
-        } else if (this.pointAmount > 0) {
+        } else if (this.pointAmount > 0 && this.writePointInput) {
           const minusPoints = Math.floor(this.pointAmount);
           const plusCoins = Math.floor(this.coinAmount);
           if (minusPoints > 0 && minusPoints <= this.userStore.loginUserProfile.point) {
