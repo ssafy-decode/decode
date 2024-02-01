@@ -133,6 +133,11 @@ export const useUserStore = defineStore(
 
     // 로그아웃
     const setLogout = () => {
+      myaxios.post('/logout', null, {
+        headers: {
+          Authorization: `Bearer ${accessToken.value}`,
+        },
+      });
       isLoggedIn.value = false;
       accessToken.value = '';
       router.push({ name: 'mainview' });
