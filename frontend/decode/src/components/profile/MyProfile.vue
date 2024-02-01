@@ -11,14 +11,23 @@
           <br />
           <br />
           <img style="width: 70%" :src="'./' + userStore.loginUserProfile.profileImg + '.png'" />
+          <!-- 추후 url로 받아오는 걸로 수정 -->
           <br />
           {{ userStore.loginUserProfile.tier }}
           <br />
-          <img style="width: 40%" src="./커마아이콘샘플.png" />
+          ((커마아이콘))
           <!-- 추후 수정 -->
         </v-col>
 
-        <v-col :cols="7">
+        <!-- 본인 기술 스택 v-chip들 나열 (소제목은 없애고)-->
+        <v-col :cols="1">
+          기술
+          <br />
+          스택 <br />
+          chips
+        </v-col>
+
+        <v-col :cols="6">
           출석 캘린더
           <br />
           <div class="pa-5" rounded>
@@ -27,8 +36,7 @@
               max-width="569"
               style="background-color: #ffffff; border-radius: 31px; border: 5px solid #d9d9d9"
             >
-              <img width="490" src="./잔디샘플.png" />
-              <!-- 추후 수정 -->
+              ((v-calendar OR v-calendar-heatmap-library))
             </v-card>
           </div>
         </v-col>
@@ -41,11 +49,9 @@
               max-width="199"
               style="background-color: #ffffff; border-radius: 31px; border: 5px solid #d9d9d9"
             >
-              <img width="150" src="./그래프샘플.png" />
-              <!-- 추후 수정 -->
-              <!-- vue-chartjs로 추후 디자인 -->
-              {{ userStore.loginUserProfile.exp }}
-              <!-- 디자인에서 수치는 필요없긴 한데 혹시 몰라서 일단 표기 -->
+              ((vue-chartjs))
+              <br />
+              이야 내 경험치는 무려 {{ userStore.loginUserProfile.exp }} exp 라구
             </v-card>
           </div>
         </v-col>
@@ -91,26 +97,28 @@
             <v-card-text style="text-align: center; font-size: 15px">
               <v-row v-if="index === 0">
                 <v-col cols="6"
-                  >질문 &nbsp;&nbsp;{{ questionList.length }}개 <br /><br />
+                  >질문 &nbsp;&nbsp;{{ qListLength }}개 <br /><br />
                   <!-- 테스트용 질문 목록 -->
-                  <div v-for="(question, questionIndex) in testquestionList" :key="questionIndex">
-                    {{ question.text }}
+                  <div v-for="(question, questionIndex) in qList" :key="questionIndex">
+                    {{ question.questionId }} &nbsp;
+                    {{ question.title }}
                   </div>
                   <br /><br />
                   이 사람이 올린 질문</v-col
                 >
                 <v-col cols="6"
-                  >답변 &nbsp;&nbsp;{{ answerList.length }}개 <br /><br />
+                  >답변 &nbsp;&nbsp;{{ aListLength }}개 <br /><br />
                   <!-- 테스트용 답변 목록 -->
-                  <div v-for="(answer, answerIndex) in testanswerList" :key="answerIndex">
-                    {{ answer.text }}
+                  <div v-for="(answer, answerIndex) in aList" :key="answerIndex">
+                    {{ answer.questionId }} &nbsp;
+                    {{ answer.title }}
                   </div>
                   <br /><br />
                   이 사람이 답변 작성한 질문</v-col
                 >
               </v-row>
               <ul v-else-if="index === 1">
-                <div>팔로워 목록 (테스트용)</div>
+                <div>팔로워 목록</div>
                 <!-- 티어 나타내는 커마 아이콘 -->
                 {{
                   followerList.tier
@@ -127,7 +135,7 @@
                 <!-- 선택한 기술 스택들 (여기선 data 아직 안 뽑아옴) -->
                 <!-- 팔로워 목록에는 버튼 없음? -->
                 <!-- 일단 잘 뜨나 테스트용 -->
-                <v-row v-for="(follower, followerIndex) in testfollowerList" :key="followerIndex">
+                <v-row v-for="(follower, followerIndex) in followerList" :key="followerIndex">
                   <v-col>
                     <!-- 티어 나타내는 커마 아이콘 -->
                     {{ follower.tier }}
@@ -144,7 +152,7 @@
                 </v-row>
               </ul>
               <ul v-else-if="index === 2">
-                <div>팔로잉 목록 (테스트용)</div>
+                <div>팔로잉 목록</div>
                 <!-- 티어 나타내는 커마 아이콘 -->
                 {{
                   followingList.tier
@@ -159,10 +167,8 @@
                   followingList.nickname
                 }}
                 <!-- 선택한 기술 스택들 (여기선 data 아직 안 뽑아옴) -->
-                <!-- 팔로잉 목록에는 팔로우 취소 버튼 있음? -->
-                <v-btn>팔로우 취소</v-btn>
                 <!-- 일단 잘 뜨나 테스트용 -->
-                <v-row v-for="(following, followingIndex) in testfollowingList" :key="followingIndex">
+                <v-row v-for="(following, followingIndex) in followingList" :key="followingIndex">
                   <v-col>
                     <!-- 티어 나타내는 커마 아이콘 -->
                     {{ following.tier }}
@@ -175,7 +181,7 @@
                     <!-- 선택한 기술 스택들 (여기선 data 아직 안 뽑아옴) -->
                     <v-chip>{{ following.tag }}</v-chip>
                     <!-- 팔로잉 목록에는 팔로우 취소 버튼 있음? -->
-                    <v-btn>팔로우 취소</v-btn>
+                    <v-btn @click="cancelfollow">팔로우 취소</v-btn>
                   </v-col>
                 </v-row>
               </ul>
@@ -195,51 +201,32 @@ const userStore = useUserStore();
 
 const tab = ref(0);
 const items = [`${userStore.loginUserProfile.nickname}의 질문 / 답변`, '팔로워', '팔로잉'];
-const questionList = ref([]);
-const answerList = ref([]);
+const qList = ref([]);
+const qListLength = ref(0);
+const aList = ref([]);
+const aListLength = ref(0);
 const followerList = ref([]);
 const followingList = ref([]);
-
-// 테스트용으로 임시 만든 배열
-const testquestionList = ref([]);
-const testanswerList = ref([]);
-const testfollowerList = ref([]);
-const testfollowingList = ref([]);
+const isFollow = ref(false);
 
 onMounted(async () => {
   await userStore.myProfile();
   await userStore.setUser(userStore.loginUserId);
+  await userStore.setQList(userStore.loginUserId);
+  await userStore.setAList(userStore.loginUserId);
   await userStore.setFollowerList(userStore.loginUserId);
   await userStore.setFollowingList(userStore.loginUserId);
-
-  //테스트용
-  testquestionList.value = [
-    { id: 1, text: 'Q [Temp Tag] 테스트용 질문1입니다.' },
-    { id: 2, text: 'Q [Temp Tag] 테스트용 질문2입니다.' },
-    { id: 3, text: 'Q [Temp Tag] 테스트용 질문3입니다.' },
-  ];
-
-  //테스트용
-  testanswerList.value = [
-    { id: 1, text: 'Q [Temp Tag] 테스트용 답변1입니다.' },
-    { id: 2, text: 'Q [Temp Tag] 테스트용 답변2입니다.' },
-    { id: 3, text: 'Q [Temp Tag] 테스트용 답변3입니다.' },
-  ];
-
-  //테스트용
-  testfollowerList.value = [
-    { tier: `bronze`, rank: 100, profileImg: `default.png`, tag: `python` },
-    { tier: `bronze`, rank: 100, profileImg: `default.png`, tag: `python` },
-    { tier: `bronze`, rank: 100, profileImg: `default.png`, tag: `python` },
-  ];
-
-  //테스트용
-  testfollowingList.value = [
-    { tier: `bronze`, rank: 100, profileImg: `default.png`, tag: `python` },
-    { tier: `bronze`, rank: 100, profileImg: `default.png`, tag: `python` },
-    { tier: `bronze`, rank: 100, profileImg: `default.png`, tag: `python` },
-  ];
 });
+
+// 디버깅 테스트
+console.log('qlist', qList.value); // Array {}
+console.log(qListLength.value); // 0
+console.log('aList', aList.value); // Array {}
+console.log(aListLength.value); // 0
+
+const cancelfollow = () => {
+  userStore.unFollow();
+};
 </script>
 
 <style scoped>
