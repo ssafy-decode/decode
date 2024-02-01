@@ -1,6 +1,5 @@
 <template>
   <v-container>
-    <h2>포인트 환전 탭</h2>
     <v-row>
       <v-col cols="12" md="6">
         <!-- 환전 부분 -->
@@ -196,8 +195,7 @@ export default {
           } else {
             alert('보유 코인이 부족합니다.');
           }
-        }
-        if (this.pointAmount > 0) {
+        } else if (this.pointAmount > 0) {
           const minusPoints = Math.floor(this.pointAmount);
           const plusCoins = Math.floor(this.coinAmount);
           if (minusPoints > 0 && minusPoints <= this.userStore.loginUserProfile.point) {
