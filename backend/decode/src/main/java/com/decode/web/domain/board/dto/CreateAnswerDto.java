@@ -14,6 +14,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class CreateAnswerDto {
+
     @DecimalMin(value = "0", inclusive = true)
     private Long questionId;
     @DecimalMin(value = "0", inclusive = true)

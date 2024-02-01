@@ -14,6 +14,8 @@ import lombok.ToString;
 @ToString
 public class UserProfileDto {
 
+    private Long id;
+
     @NotBlank
     private int exp;
 

@@ -1,5 +1,6 @@
 package com.decode.web.domain.board.service;
 
+import com.decode.web.domain.board.dto.BoardProfileResponseDto;
 import com.decode.web.domain.board.dto.CreateAnswerDto;
 import com.decode.web.domain.board.dto.RecommendDto;
 import com.decode.web.domain.board.dto.ResponseAnswerDto;
@@ -25,4 +26,6 @@ public interface AnswerService {
     Long recommend(RecommendDto recommendDto);
 
     Long unRecommend(Long userId, Long answerId);
+
+    BoardProfileResponseDto findAllByUserId(Long userId);
 }

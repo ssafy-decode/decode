@@ -2,13 +2,13 @@ package com.decode.web.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +22,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Setter
 public class UserProfileEntity {
 
     @OneToOne
@@ -51,6 +52,13 @@ public class UserProfileEntity {
 
     @Column(name = "user_coin")
     private int coin;
+
+    @OneToMany(mappedBy = "toUser", fetch = FetchType.LAZY)
+    private List<FollowEntity> followings;
+
+    @OneToMany(mappedBy = "fromUser", fetch = FetchType.LAZY)
+    private List<FollowEntity> followers;
+
 
     @Builder
     public UserProfileEntity(String nickname, int exp, String tier, String profileImg, int point,

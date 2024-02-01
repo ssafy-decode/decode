@@ -1,5 +1,6 @@
 package com.decode.web.domain.board.service;
 
+import com.decode.web.domain.board.dto.BoardProfileResponseDto;
 import com.decode.web.domain.board.dto.CreateQuestionDto;
 import com.decode.web.domain.board.dto.QuestionListDto;
 import com.decode.web.domain.board.dto.ResponseQuestionDto;
@@ -20,4 +21,6 @@ public interface QuestionService {
     void deleteQuestion(Long questionId, QuestionEntity targetQuestion);
 
     ResponseQuestionDto updateQuestion(UpdateQuestionDto updateQuestion);
+
+    BoardProfileResponseDto findAllByUserId(Long userId);
 }

@@ -9,10 +9,10 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface CommentMapper {
 
-    public CommentDto toDto(CommonEntity entity);
+    CommentDto toDto(CommonEntity entity);
 
-    public CommentEntity toEntity(CommentDto dto);
+    CommentEntity toEntity(CommentDto dto);
 
-    public CommentEntity toEntity(CreateCommentDto dto);
+    CommentEntity toEntity(CreateCommentDto dto);
 
 }

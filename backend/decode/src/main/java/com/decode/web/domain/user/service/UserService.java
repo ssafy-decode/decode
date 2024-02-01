@@ -5,6 +5,8 @@ import com.decode.web.domain.user.dto.RequestUserTagDto;
 import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.entity.UserProfileEntity;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 public interface UserService {
@@ -47,4 +49,14 @@ public interface UserService {
     void addUserTag(RequestUserTagDto requestUserTagDto);
 
     void updateUserTag(RequestUserTagDto requestUserTagDto);
+
+    void setAttendance(String email);
+
+    Set<String> getAttendance(Long id);
+
+    void setExp(Long id, int exp);
+
+    Map<String, Integer> getExp(Long id);
+
+    List<UserProfileEntity> getRank();
 }

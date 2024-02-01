@@ -19,8 +19,8 @@ import lombok.ToString;
 
 @Entity
 @Table(
-        name="Metoo",
-        uniqueConstraints={
+        name = "Metoo",
+        uniqueConstraints = {
                 @UniqueConstraint(
                         name = "UniqueUserAndQuestion",
                         columnNames = {
