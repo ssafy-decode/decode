@@ -31,6 +31,7 @@
           </v-row>
         </template>
       </v-container>
+      <p class="tagAlert">주의) 태그를 입력할 땐, react.js, vue.js 등은 뒤에 ".js"를 지워주세요</p>
 
       <br />
       <MyEditor @editor-content-updated="updateEditorContent" />
@@ -58,20 +59,7 @@ const tagIds = ref([]);
 const questionContent = ref('');
 const versions = ref([]);
 
-const items = {
-  python: 0,
-  java: 1,
-  'C++': 2,
-  javascript: 3,
-  django: 4,
-  spring: 5,
-  'spring boot': 6,
-  kotlin: 7,
-  sql: 8,
-  react: 9,
-  vue: 10,
-  'C#': 11,
-};
+const items = questionStore.items;
 
 const updateEditorContent = function (content) {
   questionContent.value = content;

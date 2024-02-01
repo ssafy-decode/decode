@@ -2,7 +2,7 @@
   <div class="wholeContainer">
     <h1 style="text-align: center">질문 게시판</h1>
     <br />
-    <div class="text-center" style="display: flex; flex-direction: column; align-items: center">
+    <!-- <div class="text-center" style="display: flex; flex-direction: column; align-items: center">
       <div class="search-container" style="width: 60%">
         <div class="searchBox">
           <v-text-field
@@ -33,7 +33,7 @@
           </v-row>
         </v-container>
       </div>
-    </div>
+    </div> -->
     <div class="btnContainer d-flex justify-end">
       <v-btn class="createBtn" @click="goCreateQuestion()">질문등록</v-btn>
     </div>
@@ -68,17 +68,17 @@ import QuestionListItem from './QuestionListItem.vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-const model = ref(false);
+// const model = ref(false);
 
 const goCreateQuestion = function () {
   router.push({ path: `/question-title-create` });
 };
 
-const switchLabel = computed(() => {
-  return model.value ? '코드로 검색' : '키워드로 검색';
-});
+// const switchLabel = computed(() => {
+//   return model.value ? '코드로 검색' : '키워드로 검색';
+// });
 
-const benched = ref(0);
+// const benched = ref(0);
 
 const questionStore = useQuestionStore();
 const keyword = ref('');
@@ -89,20 +89,7 @@ const searchParams = function (keyword, tagIds) {
 };
 
 const select = ref([]);
-const items = ref([
-  'python',
-  'java',
-  'C++',
-  'javascript',
-  'django',
-  'spring',
-  'spring boot',
-  'kotlin',
-  'sql',
-  'react',
-  'vue',
-  'C#',
-]);
+const items = questionStore.items;
 </script>
 
 <style scoped>

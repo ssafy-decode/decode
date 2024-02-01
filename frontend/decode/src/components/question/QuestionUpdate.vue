@@ -30,6 +30,7 @@
           </v-row>
         </template>
       </v-container>
+      <p class="tagAlert">주의) 태그를 입력할 땐, react.js, vue.js 등은 뒤에 ".js"를 지워주세요</p>
 
       <br />
       <UpdateEditor @editor-content-updated="updateEditorContent" />
