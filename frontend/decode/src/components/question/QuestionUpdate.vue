@@ -4,7 +4,7 @@
     <br />
     <v-form @submit.prevent="updateQuestion">
       <v-text-field variant="solo" label="질문 제목" v-model.trim="questionTitle"></v-text-field>
-      <v-container>
+      <v-container v-if="numToStr.length > 0">
         <template v-for="(tag, index) in numToStr" :key="index">
           <v-row class="d-flex justify-end">
             <v-col cols="12" sm="6" md="4">
@@ -27,11 +27,13 @@
                 label="태그 버전"
               ></v-text-field>
             </v-col>
+            <v-col cols="12" sm="6" md="4">
+              <v-btn @click="removeField(index)">삭제</v-btn>
+            </v-col>
           </v-row>
         </template>
-
-        <v-btn @click="addEmptyFields">추가</v-btn>
       </v-container>
+      <v-btn @click="addEmptyFields">추가</v-btn>
       <p class="tagAlert">주의) 태그를 입력할 땐, react.js, vue.js 등은 뒤에 ".js"를 지워주세요</p>
 
       <br />
@@ -90,7 +92,6 @@ const getOriginalQuestion = function () {
         numToStr.value.push(reverseItems[item.tagId]);
         versions.value.push(item.version);
       });
-      console.log('넘투스트링', numToStr.value);
     })
     .catch((err) => {
       console.log(err);
@@ -107,6 +108,12 @@ onMounted(() => {
 const addEmptyFields = function () {
   numToStr.value.push('');
   versions.value.push('');
+};
+
+// 태그 입력 칸 삭제 코드
+const removeField = function (index) {
+  numToStr.value.splice(index, 1);
+  versions.value.splice(index, 1);
 };
 
 const updateQuestion = function () {
