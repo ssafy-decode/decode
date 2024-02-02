@@ -27,7 +27,7 @@
                 label="태그 버전"
               ></v-text-field>
             </v-col>
-            <v-col cols="12" sm="6" md="4">
+            <v-col cols="1">
               <v-btn @click="removeField(index)">삭제</v-btn>
             </v-col>
           </v-row>

@@ -1,44 +1,46 @@
 <template>
   <v-toolbar color="transparent">
-    <v-btn>
-      <router-link to="/">
+    <router-link to="/">
+      <v-btn>
         <span style="display: flex; justify-content: space-between">
-          <img src="../de;code_logo_jin.png" alt="로고이미지" height="30px" /><v-toolbar-title
-            ><span class="decode" style="font-size: x-large; font-weight: bold">de;code</span></v-toolbar-title
-          ></span
+          <img src="../de;code_logo_jin.png" alt="로고이미지" height="30px" /><v-toolbar-title>
+            <span class="decode" style="font-size: x-large; font-weight: bold"> de;code </span>
+          </v-toolbar-title></span
         >
-      </router-link>
-    </v-btn>
+      </v-btn>
+    </router-link>
 
     &nbsp;&nbsp;|&nbsp;&nbsp;
 
-    <v-btn>
-      <router-link to="/board">
-        <v-toolbar-items>질문게시판</v-toolbar-items>
-      </router-link>
-    </v-btn>
+    <router-link to="/board">
+      <v-btn>
+        <v-toolbar-items class="font-weight-bold">질문게시판</v-toolbar-items>
+      </v-btn>
+    </router-link>
 
-    <v-btn v-show="userStore.isLoggedIn">
-      <router-link to="/shop">
-        <v-toolbar-items>상점</v-toolbar-items>
-      </router-link>
-    </v-btn>
+    <router-link to="/shop">
+      <v-btn v-show="userStore.isLoggedIn">
+        <v-toolbar-items class="font-weight-bold">상점</v-toolbar-items>
+      </v-btn>
+    </router-link>
 
-    <v-btn v-show="userStore.isLoggedIn">
-      <router-link to="/rank">
-        <v-toolbar-items>랭킹</v-toolbar-items>
-      </router-link>
-    </v-btn>
+    <router-link to="/rank">
+      <v-btn v-show="userStore.isLoggedIn">
+        <v-toolbar-items class="font-weight-bold">랭킹</v-toolbar-items>
+      </v-btn>
+    </router-link>
 
-    <v-btn v-show="userStore.isLoggedIn">
-      <router-link to="/mypage">
-        <v-toolbar-items>마이페이지</v-toolbar-items>
-      </router-link>
-    </v-btn>
+    <router-link to="/mypage">
+      <v-btn v-show="userStore.isLoggedIn">
+        <v-toolbar-items class="font-weight-bold">마이페이지</v-toolbar-items>
+      </v-btn>
+    </router-link>
 
     <v-spacer></v-spacer>
     <v-btn id="loginBtn" v-if="userStore.isLoggedIn" @click="logout">로그아웃</v-btn>
-    <v-btn id="loginBtn" v-else><router-link to="/login">로그인</router-link></v-btn>
+    <router-link to="/login" v-else>
+      <v-btn id="loginBtn"> 로그인 </v-btn>
+    </router-link>
   </v-toolbar>
 </template>
 
