@@ -23,17 +23,12 @@
         <v-col :cols="1"> 기술스택 </v-col>
 
         <v-col :cols="6">
-          출석 캘린더
-          <br />
+          출석 스트릭
           <AttendanceLog :uid="uid" />
         </v-col>
 
         <v-col :cols="3">
-          내 경험치
-          <br />
           <ExpLog :uid="uid" />
-          <br />
-          이야 경험치가 무려 {{ userStore.loginUserProfile.exp }} exp~
         </v-col>
       </v-row>
 

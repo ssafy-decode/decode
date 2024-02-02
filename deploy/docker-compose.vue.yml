@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  vue_app:
+    image: ggramgyo/decode-hub:frontend-latest
+    container_name: decode-client
+    ports:
+      - "3000:80"
+
+  dockerhub-login:
+    image: alpine
+    entrypoint: /bin/sh
+    command: -c "echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin"
+
