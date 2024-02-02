@@ -15,6 +15,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @Slf4j
 public class GlobalControllerAdvice {
 
+    @ExceptionHandler(CustomLoginException.class)
+    private ResponseEntity<ResponseDto> customLoginException(CustomLoginException e) {
+        log.error("{}", e.getMessage());
+        return new ResponseEntity<>(ResponseDto.builder()
+                .status(HttpStatus.UNAUTHORIZED)
+                .message(e.getMessage())
+                .build(), HttpStatus.UNAUTHORIZED);
+    }
     @ExceptionHandler(FollowException.class)
     private ResponseEntity<ResponseDto> followException(FollowException e) {
         log.error("{}", e.getMessage());

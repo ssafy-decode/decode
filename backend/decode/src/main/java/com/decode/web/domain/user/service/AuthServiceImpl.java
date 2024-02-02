@@ -102,6 +102,7 @@ public class AuthServiceImpl implements AuthService {
     public void logout(String token) {
         String requestAccessToken = resolveToken(token);
         String principal = jwtTokenProvider.getPrincipal(requestAccessToken);
+        log.info("logout principal : {}", principal);
 
         String refreshTokenInRedis = redisService.getValues("RT:" + SERVER + ":" + principal);
         if (refreshTokenInRedis != null) {
