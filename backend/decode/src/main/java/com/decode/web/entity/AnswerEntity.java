@@ -61,4 +61,8 @@ public class AnswerEntity extends CommonEntity {
         this.content = content;
         this.isAdopted = idAdopted;
     }
+
+    public void doAdopt() {
+        this.isAdopted = true;
+    }
 }

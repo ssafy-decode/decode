@@ -1,5 +1,6 @@
 package com.decode.web.domain.board.service;
 
+import com.decode.web.domain.board.dto.AnswerCountResponseDto;
 import com.decode.web.domain.board.dto.BoardProfileResponseDto;
 import com.decode.web.domain.board.dto.CreateAnswerDto;
 import com.decode.web.domain.board.dto.RecommendDto;
@@ -7,7 +8,9 @@ import com.decode.web.domain.board.dto.ResponseAnswerDto;
 import com.decode.web.domain.board.dto.UpdateAnswerDto;
 import com.decode.web.entity.AnswerEntity;
 import com.decode.web.entity.QuestionEntity;
+import com.decode.web.exception.InvalidWriterException;
 import java.util.List;
+import org.apache.coyote.BadRequestException;
 
 public interface AnswerService {
 
@@ -28,4 +31,8 @@ public interface AnswerService {
     Long unRecommend(Long userId, Long answerId);
 
     BoardProfileResponseDto findAllByUserId(Long userId);
+
+    void doAdopt(Long userId, Long answerId) throws InvalidWriterException;
+
+    AnswerCountResponseDto getAnswerCountByUserId(Long userId);
 }

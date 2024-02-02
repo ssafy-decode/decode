@@ -3,6 +3,7 @@ package com.decode.web.exception;
 import com.decode.web.global.ResponseDto;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.persistence.EntityNotFoundException;
+import javax.security.auth.login.CredentialException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,11 +35,22 @@ public class GlobalControllerAdvice {
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    private ResponseEntity<ResponseDto> credentialException(BadCredentialsException e) {
+    private ResponseEntity<ResponseDto> badCredentialException(BadCredentialsException e) {
         log.error("{}", e.getMessage());
         return new ResponseEntity<>(ResponseDto.builder()
                 .status(HttpStatus.UNAUTHORIZED)
                 .message(e.getMessage())
+                .data("")
+                .build(), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(CredentialException.class)
+    private ResponseEntity<ResponseDto> credentialException(CredentialException e) {
+        log.error("{}", e.getMessage());
+        return new ResponseEntity<>(ResponseDto.builder()
+                .status(HttpStatus.UNAUTHORIZED)
+                .message(e.getMessage())
+                .data("")
                 .build(), HttpStatus.UNAUTHORIZED);
     }
 
@@ -88,6 +100,17 @@ public class GlobalControllerAdvice {
         return new ResponseEntity<>(ResponseDto.builder()
                 .status(HttpStatus.BAD_REQUEST)
                 .message(e.getBindingResult().getFieldError().getDefaultMessage())
+                .data("")
+                .build(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidWriterException.class)
+    private ResponseEntity<ResponseDto> invalidWriterException(
+            InvalidWriterException e) {
+        log.error("{}", e.getMessage());
+        return new ResponseEntity<>(ResponseDto.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .message(e.getMessage())
                 .data("")
                 .build(), HttpStatus.BAD_REQUEST);
     }
