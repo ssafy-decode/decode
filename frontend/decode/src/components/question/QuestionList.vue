@@ -46,7 +46,6 @@
   <br />
 
   <div id="app">
-    <v-responsive max-width="400" class="mx-auto mb-4"> </v-responsive>
     <v-card color="#f3f3f3" elevation="16" max-width="60%" class="card mx-auto px-5">
       <v-row>
         <!-- <v-col :cols="12"> -->

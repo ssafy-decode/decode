@@ -40,7 +40,6 @@ const router = useRouter();
 const questionStore = useQuestionStore();
 
 const goDetail = function (questionId) {
-  questionStore.questionId = questionId;
   router.push({ path: `/board/${questionId}` });
 };
 

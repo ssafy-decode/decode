@@ -1,8 +1,19 @@
 <template>
-  <div class="detailContainer">
+  <v-card color="#f3f3f3" elevation="16" max-width="60%" class="card mx-auto px-5 py-5">
+    <v-row>
+      <v-col :cols="12">
+        <div class="myListItem">
+          <div class="listItem">
+            <img class="img" src="/questionIcon2.png" alt="질문아이콘" />
+            <div>
+              <p class="title">{{ question.title }}</p>
+            </div>
+          </div>
+        </div>
+      </v-col>
+    </v-row>
     <br />
     <p>질문 번호: {{ question.id }}</p>
-    <p>질문 제목: {{ question.title }}</p>
     <p>질문 내용: {{ question.content }}</p>
     <p>질문 작성자 정보: {{ question.questionWriter }}</p>
     <p>질문 태그 목록: {{ question.tagList }}</p>
@@ -10,17 +21,21 @@
     <p>질문 수정일: {{ question.updatedTime }}</p>
     <p>질문 나도 궁금 수: {{ question.meTooCnt }}</p>
     <br />
+
     <div class="btnBox">
       <v-btn class="btn" @click="goUpdate()">질문수정</v-btn>
       <v-btn class="btn" @click="deleteQuestion()">질문삭제</v-btn>
     </div>
+
     <hr />
     <br />
+
     <div class="answerRelatedBox">
       <v-btn @click="goCreateAnswer()">답변생성</v-btn>
     </div>
+
     <AnswerList :answer-list="question.answerList" />
-  </div>
+  </v-card>
 </template>
 
 <script setup>
@@ -95,6 +110,13 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.card {
+  border-top-left-radius: 50px;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+  padding-bottom: 20px;
+  margin: 40px;
+}
 .answerRelatedBox {
   display: flex;
   justify-content: space-between;
@@ -113,7 +135,56 @@ onMounted(() => {
   margin-right: 10px;
 }
 
-.detailContainer {
-  margin: 40px;
+.img {
+  width: 75px;
+  height: 75px;
+  margin: 5px 10px 5px 5px;
+}
+.metooImg {
+  width: 60px;
+  height: 70px;
+  margin-right: 5px;
+}
+.answerCountImg {
+  margin-right: 10px;
+  height: 45px;
+}
+
+.myListItem {
+  background-color: white;
+  border-radius: 45px;
+}
+.myListItem2 {
+  background-color: white;
+  border-radius: 45px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.myListItem:hover {
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.4);
+  transition: 0.3s;
+}
+.listItem {
+  width: 100%;
+  height: auto;
+  font-size: large;
+  color: #575757;
+  display: flex;
+  align-items: center;
+}
+
+.info {
+  font-size: small;
+}
+
+.nickname {
+  color: #62c0a6;
+}
+
+.title {
+  font-size: large;
+  font-weight: 800;
 }
 </style>
