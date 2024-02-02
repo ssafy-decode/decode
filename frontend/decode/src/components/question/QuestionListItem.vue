@@ -1,29 +1,35 @@
 <template>
-  <div class="myListItem" @click="goDetail(question.id)">
-    <div class="listItem">
-      <!-- <p>질문번호: {{ question.id }}</p> -->
-      <img src="./questionIcon.png" alt="질문아이콘" />
-      <div>
-        <p class="info">
-          <span class="nickname">
-            {{ question.writer.nickname }}
-          </span>
-          &nbsp;
-          <span>
-            {{ question.createdTime }}
-          </span>
-        </p>
-        <p class="title">{{ question.title }}</p>
+  <v-row>
+    <v-col :cols="9">
+      <div class="myListItem" @click="goDetail(question.id)">
+        <div class="listItem">
+          <img class="img" src="./questionIcon.png" alt="질문아이콘" />
+          <div>
+            <p class="info">
+              <span class="nickname">
+                {{ question.writer.nickname }}
+              </span>
+              &nbsp;
+              <span>
+                {{ question.createdTime }}
+              </span>
+            </p>
+            <p class="title">{{ question.title }}</p>
+          </div>
+        </div>
+      </div>
+    </v-col>
+    <v-col :cols="3">
+      <div class="myListItem2">
+        <img class="img" src="./answerIcon.png" aslt="답변 아이콘" />
+        <img class="answerCountImg" src="./answerCountIcon.png" aslt="답변수 아이콘" />
+        <img class="img" src="./questionIcon.png" aslt="나도궁금해요 아이콘" />
       </div>
       <!-- <p>질문태그: {{ question.tagList }}</p> -->
       <!-- <p>답변개수: {{ question.answerCnt }}</p> -->
       <!-- <p>나도궁금수: {{ question.meTooCnt }}</p> -->
-      <!-- <br />
-    <hr />
-    <br /> -->
-    </div>
-  </div>
-  <br />
+    </v-col>
+  </v-row>
 </template>
 
 <script setup>
@@ -44,15 +50,26 @@ defineProps({
 </script>
 
 <style scoped>
-img {
+.img {
   margin-right: 10px;
-  width: 70px;
-  height: auto;
+  width: 75px;
+  height: 75px;
+}
+.answerCountImg {
+  margin-right: 10px;
+  height: 45px;
 }
 
 .myListItem {
   background-color: white;
   border-radius: 45px;
+}
+.myListItem2 {
+  background-color: white;
+  border-radius: 45px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
 }
 
 .myListItem:hover {
@@ -66,6 +83,12 @@ img {
   color: #575757;
   display: flex;
   align-items: center;
+}
+.listItem2 {
+  width: 100%;
+  height: auto;
+  /* font-size: large; */
+  color: #575757;
 }
 
 .info {
