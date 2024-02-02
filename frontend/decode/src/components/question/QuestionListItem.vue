@@ -23,7 +23,7 @@
       <div class="myListItem2">
         <img class="img" src="./answerIcon.png" aslt="답변 아이콘" />
         <img class="answerCountImg" src="./answerCountIcon.png" aslt="답변수 아이콘" />
-        <img class="img" src="./questionIcon.png" aslt="나도궁금해요 아이콘" />
+        <img class="metooImg" src="./metoo.png" aslt="나도궁금해요 아이콘" />
       </div>
       <!-- <p>질문태그: {{ question.tagList }}</p> -->
       <!-- <p>답변개수: {{ question.answerCnt }}</p> -->
@@ -51,9 +51,13 @@ defineProps({
 
 <style scoped>
 .img {
-  margin-right: 10px;
   width: 75px;
   height: 75px;
+}
+.metooImg {
+  width: 60px;
+  height: 70px;
+  margin-right: 5px;
 }
 .answerCountImg {
   margin-right: 10px;
@@ -68,7 +72,7 @@ defineProps({
   background-color: white;
   border-radius: 45px;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -83,12 +87,6 @@ defineProps({
   color: #575757;
   display: flex;
   align-items: center;
-}
-.listItem2 {
-  width: 100%;
-  height: auto;
-  /* font-size: large; */
-  color: #575757;
 }
 
 .info {

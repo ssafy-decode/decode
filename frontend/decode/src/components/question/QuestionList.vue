@@ -97,6 +97,7 @@ const items = questionStore.items;
   border-top-left-radius: 50px;
   border-bottom-left-radius: 50px;
   border-bottom-right-radius: 50px;
+  padding-bottom: 20px;
 }
 
 input {
