@@ -21,7 +21,10 @@ export const useUserStore = defineStore(
     const aListLength = ref(0); // 답변 목록 총 개수
     const followerList = ref([]); // 팔로워 목록
     const followingList = ref([]); // 팔로잉 목록
+    const rankList = ref([]); // 경험치순 모든 유저 목록 조회
 
+    const userProfileImg = ref(''); // 유저 프로필 사진 url
+    const updatedUserProfileImg = ref(''); // 변경한 유저 프로필 사진 url
     const user = ref(null);
     const userId = ref(''); // 가입 시 회원 번호
     const userCnt = ref(0); // 아직은 쓸 일 없지만 회원 총 수
@@ -33,7 +36,6 @@ export const useUserStore = defineStore(
     // 로그인 유저 정보
     const isLoggedIn = ref(false); // 로그인 여부 T/F
     const loginUserId = ref(0); // 로그인 유저 회원 번호
-    // const loginUserPwd = ref(null); // 디버깅된 로그인 유저 비밀번호 (비밀번호 확인용)
     const loginUserName = ref(''); // 로그인 유저 이름
     const loginUserNickName = ref(''); // 로그인 유저 닉네임
     const loginUserBirthday = ref(''); // 로그인 유저 생년월일 6자리
@@ -120,7 +122,6 @@ export const useUserStore = defineStore(
 
         isLoggedIn.value = true; // 로그인 여부
         loginUserId.value = res.data.data; // 로그인 사용자 번호
-        // loginUserPwd.value = loginuser.password; // 로그인 사용자 비번 (디버깅된 ver.)
         router.push({ name: 'mainview' });
         return { success: true, data: accessToken };
       } catch (error) {
@@ -132,6 +133,7 @@ export const useUserStore = defineStore(
     const parseToken = (response) => {
       if (response.data && response.headers && response.headers.authorization) {
         const newToken = response.headers.authorization.substring(7); // 파싱한 새 accessToken 값 갱신
+        console.log(newToken);
         if (newToken === null) {
           // 새 토큰 값 없으면 기존 토큰 값 유지
           return accessToken.value;
@@ -255,6 +257,8 @@ export const useUserStore = defineStore(
         .then((res) => {
           accessToken.value = parseToken(res);
           const response = res.data;
+          console.log(response);
+          console.log('테스트중입니다');
           followingList.value = response.data;
         })
         .catch((error) => {
@@ -380,26 +384,30 @@ export const useUserStore = defineStore(
         });
     };
 
-    // 로그인 유저 프로필 사진 변경 (S3에 등록)
+    // 로그인 유저 프로필 사진 변경 (S3에 등록) => 지금은 작동 안 함
     // (API 2개 호출, /image => 결과물을 /profile/{user_id} 에 있는 profileImg에 대입 후 수정 완료)
     // requestbody: key는 file, 형태는 File, Value는 ssafy.png 처럼 파일로
     // responsebody: status: OK, message: 이미지 업로드 성공, data.url: 그 이미지의 url
-    // const updateProfileImg = (img) => {
-    //   console.log('작동 확인');
-    //   axios.post(`${URL}/image`, file, {
-    //     withCredentials: true,
-    //   },
-    // })
-    // .then((res)=>{
-    //   accessToken.value = parseToken(res)
-    //   const response = res.data
-    //   if(response.status === 'OK'){
-    //     // 업로드된 이미지를 /profile/{user_id} 의 profileImg 로 저장시켜야'
-    //     setUserProfile(loginUserId);
-    //     // setUserProfile 함수 작동 시 data.profileImg에 갱신할 수 있나?
-    //   }
-    // })
-    // };
+    const updateProfileImg = (img) => {
+      console.log('작동 확인');
+      axios
+        .post(`${URL}/image`, img, {
+          withCredentials: true,
+        })
+        .then((res) => {
+          accessToken.value = parseToken(res);
+          const response = res.data;
+          if (response.status === 'OK') {
+            updatedUserProfileImg.value = response.data.url;
+            // 업로드된 이미지를 /profile/{user_id} 의 profileImg 로 저장시켜야'
+            setUserProfile(loginUserId);
+            // setUserProfile 함수 작동 시 data.profileImg에 갱신할 수 있나?
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    };
 
     // 로그인 유저 선택한 기술 스택 변경
     const updateTechStack = (updateduser) => {
@@ -462,6 +470,7 @@ export const useUserStore = defineStore(
           if (response.status === 'OK') {
             userProfile.value = response.data;
             // 프로필 사진만 변경했을 경우 data.profileImg 에 값 갱신 가능한가??
+            userProfileImg.value = updatedUserProfileImg.value;
           } else {
             console.log('Failed to get current user profile');
           }
@@ -528,6 +537,24 @@ export const useUserStore = defineStore(
             router.push({ name: 'foundpwd' });
           } else {
             throw new Error('Failed to find user password');
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    };
+
+    // 경험치순 모든 회원 목록 조회
+    const getRank = () => {
+      axios
+        .get(`${URL}/rank`, {
+          withCredentials: true,
+        })
+        .then((res) => {
+          accessToken.value = parseToken(res);
+          const response = res.data;
+          if (response.status === 'OK') {
+            rankList.value = response.data;
           }
         })
         .catch((error) => {
@@ -603,12 +630,14 @@ export const useUserStore = defineStore(
       aListLength,
       followerList,
       followingList,
+      rankList,
       tagNum,
+      userProfileImg,
+      updatedUserProfileImg,
       user,
       userCnt,
       userId,
       loginUserId,
-      // loginUserPwd,
       loginUserName,
       loginUserNickName,
       loginUserBirthday,
@@ -623,6 +652,7 @@ export const useUserStore = defineStore(
       setLogout,
       setUser,
       setUserProfile,
+      updateProfileImg,
       findUserEmail,
       findUserPwd,
       myProfile,
@@ -642,6 +672,7 @@ export const useUserStore = defineStore(
       toFollow,
       isFollowOrNot,
       unFollow,
+      getRank,
     };
   },
   {
