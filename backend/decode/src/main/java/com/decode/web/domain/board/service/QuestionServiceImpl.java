@@ -2,6 +2,7 @@ package com.decode.web.domain.board.service;
 
 import com.decode.web.domain.board.dto.BoardProfileDto;
 import com.decode.web.domain.board.dto.BoardProfileResponseDto;
+import com.decode.web.domain.board.dto.CreateQuestionDocument;
 import com.decode.web.domain.board.dto.CreateQuestionDto;
 import com.decode.web.domain.board.dto.QuestionDto;
 import com.decode.web.domain.board.dto.QuestionListDto;
@@ -10,6 +11,7 @@ import com.decode.web.domain.board.dto.ResponseQuestionDto;
 import com.decode.web.domain.board.dto.UpdateQuestionDto;
 import com.decode.web.domain.board.mapper.QuestionMapper;
 import com.decode.web.domain.board.repository.MetooRepository;
+import com.decode.web.domain.board.repository.QuestionELKRepository;
 import com.decode.web.domain.board.repository.QuestionJpaRepository;
 import com.decode.web.domain.board.repository.QuestionRepository;
 import com.decode.web.domain.tag.dto.QuestionTagDto;
@@ -24,6 +26,7 @@ import com.decode.web.entity.UserProfileEntity;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,30 +48,37 @@ public class QuestionServiceImpl implements QuestionService {
     private final AnswerService answerService;
     private final ResponseUserProfileMapper responseUserProfileMapper;
     private final QuestionJpaRepository questionJpaRepository;
+    private final QuestionELKRepository questionELKRepository;
 
     @Override
-    public List<QuestionListDto> searchQuestionByKeyword(String keyword, List<Long> tagIds) {
-        List<QuestionEntity> questionEntityList;
-        if ("".equals(keyword)) {
-            questionEntityList = questionRepository.findAllByOrderByCreatedTimeDesc();
-        } else {
-            questionEntityList = questionRepository.findByTitleContainingOrderByCreatedTimeDesc(
-                    keyword);
+    public List<CreateQuestionDocument> searchQuestionByKeyword(String keyword, List<Long> tagIds) {
+        log.info("keyword:{}, tagIds:{}", keyword, tagIds);
+//        List<QuestionEntity> questionEntityList;
+//        if ("".equals(keyword)) {
+//            questionEntityList = questionRepository.findAllByOrderByCreatedTimeDesc();
+//        } else {
+//            questionEntityList = questionRepository.findByTitleContainingOrderByCreatedTimeDesc(
+//                    keyword);
+//        }
+//        List<QuestionListDto> questionListDtoList = new LinkedList<>(
+//                questionEntityList.stream()
+//                        .map(this::convertQuestionEntityToQuestionListDto)
+//                        .toList()
+//        );
+//        for (int i = questionListDtoList.size() - 1; i >= 0; i--) {
+//            for (long tag : tagIds) {
+//                if (!questionListDtoList.get(i).getTagList().contains(tag)) {
+//                    questionListDtoList.remove(i);
+//                    break;
+//                }
+//            }
+//        }
+        List<String> words =  Arrays.asList(keyword.split("\\s+"));
+        if(tagIds.isEmpty()){
+            return questionELKRepository.findByTitleOrContentContainingWords(words);
         }
-        List<QuestionListDto> questionListDtoList = new LinkedList<>(
-                questionEntityList.stream()
-                        .map(this::convertQuestionEntityToQuestionListDto)
-                        .toList()
-        );
-        for (int i = questionListDtoList.size() - 1; i >= 0; i--) {
-            for (long tag : tagIds) {
-                if (!questionListDtoList.get(i).getTagList().contains(tag)) {
-                    questionListDtoList.remove(i);
-                    break;
-                }
-            }
-        }
-        return questionListDtoList;
+
+        return questionELKRepository.findByQuestionTagsAndTitleOrContent(tagIds, keyword, keyword);
     }
 
     @Override
@@ -108,6 +118,9 @@ public class QuestionServiceImpl implements QuestionService {
             questionTagRepository.save(QuestionTagEntity.builder().question(questionEntity)
                     .tagId(questionTag.getTagId()).version(questionTag.getVersion()).build());
         }
+        CreateQuestionDocument createQuestionDocument = new CreateQuestionDocument(questionEntity, question);
+        log.info("Document:{}",createQuestionDocument.toString());
+        questionELKRepository.save(createQuestionDocument);
         return questionEntity.getId();
     }
 

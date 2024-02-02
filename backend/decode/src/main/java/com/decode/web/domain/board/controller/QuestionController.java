@@ -1,6 +1,7 @@
 package com.decode.web.domain.board.controller;
 
 import com.decode.web.domain.board.dto.BoardProfileResponseDto;
+import com.decode.web.domain.board.dto.CreateQuestionDocument;
 import com.decode.web.domain.board.dto.CreateQuestionDto;
 import com.decode.web.domain.board.dto.QuestionListDto;
 import com.decode.web.domain.board.dto.ResponseQuestionDto;
@@ -10,6 +11,7 @@ import com.decode.web.domain.board.service.QuestionService;
 import com.decode.web.entity.QuestionEntity;
 import com.decode.web.global.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
+import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +43,8 @@ public class QuestionController {
     @Operation(summary = "질문 검색(질문 목록 조회)", description = "keyword를 통한 질문 리스트 호출")
     public ResponseDto questionSearch(@RequestParam(name = "keyword") String keyword,
             @RequestParam(name = "tagIds") List<Long> tagIds) {
-        List<QuestionListDto> questionList = questionService.searchQuestionByKeyword(keyword,
+        List<String> keywords = Arrays.asList(keyword.split("\\s+"));
+        List<CreateQuestionDocument> questionList = questionService.searchQuestionByKeyword(keyword,
                 tagIds);
         return ResponseDto.builder().status(HttpStatus.OK).message("조회 완료").data(questionList)
                 .build();

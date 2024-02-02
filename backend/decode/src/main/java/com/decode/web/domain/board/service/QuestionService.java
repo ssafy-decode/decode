@@ -1,6 +1,7 @@
 package com.decode.web.domain.board.service;
 
 import com.decode.web.domain.board.dto.BoardProfileResponseDto;
+import com.decode.web.domain.board.dto.CreateQuestionDocument;
 import com.decode.web.domain.board.dto.CreateQuestionDto;
 import com.decode.web.domain.board.dto.QuestionListDto;
 import com.decode.web.domain.board.dto.ResponseQuestionDto;
@@ -10,7 +11,7 @@ import java.util.List;
 
 public interface QuestionService {
 
-    List<QuestionListDto> searchQuestionByKeyword(String keyword, List<Long> tagIds);
+    List<CreateQuestionDocument> searchQuestionByKeyword(String keywords, List<Long> tagIds);
 
     QuestionListDto convertQuestionEntityToQuestionListDto(QuestionEntity question);
 
