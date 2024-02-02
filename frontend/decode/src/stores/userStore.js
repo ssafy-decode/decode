@@ -380,7 +380,26 @@ export const useUserStore = defineStore(
         });
     };
 
-    // 로그인 유저 프로필 사진 변경 (API 2개 호출해야, /image => 결과물을 /profile/{user_id} 에 있는 profileImg에 대입 후 수정 완료)
+    // 로그인 유저 프로필 사진 변경 (S3에 등록)
+    // (API 2개 호출, /image => 결과물을 /profile/{user_id} 에 있는 profileImg에 대입 후 수정 완료)
+    // requestbody: key는 file, 형태는 File, Value는 ssafy.png 처럼 파일로
+    // responsebody: status: OK, message: 이미지 업로드 성공, data.url: 그 이미지의 url
+    // const updateProfileImg = (img) => {
+    //   console.log('작동 확인');
+    //   axios.post(`${URL}/image`, file, {
+    //     withCredentials: true,
+    //   },
+    // })
+    // .then((res)=>{
+    //   accessToken.value = parseToken(res)
+    //   const response = res.data
+    //   if(response.status === 'OK'){
+    //     // 업로드된 이미지를 /profile/{user_id} 의 profileImg 로 저장시켜야'
+    //     setUserProfile(loginUserId);
+    //     // setUserProfile 함수 작동 시 data.profileImg에 갱신할 수 있나?
+    //   }
+    // })
+    // };
 
     // 로그인 유저 선택한 기술 스택 변경
     const updateTechStack = (updateduser) => {
@@ -442,6 +461,7 @@ export const useUserStore = defineStore(
           const response = res.data;
           if (response.status === 'OK') {
             userProfile.value = response.data;
+            // 프로필 사진만 변경했을 경우 data.profileImg 에 값 갱신 가능한가??
           } else {
             console.log('Failed to get current user profile');
           }
@@ -612,6 +632,7 @@ export const useUserStore = defineStore(
       setFollowingList,
       checkPwd,
       // searchName,
+      // updateProfileImg, // 나중에 주석 풀기
       updatePwd,
       // updateUser,
       setLoginUser,
