@@ -175,6 +175,7 @@ export default {
       if (rate && !isNaN(rate)) {
         this.coinAmount = Math.floor(this.pointAmount / rate);
         this.writePointInput = true;
+        this.writeCoinInput = false;
       }
     },
     onCoinInput() {
@@ -183,6 +184,7 @@ export default {
       if (rate && !isNaN(rate)) {
         this.pointAmount = Math.floor(this.coinAmount * rate);
         this.writeCoinInput = true;
+        this.writePointInput = false;
       }
     },
     exchange() {

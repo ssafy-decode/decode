@@ -44,7 +44,7 @@
         <br />
         <!-- <v-card-title class="text-center">답변 수 & 채택 수</v-card-title> -->
         <div class="text-center">
-          답변 수: 0개
+          답변 수: {{ userStore.aListLength }}개
           <br />
           채택 수: 0개
           <!-- {{ userAnswerCount }} 답변, {{ userSelectionCount }} 채택 -->
@@ -77,19 +77,22 @@ const moreExp = ref(0);
 onMounted(() => {
   const showProfile = async () => {
     await userStore.myProfile();
+    await userStore.setAList(userStore.loginUserId);
     rankPercentile.value = countRankPercent();
   };
   showProfile();
 
   neededExp.value = nextTierExp();
-  moreExp.value = neededExp.value - userStore.loginUserProfile.exp;
+  moreExp.value = neededExp.value - userStore.loginUserProfile.exp; // 다음 티어까지 필요한 경험치 차액
 });
 
 const countRankPercent = () => {
+  // 상위 몇 % 계산
   return 50; // 임의로
 };
 
 const nextTierExp = () => {
+  // 다음 티어까지 필요한 총 경험치
   return 100; //임의로
 };
 </script>
