@@ -3,7 +3,7 @@
     <div>
       <p>질문번호: {{ question.id }}</p>
       <p @click="goDetail(question.id)">질문제목: {{ question.title }}</p>
-      <p>질문태그: {{ question.tagIds }}</p>
+      <p>질문태그: {{ question.tagList }}</p>
       <p>작성자 정보: {{ question.writer }}</p>
       <p>최초생성일자: {{ question.createdTime }}</p>
       <p>답변개수: {{ question.answerCnt }}</p>

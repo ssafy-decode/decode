@@ -10,31 +10,25 @@ import QuestionDetailView from '@/views/QuestionDetailView.vue';
 import QuestionTitleCreateView from '@/views/QuestionTitleCreateView.vue';
 import QuestionCreateView from '@/views/QuestionCreateView.vue';
 import AnswerCreateView from '@/views/AnswerCreateView.vue';
-import RankListVue from '@/views/RankView.vue';
+import RankView from '@/views/RankView.vue';
+import ShopView from '@/views/ShopView.vue';
 
 // Components
 import LoginForm from '@/components/LoginForm.vue';
-import UserRegistVue from '@/components/user/UserRegist.vue';
-import AuthenticationLoadingVue from '@/components/user/AuthenticationLoading.vue';
-import TechStackVue from '@/components/user/TechStack.vue';
-import FindEmailVue from '@/components/user/FindEmail.vue';
-import FindPwdVue from '@/components/user/FindPwd.vue';
-import FoundEmailVue from '@/components/user/FoundEmail.vue';
-import FoundPwdVue from '@/components/user/FoundPwd.vue';
-import MyProfileVue from '@/components/profile/MyProfile.vue';
-import MyProfileUpdateCheckPwdVue from '@/components/profile/MyProfileUpdateCheckPwd.vue';
-import MyTagUpdateVue from '@/components/profile/MyTagUpdate.vue';
-import MyProfileUpdateVue from '@/components/profile/MyProfileUpdate.vue';
-// import ItemShopVue from '@/components/shop/ItemShop.vue';
-import MyInventoryVue from '@/components/shop/MyInventory.vue';
+import UserRegist from '@/components/user/UserRegist.vue';
+import AuthenticationLoading from '@/components/user/AuthenticationLoading.vue';
+import TechStack from '@/components/user/TechStack.vue';
+import FindEmail from '@/components/user/FindEmail.vue';
+import FindPwd from '@/components/user/FindPwd.vue';
+import FoundEmail from '@/components/user/FoundEmail.vue';
+import FoundPwd from '@/components/user/FoundPwd.vue';
+import MyProfile from '@/components/profile/MyProfile.vue';
+import MyProfileUpdateCheckPwd from '@/components/profile/MyProfileUpdateCheckPwd.vue';
+import MyTagUpdate from '@/components/profile/MyTagUpdate.vue';
+import MyProfileUpdate from '@/components/profile/MyProfileUpdate.vue';
+import MyInventory from '@/components/shop/MyInventory.vue';
 import QuestionUpdate from '@/components/question/QuestionUpdate.vue';
-import OtherProfileVue from '@/components/rank/OtherProfile.vue';
-
-// 재화 거 : 추후 수정
-import ShopView from '@/views/ShopView.vue';
-// import ExchangeTabVue from '@/components/shop/ExchangeTab.vue';
-// import ShopTabVue from '@/components/shop/ShopTab.vue';
-import ProductComponentVue from '@/components/shop/ProductComponent.vue';
+import OtherProfile from '@/components/rank/OtherProfile.vue';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -55,49 +49,9 @@ const router = createRouter({
       component: QuestionBoardView,
     },
     {
-      path: '/login',
-      name: 'login',
-      component: LoginForm,
-    },
-    {
-      path: '/regist/1',
-      name: 'userregist',
-      component: UserRegistVue,
-    },
-    {
-      path: '/loading',
-      name: 'authenticationloading',
-      component: AuthenticationLoadingVue,
-    },
-    {
-      path: '/regist/2',
-      name: 'techstack',
-      component: TechStackVue,
-    },
-    {
       path: '/board/:id',
       name: 'question-detail',
       component: QuestionDetailView,
-    },
-    {
-      path: '/findemail',
-      name: 'findemail',
-      component: FindEmailVue,
-    },
-    {
-      path: '/findpwd',
-      name: 'findpwd',
-      component: FindPwdVue,
-    },
-    {
-      path: '/foundemail',
-      name: 'foundemail',
-      component: FoundEmailVue,
-    },
-    {
-      path: '/foundpwd',
-      name: 'foundpwd',
-      component: FoundPwdVue,
     },
     {
       path: '/question-title-create',
@@ -115,6 +69,56 @@ const router = createRouter({
       component: AnswerCreateView,
     },
     {
+      path: '/rank',
+      name: 'rankview',
+      component: RankView,
+    },
+    {
+      path: '/shop',
+      name: 'shop',
+      component: ShopView,
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: LoginForm,
+    },
+    {
+      path: '/regist/1',
+      name: 'userregist',
+      component: UserRegist,
+    },
+    {
+      path: '/loading',
+      name: 'authenticationloading',
+      component: AuthenticationLoading,
+    },
+    {
+      path: '/regist/2',
+      name: 'techstack',
+      component: TechStack,
+    },
+    {
+      path: '/findemail',
+      name: 'findemail',
+      component: FindEmail,
+    },
+    {
+      path: '/findpwd',
+      name: 'findpwd',
+      component: FindPwd,
+    },
+    {
+      path: '/foundemail',
+      name: 'foundemail',
+      component: FoundEmail,
+    },
+    {
+      path: '/foundpwd',
+      name: 'foundpwd',
+      component: FoundPwd,
+    },
+    {
       path: '/question-update/:id',
       name: 'question-update',
       component: QuestionUpdate,
@@ -122,63 +126,32 @@ const router = createRouter({
     {
       path: '/mypage',
       name: 'myprofile',
-      component: MyProfileVue,
+      component: MyProfile,
     },
     {
       path: '/checkpwd',
       name: 'myprofileupdatecheckpwd',
-      component: MyProfileUpdateCheckPwdVue,
+      component: MyProfileUpdateCheckPwd,
     },
     {
       path: '/updatetechstack',
       name: 'mytagupdate',
-      component: MyTagUpdateVue,
+      component: MyTagUpdate,
     },
     {
       path: '/updatepwd',
       name: 'myprofileupdate',
-      component: MyProfileUpdateVue,
-    },
-    {
-      path: '/rank',
-      name: 'ranklist',
-      component: RankListVue,
+      component: MyProfileUpdate,
     },
     {
       path: '/detail',
       name: 'otherprofile',
-      component: OtherProfileVue,
+      component: OtherProfile,
     },
-    // {
-    //   path: '/shop',
-    //   name: 'itemshop',
-    //   component: ItemShopVue,
-    // },
     {
       path: '/inventory',
       name: 'myinventory',
-      component: MyInventoryVue,
-    },
-    // 재화 거 : 추후 수정
-    {
-      path: '/shop',
-      name: 'shop',
-      component: ShopView,
-    },
-    // {
-    //   path: '/exchangetab',
-    //   name: 'exchangetab',
-    //   component: ExchangeTabVue,
-    // },
-    // {
-    //   path: '/shoptab',
-    //   name: 'shoptab',
-    //   component: ShopTabVue,
-    // },
-    {
-      path: '/productcomponent',
-      name: 'productcomponent',
-      component: ProductComponentVue,
+      component: MyInventory,
     },
   ],
 });

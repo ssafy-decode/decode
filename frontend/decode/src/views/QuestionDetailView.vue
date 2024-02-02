@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import axios from 'axios';
+import axios from '@/utils/common-axios';
 import { onMounted, ref } from 'vue';
 import { useQuestionStore } from '@/stores/questionStore';
 import { useAnswerStore } from '@/stores/answerStore';
@@ -44,11 +44,7 @@ const question = ref({});
 const getDetailQuestion = function () {
   axios({
     method: 'get',
-    url: `${questionStore.URL}/question/${route.params.id}`,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      Authorization: `${userStore.accessToken}`,
-    },
+    url: `/question/${route.params.id}`,
   })
     .then((res) => {
       questionId.value = route.params.id;
@@ -64,9 +60,8 @@ const deleteQuestion = function () {
   if (confirm('질문을 삭제하시겠습니까?')) {
     axios({
       method: 'delete',
-      url: `${questionStore.URL}/question/delete/${questionId.value}`,
+      url: `/question/delete/${questionId.value}`,
       headers: {
-        'Access-Control-Allow-Origin': '*',
         Authorization: `Bearer ${userStore.accessToken}`,
       },
     })

@@ -11,6 +11,7 @@
             class="searchInput"
             v-model="keyword"
             bg-color="fff"
+            clearable
           ></v-text-field>
           <v-btn class="searchBtn" size="x-large" @click="searchParams(keyword, tagIds)">검색</v-btn>
         </div>
@@ -21,8 +22,8 @@
                 variant="solo"
                 class="stackBox"
                 bg-color="fff"
-                v-model="select"
-                :items="items"
+                v-model="tagIds"
+                :items="Object.keys(items)"
                 placeholder="ex) java, spring boot, sql"
                 label="기술 스택"
                 multiple
@@ -43,17 +44,18 @@
       <v-responsive max-width="400" class="mx-auto mb-4"> </v-responsive>
       <v-card elevation="16" max-width="60%" class="mx-auto px-5 rounded-xl">
         <v-row>
-          <v-col :cols="8">
-            <v-list-item :key="'question'">
+          <v-col :cols="12">
+            <!-- <v-col :cols="8"> -->
+            <v-list-item>
               <v-list-item-title class="text-center"> 질 문 </v-list-item-title>
             </v-list-item>
           </v-col>
 
-          <v-col :cols="4">
+          <!-- <v-col :cols="4">
             <v-list-item :key="'author'">
               <v-list-item-title class="text-center"> 작 성 </v-list-item-title>
             </v-list-item>
-          </v-col>
+          </v-col> -->
         </v-row>
         <QuestionListItem v-for="question in questionStore.questions" :key="question.id" :question="question" />
       </v-card>
@@ -68,41 +70,27 @@ import QuestionListItem from './QuestionListItem.vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-const model = ref(false);
+// const model = ref(false);
 
 const goCreateQuestion = function () {
   router.push({ path: `/question-title-create` });
 };
 
-const switchLabel = computed(() => {
-  return model.value ? '코드로 검색' : '키워드로 검색';
-});
+// const switchLabel = computed(() => {
+//   return model.value ? '코드로 검색' : '키워드로 검색';
+// });
 
-const benched = ref(0);
+// const benched = ref(0);
 
 const questionStore = useQuestionStore();
 const keyword = ref('');
-const tagIds = ref('');
+const tagIds = ref([]);
 
 const searchParams = function (keyword, tagIds) {
   questionStore.getQuestions(keyword, tagIds);
 };
 
-const select = ref([]);
-const items = ref([
-  'python',
-  'java',
-  'C++',
-  'javascript',
-  'django',
-  'spring',
-  'spring boot',
-  'kotlin',
-  'sql',
-  'react',
-  'vue',
-  'C#',
-]);
+const items = questionStore.items;
 </script>
 
 <style scoped>
