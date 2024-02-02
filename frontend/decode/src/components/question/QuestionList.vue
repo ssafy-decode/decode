@@ -47,20 +47,20 @@
 
   <div id="app">
     <v-responsive max-width="400" class="mx-auto mb-4"> </v-responsive>
-    <v-card color="#f3f3f3" elevation="16" max-width="60%" class="mx-auto px-5 rounded-xl">
+    <v-card color="#f3f3f3" elevation="16" max-width="60%" class="card mx-auto px-5">
       <v-row>
-        <v-col :cols="12">
-          <!-- <v-col :cols="8"> -->
+        <!-- <v-col :cols="12"> -->
+        <v-col :cols="9">
           <v-list-item class="titleBox">
             <v-list-item-title class="text-center title"> 질 문 </v-list-item-title>
           </v-list-item>
         </v-col>
-        <!-- 
-        <v-col :cols="4">
+
+        <v-col :cols="3">
           <v-list-item class="titleBox">
-            <v-list-item-title class="text-center"> 작 성 </v-list-item-title>
+            <v-list-item-title class="text-center title"> 작 성 </v-list-item-title>
           </v-list-item>
-        </v-col> -->
+        </v-col>
       </v-row>
       <QuestionListItem v-for="question in questionStore.questions" :key="question.id" :question="question" />
     </v-card>
@@ -93,6 +93,12 @@ const items = questionStore.items;
 </script>
 
 <style scoped>
+.card {
+  border-top-left-radius: 50px;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+}
+
 input {
   border-left: 1px solid black;
 }
@@ -179,7 +185,6 @@ span {
   margin: 40px 60px;
   height: 55px;
   color: #2f423d;
-  /* width: 706px; */
 }
 
 .title {
