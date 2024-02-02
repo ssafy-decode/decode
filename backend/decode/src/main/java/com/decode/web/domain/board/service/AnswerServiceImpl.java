@@ -1,5 +1,6 @@
 package com.decode.web.domain.board.service;
 
+import com.decode.web.domain.board.dto.AnswerCountResponseDto;
 import com.decode.web.domain.board.dto.BoardProfileDto;
 import com.decode.web.domain.board.dto.BoardProfileResponseDto;
 import com.decode.web.domain.board.dto.CreateAnswerDto;
@@ -177,5 +178,13 @@ public class AnswerServiceImpl implements AnswerService {
             throw new InvalidWriterException("글 작성자가 아닙니다.");
         }
         answer.doAdopt();
+    }
+
+    @Override
+    public AnswerCountResponseDto getAnswerCountByUserId(Long userId) {
+        Long selectedCnt = answerJpaRepository.getAnswerCountByUserId(userId);
+        return AnswerCountResponseDto.builder()
+                .selectedCnt(selectedCnt)
+                .build();
     }
 }

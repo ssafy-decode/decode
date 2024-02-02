@@ -32,4 +32,12 @@ public class AnswerJpaRepository {
                 .setParameter("answerId", answerId)
                 .getSingleResult();
     }
+
+    public Long getAnswerCountByUserId(Long userId) {
+        return entityManager.createQuery("select count(a) from AnswerEntity a "
+                                + "where a.answerWriter.id =: userId "
+                        , Long.class)
+                .setParameter("userId", userId)
+                .getSingleResult();
+    }
 }

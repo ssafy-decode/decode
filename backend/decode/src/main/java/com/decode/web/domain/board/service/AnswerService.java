@@ -1,5 +1,6 @@
 package com.decode.web.domain.board.service;
 
+import com.decode.web.domain.board.dto.AnswerCountResponseDto;
 import com.decode.web.domain.board.dto.BoardProfileResponseDto;
 import com.decode.web.domain.board.dto.CreateAnswerDto;
 import com.decode.web.domain.board.dto.RecommendDto;
@@ -32,4 +33,6 @@ public interface AnswerService {
     BoardProfileResponseDto findAllByUserId(Long userId);
 
     void doAdopt(Long userId, Long answerId) throws InvalidWriterException;
+
+    AnswerCountResponseDto getAnswerCountByUserId(Long userId);
 }

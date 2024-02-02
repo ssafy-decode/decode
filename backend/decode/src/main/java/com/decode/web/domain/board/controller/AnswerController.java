@@ -1,5 +1,6 @@
 package com.decode.web.domain.board.controller;
 
+import com.decode.web.domain.board.dto.AnswerCountResponseDto;
 import com.decode.web.domain.board.dto.AnswerDoAdoptDto;
 import com.decode.web.domain.board.dto.BoardProfileResponseDto;
 import com.decode.web.domain.board.dto.CreateAnswerDto;
@@ -116,6 +117,16 @@ public class AnswerController {
                 .status(HttpStatus.OK)
                 .message("답변 채택 완료")
                 .data("")
+                .build();
+    }
+
+    @GetMapping("/count/{userId}")
+    public ResponseDto getAnswerCount(@PathVariable Long userId) {
+        AnswerCountResponseDto data = answerService.getAnswerCountByUserId(userId);
+        return ResponseDto.builder()
+                .status(HttpStatus.OK)
+                .message("총 답변 채택 수 가져오기 성공")
+                .data(data)
                 .build();
     }
 
