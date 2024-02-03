@@ -69,6 +69,9 @@ public class SecurityConfig {
                         .authorizationEndpoint(authorizationEndpoint -> authorizationEndpoint
                                 .baseUri("/oauth2/authorization")
                         )
+                        .redirectionEndpoint(redirectionEndpoint -> redirectionEndpoint
+                                .baseUri("/oauth2/callback/*")
+                        )
 
                         .successHandler(oAuth2AuthenticationSuccessHandler)
                         .failureHandler(oAuth2AuthenticationFailureHandler)
@@ -81,10 +84,11 @@ public class SecurityConfig {
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                         .accessDeniedHandler(jwtAccessDeniedHandler)
                 )
-                .addFilter(corsconfig.corsFilter())
-                .addFilterBefore(new JwtAuthenticationFilter(authservice, jwtTokenProvider),
-                        UsernamePasswordAuthenticationFilter.class);
+                .addFilter(corsconfig.corsFilter());
+//                .addFilterBefore(new JwtAuthenticationFilter(authservice, jwtTokenProvider),
+//                        UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
     }
 }
+;
