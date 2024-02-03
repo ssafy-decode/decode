@@ -72,9 +72,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         response.addCookie(cookie);
         response.setHeader("Authorization", "Bearer " + AccessToken);
 
-        // 리다이렉션
         log.info("oauth 로그인 성공");
-//        response.sendRedirect("http://localhost:8080");
-        response.setHeader("Authorization", "Bearer " + AccessToken);
+
     }
 }
