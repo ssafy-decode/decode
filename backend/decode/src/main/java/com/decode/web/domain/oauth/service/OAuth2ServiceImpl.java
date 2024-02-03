@@ -59,10 +59,10 @@ public class OAuth2ServiceImpl implements OAuth2Service {
     }
 
     @Override
-    public TokenDto login(GithubUserInfoDto userInfo) {
+    public TokenDto login(GithubUserInfoDto userInfo, String provider) {
         String email = userInfo.getLogin()+ "@decode.com";
 
-        // 최초 로그인이면 github의 uid로 회원가입 처리
+        // 최초 로그인이면 uid로 회원가입 처리
         if (userInfoRepository.findByEmail(email).isEmpty()) {
             UserInfoEntity userInfoEntity = UserInfoEntity.builder()
                     .email(email)
@@ -72,11 +72,11 @@ public class OAuth2ServiceImpl implements OAuth2Service {
         }
 
         // jwt 발급
-        String AccessToken = jwtTokenProvider.createAccessToken(email, "github");
-        String RefreshToken = jwtTokenProvider.createRefreshToken(email, "github");
+        String AccessToken = jwtTokenProvider.createAccessToken(email, provider);
+        String RefreshToken = jwtTokenProvider.createRefreshToken(email, provider);
 
         // redis에 refresh token 저장
-        authService.saveRefreshToken("github", email, RefreshToken);
+        authService.saveRefreshToken(provider, email, RefreshToken);
 
         // 인증 정보 저장
         Authentication newAuthentication = jwtTokenProvider.getAuthentication(AccessToken);

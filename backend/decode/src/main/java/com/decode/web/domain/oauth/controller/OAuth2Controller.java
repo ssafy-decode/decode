@@ -31,7 +31,7 @@ public class OAuth2Controller {
         GithubUserInfoDto userInfo = oAuth2Service.getUserInfo(accessToken);
 
         // 3. 사용자 정보 이용해서 회원가입 or 로그인 처리
-        TokenDto tokenDto = oAuth2Service.login(userInfo);
+        TokenDto tokenDto = oAuth2Service.login(userInfo,"github");
 
         // 4. 이후엔 기존 로그인과 똑같이 처리
         Cookie cookie = new Cookie("refresh-token", tokenDto.getRefreshToken());
