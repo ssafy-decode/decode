@@ -1,27 +1,50 @@
 <template>
-  <div>
-    <div class="answerBox" v-if="answer">
-      <div>
-        <p>답변 번호: {{ answer.answerId }}</p>
-        <p>작성자: {{ answer.answerWriter.nickname }}</p>
-        <p>답변 내용: {{ answer.content }}</p>
-        <p>작성시각: {{ answer.createdTime }}</p>
-        <p>수정시각: {{ answer.updatedTime }}</p>
-        <br />
+  <div v-if="answer">
+    <div class="myListItem">
+      <div class="listItem">
+        <div>
+          <p>
+            <span class="nickname title">
+              {{ answer.answerWriter.nickname }}
+            </span>
+            &nbsp;
+            <span class="time info">
+              {{ answer.createdTime }}
+            </span>
+          </p>
+        </div>
       </div>
-      <div class="btnBox">
-        <v-btn class="btn" @click="answerStore.updateAnswer(answer.answerId)">답변수정</v-btn>
-        <v-btn class="btn" @click="answerStore.deleteAnswer(answer.answerId)">답변삭제</v-btn>
+      <div class="answerBox listItem answerContent">
+        {{ answer.content }}
+      </div>
+      <div class="editDeleteBox">
+        <span class="deleteText" @click="answerStore.deleteAnswer(answer.answerId)">답변삭제</span>
       </div>
     </div>
-    <br />
-    <hr />
+    <!-- <br /> -->
     <div class="commentBox">
       <CommentList :comment-list="answer.commentList" />
-      <v-form @submit.prevent="createComment" class="commentInputArea">
-        <v-textarea v-model="commentContent" clearable label="댓글을 작성해주세요"></v-textarea>
-        <v-btn class="btn" type="submit">댓글등록</v-btn>
-      </v-form>
+      <div class="searchBox">
+        <div class="midBox">
+          <v-form class="commentInputArea stackBox">
+            <v-textarea
+              variant="solo-filled"
+              auto-grow
+              rows="1"
+              class="searchInput"
+              v-model="commentContent"
+              clearable
+              label="댓글을 작성해주세요"
+            >
+              <template #append-inner>
+                <v-btn type="submit" class="searchBtn" size="medium" @click="createComment">
+                  <img src="/searchicon.png" alt="검색아이콘" style="width: 40px; height: auto" />
+                </v-btn>
+              </template>
+            </v-textarea>
+          </v-form>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -29,7 +52,6 @@
 <script setup>
 import CommentList from '@/components/comment/CommentList.vue';
 import { useAnswerStore } from '@/stores/answerStore';
-import { useCommentStore } from '@/stores/commentStore';
 import { useUserStore } from '@/stores/userStore';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
@@ -38,7 +60,6 @@ import axios from '@/utils/common-axios';
 const router = useRouter();
 
 const answerStore = useAnswerStore();
-const commentStore = useCommentStore();
 const userStore = useUserStore();
 
 const props = defineProps({
@@ -91,7 +112,8 @@ div {
 }
 
 .commentBox {
-  margin-left: 50px;
+  margin-left: 10px;
+  padding: 0px;
 }
 
 .commentInputArea {
@@ -99,5 +121,101 @@ div {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.img {
+  width: 75px;
+  height: 75px;
+}
+.metooImg {
+  width: 60px;
+  height: 70px;
+  margin-right: 5px;
+}
+.answerCountImg {
+  margin-right: 10px;
+  height: 45px;
+}
+
+.myListItem {
+  background-color: white;
+  border-radius: 35px;
+}
+.myListItem2 {
+  background-color: white;
+  border-radius: 35px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.listItem {
+  width: 100%;
+  height: auto;
+  font-size: large;
+  color: #575757;
+  display: flex;
+  align-items: center;
+}
+
+.info {
+  font-size: small;
+}
+
+.nickname {
+  color: #62c0a6;
+}
+
+.title {
+  font-size: large;
+  font-weight: 800;
+}
+
+.time {
+  color: #d9d9d9;
+}
+
+.answerContent {
+  border: #62c0a6 solid 2px;
+  border-radius: 24px;
+  padding: 40px;
+}
+
+.editDeleteBox {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0;
+}
+
+.deleteText {
+  color: #12a980;
+  font-size: small;
+  font-weight: 800;
+}
+
+.searchBox {
+  position: relative;
+  right: -18px;
+  padding-left: 127px;
+  margin: 0px;
+}
+
+.midBox {
+  padding: 0px;
+  margin: 0px;
+}
+
+.searchInput {
+  padding: 0px;
+  margin: 0px;
+}
+
+.searchBtn {
+  position: relative;
+  border-radius: 30px;
+}
+
+.stackBox ::v-deep(.v-field) {
+  border-radius: 30px;
 }
 </style>
