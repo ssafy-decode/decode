@@ -165,7 +165,6 @@ public class UserController {
         cookie.setMaxAge(COOKIE_MAX_AGE);
         cookie.setSecure(true);
         cookie.setDomain("i10a507.p.ssafy.io");
-        cookie.setDomain("localhost");
         res.addCookie(cookie);
 
         res.setHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
@@ -187,7 +186,7 @@ public class UserController {
         Cookie cookie = new Cookie("refresh-token", null);
         cookie.setMaxAge(0);
         cookie.setSecure(true);
-        cookie.setDomain("localhost");
+        cookie.setDomain("i10a507.p.ssafy.io");
         res.addCookie(cookie);
 
         // 헤더에서 토큰 삭제
