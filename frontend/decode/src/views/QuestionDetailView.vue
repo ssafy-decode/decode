@@ -13,28 +13,49 @@
       </v-col>
     </v-row>
     <br />
-    <p>질문 번호: {{ question.id }}</p>
-    <p>질문 내용: {{ question.content }}</p>
-    <p>질문 작성자 정보: {{ question.questionWriter }}</p>
-    <p>질문 태그 목록: {{ question.tagList }}</p>
-    <p>질문 생성일: {{ question.createdTime }}</p>
-    <p>질문 수정일: {{ question.updatedTime }}</p>
-    <p>질문 나도 궁금 수: {{ question.meTooCnt }}</p>
-    <br />
+    <div class="myListItem contentBox">
+      <v-row>
+        <v-col :cols="12">
+          <div class="listItem writerBox">
+            <span class="nickname title">{{ writerNickname }}</span>
+            &nbsp; &nbsp;
+            <span class="time info">{{ question.createdTime }}</span>
+          </div>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col :cols="12">
+          <div class="listItem title">{{ question.content }}</div>
+        </v-col>
+      </v-row>
+      <br /><br />
+      <div class="btnBox">
+        <div>
+          <v-btn @click="goUpdate()">질문수정</v-btn>
+          <v-btn @click="deleteQuestion()">질문삭제</v-btn>
+        </div>
+        <div>
+          <!-- 나도 궁금 -->
+          <!-- 누르면 나도 궁금 되도록 -->
 
-    <div class="btnBox">
-      <v-btn class="btn" @click="goUpdate()">질문수정</v-btn>
-      <v-btn class="btn" @click="deleteQuestion()">질문삭제</v-btn>
+          <!-- <span>{{ question.meTooCnt }}</span>
+          &nbsp; &nbsp; -->
+
+          <!-- 북마크 카운트수 불러올 수 있도록? -->
+          <!-- 누르면 북마크 되도록 -->
+
+          <!-- <span>{{ question.meTooCnt }}</span>
+          &nbsp; &nbsp; -->
+
+          <v-btn @click="goCreateAnswer()">답변달기</v-btn>
+        </div>
+      </div>
     </div>
-
-    <hr />
     <br />
-
-    <div class="answerRelatedBox">
-      <v-btn @click="goCreateAnswer()">답변생성</v-btn>
+    <br />
+    <div class="myListItem">
+      <AnswerList :answer-list="question.answerList" />
     </div>
-
-    <AnswerList :answer-list="question.answerList" />
   </v-card>
 </template>
 
@@ -55,6 +76,7 @@ const route = useRoute();
 
 const questionId = ref(0);
 const question = ref({});
+const writerNickname = ref('');
 
 const getDetailQuestion = function () {
   axios({
@@ -64,6 +86,7 @@ const getDetailQuestion = function () {
     .then((res) => {
       questionId.value = route.params.id;
       question.value = res.data.data;
+      writerNickname.value = question.value.questionWriter.nickname;
     })
     .catch((err) => {
       console.log(err);
@@ -110,24 +133,31 @@ onMounted(() => {
 </script>
 
 <style scoped>
+button {
+  background-color: #62c0a6;
+  border-radius: 35px;
+  font-size: small;
+  padding: 0 10 0;
+  margin: 5px;
+}
+
 .card {
   border-top-left-radius: 50px;
   border-bottom-left-radius: 50px;
   border-bottom-right-radius: 50px;
-  padding-bottom: 20px;
-  margin: 40px;
+  margin: 40 px;
 }
 .answerRelatedBox {
   display: flex;
-  justify-content: space-between;
-  padding: 20px;
+  justify-content: flex-end;
 }
 
 .answerListBox {
   padding: 20px;
 }
 .btnBox {
-  padding: 20px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .btn {
@@ -152,20 +182,25 @@ onMounted(() => {
 
 .myListItem {
   background-color: white;
-  border-radius: 45px;
+  border-radius: 35px;
+  padding-bottom: 10px;
 }
 .myListItem2 {
   background-color: white;
-  border-radius: 45px;
+  border-radius: 35px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.myListItem:hover {
-  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.4);
-  transition: 0.3s;
+.contentBox {
+  padding: 25px 40px 25px;
 }
+
+.writerBox {
+  align-items: flex-end;
+}
+
 .listItem {
   width: 100%;
   height: auto;
@@ -186,5 +221,9 @@ onMounted(() => {
 .title {
   font-size: large;
   font-weight: 800;
+}
+
+.time {
+  color: #d9d9d9;
 }
 </style>

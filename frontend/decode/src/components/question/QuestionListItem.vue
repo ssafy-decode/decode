@@ -10,7 +10,7 @@
                 {{ question.writer.nickname }}
               </span>
               &nbsp;
-              <span>
+              <span class="time">
                 {{ question.createdTime }}
               </span>
             </p>
@@ -22,12 +22,12 @@
     <v-col :cols="3">
       <div class="myListItem2">
         <img class="img" src="./answerIcon.png" aslt="답변 아이콘" />
-        <img class="answerCountImg" src="./answerCountIcon.png" aslt="답변수 아이콘" />
-        <img class="metooImg" src="./metoo.png" aslt="나도궁금해요 아이콘" />
+        <p>답변: {{ question.answerCnt }}</p>
+        <p>나도궁금: {{ question.meTooCnt }}</p>
+        <!-- <img class="answerCountImg" src="./answerCountIcon.png" aslt="답변수 아이콘" /> -->
+        <!-- <img class="metooImg" src="./metoo.png" aslt="나도궁금해요 아이콘" /> -->
       </div>
       <!-- <p>질문태그: {{ question.tagList }}</p> -->
-      <!-- <p>답변개수: {{ question.answerCnt }}</p> -->
-      <!-- <p>나도궁금수: {{ question.meTooCnt }}</p> -->
     </v-col>
   </v-row>
 </template>
@@ -65,11 +65,11 @@ defineProps({
 
 .myListItem {
   background-color: white;
-  border-radius: 45px;
+  border-radius: 35px;
 }
 .myListItem2 {
   background-color: white;
-  border-radius: 45px;
+  border-radius: 35px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -99,5 +99,9 @@ defineProps({
 .title {
   font-size: large;
   font-weight: 800;
+}
+
+.time {
+  color: #d9d9d9;
 }
 </style>

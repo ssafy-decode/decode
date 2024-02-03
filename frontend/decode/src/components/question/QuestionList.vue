@@ -11,13 +11,11 @@
           bg-color="fff"
           clearable
         >
-          <!-- 이미지 아이콘 넣는 코드 -->
           <template #append-inner>
             <v-btn class="searchBtn" size="medium" @click="searchParams(keyword, tagIds)">
               <img src="./searchicon.png" alt="검색아이콘" style="width: 40px; height: auto" />
             </v-btn>
           </template>
-          <!-- 이미지 아이콘 넣는 코드 -->
         </v-text-field>
       </div>
     </div>
