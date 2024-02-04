@@ -93,7 +93,6 @@ const createAnswer = function () {
     userId: parseInt(userId),
     content: answerContent.value,
   };
-  console.log(data);
   axios({
     method: 'post',
     url: `/answer`,
@@ -107,6 +106,7 @@ const createAnswer = function () {
       router.push({ path: `/board/${questionId}` });
     })
     .catch((err) => {
+      console.log(data)
       console.log(err);
       console.log('답변 생성 오류');
     });
