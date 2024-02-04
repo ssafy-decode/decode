@@ -53,7 +53,7 @@
     </div>
     <br />
     <br />
-    <div class="myListItem">
+    <div v-if="isAnswerExist" class="myListItem" >
       <AnswerList :answer-list="question.answerList" />
     </div>
   </v-card>
@@ -77,6 +77,7 @@ const route = useRoute();
 const questionId = ref(0);
 const question = ref({});
 const writerNickname = ref('');
+const isAnswerExist = ref(false)
 
 const getDetailQuestion = function () {
   axios({
@@ -86,6 +87,7 @@ const getDetailQuestion = function () {
     .then((res) => {
       questionId.value = route.params.id;
       question.value = res.data.data;
+      isAnswerExist.value = question.value.answerList.length > 0;
       writerNickname.value = question.value.questionWriter.nickname;
     })
     .catch((err) => {
@@ -141,6 +143,10 @@ button {
   margin: 5px;
 }
 
+.bgColorWhite {
+  background-color: white;
+}
+
 .card {
   border-top-left-radius: 50px;
   border-bottom-left-radius: 50px;
@@ -181,9 +187,9 @@ button {
 }
 
 .myListItem {
-  background-color: white;
   border-radius: 35px;
   padding-bottom: 10px;
+  background-color: white;
 }
 .myListItem2 {
   background-color: white;
