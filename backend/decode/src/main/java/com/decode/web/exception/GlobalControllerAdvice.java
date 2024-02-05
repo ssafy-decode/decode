@@ -129,7 +129,7 @@ public class GlobalControllerAdvice {
         log.error("{}", e.getMessage());
         return new ResponseEntity<>(ResponseDto.builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .message("Internal Server Error")
+                .message(e.getMessage())
                 .data("")
                 .build(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
