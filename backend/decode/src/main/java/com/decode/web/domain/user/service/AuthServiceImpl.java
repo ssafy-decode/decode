@@ -2,6 +2,7 @@ package com.decode.web.domain.user.service;
 
 import com.decode.web.domain.common.redis.RedisService;
 import com.decode.web.domain.user.dto.AuthDto;
+import com.decode.web.domain.user.dto.AuthDto.TokenDto;
 import com.decode.web.exception.CustomLoginException;
 import com.decode.web.global.utils.authentication.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -33,10 +34,11 @@ public class AuthServiceImpl implements AuthService {
         try {
             Authentication authentication = authenticationManagerBuilder.getObject()
                     .authenticate(authenticationToken);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            TokenDto tokenDto = generateToken(SERVER, authentication.getName());
             userService.setAttendance(loginDto.getEmail());
-            userService.setExp(userService.getUserByEmail(loginDto.getEmail()).getId(),1);
-            return generateToken(SERVER, authentication.getName());
+            userService.setExp(jwtTokenProvider.getAuthUserId(tokenDto.getAccessToken()),1);
+            return tokenDto;
         } catch (BadCredentialsException e) {
             throw new CustomLoginException("아이디/비밀번호가 일치하지 않아요.");
         }
