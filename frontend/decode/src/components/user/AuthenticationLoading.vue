@@ -10,10 +10,19 @@
 </template>
 
 <script setup>
-// 인증 완료 시 alert 발동시키기
-// const next = () => {
-//   alert('소셜 인증이 완료되었습니다.\n다음 단계로 넘어갑니다.');
-// };
+import { useRouter } from 'vue-router';
+import { useUserStore } from '@/stores/userStore';
+import { storeToRefs } from 'pinia';
+
+const userStore = useUserStore();
+const { accessToken: accessToken, isLoggedIn: isLoggedIn } = storeToRefs(userStore);
+const router = useRouter();
+
+window.addEventListener('message', (event) => {
+  accessToken.value = event.data;
+  isLoggedIn.value = true;
+  router.push('/');
+});
 </script>
 
 <style scoped></style>

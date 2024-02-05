@@ -12,6 +12,7 @@ import QuestionCreateView from '@/views/QuestionCreateView.vue';
 import AnswerCreateView from '@/views/AnswerCreateView.vue';
 import RankView from '@/views/RankView.vue';
 import ShopView from '@/views/ShopView.vue';
+import AuthenticationRedirectView from '@/views/AuthenticationRedirect.vue';
 
 // Components
 import LoginForm from '@/components/LoginForm.vue';
@@ -92,6 +93,11 @@ const router = createRouter({
       path: '/loading',
       name: 'authenticationloading',
       component: AuthenticationLoading,
+    },
+    {
+      path: '/oauth2/callback/github',
+      name: 'oauth2redirect',
+      component: AuthenticationRedirectView,
     },
     {
       path: '/regist/2',
