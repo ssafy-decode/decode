@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -57,8 +58,12 @@ public class UserController {
     private final MailService mailService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    private final int COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30일
 
+    @Value("${domain.cookie.max-age}")
+    private String COOKIE_MAX_AGE;
+
+    @Value("${domain.url}")
+    private String DOMAIN_URL;
 
     @Deprecated
     @GetMapping("/user")
@@ -85,7 +90,7 @@ public class UserController {
 
     @GetMapping("/user/profile/{userId}")
     @Operation(summary = "UserProfile 조회", description = "userId에 해당하는 유저의 프로필 조회")
-    public ResponseDto getUserProfile(@PathVariable Long userId){
+    public ResponseDto getUserProfile(@PathVariable Long userId) {
         ResponseUserProfileDto userProfile = userService.getUserProfileDtoById(userId);
         return ResponseDto.builder().data(userProfile).status(HttpStatus.OK).build();
     }
@@ -162,9 +167,9 @@ public class UserController {
         TokenDto tokenDto = authService.login(loginDto);
         // 로그인 성공하면 액세스토큰은 헤더, 리프레시토큰은 쿠키에 저장
         Cookie cookie = new Cookie("refresh-token", tokenDto.getRefreshToken());
-        cookie.setMaxAge(COOKIE_MAX_AGE);
+        cookie.setMaxAge(Integer.parseInt(COOKIE_MAX_AGE));
         cookie.setSecure(true);
-        cookie.setDomain("i10a507.p.ssafy.io");
+        cookie.setDomain(DOMAIN_URL);
         res.addCookie(cookie);
 
         res.setHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
@@ -325,6 +330,7 @@ public class UserController {
                 .status(HttpStatus.OK)
                 .message("출석 로그 확인").build();
     }
+
     @GetMapping("/exp/{id}")
     @Operation(summary = "경험치 로그", description = "경험치로그 API")
     public ResponseDto getExp(@PathVariable Long id) {
