@@ -1,11 +1,14 @@
 package com.decode.web.domain.tag.controller;
 
 import com.decode.web.domain.tag.dto.TagDto;
+import com.decode.web.domain.tag.dto.TagIdListDto;
 import com.decode.web.domain.tag.service.TagService;
 import com.decode.web.global.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,4 +28,13 @@ public class TagController {
         return ResponseDto.builder().status(HttpStatus.OK).message(tagName + "duplicate").build();
     }
 
+    @GetMapping("/tag/{userId}")
+    public ResponseDto getTags(@PathVariable Long userId) {
+        TagIdListDto data = tagService.getTagListByUserId(userId);
+        return ResponseDto.builder()
+                .data(data)
+                .message("기술 스택 목록 가져오기 성공")
+                .status(HttpStatus.OK)
+                .build();
+    }
 }
