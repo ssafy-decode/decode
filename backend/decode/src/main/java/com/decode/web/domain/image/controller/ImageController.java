@@ -23,14 +23,13 @@ public class ImageController {
     public ResponseDto imageUpload(
             @RequestPart(value = "file", required = false) MultipartFile image)
             throws IOException {
-        String uploadedImageUrl = imageServiceImpl.uploadImage(image);
+        String data = imageServiceImpl.uploadImage(image);
         return ResponseDto.builder()
                 .status(HttpStatus.OK)
                 .message("이미지 업로드 성공")
                 .data(ImageResponseDto.builder()
-                        .url(uploadedImageUrl)
-                        .build()
-                )
+                        .url(data)
+                        .build())
                 .build();
     }
 }
