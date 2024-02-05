@@ -17,8 +17,8 @@
       <div class="answerBox listItem answerContent">
         {{ answer.content }}
       </div>
-      <div class="editDeleteBox">
-        <span class="deleteText" @click="answerStore.deleteAnswer(answer.answerId)">답변삭제</span>
+      <div class="editDeleteBox" @click="answerStore.deleteAnswer(answer.answerId)">
+        <span class="deleteText">답변삭제</span>
       </div>
     </div>
     <!-- <br /> -->
@@ -110,7 +110,6 @@ div {
   display: flex;
   justify-content: space-between;
 }
-
 
 .commentBox {
   margin-left: 10px;

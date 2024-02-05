@@ -18,8 +18,8 @@
       <div class="commentBox listItem">
         {{ comment.content }}
       </div>
-      <div class="editDeleteBox">
-        <span class="deleteText" @click="commentStore.deleteComment(comment.commentId)">답변삭제</span>
+      <div class="editDeleteBox" @click="commentStore.deleteComment(comment.commentId)">
+        <span class="deleteText">댓글삭제</span>
       </div>
     </div>
   </div>

@@ -1,9 +1,6 @@
 <template>
   <div>
-    <h1>A Create View</h1>
-    <br />
     <AnswerCreate />
-    <br />
   </div>
 </template>
 
@@ -11,4 +8,8 @@
 import AnswerCreate from '@/components/answer/AnswerCreate.vue';
 </script>
 
-<style scoped></style>
+<style scoped>
+div {
+  margin: 30px 0px 30px;
+}
+</style>
