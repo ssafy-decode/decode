@@ -2,12 +2,13 @@ package com.decode.web.domain.board.service;
 
 import com.decode.web.domain.board.dto.BoardProfileDto;
 import com.decode.web.domain.board.dto.BoardProfileResponseDto;
-import com.decode.web.domain.board.dto.CreateQuestionDocument;
+import com.decode.web.domain.board.dto.QuestionDocument;
 import com.decode.web.domain.board.dto.CreateQuestionDto;
 import com.decode.web.domain.board.dto.QuestionDto;
 import com.decode.web.domain.board.dto.QuestionListDto;
 import com.decode.web.domain.board.dto.ResponseAnswerDto;
 import com.decode.web.domain.board.dto.ResponseQuestionDto;
+import com.decode.web.domain.board.dto.ResponseQuestionListDto;
 import com.decode.web.domain.board.dto.UpdateQuestionDto;
 import com.decode.web.domain.board.mapper.QuestionMapper;
 import com.decode.web.domain.board.repository.MetooRepository;
@@ -26,8 +27,6 @@ import com.decode.web.entity.UserProfileEntity;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -42,150 +41,109 @@ public class QuestionServiceImpl implements QuestionService {
     private final QuestionRepository questionRepository;
     private final UserProfileRepository userProfileRepository;
     private final QuestionMapper questionMapper;
-    private final TagService tagService;
-    private final QuestionTagRepository questionTagRepository;
-    private final MetooRepository metooRepository;
     private final AnswerService answerService;
     private final ResponseUserProfileMapper responseUserProfileMapper;
-    private final QuestionJpaRepository questionJpaRepository;
     private final QuestionELKRepository questionELKRepository;
 
     @Override
-    public List<CreateQuestionDocument> searchQuestionByKeyword(String keyword, List<Long> tagIds) {
-        log.info("keyword:{}, tagIds:{}", keyword, tagIds);
-//        List<QuestionEntity> questionEntityList;
-//        if ("".equals(keyword)) {
-//            questionEntityList = questionRepository.findAllByOrderByCreatedTimeDesc();
-//        } else {
-//            questionEntityList = questionRepository.findByTitleContainingOrderByCreatedTimeDesc(
-//                    keyword);
-//        }
-//        List<QuestionListDto> questionListDtoList = new LinkedList<>(
-//                questionEntityList.stream()
-//                        .map(this::convertQuestionEntityToQuestionListDto)
-//                        .toList()
-//        );
-//        for (int i = questionListDtoList.size() - 1; i >= 0; i--) {
-//            for (long tag : tagIds) {
-//                if (!questionListDtoList.get(i).getTagList().contains(tag)) {
-//                    questionListDtoList.remove(i);
-//                    break;
-//                }
-//            }
-//        }
-        List<String> words =  Arrays.asList(keyword.split("\\s+"));
-        if(tagIds.isEmpty()){
-            return questionELKRepository.findByTitleOrContentContainingWords(words);
+    public List<ResponseQuestionListDto> searchQuestionByKeyword(String keyword, List<Long> tagIds) {
+        List<QuestionDocument> questionDocumentList;
+        if(keyword.isEmpty()){
+            if(tagIds.isEmpty()) questionDocumentList = questionELKRepository.findAllQuestion();
+            else questionDocumentList = questionELKRepository.findByQuestionTags(tagIds);
+        } else {
+            if(tagIds.isEmpty()) questionDocumentList = questionELKRepository.findByTitleOrContent(keyword);
+            else questionDocumentList = questionELKRepository.findByQuestionTagsAndTitleAndContent(keyword,tagIds);
         }
 
-        return questionELKRepository.findByQuestionTagsAndTitleOrContent(tagIds, keyword, keyword);
+        return questionDocumentList.stream().map(this::convertDocumentToQuestionListDto).collect(
+                Collectors.toList());
+
     }
 
-    @Override
-    public QuestionListDto convertQuestionEntityToQuestionListDto(QuestionEntity question) {
-        return new QuestionListDto(
-                question.getId(),
-                question.getTitle(),
-                responseUserProfileMapper.toDto(question.getQuestionWriter()),
-                tagIds(question.getQuestionTags()),
-                question.getCreatedTime(),
-                question.getAnswers().size(),
-                question.getMetoos().size()
-        );
+    public ResponseQuestionListDto convertDocumentToQuestionListDto(
+            QuestionDocument questionDocument) {
+        QuestionEntity questionEntity = questionRepository.getReferenceById(questionDocument.getId());
+        return new ResponseQuestionListDto(
+            questionDocument.getId(),
+            questionDocument.getTitle(),
+            responseUserProfileMapper.toDto(
+                    userProfileRepository.getReferenceById(questionDocument.getWriterId())),
+            questionDocument.getQuestionTags(),
+            questionEntity.getCreatedTime(),
+            questionEntity.getUpdatedTime(),
+            questionEntity.getAnswers().size(),
+            questionEntity.getMetoos().size());
     }
-
-    private List<Long> tagIds(List<QuestionTagEntity> questionTagEntityList) {
-        return questionTagEntityList.stream()
-                .map(QuestionTagEntity::getTagId)
-                .collect(Collectors.toList());
-    }
-
 
     @Override
     @Transactional
     public Long createQuestion(CreateQuestionDto question) {
-        UserProfileEntity questionWriter = userProfileRepository.findById(
-                question.getQuestionWriterId()).orElseThrow(
-                () -> new EntityNotFoundException(
-                        "user not found with id: " + question.getQuestionWriterId()));
-
-        QuestionDto questionDto = new QuestionDto(question);
-        questionDto.setQuestionWriter(questionWriter);
-        QuestionEntity questionEntity = questionMapper.toEntity(questionDto);
-        questionRepository.save(questionEntity);
-        List<QuestionTagDto> tagList = question.getTags();
-        for (QuestionTagDto questionTag : tagList) {
-            questionTagRepository.save(QuestionTagEntity.builder().question(questionEntity)
-                    .tagId(questionTag.getTagId()).version(questionTag.getVersion()).build());
-        }
-        CreateQuestionDocument createQuestionDocument = new CreateQuestionDocument(questionEntity, question);
-        log.info("Document:{}",createQuestionDocument.toString());
-        questionELKRepository.save(createQuestionDocument);
-        return questionEntity.getId();
+        Long questionId = questionRepository.save(QuestionEntity.builder().build()).getId();
+        QuestionDocument createQuestionDocument = new QuestionDocument(questionId, question);
+        log.info("QuestionDocument: {}", createQuestionDocument);
+        return questionELKRepository.save(createQuestionDocument).getId();
     }
 
     @Override
     @Transactional
     public ResponseQuestionDto questionDetail(Long questionId) {
         QuestionEntity questionEntity = questionRepository.findById(questionId).orElseThrow(
-                () -> new EntityNotFoundException(
-                        "Question not found with id: " + questionId));
-        UserProfileEntity writerEntity = questionEntity.getQuestionWriter();
+                () -> new EntityNotFoundException("Question not found with id at DB: " + questionId));
+        QuestionDocument questionDocument = questionELKRepository.findById(questionId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Question not found with id at ELK: " + questionId));
+        UserProfileEntity writerEntity = userProfileRepository.findById(questionDocument.getWriterId())
+                .orElseThrow(() -> new EntityNotFoundException(
+                "User not found with id: " + questionDocument.getWriterId()));
         ResponseUserProfileDto writerDto = responseUserProfileMapper.toDto(writerEntity);
-        String title = questionEntity.getTitle();
-        String content = questionEntity.getContent();
+        String title = questionDocument.getTitle();
+        String content = questionDocument.getContent();
         List<ResponseAnswerDto> answerList = answerService.getResponseAnswerDtoList(questionEntity);
-        List<QuestionTagDto> questionTagDtoList = tagService.getQuestionTagList(questionId);
-        int meTooCnt = metooRepository.countByQuestionId(questionEntity.getId());
+        List<QuestionTagDto> questionTagDtoList = questionDocument.getQuestionTags();
+        int meTooCnt = questionEntity.getMetoos().size();
         LocalDateTime createdTime = questionEntity.getCreatedTime();
         LocalDateTime updateTime = questionEntity.getUpdatedTime();
 
         return new ResponseQuestionDto(questionId, title, content, writerDto, questionTagDtoList,
-                answerList, meTooCnt,
-                createdTime, updateTime);
+                answerList, meTooCnt, createdTime, updateTime);
     }
 
     @Override
-    public void deleteQuestion(Long questionId, QuestionEntity targetQuestion) {
+    public void deleteQuestion(QuestionDocument questionDocument) {
+        QuestionEntity targetQuestion = questionRepository.findById(questionDocument.getId())
+                .orElseThrow(() -> new EntityNotFoundException(
+                "Question not found with id: " + questionDocument.getId()));
         questionRepository.delete(targetQuestion);
+        questionELKRepository.delete(questionDocument);
     }
 
     @Override
     @Transactional
     public ResponseQuestionDto updateQuestion(UpdateQuestionDto updateQuestion) {
-        QuestionEntity question = questionRepository.findById(updateQuestion.getQuestionId())
-                .orElseThrow(
-                        () -> new EntityNotFoundException(
-                                "Question not found with id: " + updateQuestion.getQuestionId()));
-        question.setTitle(updateQuestion.getTitle());
-        question.setContent(updateQuestion.getContent());
+        QuestionDocument questionDocument = questionELKRepository.findById(updateQuestion.getQuestionId())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Question not found with id: " + updateQuestion.getQuestionId()));
 
-        List<QuestionTagEntity> questionTagEntityList = questionTagRepository.findAllByQuestionId(
-                updateQuestion.getQuestionId());
-        if (!questionTagEntityList.isEmpty()) {
-            questionTagRepository.deleteAll(questionTagEntityList);
-        }
-        List<QuestionTagDto> tagList = updateQuestion.getTagList();
+        questionDocument.setTitle(updateQuestion.getTitle());
+        questionDocument.setContent(updateQuestion.getContent());
+        questionDocument.setQuestionTags(updateQuestion.getTagList());
 
-        if (!tagList.isEmpty()) {
-            for (QuestionTagDto questionTag : tagList) {
-                questionTagRepository.save(QuestionTagEntity.builder().question(question)
-                        .tagId(questionTag.getTagId()).version(questionTag.getVersion()).build());
-            }
-        }
+        questionRepository.save(questionRepository.getReferenceById(updateQuestion.getQuestionId()));
 
-        return questionDetail(updateQuestion.getQuestionId());
+        questionELKRepository.save(questionDocument);
+
+        return questionDetail(questionDocument.getId());
     }
 
     @Override
     public BoardProfileResponseDto findAllByUserId(Long userId) {
-        List<BoardProfileDto> questions = questionJpaRepository.findAllByUserId(userId)
-                .stream()
-                .map(QuestionEntity::toDto)
-                .collect(Collectors.toList());
-        return BoardProfileResponseDto.builder()
-                .list(questions)
-                .size(questions.size())
-                .build();
+        List<BoardProfileDto> questions = questionELKRepository.findAllByWriterId(userId).stream()
+                .map(this::convertDocumentToBoardProfileDto).toList();
+        return BoardProfileResponseDto.builder().list(questions).size(questions.size()).build();
+    }
+
+    public BoardProfileDto convertDocumentToBoardProfileDto(QuestionDocument document){
+        return new BoardProfileDto(document.getTitle(), document.getId());
     }
 }

@@ -1,16 +1,18 @@
 package com.decode.web.domain.board.controller;
 
 import com.decode.web.domain.board.dto.BoardProfileResponseDto;
-import com.decode.web.domain.board.dto.CreateQuestionDocument;
 import com.decode.web.domain.board.dto.CreateQuestionDto;
-import com.decode.web.domain.board.dto.QuestionListDto;
+import com.decode.web.domain.board.dto.QuestionDocument;
 import com.decode.web.domain.board.dto.ResponseQuestionDto;
+import com.decode.web.domain.board.dto.ResponseQuestionListDto;
 import com.decode.web.domain.board.dto.UpdateQuestionDto;
+import com.decode.web.domain.board.repository.QuestionELKRepository;
 import com.decode.web.domain.board.repository.QuestionRepository;
 import com.decode.web.domain.board.service.QuestionService;
 import com.decode.web.entity.QuestionEntity;
 import com.decode.web.global.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -37,15 +39,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class QuestionController {
 
     private final QuestionService questionService;
-    private final QuestionRepository questionRepository;
+    private final QuestionELKRepository questionELKRepository;
 
     @GetMapping
     @Operation(summary = "질문 검색(질문 목록 조회)", description = "keyword를 통한 질문 리스트 호출")
     public ResponseDto questionSearch(@RequestParam(name = "keyword") String keyword,
             @RequestParam(name = "tagIds") List<Long> tagIds) {
-        List<String> keywords = Arrays.asList(keyword.split("\\s+"));
-        List<CreateQuestionDocument> questionList = questionService.searchQuestionByKeyword(keyword,
-                tagIds);
+        List<ResponseQuestionListDto> questionList = questionService.searchQuestionByKeyword(
+                keyword, tagIds);
         return ResponseDto.builder().status(HttpStatus.OK).message("조회 완료").data(questionList)
                 .build();
     }
@@ -89,13 +90,13 @@ public class QuestionController {
     @Operation(summary = "질문 삭제", description = "작성자와 일치하는 사용자의 토큰을 식별 후 삭제")
     public ResponseDto deleteQuestion(@PathVariable Long questionId, Authentication auth) {
         Long userId = (Long) auth.getPrincipal();
-        QuestionEntity targetQuestion = questionRepository.findById(questionId).orElseThrow(
-                () -> new BadCredentialsException(
-                        "Question not found with id: " + questionId));
-        if (!userId.equals(targetQuestion.getQuestionWriter().getId())) {
+        QuestionDocument questionDocument = questionELKRepository.findById(questionId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                "Question not found with id: " + questionId));
+        if (!userId.equals(questionDocument.getWriterId())) {
             return ResponseDto.builder().status(HttpStatus.BAD_REQUEST).message("사용자 불일치").build();
         }
-        questionService.deleteQuestion(questionId, targetQuestion);
+        questionService.deleteQuestion(questionDocument);
         return ResponseDto.builder().status(HttpStatus.OK).build();
     }
 
@@ -103,10 +104,7 @@ public class QuestionController {
     @GetMapping("/list/{userId}")
     public ResponseDto getQuestionListByUserId(@PathVariable Long userId) {
         BoardProfileResponseDto data = questionService.findAllByUserId(userId);
-        return ResponseDto.builder()
-                .status(HttpStatus.OK)
-                .message("질문 목록 조회 완료")
-                .data(data)
+        return ResponseDto.builder().status(HttpStatus.OK).message("질문 목록 조회 완료").data(data)
                 .build();
     }
 }

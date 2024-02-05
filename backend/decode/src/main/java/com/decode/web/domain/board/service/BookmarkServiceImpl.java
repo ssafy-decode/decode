@@ -1,9 +1,14 @@
 package com.decode.web.domain.board.service;
 
 import com.decode.web.domain.board.dto.BookmarkDto;
+import com.decode.web.domain.board.dto.QuestionDocument;
 import com.decode.web.domain.board.dto.QuestionListDto;
+import com.decode.web.domain.board.dto.ResponseQuestionListDto;
 import com.decode.web.domain.board.repository.BookmarkRepository;
+import com.decode.web.domain.board.repository.QuestionELKRepository;
 import com.decode.web.domain.board.repository.QuestionRepository;
+import com.decode.web.domain.user.mapper.ResponseUserProfileMapper;
+import com.decode.web.domain.user.mapper.UserProfileMapper;
 import com.decode.web.domain.user.repository.UserProfileRepository;
 import com.decode.web.entity.BookmarkEntity;
 import com.decode.web.entity.QuestionEntity;
@@ -22,8 +27,8 @@ public class BookmarkServiceImpl implements BookmarkService {
     private final UserProfileRepository userProfileRepository;
     private final QuestionRepository questionRepository;
     private final BookmarkRepository bookmarkRepository;
-    private final QuestionService questionService;
-
+    private final QuestionELKRepository questionELKRepository;
+    private final ResponseUserProfileMapper responseUserProfileMapper;
     @Override
     public Long bookMark(BookmarkDto bookmarkDto) {
         Long userId = bookmarkDto.getUserId();
@@ -52,19 +57,30 @@ public class BookmarkServiceImpl implements BookmarkService {
     }
 
     @Override
-    public List<QuestionListDto> getBookMarkQuetionList(Long userId) {
-        UserProfileEntity userProfile = userProfileRepository.findById(userId)
-                .orElseThrow(
+    public List<ResponseQuestionListDto> getBookMarkQuetionList(Long userId) {
+        UserProfileEntity userProfile = userProfileRepository.findById(userId).orElseThrow(
                         () -> new EntityNotFoundException("User not found with ID: " + userId));
 
         List<BookmarkEntity> bookmarks = bookmarkRepository.findByUserProfile(userProfile);
 
-        List<QuestionEntity> questionEntityList = bookmarks.stream()
-                .map(BookmarkEntity::getQuestion)
-                .toList();
+        return bookmarks.stream()
+                .map(this::converBookmarkToResponseQuestionListDto).toList();
+    }
 
-        return questionEntityList.stream()
-                .map(questionService::convertQuestionEntityToQuestionListDto).collect(
-                        Collectors.toList());
+    public ResponseQuestionListDto converBookmarkToResponseQuestionListDto(BookmarkEntity bookmark){
+        QuestionEntity questionEntity = bookmark.getQuestion();
+        QuestionDocument questionDocument = questionELKRepository.findById(questionEntity.getId()).orElseThrow(
+                () -> new BadCredentialsException(
+                        "Question not found with id: " + questionEntity.getId()));
+        return new ResponseQuestionListDto(
+            questionEntity.getId(),
+            questionDocument.getTitle(),
+            responseUserProfileMapper.toDto(userProfileRepository.getReferenceById(questionDocument.getWriterId())),
+            questionDocument.getQuestionTags(),
+            questionEntity.getCreatedTime(),
+            questionEntity.getUpdatedTime(),
+            questionEntity.getAnswers().size(),
+            questionEntity.getMetoos().size()
+        );
     }
 }

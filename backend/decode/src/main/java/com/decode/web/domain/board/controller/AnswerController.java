@@ -31,7 +31,6 @@ public class AnswerController {
 
     private final AnswerService answerService;
     private final AnswerRepository answerRepository;
-    private final RecommendRepository recommendRepository;
 
 
     @PostMapping

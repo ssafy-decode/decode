@@ -2,6 +2,7 @@ package com.decode.web.domain.board.service;
 
 import com.decode.web.domain.board.dto.BookmarkDto;
 import com.decode.web.domain.board.dto.QuestionListDto;
+import com.decode.web.domain.board.dto.ResponseQuestionListDto;
 import java.util.List;
 
 public interface BookmarkService {
@@ -10,5 +11,5 @@ public interface BookmarkService {
 
     void unBookMark(Long userId, Long questionId);
 
-    List<QuestionListDto> getBookMarkQuetionList(Long userId);
+    List<ResponseQuestionListDto> getBookMarkQuetionList(Long userId);
 }
