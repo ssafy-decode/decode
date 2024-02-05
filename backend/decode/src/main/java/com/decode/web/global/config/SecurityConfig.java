@@ -50,7 +50,14 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                        .requestMatchers(HttpMethod.GET).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/login"), new AntPathRequestMatcher("/regist")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/email")
+                                , new AntPathRequestMatcher("/password")
+                                , new AntPathRequestMatcher("/oauth2/authorization/**")
+                                , new AntPathRequestMatcher("/oauth2/callback/**")
+
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(httpBasic ->
