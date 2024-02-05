@@ -198,25 +198,6 @@ public class UserController {
 
     }
 
-    @PostMapping("/validate")
-    @Operation(summary = "토큰 만료 검사", description = "토큰 만료 검사 API")
-    public ResponseDto validate(@RequestHeader("Authorization") String token) {
-        log.info("validate");
-        // 만료되면 false, 유효하면 true
-        if (authService.validate(token)) {
-            log.info("validated");
-            return ResponseDto.builder()
-                    .status(HttpStatus.OK)
-                    .message("validated").build();
-        } else {
-            log.info("expired");
-            return ResponseDto.builder()
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .message("expired").build();
-
-        }
-    }
-
     @GetMapping("/email")
     @Operation(summary = "이메일 중복 체크", description = "이메일 중복 체크 API")
     public ResponseDto emailDupCheck(@RequestParam String keyword) {
