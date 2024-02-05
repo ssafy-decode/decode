@@ -30,6 +30,7 @@ public class RedisServiceImpl implements RedisService {
     public void setValueForSet(String key, String value) {
         redisTemplate.opsForSet().add(key, value);
     }
+
     // 만료시간 설정 -> 자동 삭제
     @Override
     public void setValuesWithTimeout(String key, String value, long timeout) {

@@ -24,6 +24,7 @@ public class GlobalControllerAdvice {
                 .message(e.getMessage())
                 .build(), HttpStatus.UNAUTHORIZED);
     }
+
     @ExceptionHandler(FollowException.class)
     private ResponseEntity<ResponseDto> followException(FollowException e) {
         log.error("{}", e.getMessage());
