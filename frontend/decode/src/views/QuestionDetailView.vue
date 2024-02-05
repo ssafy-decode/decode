@@ -25,7 +25,7 @@
       </v-row>
       <v-row>
         <v-col :cols="12">
-          <div class="listItem title">{{ question.content }}</div>
+          <MyViewer />
         </v-col>
       </v-row>
       <br /><br />
@@ -35,18 +35,6 @@
           <v-btn @click="deleteQuestion()">질문삭제</v-btn>
         </div>
         <div>
-          <!-- 나도 궁금 -->
-          <!-- 누르면 나도 궁금 되도록 -->
-
-          <!-- <span>{{ question.meTooCnt }}</span>
-          &nbsp; &nbsp; -->
-
-          <!-- 북마크 카운트수 불러올 수 있도록? -->
-          <!-- 누르면 북마크 되도록 -->
-
-          <!-- <span>{{ question.meTooCnt }}</span>
-          &nbsp; &nbsp; -->
-
           <v-btn @click="goCreateAnswer()">답변달기</v-btn>
         </div>
       </div>
@@ -61,12 +49,13 @@
 
 <script setup>
 import axios from '@/utils/common-axios';
-import { onMounted, ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useQuestionStore } from '@/stores/questionStore';
 import { useAnswerStore } from '@/stores/answerStore';
 import { useUserStore } from '@/stores/userStore';
 import { useRoute, useRouter } from 'vue-router';
 import AnswerList from '@/components/answer/AnswerList.vue';
+import MyViewer from '@/components/common/MyViewer.vue';
 
 const questionStore = useQuestionStore();
 const answerStore = useAnswerStore();
