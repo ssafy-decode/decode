@@ -2,6 +2,7 @@ package com.decode.web.global.config;
 
 
 import com.decode.web.domain.user.service.AuthService;
+import com.decode.web.global.filter.JwtAuthenticationFilter;
 import com.decode.web.global.utils.authentication.JwtAccessDeniedHandler;
 import com.decode.web.global.utils.authentication.JwtAuthenticationEntryPoint;
 import com.decode.web.global.utils.authentication.JwtTokenProvider;
@@ -17,6 +18,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsUtils;
 
 @Configuration
@@ -46,8 +49,15 @@ public class SecurityConfig {
         httpSecurity
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/**", "/decode/**").permitAll()
                         .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                        .requestMatchers(HttpMethod.GET).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/login"), new AntPathRequestMatcher("/regist")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/email")
+                                , new AntPathRequestMatcher("/password")
+                                , new AntPathRequestMatcher("/oauth2/authorization/**")
+                                , new AntPathRequestMatcher("/oauth2/callback/**")
+
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(httpBasic ->
@@ -82,10 +92,11 @@ public class SecurityConfig {
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                         .accessDeniedHandler(jwtAccessDeniedHandler)
                 )
-                .addFilter(corsconfig.corsFilter());
-//                .addFilterBefore(new JwtAuthenticationFilter(authservice, jwtTokenProvider),
-//                        UsernamePasswordAuthenticationFilter.class);
+                .addFilter(corsconfig.corsFilter())
+                .addFilterBefore(new JwtAuthenticationFilter(authservice, jwtTokenProvider),
+                        UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
     }
 }
+;
