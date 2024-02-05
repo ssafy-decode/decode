@@ -1,7 +1,6 @@
 package com.decode.web.domain.board.controller;
 
 import com.decode.web.domain.board.dto.BookmarkDto;
-import com.decode.web.domain.board.dto.QuestionListDto;
 import com.decode.web.domain.board.dto.ResponseQuestionListDto;
 import com.decode.web.domain.board.repository.QuestionELKRepository;
 import com.decode.web.domain.board.repository.QuestionRepository;
@@ -58,7 +57,8 @@ public class BookmarkController {
     @GetMapping("/{userId}")
     @Operation(summary = "북마크 질문 리스트 조회", description = "유저가 북마크한 질문 조회")
     public ResponseDto getBookMarkQuestionList(@PathVariable Long userId) {
-        List<ResponseQuestionListDto> bookMarkQuestionList = bookmarkService.getBookMarkQuetionList(userId);
+        List<ResponseQuestionListDto> bookMarkQuestionList = bookmarkService.getBookMarkQuetionList(
+                userId);
         return ResponseDto.builder().data(bookMarkQuestionList).status(HttpStatus.OK).build();
     }
 

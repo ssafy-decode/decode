@@ -85,7 +85,7 @@ public class UserController {
 
     @GetMapping("/user/profile/{userId}")
     @Operation(summary = "UserProfile 조회", description = "userId에 해당하는 유저의 프로필 조회")
-    public ResponseDto getUserProfile(@PathVariable Long userId){
+    public ResponseDto getUserProfile(@PathVariable Long userId) {
         ResponseUserProfileDto userProfile = userService.getUserProfileDtoById(userId);
         return ResponseDto.builder().data(userProfile).status(HttpStatus.OK).build();
     }
@@ -165,7 +165,6 @@ public class UserController {
         cookie.setMaxAge(COOKIE_MAX_AGE);
         cookie.setSecure(true);
         cookie.setDomain("i10a507.p.ssafy.io");
-        cookie.setDomain("localhost");
         res.addCookie(cookie);
 
         res.setHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
@@ -187,7 +186,7 @@ public class UserController {
         Cookie cookie = new Cookie("refresh-token", null);
         cookie.setMaxAge(0);
         cookie.setSecure(true);
-        cookie.setDomain("localhost");
+        cookie.setDomain("i10a507.p.ssafy.io");
         res.addCookie(cookie);
 
         // 헤더에서 토큰 삭제
@@ -197,25 +196,6 @@ public class UserController {
                 .status(HttpStatus.OK)
                 .message("logout").build();
 
-    }
-
-    @PostMapping("/validate")
-    @Operation(summary = "토큰 만료 검사", description = "토큰 만료 검사 API")
-    public ResponseDto validate(@RequestHeader("Authorization") String token) {
-        log.info("validate");
-        // 만료되면 false, 유효하면 true
-        if (authService.validate(token)) {
-            log.info("validated");
-            return ResponseDto.builder()
-                    .status(HttpStatus.OK)
-                    .message("validated").build();
-        } else {
-            log.info("expired");
-            return ResponseDto.builder()
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .message("expired").build();
-
-        }
     }
 
     @GetMapping("/email")
@@ -295,7 +275,7 @@ public class UserController {
     @PostMapping("/addUserTag")
     @Operation(summary = "유저 태그 선택", description = "신규 유저의 선호 기술 태그 추가")
     public ResponseDto addUserTag(@RequestBody
-            RequestUserTagDto requestUserTagDto) {
+    RequestUserTagDto requestUserTagDto) {
         userService.addUserTag(requestUserTagDto);
         return ResponseDto.builder().status(HttpStatus.OK).build();
     }
@@ -345,6 +325,7 @@ public class UserController {
                 .status(HttpStatus.OK)
                 .message("출석 로그 확인").build();
     }
+
     @GetMapping("/exp/{id}")
     @Operation(summary = "경험치 로그", description = "경험치로그 API")
     public ResponseDto getExp(@PathVariable Long id) {

@@ -2,27 +2,20 @@ package com.decode.web.domain.board.service;
 
 import com.decode.web.domain.board.dto.BoardProfileDto;
 import com.decode.web.domain.board.dto.BoardProfileResponseDto;
-import com.decode.web.domain.board.dto.QuestionDocument;
 import com.decode.web.domain.board.dto.CreateQuestionDto;
-import com.decode.web.domain.board.dto.QuestionDto;
-import com.decode.web.domain.board.dto.QuestionListDto;
+import com.decode.web.domain.board.dto.QuestionDocument;
 import com.decode.web.domain.board.dto.ResponseAnswerDto;
 import com.decode.web.domain.board.dto.ResponseQuestionDto;
 import com.decode.web.domain.board.dto.ResponseQuestionListDto;
 import com.decode.web.domain.board.dto.UpdateQuestionDto;
 import com.decode.web.domain.board.mapper.QuestionMapper;
-import com.decode.web.domain.board.repository.MetooRepository;
 import com.decode.web.domain.board.repository.QuestionELKRepository;
-import com.decode.web.domain.board.repository.QuestionJpaRepository;
 import com.decode.web.domain.board.repository.QuestionRepository;
 import com.decode.web.domain.tag.dto.QuestionTagDto;
-import com.decode.web.domain.tag.repository.QuestionTagRepository;
-import com.decode.web.domain.tag.service.TagService;
 import com.decode.web.domain.user.dto.ResponseUserProfileDto;
 import com.decode.web.domain.user.mapper.ResponseUserProfileMapper;
 import com.decode.web.domain.user.repository.UserProfileRepository;
 import com.decode.web.entity.QuestionEntity;
-import com.decode.web.entity.QuestionTagEntity;
 import com.decode.web.entity.UserProfileEntity;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -46,14 +39,22 @@ public class QuestionServiceImpl implements QuestionService {
     private final QuestionELKRepository questionELKRepository;
 
     @Override
-    public List<ResponseQuestionListDto> searchQuestionByKeyword(String keyword, List<Long> tagIds) {
+    public List<ResponseQuestionListDto> searchQuestionByKeyword(String keyword,
+            List<Long> tagIds) {
         List<QuestionDocument> questionDocumentList;
-        if(keyword.isEmpty()){
-            if(tagIds.isEmpty()) questionDocumentList = questionELKRepository.findAllQuestion();
-            else questionDocumentList = questionELKRepository.findByQuestionTags(tagIds);
+        if (keyword.isEmpty()) {
+            if (tagIds.isEmpty()) {
+                questionDocumentList = questionELKRepository.findAllQuestion();
+            } else {
+                questionDocumentList = questionELKRepository.findByQuestionTags(tagIds);
+            }
         } else {
-            if(tagIds.isEmpty()) questionDocumentList = questionELKRepository.findByTitleOrContent(keyword);
-            else questionDocumentList = questionELKRepository.findByQuestionTagsAndTitleAndContent(keyword,tagIds);
+            if (tagIds.isEmpty()) {
+                questionDocumentList = questionELKRepository.findByTitleOrContent(keyword);
+            } else {
+                questionDocumentList = questionELKRepository.findByQuestionTagsAndTitleAndContent(
+                        keyword, tagIds);
+            }
         }
 
         return questionDocumentList.stream().map(this::convertDocumentToQuestionListDto).collect(
@@ -63,17 +64,18 @@ public class QuestionServiceImpl implements QuestionService {
 
     public ResponseQuestionListDto convertDocumentToQuestionListDto(
             QuestionDocument questionDocument) {
-        QuestionEntity questionEntity = questionRepository.getReferenceById(questionDocument.getId());
+        QuestionEntity questionEntity = questionRepository.getReferenceById(
+                questionDocument.getId());
         return new ResponseQuestionListDto(
-            questionDocument.getId(),
-            questionDocument.getTitle(),
-            responseUserProfileMapper.toDto(
-                    userProfileRepository.getReferenceById(questionDocument.getWriterId())),
-            questionDocument.getQuestionTags(),
-            questionEntity.getCreatedTime(),
-            questionEntity.getUpdatedTime(),
-            questionEntity.getAnswers().size(),
-            questionEntity.getMetoos().size());
+                questionDocument.getId(),
+                questionDocument.getTitle(),
+                responseUserProfileMapper.toDto(
+                        userProfileRepository.getReferenceById(questionDocument.getWriterId())),
+                questionDocument.getQuestionTags(),
+                questionEntity.getCreatedTime(),
+                questionEntity.getUpdatedTime(),
+                questionEntity.getAnswers().size(),
+                questionEntity.getMetoos().size());
     }
 
     @Override
@@ -89,13 +91,15 @@ public class QuestionServiceImpl implements QuestionService {
     @Transactional
     public ResponseQuestionDto questionDetail(Long questionId) {
         QuestionEntity questionEntity = questionRepository.findById(questionId).orElseThrow(
-                () -> new EntityNotFoundException("Question not found with id at DB: " + questionId));
+                () -> new EntityNotFoundException(
+                        "Question not found with id at DB: " + questionId));
         QuestionDocument questionDocument = questionELKRepository.findById(questionId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Question not found with id at ELK: " + questionId));
-        UserProfileEntity writerEntity = userProfileRepository.findById(questionDocument.getWriterId())
+        UserProfileEntity writerEntity = userProfileRepository.findById(
+                        questionDocument.getWriterId())
                 .orElseThrow(() -> new EntityNotFoundException(
-                "User not found with id: " + questionDocument.getWriterId()));
+                        "User not found with id: " + questionDocument.getWriterId()));
         ResponseUserProfileDto writerDto = responseUserProfileMapper.toDto(writerEntity);
         String title = questionDocument.getTitle();
         String content = questionDocument.getContent();
@@ -113,7 +117,7 @@ public class QuestionServiceImpl implements QuestionService {
     public void deleteQuestion(QuestionDocument questionDocument) {
         QuestionEntity targetQuestion = questionRepository.findById(questionDocument.getId())
                 .orElseThrow(() -> new EntityNotFoundException(
-                "Question not found with id: " + questionDocument.getId()));
+                        "Question not found with id: " + questionDocument.getId()));
         questionRepository.delete(targetQuestion);
         questionELKRepository.delete(questionDocument);
     }
@@ -121,7 +125,8 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     @Transactional
     public ResponseQuestionDto updateQuestion(UpdateQuestionDto updateQuestion) {
-        QuestionDocument questionDocument = questionELKRepository.findById(updateQuestion.getQuestionId())
+        QuestionDocument questionDocument = questionELKRepository.findById(
+                        updateQuestion.getQuestionId())
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Question not found with id: " + updateQuestion.getQuestionId()));
 
@@ -129,7 +134,8 @@ public class QuestionServiceImpl implements QuestionService {
         questionDocument.setContent(updateQuestion.getContent());
         questionDocument.setQuestionTags(updateQuestion.getTagList());
 
-        questionRepository.save(questionRepository.getReferenceById(updateQuestion.getQuestionId()));
+        questionRepository.save(
+                questionRepository.getReferenceById(updateQuestion.getQuestionId()));
 
         questionELKRepository.save(questionDocument);
 
@@ -143,7 +149,7 @@ public class QuestionServiceImpl implements QuestionService {
         return BoardProfileResponseDto.builder().list(questions).size(questions.size()).build();
     }
 
-    public BoardProfileDto convertDocumentToBoardProfileDto(QuestionDocument document){
+    public BoardProfileDto convertDocumentToBoardProfileDto(QuestionDocument document) {
         return new BoardProfileDto(document.getTitle(), document.getId());
     }
 }

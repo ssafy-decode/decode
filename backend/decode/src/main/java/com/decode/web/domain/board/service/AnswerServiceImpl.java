@@ -1,5 +1,6 @@
 package com.decode.web.domain.board.service;
 
+import com.decode.web.domain.board.dto.AnswerCountResponseDto;
 import com.decode.web.domain.board.dto.BoardProfileDto;
 import com.decode.web.domain.board.dto.BoardProfileResponseDto;
 import com.decode.web.domain.board.dto.CreateAnswerDto;
@@ -21,7 +22,9 @@ import com.decode.web.entity.AnswerEntity;
 import com.decode.web.entity.QuestionEntity;
 import com.decode.web.entity.RecommendEntity;
 import com.decode.web.entity.UserProfileEntity;
+import com.decode.web.exception.InvalidWriterException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -170,11 +173,33 @@ public class AnswerServiceImpl implements AnswerService {
                 .build();
     }
 
-    public BoardProfileDto convertAnswerToBoardProfileDto(AnswerEntity answer){
+    public BoardProfileDto convertAnswerToBoardProfileDto(AnswerEntity answer) {
         Long questionId = answer.getQuestion().getId();
         QuestionDocument questionDocument = questionELKRepository.findById(questionId).orElseThrow(
                 () -> new EntityNotFoundException(
                         "Question not found with id: " + questionId));
         return new BoardProfileDto(questionDocument.getTitle(), questionDocument.getId());
+    }
+
+    @Override
+    @Transactional
+    public void doAdopt(Long userId, Long answerId) {
+        AnswerEntity answer = answerJpaRepository.findOneByAnswerId(answerId);
+        Long questionId = answer.getQuestion().getId();
+        QuestionDocument questionDocument = questionELKRepository.findById(questionId).orElseThrow(
+                () -> new EntityNotFoundException(
+                        "Question not found with id: " + questionId));
+        if (!questionDocument.getWriterId().equals(userId)) {
+            throw new InvalidWriterException("글 작성자가 아닙니다.");
+        }
+        answer.doAdopt();
+    }
+
+    @Override
+    public AnswerCountResponseDto getAnswerCountByUserId(Long userId) {
+        Long selectedCnt = answerJpaRepository.getAnswerCountByUserId(userId);
+        return AnswerCountResponseDto.builder()
+                .selectedCnt(selectedCnt)
+                .build();
     }
 }

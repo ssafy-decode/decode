@@ -1,6 +1,5 @@
 package com.decode.web.domain.board.dto;
 
-import com.decode.web.entity.UserProfileEntity;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

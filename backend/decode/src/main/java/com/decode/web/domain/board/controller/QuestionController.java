@@ -7,18 +7,14 @@ import com.decode.web.domain.board.dto.ResponseQuestionDto;
 import com.decode.web.domain.board.dto.ResponseQuestionListDto;
 import com.decode.web.domain.board.dto.UpdateQuestionDto;
 import com.decode.web.domain.board.repository.QuestionELKRepository;
-import com.decode.web.domain.board.repository.QuestionRepository;
 import com.decode.web.domain.board.service.QuestionService;
-import com.decode.web.entity.QuestionEntity;
 import com.decode.web.global.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -92,7 +88,7 @@ public class QuestionController {
         Long userId = (Long) auth.getPrincipal();
         QuestionDocument questionDocument = questionELKRepository.findById(questionId)
                 .orElseThrow(() -> new EntityNotFoundException(
-                "Question not found with id: " + questionId));
+                        "Question not found with id: " + questionId));
         if (!userId.equals(questionDocument.getWriterId())) {
             return ResponseDto.builder().status(HttpStatus.BAD_REQUEST).message("사용자 불일치").build();
         }

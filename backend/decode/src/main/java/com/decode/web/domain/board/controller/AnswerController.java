@@ -1,14 +1,16 @@
 package com.decode.web.domain.board.controller;
 
+import com.decode.web.domain.board.dto.AnswerCountResponseDto;
+import com.decode.web.domain.board.dto.AnswerDoAdoptDto;
 import com.decode.web.domain.board.dto.BoardProfileResponseDto;
 import com.decode.web.domain.board.dto.CreateAnswerDto;
 import com.decode.web.domain.board.dto.RecommendDto;
 import com.decode.web.domain.board.dto.UpdateAnswerDto;
 import com.decode.web.domain.board.repository.AnswerRepository;
-import com.decode.web.domain.board.repository.RecommendRepository;
 import com.decode.web.domain.board.service.AnswerService;
 import com.decode.web.entity.AnswerEntity;
 import com.decode.web.global.ResponseDto;
+import javax.security.auth.login.CredentialException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -100,4 +102,30 @@ public class AnswerController {
                 .data(data)
                 .build();
     }
+
+    @PostMapping("/adopt")
+    public ResponseDto doAdopt(@RequestBody AnswerDoAdoptDto answerDoAdoptDto,
+            Authentication auth) throws CredentialException {
+        Long authUserId = (Long) auth.getPrincipal();
+        if (!answerDoAdoptDto.getUserId().equals(authUserId)) {
+            throw new CredentialException("사용자 불일치");
+        }
+        answerService.doAdopt(answerDoAdoptDto.getUserId(), answerDoAdoptDto.getAnswerId());
+        return ResponseDto.builder()
+                .status(HttpStatus.OK)
+                .message("답변 채택 완료")
+                .data("")
+                .build();
+    }
+
+    @GetMapping("/count/{userId}")
+    public ResponseDto getAnswerCount(@PathVariable Long userId) {
+        AnswerCountResponseDto data = answerService.getAnswerCountByUserId(userId);
+        return ResponseDto.builder()
+                .status(HttpStatus.OK)
+                .message("총 답변 채택 수 가져오기 성공")
+                .data(data)
+                .build();
+    }
+
 }

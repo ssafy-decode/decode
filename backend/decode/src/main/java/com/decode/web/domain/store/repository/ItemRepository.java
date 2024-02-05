@@ -1,6 +1,5 @@
 package com.decode.web.domain.store.repository;
 
-import com.decode.web.domain.store.dto.ItemUseDto;
 import com.decode.web.entity.ItemEntity;
 import jakarta.persistence.EntityManager;
 import java.util.List;

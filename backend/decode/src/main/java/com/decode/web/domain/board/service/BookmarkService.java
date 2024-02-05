@@ -1,7 +1,6 @@
 package com.decode.web.domain.board.service;
 
 import com.decode.web.domain.board.dto.BookmarkDto;
-import com.decode.web.domain.board.dto.QuestionListDto;
 import com.decode.web.domain.board.dto.ResponseQuestionListDto;
 import java.util.List;
 

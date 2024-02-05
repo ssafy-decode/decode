@@ -1,6 +1,7 @@
 package com.decode.web.global.utils.oauth2;
 
 import com.decode.web.domain.user.repository.UserInfoRepository;
+import com.decode.web.domain.user.service.AuthService;
 import com.decode.web.domain.user.service.UserService;
 import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.global.utils.authentication.JwtTokenProvider;
@@ -29,6 +30,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
     private final UserInfoRepository userInfoRepository;
+    private final AuthService authService;
 
 
     @Override
@@ -39,6 +41,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         String uid = oAuth2User.getName();
         log.info(oAuth2User.toString());
+        log.info("oauth2 시작");
         String email = oAuth2User.getAttributes().get("login").toString() + "@decode.com";
 
         // 최초 로그인이면 github의 uid로 회원가입 처리
@@ -54,6 +57,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String AccessToken = jwtTokenProvider.createAccessToken(email, "github");
         String RefreshToken = jwtTokenProvider.createRefreshToken(email, "github");
 
+        // redis에 refresh token 저장
+        authService.saveRefreshToken("github", email, RefreshToken);
+
         // 인증 정보 저장
         Authentication newAuthentication = jwtTokenProvider.getAuthentication(AccessToken);
         SecurityContextHolder.getContext().setAuthentication(newAuthentication);
@@ -66,9 +72,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         response.addCookie(cookie);
         response.setHeader("Authorization", "Bearer " + AccessToken);
 
-        // 리다이렉션
         log.info("oauth 로그인 성공");
-        response.sendRedirect("http://localhost:8080");
-        response.setHeader("Authorization", "Bearer " + AccessToken);
+
     }
 }

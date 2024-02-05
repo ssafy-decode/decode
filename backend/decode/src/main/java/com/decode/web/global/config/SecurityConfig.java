@@ -19,6 +19,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsUtils;
 
 @Configuration
@@ -48,8 +49,16 @@ public class SecurityConfig {
         httpSecurity
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/**", "/decode/**").permitAll()
                         .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                        .requestMatchers(HttpMethod.GET).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/login"),
+                                new AntPathRequestMatcher("/regist")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/email")
+                                , new AntPathRequestMatcher("/password")
+                                , new AntPathRequestMatcher("/oauth2/authorization/**")
+                                , new AntPathRequestMatcher("/oauth2/callback/**")
+
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(httpBasic ->
@@ -68,6 +77,9 @@ public class SecurityConfig {
                 .oauth2Login(oauth2Login -> oauth2Login
                         .authorizationEndpoint(authorizationEndpoint -> authorizationEndpoint
                                 .baseUri("/oauth2/authorization")
+                        )
+                        .redirectionEndpoint(redirectionEndpoint -> redirectionEndpoint
+                                .baseUri("/oauth2/callback/*")
                         )
 
                         .successHandler(oAuth2AuthenticationSuccessHandler)
@@ -88,3 +100,4 @@ public class SecurityConfig {
         return httpSecurity.build();
     }
 }
+;

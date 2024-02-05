@@ -9,6 +9,7 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 public interface QuestionELKRepository extends ElasticsearchRepository<QuestionDocument, String> {
 
     List<QuestionDocument> findAllByWriterId(Long writerId);
+
     Optional<QuestionDocument> findById(Long id);
 
     @Query("{\"match_all\": {}}")
