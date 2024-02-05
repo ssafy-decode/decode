@@ -26,6 +26,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest req,
             HttpServletResponse res,
             FilterChain filterChain) throws ServletException, IOException {
+
+
+
+
         String accessToken = resolveToken(req);
         String refreshToken = null;
         Cookie[] list = req.getCookies();
@@ -51,9 +55,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             accessToken = reIssueAccessToken(refreshToken);
             res.setHeader("Authorization", "Bearer " + accessToken);
         } else {
-            // 로그아웃 처리
             SecurityContextHolder.clearContext();
-            throw new CustomLoginException("다시 로그인 해주세요.");
         }
 
         filterChain.doFilter(req, res);
