@@ -53,7 +53,7 @@
     </div>
     <br />
     <br />
-    <div v-if="isAnswerExist" class="myListItem" >
+    <div v-if="isAnswerExist" class="myListItem">
       <AnswerList :answer-list="question.answerList" />
     </div>
   </v-card>
@@ -77,7 +77,7 @@ const route = useRoute();
 const questionId = ref(0);
 const question = ref({});
 const writerNickname = ref('');
-const isAnswerExist = ref(false)
+const isAnswerExist = ref(false);
 
 const getDetailQuestion = function () {
   axios({
@@ -141,6 +141,7 @@ button {
   font-size: small;
   padding: 0 10 0;
   margin: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
 }
 
 .bgColorWhite {
