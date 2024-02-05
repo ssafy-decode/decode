@@ -123,7 +123,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onBeforeMount, ref } from 'vue';
 import { useUserStore } from '@/stores/userStore';
 
 const userStore = useUserStore();
@@ -161,7 +161,7 @@ const matchId = (list, profiles) => {
   });
 };
 
-onMounted(() => {
+onBeforeMount(() => {
   userStore.setQList(userStore.loginUserId);
   userStore.setAList(userStore.loginUserId);
   userStore.getRank();

@@ -37,6 +37,7 @@ export const useShopStore = defineStore(
           const response = res.data;
           if (response.status === 'OK') {
             items.value = response.data;
+            console.log('items.value는 제대로 가져오는 중?', items.value);
           }
         })
         .catch((error) => {
@@ -60,7 +61,7 @@ export const useShopStore = defineStore(
           const response = res.data;
           if (response.status === 'OK') {
             products.value = response.data;
-            console.log(products.value);
+            console.log('products.value는 제대로 가져오는 중', products.value);
           }
         })
         .catch((error) => {
@@ -80,6 +81,7 @@ export const useShopStore = defineStore(
           const response = res.data;
           if (response.status === 'OK') {
             searchedProducts.value = response.data;
+            console.log('searchedProducts.value는 제대로 가져오는 중?', searchedProducts.value);
           }
         })
         .catch((error) => {

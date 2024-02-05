@@ -10,6 +10,7 @@ export const useUserStore = defineStore(
     const users = ref([]); // 회원 목록
     const searchUsers = ref([]); // 아직은 쓸 일 없지만 검색된 회원 목록
     const tagIdList = ref([]); // 선택한 기술 태그 목록
+    const userTagIdList = ref([]); // 특정 유저 선택한 기술 태그 목록
     const loginUserProfile = ref([]); // 로그인 유저 프로필 data 저장 목록
     const userProfile = ref([]); // 특정 유저 프로필 data 저장 목록
     const qList = ref([]); // 질문 목록
@@ -91,9 +92,6 @@ export const useUserStore = defineStore(
           } else {
             throw new Error('Failed to create user');
           }
-        })
-        .catch((error) => {
-          console.error('Error:', error);
         });
     };
 
@@ -178,9 +176,6 @@ export const useUserStore = defineStore(
             accessToken.value = '';
             router.push({ name: 'mainview' });
           }
-        })
-        .catch((error) => {
-          console.error('Error:', error);
         });
     };
 
@@ -199,13 +194,24 @@ export const useUserStore = defineStore(
           const response = res.data;
           if (response.status === 'OK') {
             loginUserProfile.value = response.data;
-            console.log('디버깅용', loginUserProfile.value); // 디버깅용
           } else {
             console.log('Failed to get loginuser profile');
           }
+        });
+    };
+
+    // 특정 회원 선호 기술 스택 (번호) 조회
+    const getTagNumList = (userid) => {
+      axios
+        .get(`/tag/${userid}`, {
+          withCredentials: true,
         })
-        .catch((error) => {
-          console.error('Error:', error);
+        .then((res) => {
+          accessToken.value = parseToken(res);
+          const response = res.data;
+          if (response.status === 'OK') {
+            userTagIdList.value = response.data.tagIdList;
+          }
         });
     };
 
@@ -222,9 +228,6 @@ export const useUserStore = defineStore(
             qList.value = response.data.list;
             qListLength.value = response.data.size;
           }
-        })
-        .catch((error) => {
-          console.error('Error:', error);
         });
     };
 
@@ -241,9 +244,6 @@ export const useUserStore = defineStore(
             aList.value = response.data.list;
             aListLength.value = response.data.size;
           }
-        })
-        .catch((error) => {
-          console.error('Error:', error);
         });
     };
 
@@ -256,10 +256,9 @@ export const useUserStore = defineStore(
         .then((res) => {
           accessToken.value = parseToken(res);
           const response = res.data;
+          console.log('followerlist', response);
+          console.log('팔로워 테스트중입니다');
           followerList.value = response.data;
-        })
-        .catch((error) => {
-          console.error('Error:', error);
         });
     };
 
@@ -272,12 +271,9 @@ export const useUserStore = defineStore(
         .then((res) => {
           accessToken.value = parseToken(res);
           const response = res.data;
-          console.log(response);
-          console.log('테스트중입니다');
+          console.log('followinglist', response);
+          console.log('팔로잉 테스트중입니다');
           followingList.value = response.data;
-        })
-        .catch((error) => {
-          console.error('Error:', error);
         });
     };
 
@@ -315,9 +311,6 @@ export const useUserStore = defineStore(
             console.log('BAD_REQUEST');
             return;
           }
-        })
-        .catch((error) => {
-          console.error('Error:', error);
         });
     };
 
@@ -334,9 +327,6 @@ export const useUserStore = defineStore(
           accessToken.value = parseToken(res);
           isFollow.value = res.data;
           console.log('팔로우 여부 조회 성공');
-        })
-        .catch((error) => {
-          console.error('Error:', error);
         });
     };
 
@@ -366,9 +356,6 @@ export const useUserStore = defineStore(
             alert('BAD_REQUEST');
             return;
           }
-        })
-        .catch((error) => {
-          console.error('Error:', error);
         });
     };
 
@@ -393,9 +380,6 @@ export const useUserStore = defineStore(
               return;
             }
           }
-        })
-        .catch((error) => {
-          console.error('Error:', error);
         });
     };
 
@@ -418,9 +402,6 @@ export const useUserStore = defineStore(
             setUserProfile(loginUserId);
             // setUserProfile 함수 작동 시 data.profileImg에 갱신할 수 있나?
           }
-        })
-        .catch((error) => {
-          console.error('Error:', error);
         });
     };
 
@@ -445,9 +426,6 @@ export const useUserStore = defineStore(
             // updateduser.tagIdList = updatedTagNums;
             console.log('store에서 마지막 확인', updateduser.tagIdList); // [7,8,9]
           }
-        })
-        .catch((error) => {
-          console.error('Error:', error);
         });
     };
 
@@ -466,9 +444,6 @@ export const useUserStore = defineStore(
           if (response.status === 'OK') {
             router.push({ name: 'myprofile' });
           }
-        })
-        .catch((error) => {
-          console.error('Error:', error);
         });
     };
 
@@ -489,9 +464,6 @@ export const useUserStore = defineStore(
           } else {
             console.log('Failed to get current user profile');
           }
-        })
-        .catch((error) => {
-          console.error('Error:', error);
         });
     };
 
@@ -512,9 +484,6 @@ export const useUserStore = defineStore(
             loginUserPhone.value = response.data.phoneNumber;
             user.value = { ...res.data };
           }
-        })
-        .catch((error) => {
-          console.error('Error:', error);
         });
     };
 
@@ -533,9 +502,6 @@ export const useUserStore = defineStore(
           } else {
             throw new Error('Failed to find user email');
           }
-        })
-        .catch((error) => {
-          console.error('Error:', error);
         });
     };
 
@@ -553,9 +519,6 @@ export const useUserStore = defineStore(
           } else {
             throw new Error('Failed to find user password');
           }
-        })
-        .catch((error) => {
-          console.error('Error:', error);
         });
     };
 
@@ -571,9 +534,6 @@ export const useUserStore = defineStore(
           if (response.status === 'OK') {
             rankList.value = response.data;
           }
-        })
-        .catch((error) => {
-          console.error('Error:', error);
         });
     };
 
@@ -626,9 +586,6 @@ export const useUserStore = defineStore(
         .then((res) => {
           accessToken.value = parseToken(res);
           users.value = res.data;
-        })
-        .catch((error) => {
-          console.error('Error:', error);
         });
     };
 
@@ -637,6 +594,7 @@ export const useUserStore = defineStore(
       isLoggedIn,
       users,
       searchUsers,
+      userTagIdList,
       tagIdList,
       loginUserProfile,
       qList,
@@ -673,6 +631,7 @@ export const useUserStore = defineStore(
       findUserEmail,
       findUserPwd,
       myProfile,
+      getTagNumList,
       setQList,
       setAList,
       setFollowerList,
