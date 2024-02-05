@@ -5,6 +5,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.persistence.EntityNotFoundException;
 import javax.security.auth.login.CredentialException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -116,6 +117,16 @@ public class GlobalControllerAdvice {
     @ExceptionHandler(InvalidWriterException.class)
     private ResponseEntity<ResponseDto> invalidWriterException(
             InvalidWriterException e) {
+        log.error("{}", e.getMessage());
+        return new ResponseEntity<>(ResponseDto.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .message(e.getMessage())
+                .data("")
+                .build(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    private ResponseEntity<ResponseDto> badRequestException(BadRequestException e) {
         log.error("{}", e.getMessage());
         return new ResponseEntity<>(ResponseDto.builder()
                 .status(HttpStatus.BAD_REQUEST)

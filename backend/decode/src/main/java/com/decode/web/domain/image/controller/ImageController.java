@@ -17,13 +17,13 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 public class ImageController {
 
-    private final ImageService imageServiceImpl;
+    private final ImageService imageService;
 
     @PostMapping("/image")
     public ResponseDto imageUpload(
             @RequestPart(value = "file", required = false) MultipartFile image)
             throws IOException {
-        String data = imageServiceImpl.uploadImage(image);
+        String data = imageService.uploadImage(image);
         return ResponseDto.builder()
                 .status(HttpStatus.OK)
                 .message("이미지 업로드 성공")
