@@ -11,7 +11,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +36,7 @@ public class AuthServiceImpl implements AuthService {
 
             TokenDto tokenDto = generateToken(SERVER, authentication.getName());
             userService.setAttendance(loginDto.getEmail());
-            userService.setExp(jwtTokenProvider.getAuthUserId(tokenDto.getAccessToken()),1);
+            userService.setExp(jwtTokenProvider.getAuthUserId(tokenDto.getAccessToken()), 1);
             return tokenDto;
         } catch (BadCredentialsException e) {
             throw new CustomLoginException("아이디/비밀번호가 일치하지 않아요.");

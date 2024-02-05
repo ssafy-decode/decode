@@ -61,11 +61,13 @@ public class SocialServiceImpl implements SocialService {
         List<FollowEntity> followEntityList = followRepository.findByToUserId(userId);
         List<ResponseUserProfileDto> followerList = new LinkedList<>();
         for (FollowEntity followEntity : followEntityList) {
-            UserProfileEntity following = userProfileRepository.findById(followEntity.getFromUser().getId())
+            UserProfileEntity following = userProfileRepository.findById(
+                            followEntity.getFromUser().getId())
                     .orElseThrow(() -> new EntityNotFoundException(
                             "user not found with id: " + followEntity.getToUser().getId()));
             ResponseUserProfileDto userProfileDto = responseUserProfileMapper.toDto(following);
-            userProfileDto.setUserTagList(following.getUserTags().stream().map(UserTagEntity::getTagId).toList());
+            userProfileDto.setUserTagList(
+                    following.getUserTags().stream().map(UserTagEntity::getTagId).toList());
             followerList.add(userProfileDto);
         }
         return followerList;
@@ -77,11 +79,13 @@ public class SocialServiceImpl implements SocialService {
         List<FollowEntity> followEntityList = followRepository.findByFromUserId(userId);
         List<ResponseUserProfileDto> followingList = new LinkedList<>();
         for (FollowEntity followEntity : followEntityList) {
-            UserProfileEntity following = userProfileRepository.findById(followEntity.getToUser().getId())
+            UserProfileEntity following = userProfileRepository.findById(
+                            followEntity.getToUser().getId())
                     .orElseThrow(() -> new EntityNotFoundException(
-                    "user not found with id: " + followEntity.getToUser().getId()));
+                            "user not found with id: " + followEntity.getToUser().getId()));
             ResponseUserProfileDto userProfileDto = responseUserProfileMapper.toDto(following);
-            userProfileDto.setUserTagList(following.getUserTags().stream().map(UserTagEntity::getTagId).toList());
+            userProfileDto.setUserTagList(
+                    following.getUserTags().stream().map(UserTagEntity::getTagId).toList());
             followingList.add(userProfileDto);
         }
         return followingList;

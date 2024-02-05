@@ -85,7 +85,7 @@ public class UserController {
 
     @GetMapping("/user/profile/{userId}")
     @Operation(summary = "UserProfile 조회", description = "userId에 해당하는 유저의 프로필 조회")
-    public ResponseDto getUserProfile(@PathVariable Long userId){
+    public ResponseDto getUserProfile(@PathVariable Long userId) {
         ResponseUserProfileDto userProfile = userService.getUserProfileDtoById(userId);
         return ResponseDto.builder().data(userProfile).status(HttpStatus.OK).build();
     }
@@ -275,7 +275,7 @@ public class UserController {
     @PostMapping("/addUserTag")
     @Operation(summary = "유저 태그 선택", description = "신규 유저의 선호 기술 태그 추가")
     public ResponseDto addUserTag(@RequestBody
-            RequestUserTagDto requestUserTagDto) {
+    RequestUserTagDto requestUserTagDto) {
         userService.addUserTag(requestUserTagDto);
         return ResponseDto.builder().status(HttpStatus.OK).build();
     }
@@ -325,6 +325,7 @@ public class UserController {
                 .status(HttpStatus.OK)
                 .message("출석 로그 확인").build();
     }
+
     @GetMapping("/exp/{id}")
     @Operation(summary = "경험치 로그", description = "경험치로그 API")
     public ResponseDto getExp(@PathVariable Long id) {
