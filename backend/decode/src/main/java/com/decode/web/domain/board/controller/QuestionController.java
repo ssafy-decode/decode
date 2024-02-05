@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -50,11 +51,9 @@ public class QuestionController {
     @PostMapping
     @Operation(summary = "질문 생성", description = "질문 생성")
     public ResponseDto createQuestion(@RequestBody CreateQuestionDto question,
-            Authentication auth) {
+            Authentication auth) throws BadRequestException {
         Long userId = (Long) auth.getPrincipal();
-        if (!userId.equals(question.getQuestionWriterId())) {
-            return ResponseDto.builder().status(HttpStatus.BAD_REQUEST).message("사용자 불일치").build();
-        }
+        validateUser(userId, question.getQuestionWriterId());
         Long questionId = questionService.createQuestion(question);
         ResponseQuestionDto responseQuestionDto = questionService.questionDetail(questionId);
 
@@ -73,25 +72,22 @@ public class QuestionController {
     @PatchMapping
     @Operation(summary = "질문 수정", description = "작성자와 일치하는 사용자의 토큰을 식별 후 수정")
     public ResponseDto updateQuestion(@RequestBody UpdateQuestionDto updateQuestion,
-            Authentication auth) {
+            Authentication auth) throws BadRequestException {
         Long userId = (Long) auth.getPrincipal();
-        if (!userId.equals(updateQuestion.getUserId())) {
-            return ResponseDto.builder().status(HttpStatus.BAD_REQUEST).message("사용자 불일치").build();
-        }
+        validateUser(userId, updateQuestion.getUserId());
         ResponseQuestionDto responseQuestionDto = questionService.updateQuestion(updateQuestion);
         return ResponseDto.builder().status(HttpStatus.OK).data(responseQuestionDto).build();
     }
 
     @DeleteMapping("/delete/{questionId}")
     @Operation(summary = "질문 삭제", description = "작성자와 일치하는 사용자의 토큰을 식별 후 삭제")
-    public ResponseDto deleteQuestion(@PathVariable Long questionId, Authentication auth) {
+    public ResponseDto deleteQuestion(@PathVariable Long questionId, Authentication auth)
+            throws BadRequestException {
         Long userId = (Long) auth.getPrincipal();
         QuestionEntity targetQuestion = questionRepository.findById(questionId).orElseThrow(
                 () -> new BadCredentialsException(
                         "Question not found with id: " + questionId));
-        if (!userId.equals(targetQuestion.getQuestionWriter().getId())) {
-            return ResponseDto.builder().status(HttpStatus.BAD_REQUEST).message("사용자 불일치").build();
-        }
+        validateUser(userId, targetQuestion.getQuestionWriter().getId());
         questionService.deleteQuestion(questionId, targetQuestion);
         return ResponseDto.builder().status(HttpStatus.OK).build();
     }
@@ -105,5 +101,11 @@ public class QuestionController {
                 .message("질문 목록 조회 완료")
                 .data(data)
                 .build();
+    }
+
+    private void validateUser(Long userId, Long requestUserId) throws BadRequestException {
+        if (!userId.equals(requestUserId)) {
+            throw new BadRequestException("사용자 불일치");
+        }
     }
 }
