@@ -2,7 +2,12 @@
   <v-row justify="center">
     <v-card width="1036" style="box-shadow: none; margin-top: 10px; background-color: transparent">
       <v-tabs v-model="tab" background-color="transparent" grow>
-        <v-tab v-for="(item, index) in items" :key="index" :value="index" style="font-size: 16px; font-weight: bold">
+        <v-tab
+          v-for="(item, index) in items"
+          :key="index"
+          :value="index"
+          style="font-size: 16px; font-weight: bold; flex: 1"
+        >
           {{
             index === 0
               ? `${item}`
@@ -23,38 +28,39 @@
           :class="{ 'v-window-item-active': tab === index }"
         >
           <!-- 0번 탭 누를 시 -->
-          <v-card
-            v-if="index === 0"
-            class="mx-auto px-4 py-8"
-            max-width="518"
-            style="text-align: center; background-color: #f3f3f3; border-radius: 31px; border: 15px solid #d9d9d9"
-          >
-            <v-col cols="6"
-              >질문 &nbsp;&nbsp;{{ userStore.qListLength }}개 <br /><br />
-              <div v-for="(question, questionIndex) in userStore.qList" :key="questionIndex">
-                {{ questionIndex + 1 }} &nbsp; {{ question.questionId }} &nbsp;
-                {{ question.title }}
-              </div>
-              <br /><br />
-              이 사람이 올린 질문</v-col
-            >
-          </v-card>
+          <v-row v-if="index === 0">
+            <v-col cols="6">
+              <v-card
+                class="mx-auto px-4 py-8"
+                max-width="518"
+                style="text-align: center; background-color: #f3f3f3; border-radius: 31px; border: 15px solid #d9d9d9"
+              >
+                질문 &nbsp;&nbsp;{{ userStore.qListLength }}개 <br /><br />
+                <div v-for="(question, questionIndex) in userStore.qList" :key="questionIndex">
+                  {{ questionIndex + 1 }} &nbsp; {{ question.questionId }} &nbsp;
+                  {{ question.title }}
+                </div>
+                <br /><br />
+                이 사람이 올린 질문
+              </v-card>
+            </v-col>
 
-          <v-card
-            v-if="index === 0"
-            class="mx-auto px-4 py-8"
-            max-width="518"
-            style="text-align: center; background-color: #f3f3f3; border-radius: 31px; border: 15px solid #d9d9d9"
-          >
-            <v-col cols="6"
-              >답변 &nbsp;&nbsp;{{ userStore.aListLength }}개 <br /><br />
-              <div v-for="(answer, answerIndex) in userStore.aList" :key="answerIndex">
-                {{ answerIndex + 1 }} &nbsp; {{ answer.questionId }} &nbsp;
-                {{ answer.title }}
-              </div>
-              <br /><br />
-              이 사람이 답변 작성한 질문</v-col
-            ></v-card
+            <v-col cols="6">
+              <v-card
+                v-if="index === 0"
+                class="mx-auto px-4 py-8"
+                max-width="518"
+                style="text-align: center; background-color: #f3f3f3; border-radius: 31px; border: 15px solid #d9d9d9"
+              >
+                답변 &nbsp;&nbsp;{{ userStore.aListLength }}개 <br /><br />
+                <div v-for="(answer, answerIndex) in userStore.aList" :key="answerIndex">
+                  {{ answerIndex + 1 }} &nbsp; {{ answer.questionId }} &nbsp;
+                  {{ answer.title }}
+                </div>
+                <br /><br />
+                이 사람이 답변 작성한 질문</v-card
+              ></v-col
+            ></v-row
           >
 
           <ul v-else-if="index === 1">

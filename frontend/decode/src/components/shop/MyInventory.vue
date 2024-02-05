@@ -1,6 +1,5 @@
 <template>
   <v-container style="text-align: center">
-    <!-- <h2>{{ storeName }}</h2> -->
     <h2>인벤토리</h2>
     <br />
     <v-row>
@@ -90,10 +89,6 @@ export default {
     productNameSearch() {
       console.log('검색 버튼 클릭됨');
       // Add your search logic here
-    },
-    goToShop() {
-      console.log('상점으로 이동');
-      // Add your logic to navigate to inventory
     },
     getFilteredProducts(category) {
       if (category === 0) {
