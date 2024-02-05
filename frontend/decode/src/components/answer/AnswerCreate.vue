@@ -1,24 +1,34 @@
 <template>
-  <v-card class="mx-auto d-flex justify-space-between py-5 px-3 card" width="1550" height="750">
-    <v-sheet class="px-5" width="600" style="border: 2px solid black">
-      <br />
-      <p>질문 번호: {{ questionId }}</p>
-      <p>질문 제목: {{ questionTitle }}</p>
-      <p>질문 내용: {{ questionContent }}</p>
-      <p>질문 작성자: {{ questionWriter.nickname }}</p>
-      <p>질문 태그 목록: {{ questionTagList }}</p>
-      <p>질문 생성일: {{ questionCreatedTime }}</p>
-      <p>질문 수정일: {{ questionUpdatedTime }}</p>
-      <p>질문 나도 궁금 수: {{ questionMeTooCnt }}</p>
-      <br />
+  <v-card class="card mx-auto" width="75%" height="70%">
+    <v-sheet class="cardLeft">
+      <v-row>
+        <v-col :cols="12">
+          <div class="myListItem">
+            <div class="listItem">
+              <img class="img" src="/questionIcon2.png" alt="질문아이콘" />
+              <div>
+                <p class="title">{{ questionTitle }}</p>
+              </div>
+            </div>
+          </div>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col :cols="12">
+          <div class="contentBox">
+            <p>{{ questionContent }}</p>
+          </div>
+        </v-col>
+      </v-row>
     </v-sheet>
-    <v-sheet class="mx-auto px-5" width="900" style="border: 2px solid black">
-      <h3>답변 작성 칸</h3>
-      <br />
+    <v-sheet class="cardRight">
+      <div class="answerTitle">답변 작성 중...</div>
       <form @submit.prevent="createAnswer">
-        <MyEditor @editor-content-updated="updateEditorContent" />
+        <div style="background-color: white">
+          <MyEditor @editor-content-updated="updateEditorContent" />
+        </div>
         <div id="btnBox">
-          <v-btn id="submitBtn" type="submit">답변등록</v-btn>
+          <v-btn class="submitBtn" type="submit">답변등록</v-btn>
         </div>
       </form>
     </v-sheet>
@@ -137,11 +147,12 @@ const createAnswer = function () {
 
 .submitBtn {
   position: absolute;
-  right: 10px;
-  top: 5px;
-  border-radius: 40px;
+  right: 0px;
+  top: 20px;
+  border-radius: 34px;
   background-color: #62c0a6;
   font-weight: 800;
+  font-size: small;
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.4);
 }
 
@@ -158,13 +169,27 @@ const createAnswer = function () {
 }
 
 .card {
-  width: 1000px;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.4);
+  background-color: none;
+  display: flex;
+  justify-content: space-between;
   border-top-left-radius: 50px;
   border-bottom-left-radius: 50px;
   border-bottom-right-radius: 50px;
-  padding: 30px 30px 70px;
+}
+
+.cardLeft {
+  width: 40%;
+  border-top-left-radius: 50px;
+  border-bottom-left-radius: 50px;
+  padding: 50px 30px 70px;
   background-color: #f4f4f4;
-  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.4);
+}
+.cardRight {
+  width: 60%;
+  border-bottom-right-radius: 50px;
+  padding: 50px 30px 70px;
+  background-color: #d9d9d9;
 }
 
 input {
@@ -192,5 +217,45 @@ span {
 .stackBox ::v-deep(.v-field) {
   border-radius: 45px;
   padding: 5px 10px;
+}
+
+.myListItem {
+  border-radius: 35px;
+  background-color: white;
+}
+
+.listItem {
+  /* width: 100%; */
+  height: auto;
+  font-size: large;
+  color: #575757;
+  display: flex;
+  align-items: center;
+}
+
+.title {
+  font-size: medium;
+  font-weight: 800;
+}
+
+.img {
+  width: 50px;
+  height: 50px;
+  margin: 5px 10px 5px 5px;
+}
+
+.contentBox {
+  padding: 25px 30px 25px;
+  background-color: white;
+  border-radius: 25px;
+  min-height: 515px;
+  height: auto;
+}
+
+.answerTitle {
+  margin-bottom: 20px;
+  font-size: larger;
+  font-weight: bolder;
+  color: #575757;
 }
 </style>

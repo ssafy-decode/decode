@@ -54,6 +54,7 @@ export const useQuestionStore = defineStore(
         },
       })
         .then((res) => {
+          console.log(res.data.data);
           questions.value = res.data.data;
         })
         .catch((err) => {

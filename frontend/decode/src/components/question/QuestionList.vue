@@ -66,7 +66,7 @@
 
 <script setup>
 import { useQuestionStore } from '@/stores/questionStore';
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import QuestionListItem from './QuestionListItem.vue';
 import { useRouter } from 'vue-router';
 
@@ -81,8 +81,6 @@ const keyword = ref('');
 const tagIds = ref([]);
 
 const searchParams = function (keyword, tagIds) {
-  console.log('키워드는', keyword);
-  console.log('태그는', ...tagIds);
   questionStore.getQuestions(keyword, ...tagIds);
 };
 
@@ -175,6 +173,7 @@ span {
 .createBtn {
   border-radius: 30px;
   background-color: #62c0a6;
+  font-weight: 800;
 }
 
 .titleBox {

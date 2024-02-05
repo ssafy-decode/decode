@@ -89,6 +89,7 @@ const getDetailQuestion = function () {
       question.value = res.data.data;
       isAnswerExist.value = question.value.answerList.length > 0;
       writerNickname.value = question.value.questionWriter.nickname;
+      questionStore.originalContent = question.value.content;
     })
     .catch((err) => {
       console.log(err);
@@ -120,7 +121,6 @@ const deleteQuestion = function () {
 };
 
 const goUpdate = function () {
-  questionStore.originalContent = question.value.content;
   router.push({ path: `/question-update/${questionId.value}` });
 };
 
@@ -139,6 +139,7 @@ button {
   background-color: #62c0a6;
   border-radius: 35px;
   font-size: small;
+  font-weight: 800;
   padding: 0 10 0;
   margin: 5px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
@@ -165,11 +166,6 @@ button {
 .btnBox {
   display: flex;
   justify-content: space-between;
-}
-
-.btn {
-  margin-left: 10px;
-  margin-right: 10px;
 }
 
 .img {

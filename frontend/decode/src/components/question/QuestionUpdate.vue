@@ -128,7 +128,7 @@ const updateQuestion = function () {
   const tags = numToStr.value.map((tag, index) => {
     return {
       tagId: items[tag],
-      tagName: tag,
+      // tagName: tag, // API 수정 이후 임시 수정한 부분(테스트 전)
       version: versions.value[index],
     };
   });
