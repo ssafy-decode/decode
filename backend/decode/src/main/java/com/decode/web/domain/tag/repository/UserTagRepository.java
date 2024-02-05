@@ -9,4 +9,5 @@ public interface UserTagRepository extends JpaRepository<UserTagEntity, Long> {
 
     List<UserTagEntity> findAllByUserProfile(UserProfileEntity userProfile);
 
+    List<UserTagEntity> findAllByUserProfileId(Long userProfileId);
 }
