@@ -41,9 +41,11 @@ public class OAuth2ServiceImpl implements OAuth2Service {
     @Override
     public String getAccessToken(String code) {
 
-        OAuthResponseDto result = restTemplate.postForEntity("https://github.com/login/oauth/access_token",
-                new OAuthRequestDto(clientId, clientSecret, code), OAuthResponseDto.class).getBody();
-        if(result == null) {
+        OAuthResponseDto result = restTemplate.postForEntity(
+                        "https://github.com/login/oauth/access_token",
+                        new OAuthRequestDto(clientId, clientSecret, code), OAuthResponseDto.class)
+                .getBody();
+        if (result == null) {
             throw new CustomLoginException("깃헙로그인 실패");
         }
         return result.getAccess_token();
@@ -60,7 +62,7 @@ public class OAuth2ServiceImpl implements OAuth2Service {
 
     @Override
     public TokenDto login(GithubUserInfoDto userInfo, String provider) {
-        String email = userInfo.getLogin()+ "@decode.com";
+        String email = userInfo.getLogin() + "@decode.com";
 
         // 최초 로그인이면 uid로 회원가입 처리
         if (userInfoRepository.findByEmail(email).isEmpty()) {

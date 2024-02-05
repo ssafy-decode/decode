@@ -1,7 +1,6 @@
 package com.decode.web.global.filter;
 
 import com.decode.web.domain.user.service.AuthService;
-import com.decode.web.exception.CustomLoginException;
 import com.decode.web.global.utils.authentication.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -26,9 +25,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest req,
             HttpServletResponse res,
             FilterChain filterChain) throws ServletException, IOException {
-
-
-
 
         String accessToken = resolveToken(req);
         String refreshToken = null;
@@ -71,6 +67,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return null;
 
     }
+
     private String reIssueAccessToken(String refreshToken) {
         // 토큰 재발급
         log.info("토큰 재발급");

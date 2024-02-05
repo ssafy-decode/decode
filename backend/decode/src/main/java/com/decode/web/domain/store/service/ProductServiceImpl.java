@@ -1,6 +1,5 @@
 package com.decode.web.domain.store.service;
 
-import com.amazonaws.services.kms.model.NotFoundException;
 import com.decode.web.domain.store.dto.ProductBuyRequestDto;
 import com.decode.web.domain.store.dto.ProductDto;
 import com.decode.web.domain.store.repository.ItemRepository;

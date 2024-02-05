@@ -1,6 +1,5 @@
 package com.decode.web.domain.user.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,7 +26,8 @@ public class ResponseUserProfileDto {
     private List<Long> userTagList;
 
     @Builder
-    public ResponseUserProfileDto(Long id, int exp, int point, int coin, String nickname, String tier){
+    public ResponseUserProfileDto(Long id, int exp, int point, int coin, String nickname,
+            String tier) {
         this.id = id;
         this.exp = exp;
         this.point = point;

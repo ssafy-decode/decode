@@ -10,7 +10,6 @@ import com.decode.web.entity.AnswerEntity;
 import com.decode.web.entity.QuestionEntity;
 import com.decode.web.exception.InvalidWriterException;
 import java.util.List;
-import org.apache.coyote.BadRequestException;
 
 public interface AnswerService {
 
