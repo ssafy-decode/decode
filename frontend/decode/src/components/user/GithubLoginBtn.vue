@@ -35,7 +35,7 @@ const githubMouseLeave = () => {
 
 // 로딩 창으로 이동 + 팝업창 띄우기 (아직 링크 연결 안 됨)
 const authenticate = () => {
-  window.open(`https://i10a507.p.ssafy.io/decode/oauth2/authorization/github`, `_blank`, `width=400, height=600`);
+  window.open(`http://localhost/decode/oauth2/authorization/github`, `_blank`, `width=400, height=600`);
   router.push(`/loading`);
 };
 </script>

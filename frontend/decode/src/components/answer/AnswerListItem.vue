@@ -1,5 +1,5 @@
 <template>
-  <div v-if="answer">
+  <div v-if="answer" class="answerContainer">
     <div class="myListItem">
       <div class="listItem">
         <div>
@@ -110,6 +110,7 @@ div {
   display: flex;
   justify-content: space-between;
 }
+
 
 .commentBox {
   margin-left: 10px;
