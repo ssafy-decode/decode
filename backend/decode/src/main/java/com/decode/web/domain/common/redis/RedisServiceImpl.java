@@ -1,4 +1,4 @@
-package com.decode.web.domain.user.service;
+package com.decode.web.domain.common.redis;
 
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
