@@ -1,6 +1,5 @@
 <template>
   <v-container style="text-align: center">
-    <!-- <h2>{{ storeName }}</h2> -->
     <h2>인벤토리</h2>
     <br />
     <v-row>
