@@ -49,6 +49,9 @@ export const useQuestionStore = defineStore(
         method: 'get',
         url: `/question`,
         params: { keyword, tagIds },
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+        },
       })
         .then((res) => {
           questions.value = res.data.data;
