@@ -3,36 +3,79 @@
     <v-row>
       <v-col cols="12" md="6">
         <!-- 환전 부분 -->
-        <v-card style="text-align: center; height: 250px">
-          <div style="color: #34a080">환전</div>
+        <v-card style="text-align: center; height: 350px">
+          <div style="color: #34a080; font-size: larger; font-weight: bold">환전</div>
           <br />
           <br />
+          <v-row style="color: #34a080; font-weight: bold"
+            ><v-col cols="12" md="6">포인트</v-col><v-col cols="12" md="6">코인</v-col></v-row
+          >
+          <br />
+
           <v-form @submit.prevent="exchangePoints">
             <v-row style="margin-left: 5px; margin-right: 5px">
               <v-col cols="12" md="6">
-                <v-text-field v-model="pointAmount" label="포인트" type="number" @input="onPointInput"></v-text-field>
+                <v-text-field
+                  class="vtextfield"
+                  variant="plain"
+                  v-model="pointAmount"
+                  label="포인트"
+                  type="number"
+                  @input="onPointInput"
+                ></v-text-field>
               </v-col>
               <v-col cols="12" md="6">
-                <v-text-field v-model="coinAmount" label="코인" type="number" @input="onCoinInput"></v-text-field>
+                <v-text-field
+                  class="vtextfield"
+                  variant="plain"
+                  v-model="coinAmount"
+                  label="코인"
+                  type="number"
+                  @input="onCoinInput"
+                ></v-text-field>
               </v-col>
             </v-row>
-            <div v-if="userStore.loginUserProfile">
-              보유 포인트: {{ userStore.loginUserProfile.point }}&nbsp;&nbsp; 보유 코인:
-              {{ userStore.loginUserProfile.coin }}
+            <br />
+
+            <div
+              v-if="userStore.loginUserProfile"
+              style="margin-left: 30px; margin-right: 30px; display: flex; justify-content: space-between"
+            >
+              <span>보유 포인트: {{ userStore.loginUserProfile.point }}</span>
+              <!-- 색상 변경된 버튼 -->
+              <span
+                ><v-btn
+                  @click="exchange"
+                  type="submit"
+                  color="#62C0A6"
+                  size="x-large"
+                  style="border-radius: 34px; font-size: large; width: 111px"
+                  >환전</v-btn
+                >
+              </span>
+              <span>보유 코인: {{ userStore.loginUserProfile.coin }}</span>
             </div>
             <br />
-            <!-- 색상 변경된 버튼 -->
-            <v-btn @click="exchange" type="submit" color="#34A080">환전</v-btn>
+
+            <div style="display: flex; justify-content: baseline; align-items: center; margin-left: 20px">
+              <span
+                ><img style="width: 30px" @mouseover="showMsg" @mouseleave="hideMsg" src="../../../helpicon.png"
+              /></span>
+              &nbsp;<span style="font-size: 13px" v-show="isHovered"
+                >포인트는 매일 출석 체크, 질문, 답변, 채택, 신고 인정 시 획득 가능합니다.</span
+              >
+            </div>
           </v-form>
         </v-card>
       </v-col>
+
       <v-col cols="12" md="6">
         <!-- 실시간 차트 -->
-        <v-card style="text-align: center">
-          <div style="color: #34a080">환율 그래프</div>
+        <v-card style="text-align: center; height: 350px">
+          <div style="color: #34a080; font-size: larger; font-weight: bold">환율 그래프</div>
           <br />
           <v-container class="chart-container">
-            <canvas ref="lineChart" height="100px"></canvas>
+            <canvas ref="lineChart" height="100%"></canvas>
           </v-container>
         </v-card>
       </v-col>
@@ -88,6 +131,7 @@ export default {
           },
         },
       },
+      isHovered: false,
     };
   },
   beforeMount() {
@@ -175,6 +219,7 @@ export default {
       if (rate && !isNaN(rate)) {
         this.coinAmount = Math.floor(this.pointAmount / rate);
         this.writePointInput = true;
+        this.writeCoinInput = false;
       }
     },
     onCoinInput() {
@@ -183,6 +228,7 @@ export default {
       if (rate && !isNaN(rate)) {
         this.pointAmount = Math.floor(this.coinAmount * rate);
         this.writeCoinInput = true;
+        this.writePointInput = false;
       }
     },
     exchange() {
@@ -210,10 +256,28 @@ export default {
         }
       }
     },
+    showMsg() {
+      this.isHovered = true;
+    },
+    hideMsg() {
+      this.isHovered = false;
+    },
   },
 };
 </script>
 
 <style scoped>
 /* 필요한 스타일이 있다면 추가 */
+.vtextfield {
+  border-radius: 20px;
+  background-color: #d9f2eb;
+  box-shadow: 0 8px 0px rgba(0, 0, 0, 0.2);
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 10px;
+}
+
+.v-text-field .v-input__control .v-input__slot::after {
+  background-color: transparent;
+}
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto d-flex justify-space-between py-5 px-3" width="1550" height="750">
+  <v-card class="mx-auto d-flex justify-space-between py-5 px-3 card" width="1550" height="750">
     <v-sheet class="px-5" width="600" style="border: 2px solid black">
       <br />
       <p>질문 번호: {{ questionId }}</p>
@@ -93,7 +93,6 @@ const createAnswer = function () {
     userId: parseInt(userId),
     content: answerContent.value,
   };
-  console.log(data);
   axios({
     method: 'post',
     url: `/answer`,
@@ -107,6 +106,7 @@ const createAnswer = function () {
       router.push({ path: `/board/${questionId}` });
     })
     .catch((err) => {
+      console.log(data);
       console.log(err);
       console.log('답변 생성 오류');
     });
@@ -114,15 +114,83 @@ const createAnswer = function () {
 </script>
 
 <style scoped>
-#btnBox {
-  position: relative;
+.addTagBox {
+  margin-top: 15px;
 }
 
-#submitBtn {
+.xBtn {
+  margin-bottom: 20px;
+}
+
+.tagContainer {
+  padding: 5px 10px 5px;
+}
+
+.btnBox {
+  position: relative;
+  margin-top: 20px;
+}
+.addTagBtnBox {
+  position: relative;
+  top: -40px;
+}
+
+.submitBtn {
   position: absolute;
   right: 10px;
   top: 5px;
   border-radius: 40px;
   background-color: #62c0a6;
+  font-weight: 800;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.4);
+}
+
+.createBox {
+  margin-bottom: 150px;
+}
+
+#btnBox {
+  position: relative;
+}
+
+.createBox {
+  margin-bottom: 150px;
+}
+
+.card {
+  width: 1000px;
+  border-top-left-radius: 50px;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+  padding: 30px 30px 70px;
+  background-color: #f4f4f4;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.4);
+}
+
+input {
+  border-left: 1px solid black;
+}
+
+span {
+  margin: 5px;
+}
+
+::-webkit-scrollbar {
+  width: 15px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #b0b0b0;
+  border: solid 2px #e6e6e6;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #e6e6e6;
+}
+
+.stackBox ::v-deep(.v-field) {
+  border-radius: 45px;
+  padding: 5px 10px;
 }
 </style>

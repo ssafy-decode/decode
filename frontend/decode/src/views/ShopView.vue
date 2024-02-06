@@ -2,6 +2,7 @@
   <v-container class="itemshop">
     <ExchangeTab />
     <br />
+    <br />
     <ShopTab />
   </v-container>
 

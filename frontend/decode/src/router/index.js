@@ -24,12 +24,12 @@ import FindPwd from '@/components/user/FindPwd.vue';
 import FoundEmail from '@/components/user/FoundEmail.vue';
 import FoundPwd from '@/components/user/FoundPwd.vue';
 import MyProfile from '@/components/profile/MyProfile.vue';
+import OtherProfile from '@/components/profile/OtherProfile.vue';
 import MyProfileUpdateCheckPwd from '@/components/profile/MyProfileUpdateCheckPwd.vue';
-import MyTagUpdate from '@/components/profile/MyTagUpdate.vue';
 import MyProfileUpdate from '@/components/profile/MyProfileUpdate.vue';
+import MyTagUpdate from '@/components/profile/MyTagUpdate.vue';
 import MyInventory from '@/components/shop/MyInventory.vue';
 import QuestionUpdate from '@/components/question/QuestionUpdate.vue';
-import OtherProfile from '@/components/rank/OtherProfile.vue';
 
 const router = createRouter({
   history: createWebHistory(),

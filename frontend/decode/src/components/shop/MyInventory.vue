@@ -1,25 +1,41 @@
 <template>
   <v-container style="text-align: center">
+<<<<<<< HEAD
     <h2>인벤토리</h2>
+=======
+    <h2 style="color: #34a080">인벤토리</h2>
+>>>>>>> 345d7605d72541ffa47475b234788df79a6a8b64
     <br />
-    <v-row>
+    <br />
+    <v-row style="display: flex; align-items: center; margin-left: 500px; margin-right: 30px">
       <v-col>
-        <v-row>
-          <v-text-field
-            v-model="searchKeyword"
-            label="아이템명을 입력해주세요."
-            append-icon="mdi-magnify"
-            @click:append="productNameSearch"
-          ></v-text-field>
-        </v-row>
+        <v-text-field
+          v-model="searchKeyword"
+          variant="plain"
+          label="아이템을 입력해주세요"
+          class="search-field"
+          bg-color="fff"
+          clearable
+          append-inner
+        >
+          <template #append-inner>
+            <v-btn class="searchBtn" size="medium" @click="productNameSearch(name)">
+              <img src="./searchicon.png" alt="검색아이콘" style="width: 40px; height: auto" />
+            </v-btn>
+          </template>
+        </v-text-field>
       </v-col>
-      <v-col cols="2">
-        <router-link to="/shop"><v-btn color="primary">상 점</v-btn></router-link>
+      <v-col>
+        <router-link to="/shop">
+          <v-btn color="#62C0A6" style="height: 38px; width: 99px; border-radius: 34px; font-weight: bold">상점</v-btn>
+        </router-link>
       </v-col>
     </v-row>
+    <br />
 
     <v-card>
-      <v-tabs v-model="selectedTab" @click="onTabChange">
+      <!-- <v-tabs v-model="selectedTab" @click="onTabChange"> -->
+      <v-tabs v-model="selectedTab">
         <v-tab value="all-product">전체</v-tab>
         <v-tab value="wearing-item">착장아이템</v-tab>
         <v-tab value="consumption-item">소비아이템</v-tab>
@@ -29,14 +45,14 @@
         <v-window v-model="selectedTab">
           <v-window-item value="all-product">
             <v-row>
-              <v-col v-for="product in getFilteredProducts(0)" :key="product.id">
+              <v-col v-for="product in getFilteredProducts(0)" :key="product.productId">
                 <ProductComponent :product="product" />
               </v-col>
             </v-row>
           </v-window-item>
           <v-window-item value="wearing-item">
             <v-row>
-              <v-col v-for="product in getFilteredProducts(1)" :key="product.id">
+              <v-col v-for="product in getFilteredProducts(1)" :key="product.productId">
                 <ProductComponent :product="product" />
               </v-col>
             </v-row>
@@ -44,7 +60,7 @@
 
           <v-window-item value="consumption-item">
             <v-row>
-              <v-col v-for="product in getFilteredProducts(2)" :key="product.id">
+              <v-col v-for="product in getFilteredProducts(2)" :key="product.productId">
                 <ProductComponent :product="product" />
               </v-col>
             </v-row>
@@ -90,10 +106,6 @@ export default {
       console.log('검색 버튼 클릭됨');
       // Add your search logic here
     },
-    goToShop() {
-      console.log('상점으로 이동');
-      // Add your logic to navigate to inventory
-    },
     getFilteredProducts(category) {
       if (category === 0) {
         return this.allProducts; // 전체 탭일 경우 모든 상품 반환
@@ -112,4 +124,21 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.search-field {
+  width: 705px;
+  height: 60px;
+  margin-right: 10px;
+  background-color: white;
+  border-radius: 31px;
+  border: 1px solid #898989;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.searchBtn {
+  position: relative;
+  bottom: 10px;
+  border-radius: 30px;
+}
+</style>
