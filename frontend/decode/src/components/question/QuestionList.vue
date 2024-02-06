@@ -98,10 +98,6 @@ input {
   border-left: 1px solid black;
 }
 
-.chips-switch-container {
-  align-items: center;
-}
-
 span {
   margin: 5px;
 }

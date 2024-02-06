@@ -64,7 +64,6 @@ import { useUserStore } from '@/stores/userStore';
 import AttendanceLog from '@/components/profile/AttendanceLog.vue';
 import ExpLog from '@/components/profile/ExpLog.vue';
 import { storeToRefs } from 'pinia';
-import MyProfileWindow from '@/components/profile/MyProfileWindow.vue';
 
 const userStore = useUserStore();
 const { loginUserId: uid } = storeToRefs(userStore);

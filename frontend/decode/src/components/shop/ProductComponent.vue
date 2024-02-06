@@ -2,15 +2,18 @@
 import { useUserStore } from '@/stores/userStore';
 import { storeToRefs } from 'pinia';
 import { ref, defineProps } from 'vue';
+import axios from '@/utils/common-axios';
 const userStore = useUserStore();
-const { loginUserId: uid, loginUserProfile: profile } = storeToRefs(userStore);
+const { loginUserId: uid, loginUserProfile: profile, accessToken: accessToken } = storeToRefs(userStore);
 const props = defineProps({
   product: Object,
 });
+const count = ref(0);
 
 const data = {
   userId: uid.value,
   productId: props.product.productId,
+  count: 0,
 };
 
 const showModal = ref(false);
@@ -19,8 +22,28 @@ const closeModal = () => {
   showModal.value = false;
 };
 
-const buyProduct = () => {
+const openModal = () => {
   showModal.value = true;
+};
+
+const buyProduct = async () => {
+  data.count = count.value;
+  console.table(data);
+  await axios
+    .post('/product', data, {
+      headers: {
+        Authorization: `Bearer ${accessToken.value}`,
+      },
+    })
+    .then((res) => {
+      console.log(res);
+      alert('구매가 완료되었습니다.');
+      closeModal();
+    })
+    .catch((err) => {
+      console.log(err);
+      alert('돈이 없으시네요.');
+    });
 };
 </script>
 <template>
@@ -47,7 +70,7 @@ const buyProduct = () => {
         {{ profile.coin }}
       </div>
       <div class="product-buy-btn">
-        <v-btn color="#34a080" @click="buyProduct">구매</v-btn>
+        <v-btn color="#34a080" @click="openModal">구매</v-btn>
       </div>
     </div>
   </div>
@@ -56,6 +79,7 @@ const buyProduct = () => {
     <div class="modal-content">
       <span class="close" @click="closeModal">&times;</span>
       <h1>상품 미리 보기</h1>
+      <!-- 여기 미리보기 컴포넌트 대신 들어가야함 -->
       <div class="modal-product-image">
         <img :src="product.productImage" alt="product.productName" />
       </div>
@@ -65,8 +89,14 @@ const buyProduct = () => {
           <p>{{ product.productDetail }}</p>
         </div>
         <h4>{{ product.productPrice }}</h4>
+
+        <div class="modal-product-count">
+          <h4>수량</h4>
+          <input style="border: 1px solid gray; margin-left: 5px" type="number" v-model="count" />
+        </div>
+
         <div class="modal-product-buy-btn">
-          <v-btn color="#34a080">구매하기</v-btn>
+          <v-btn color="#34a080" @click="buyProduct">구매하기</v-btn>
         </div>
       </div>
     </div>
@@ -141,13 +171,19 @@ const buyProduct = () => {
   margin-left: 5px;
 }
 .product-buy-btn {
-  margin-top: 20px;
+  margin-top: 5px;
 }
 .modal-product-buy-btn {
-  margin-top: 100px;
+  margin-top: 20px;
 }
 .modal-product-info1 {
   margin-top: 20px;
   height: 100px;
+}
+.modal-product-count {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

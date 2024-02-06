@@ -58,7 +58,7 @@
   </div>
 
   <!-- 로딩 끝나고 데이터 가져왔다면 하단 탭들 렌더링 -->
-  <OtherProfileWindow v-if="!loading && isFetched" />
+  <!-- <OtherProfileWindow v-if="!loading && isFetched" /> -->
 </template>
 
 <script setup>
@@ -67,7 +67,7 @@ import { useUserStore } from '@/stores/userStore';
 import AttendanceLog from '@/components/profile/AttendanceLog.vue';
 import ExpLog from '@/components/profile/ExpLog.vue';
 import { storeToRefs } from 'pinia';
-import OtherProfileWindow from '@/components/profile/OtherProfileWindow.vue';
+// import OtherProfileWindow from '@/components/profile/OtherProfileWindow.vue';
 
 const userStore = useUserStore();
 const { id: uid } = storeToRefs(userStore); // id 필요

@@ -1,39 +1,34 @@
 <template>
-  <!-- <MyProfile /> -->
-  <!-- <MyProfileWindow /> -->
-  <div>123</div>
+  <MyProfile />
+  <MyProfileWindow />
 </template>
 
 <script setup>
-import { ref, computed, onBeforeMount } from 'vue';
-import { useUserStore } from '@/stores/userStore';
-import AttendanceLog from '@/components/profile/AttendanceLog.vue';
-import ExpLog from '@/components/profile/ExpLog.vue';
-import { storeToRefs } from 'pinia';
+// import { ref, computed, onBeforeMount } from 'vue';
+// import { useUserStore } from '@/stores/userStore';
 import MyProfileWindow from '@/components/profile/MyProfileWindow.vue';
 import MyProfile from '@/components/profile/MyProfile.vue';
 
-const userStore = useUserStore();
-const { loginUserId: uid } = storeToRefs(userStore);
+// const userStore = useUserStore();
 
 // DB에 수정된 번호를 다시 태그명으로 전환
-const tagName = {
-  1: 'python',
-  2: 'java',
-  3: 'C++',
-  4: 'javascript',
-  5: 'django',
-  6: 'spring',
-  7: 'spring boot',
-  8: 'kotlin',
-  9: 'sql',
-  10: 'react',
-  11: 'vue',
-  12: 'C#',
-};
+// const tagName = {
+//   1: 'python',
+//   2: 'java',
+//   3: 'C++',
+//   4: 'javascript',
+//   5: 'django',
+//   6: 'spring',
+//   7: 'spring boot',
+//   8: 'kotlin',
+//   9: 'sql',
+//   10: 'react',
+//   11: 'vue',
+//   12: 'C#',
+// };
 
-const followerProfiles = ref([]); // 팔로워 목록에 rank 포함한 새 배열
-const followingProfiles = ref([]); // 팔로잉 목록에 rank 포함한 새 배열
+// const followerProfiles = ref([]); // 팔로워 목록에 rank 포함한 새 배열
+// const followingProfiles = ref([]); // 팔로잉 목록에 rank 포함한 새 배열
 
 // 경험치순 순위 목록의 회원번호와 팔로워/팔로잉 목록 회원번호 대조
 // const matchId = (list, profiles) => {
@@ -80,7 +75,7 @@ onBeforeMount(async () => {
 </script>
 
 <style scoped>
-.buttons {
+/* .buttons {
   text-align: end;
 }
 .btn {
@@ -89,5 +84,5 @@ onBeforeMount(async () => {
   border-radius: 34px;
   font-size: smaller;
   font-weight: bold;
-}
+} */
 </style>
