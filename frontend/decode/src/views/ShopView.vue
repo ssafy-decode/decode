@@ -5,21 +5,23 @@
     <br />
     <ShopTab />
   </v-container>
+
+  <!-- <OpenviduModal></OpenviduModal> -->
 </template>
 
-<script>
+<script setup>
 import ExchangeTab from '@/components/shop/ExchangeTab.vue';
 import ShopTab from '@/components/shop/ShopTab.vue';
-export default {
-  components: {
-    ExchangeTab,
-    ShopTab,
-  },
-  methods: {},
-  data: () => ({
-    tab: 'exchange',
-  }),
-};
+import OpenviduModal from '@/components/chat/OpenviduModal.vue';
+import { useShopStore } from '@/stores/shopStore.js';
+const shopStore = useShopStore();
+const { fetchProducts } = shopStore;
+fetchProducts();
 </script>
-
-<style></style>
+<style scoped>
+.custom-openvidu-modal {
+  background-color: red;
+  width: 100%;
+  height: 100%;
+}
+</style>
