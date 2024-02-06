@@ -118,7 +118,7 @@ const complete = async () => {
     await userStore.updateTechStack(updateuser);
     setTimeout(() => {
       router.push({ name: 'myprofileupdate' });
-    }, 1000);
+    }, 1000); // 1초 후에
   } catch (error) {
     console.error('Error', error);
   }

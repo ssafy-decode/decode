@@ -10,7 +10,7 @@ export const useUserStore = defineStore(
     const users = ref([]); // 회원 목록
     const searchUsers = ref([]); // 아직은 쓸 일 없지만 검색된 회원 목록
     const tagIdList = ref([]); // 선택한 기술 태그 목록
-    const userTagIdList = ref([]); // 특정 유저 선택한 기술 태그 목록
+    // const userTagIdList = ref([]); // 특정 유저 선택한 기술 태그 목록
     const loginUserProfile = ref([]); // 로그인 유저 프로필 data 저장 목록
     const userProfile = ref([]); // 특정 유저 프로필 data 저장 목록
     const qList = ref([]); // 질문 목록
@@ -210,7 +210,7 @@ export const useUserStore = defineStore(
           accessToken.value = parseToken(res);
           const response = res.data;
           if (response.status === 'OK') {
-            userTagIdList.value = response.data.tagIdList;
+            tagIdList.value = response.data.tagIdList;
           }
         });
     };
@@ -408,9 +408,6 @@ export const useUserStore = defineStore(
     // 로그인 유저 선택한 기술 스택 변경
     const updateTechStack = (updateduser) => {
       const updatedTagNums = updateduser.tagIdList.map((item) => tagNum[item]);
-      updateduser.tagIdList = updatedTagNums;
-      console.log('테스트중', updateduser.tagIdList); // 테스트중 [7,8,9]
-      console.log('들어갔나', updatedTagNums); // 들어갔나 [7,8,9]
       axios
         .patch(`/updateUserTag`, updateduser, {
           withCredentials: true,
@@ -422,9 +419,7 @@ export const useUserStore = defineStore(
           accessToken.value = parseToken(res);
           const response = res.data;
           if (response.status === 'OK') {
-            console.log('정상 작동하는지 확인'); // 출력되고 있음
-            // updateduser.tagIdList = updatedTagNums;
-            console.log('store에서 마지막 확인', updateduser.tagIdList); // [7,8,9]
+            updateduser.tagIdList = updatedTagNums;
           }
         });
     };
@@ -594,7 +589,7 @@ export const useUserStore = defineStore(
       isLoggedIn,
       users,
       searchUsers,
-      userTagIdList,
+      // userTagIdList,
       tagIdList,
       loginUserProfile,
       qList,

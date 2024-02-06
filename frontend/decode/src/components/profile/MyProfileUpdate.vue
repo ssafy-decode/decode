@@ -15,7 +15,7 @@
           </v-col>
           <v-col cols="8">
             <div style="font-size: 16px">
-              <span> 이 &nbsp;&nbsp; 름: {{ userStore.loginUserProfile.nickname }}</span>
+              <span> 이 &nbsp;&nbsp; 름: {{ userName }}</span>
               <br />
               <br />
               <span>닉 네 임: {{ userNickName }}</span>
@@ -40,8 +40,8 @@
           기술 스택 변경
           <br />
           <br />
-          <div v-if="userStore.userTagIdList.length > 0">
-            <v-chip v-for="tag in userStore.userTagIdList" :key="tag" label color="primary" class="mr-2 mb-2">
+          <div v-if="userStore.tagIdList.length > 0">
+            <v-chip v-for="tag in userStore.tagIdList" :key="tag" label color="primary" class="mr-2 mb-2">
               {{ tagName[tag] }}</v-chip
             >
           </div>
@@ -125,7 +125,6 @@ const tagName = {
   12: 'C#',
 };
 
-const selectedTags = ref([]);
 const password = ref('');
 const password2 = ref('');
 const showPassword = ref(false);
@@ -163,50 +162,6 @@ onBeforeMount(() => {
   userStore.setUser(userStore.loginUserId);
   userStore.getTagNumList(userStore.loginUserId);
 });
-
-// onMounted(() => {
-// console.log('작동은 되는 건가');
-// console.log(userStore.tagIdList);
-// onUpdated(() => {
-// selectedTags.value = userStore.user.tagIdList.value.map((tagId) => tagNum[tagId]);
-// });
-
-// 디버깅 테스트
-// console.log('===');
-// console.log(selectedTags); //RefImpl {__v_isShallow: false, dep: Map(1), __v_isRef: true, _rawValue: Array(0), _value: Proxy(Array)}
-// console.log('***');
-// console.log(selectedTags.value); //Proxy(Array) {}
-// console.log('---');
-// 왜 값이 안 들어가지..
-
-// watch(
-//   () => userStore,
-//   (updated) => {
-//     if (updated.user && updated.user.tagIdList && updated.user.tagIdList.value) {
-//       selectedTags.value = updated.user.tagIdList.value.map((tagId) => tagNum[tagId]);
-//     }
-//     // console.log(tagIdList);
-//   },
-//   { deep: true },
-// );
-
-// watch(
-//   () => userStore,
-//   (updated) => {
-//     console.log('여기까지 왔나');
-//     if (updated.user && updated.user.tagIdList && updated.user.tagIdList.value) {
-//       selectedTags.value = updated.user.tagIdList.value.map((tagId) => tagNum[tagId]);
-//       console.log('출력', selectedTags.value);
-//     }
-//   },
-//   { deep: true },
-// );
-
-// if (userStore.tagIdList && userStore.tagIdList.value) {
-//   selectedTags.value = userStore.tagIdList.value.map((tagId) => tagNum[tagId]);
-//   console.log('출력', selectedTags.value);
-// }
-// });
 
 const updatepwd = () => {
   if (!isPasswordValid(password.value)) {
