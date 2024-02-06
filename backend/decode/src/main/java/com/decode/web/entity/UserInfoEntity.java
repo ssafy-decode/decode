@@ -1,6 +1,9 @@
 package com.decode.web.entity;
 
 import com.decode.web.global.CommonEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,11 +21,12 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "UserInfo")
 @NoArgsConstructor
-
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class UserInfoEntity extends CommonEntity {
 
     @OneToOne(mappedBy = "userInfoEntity")
     @PrimaryKeyJoinColumn
+    @JsonBackReference
     private UserProfileEntity userProfileEntity;
 
     @Id
