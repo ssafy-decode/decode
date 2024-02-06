@@ -1,5 +1,6 @@
 <template>
   <v-row justify="center">
+    (아직 해당 회원 id로 수정 안 함)
     <v-card width="1036" style="box-shadow: none; margin-top: 10px; background-color: transparent">
       <v-tabs v-model="tab" background-color="transparent" grow>
         <v-tab

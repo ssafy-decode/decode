@@ -15,7 +15,7 @@
           </v-col>
           <v-col cols="8">
             <div style="font-size: 16px">
-              <span> 이 &nbsp;&nbsp; 름: {{ userStore.loginUserProfile.nickname }}</span>
+              <span> 이 &nbsp;&nbsp; 름: {{ userName }}</span>
               <br />
               <br />
               <span>닉 네 임: {{ userNickName }}</span>
@@ -28,7 +28,7 @@
         </v-row>
         <br />
         <div style="text-align: left; margin-left: 20px">
-          <span>이&nbsp;&nbsp; 메&nbsp;&nbsp; 일: {{ userEmail }}</span>
+          <span>이&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 메&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 일: {{ userEmail }}</span>
           <br />
           <br />
           <span>휴대폰 뒷자리: {{ userPhone }}</span>
@@ -39,15 +39,19 @@
         <div>
           기술 스택 변경
           <br />
-          <div v-if="selectedTags.length > 0">
-            <v-chip v-for="tag in selectedTags" :key="tag" label color="primary" class="mr-2 mb-2">{{ tag }}</v-chip>
-            <p>나오는가{{ selectedTags }}</p>
-            <!-- {{ userStore.tagIdList.value }} (값이 없어서 빈칸이 뜨는 중입니다) -->
+          <br />
+          <div v-if="userStore.tagIdList.length > 0">
+            <v-chip v-for="tag in userStore.tagIdList" :key="tag" label color="primary" class="mr-2 mb-2">
+              {{ tagName[tag] }}</v-chip
+            >
           </div>
           <div v-else>선택한 기술 스택이 없습니다.</div>
           <br />
-          <router-link to="/updatetechstack"><v-btn>기술 스택 변경</v-btn></router-link>
+          <router-link to="/updatetechstack"
+            ><v-btn class="tagbtn" color="#62C0A6" type="submit" variant="elevated">기술 스택 변경</v-btn></router-link
+          >
         </div>
+        <br />
         <br />
         <div>
           비밀번호 변경
@@ -64,7 +68,7 @@
             hint="영문, 숫자, 특수문자 조합 8자리 이상"
             append-inner
             :type="showPassword ? 'text' : 'password'"
-            style="margin-right: 20px"
+            style="margin-left: 20px; margin-right: 20px"
           >
             <template #append-inner>
               <v-icon @click="toggleEye" style="margin-right: 10px">{{
@@ -82,7 +86,7 @@
             label="비밀번호 확인"
             append-inner
             :type="showPassword2 ? 'text' : 'password'"
-            style="margin-right: 20px"
+            style="margin-left: 20px; margin-right: 20px"
           >
             <template #append-inner>
               <v-icon @click="toggleEye2" style="margin-right: 10px">{{
@@ -100,13 +104,13 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onBeforeMount, ref } from 'vue';
 import { useUserStore } from '@/stores/userStore';
 
 const userStore = useUserStore();
 
 // DB에 수정된 번호를 다시 태그명으로 전환
-const tagNum = {
+const tagName = {
   1: 'python',
   2: 'java',
   3: 'C++',
@@ -121,7 +125,6 @@ const tagNum = {
   12: 'C#',
 };
 
-const selectedTags = ref([]);
 const password = ref('');
 const password2 = ref('');
 const showPassword = ref(false);
@@ -155,50 +158,9 @@ const userBirthday = userStore.loginUserBirthday;
 const userEmail = userStore.loginUserEmail;
 const userPhone = userStore.loginUserPhone;
 
-// 기술 스택 get 메소드 이따가 추가되면 쓰기
-onMounted(() => {
+onBeforeMount(() => {
   userStore.setUser(userStore.loginUserId);
-  // console.log('작동은 되는 건가');
-  // console.log(userStore.tagIdList);
-  // onUpdated(() => {
-  // selectedTags.value = userStore.user.tagIdList.value.map((tagId) => tagNum[tagId]);
-  // });
-
-  // 디버깅 테스트
-  // console.log('===');
-  // console.log(selectedTags); //RefImpl {__v_isShallow: false, dep: Map(1), __v_isRef: true, _rawValue: Array(0), _value: Proxy(Array)}
-  // console.log('***');
-  // console.log(selectedTags.value); //Proxy(Array) {}
-  // console.log('---');
-  // 왜 값이 안 들어가지..
-
-  // watch(
-  //   () => userStore,
-  //   (updated) => {
-  //     if (updated.user && updated.user.tagIdList && updated.user.tagIdList.value) {
-  //       selectedTags.value = updated.user.tagIdList.value.map((tagId) => tagNum[tagId]);
-  //     }
-  //     // console.log(tagIdList);
-  //   },
-  //   { deep: true },
-  // );
-
-  // watch(
-  //   () => userStore,
-  //   (updated) => {
-  //     console.log('여기까지 왔나');
-  //     if (updated.user && updated.user.tagIdList && updated.user.tagIdList.value) {
-  //       selectedTags.value = updated.user.tagIdList.value.map((tagId) => tagNum[tagId]);
-  //       console.log('출력', selectedTags.value);
-  //     }
-  //   },
-  //   { deep: true },
-  // );
-
-  // if (userStore.tagIdList && userStore.tagIdList.value) {
-  //   selectedTags.value = userStore.tagIdList.value.map((tagId) => tagNum[tagId]);
-  //   console.log('출력', selectedTags.value);
-  // }
+  userStore.getTagNumList(userStore.loginUserId);
 });
 
 const updatepwd = () => {
@@ -229,6 +191,15 @@ const updatepwd = () => {
   font-weight: bold;
   border-radius: 34px;
   margin-top: 10px;
+  color: #000000;
+}
+
+.tagbtn {
+  height: 34px;
+  width: 150px;
+  font-size: 15px;
+  font-weight: bold;
+  border-radius: 34px;
   color: #000000;
 }
 

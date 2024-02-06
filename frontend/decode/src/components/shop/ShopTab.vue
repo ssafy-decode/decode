@@ -1,22 +1,35 @@
 <template>
   <v-container style="text-align: center">
-    <h2>상점</h2>
+    <h2 style="color: #34a080">상점</h2>
     <br />
-    <v-row>
+    <br />
+    <v-row style="display: flex; align-items: center; margin-left: 500px; margin-right: 30px">
       <v-col>
-        <v-row>
-          <v-text-field
-            v-model="searchKeyword"
-            label="상품을 입력해주세요."
-            append-icon="mdi-magnify"
-            @click:append="productNameSearch"
-          ></v-text-field>
-        </v-row>
+        <v-text-field
+          v-model="searchKeyword"
+          variant="plain"
+          label="상품을 입력해주세요"
+          class="search-field"
+          bg-color="fff"
+          clearable
+          append-inner
+        >
+          <template #append-inner>
+            <v-btn class="searchBtn" size="medium" @click="productNameSearch(name)">
+              <img src="./searchicon.png" alt="검색아이콘" style="width: 40px; height: auto" />
+            </v-btn>
+          </template>
+        </v-text-field>
       </v-col>
-      <v-col cols="2">
-        <router-link to="/inventory"><v-btn color="primary">인벤토리</v-btn></router-link>
+      <v-col>
+        <router-link to="/inventory">
+          <v-btn color="#62C0A6" style="height: 38px; width: 99px; border-radius: 34px; font-weight: bold"
+            >인벤토리</v-btn
+          >
+        </router-link>
       </v-col>
     </v-row>
+    <br />
 
     <v-card>
       <!-- <v-tabs v-model="selectedTab" @click="onTabChange"> -->
@@ -37,30 +50,16 @@
           </v-window-item>
           <v-window-item value="wearing-item">
             <v-row>
-              <v-col
-                v-if="getFilteredProducts(1).length > 0"
-                v-for="product in getFilteredProducts(1)"
-                :key="product.productId"
-              >
+              <v-col v-for="product in getFilteredProducts(1)" :key="product.productId">
                 <ProductComponent :product="product" />
-              </v-col>
-              <v-col v-else v-for="product in getFilteredProducts(1)" :key="product.productId">
-                해당 상품이 없습니다.
               </v-col>
             </v-row>
           </v-window-item>
 
           <v-window-item value="consumption-item">
             <v-row>
-              <v-col
-                v-if="getFilteredProducts(2).length > 0"
-                v-for="product in getFilteredProducts(2)"
-                :key="product.productId"
-              >
+              <v-col v-for="product in getFilteredProducts(2)" :key="product.productId">
                 <ProductComponent :product="product" />
-              </v-col>
-              <v-col v-else v-for="product in getFilteredProducts(2)" :key="product.productId">
-                해당 상품이 없습니다.
               </v-col>
             </v-row>
           </v-window-item>
@@ -71,43 +70,68 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+// 현 상황: store에서 products.value는 제대로 가져오는 중 => ShopTab.vue로 못 가져오는 중..
+import { ref, onBeforeMount } from 'vue';
 import { useShopStore } from '@/stores/shopStore';
 import ProductComponent from './ProductComponent.vue';
 
 const shopStore = useShopStore();
 
-const products = ref([]); // 전체 상품 목록
+// const products = ref([]); // 전체 상품 목록
 const searchedProducts = ref([]); // 검색한 상품 목록
 const searchKeyword = ref(''); // 검색어
 const selectedTab = ref('all-product'); // 선택된 탭
 
 const getFilteredProducts = (category) => {
-  const filteredProducts = products.value;
+  const allProducts = shopStore.products.value || [];
+  const filteredProducts = [];
 
   if (category === 0) {
-    if (!filteredProducts) {
-      console.log('해당 상품이 없습니다.');
-    }
-    return filteredProducts; // 전체 탭 => 모든 상품 반환
+    return allProducts;
   } else {
-    if (!filteredProducts) {
-      console.log('해당 상품이 없습니다.');
-    }
-    return filteredProducts.filter((product) => product.productType === category); // 카테고리 상품만 반환
+    allProducts.forEach((product) => {
+      if (product.productType === category) {
+        filteredProducts.push(product);
+      }
+    });
+    return filteredProducts;
   }
+
+  // console.log('테스트테스트', shopStore.products.value);
+  // const filteredProducts = shopStore.products.value;
+  // console.log('그래서 나오니 안 나오니', filteredProducts);
+
+  // if (category === 0) {
+  //   if (!filteredProducts) {
+  //     console.log('해당 상품이 없습니다. 1');
+  //     return [];
+  //   }
+  //   return filteredProducts; // 전체 탭 => 모든 상품 반환
+  // } else {
+  //   if (!filteredProducts) {
+  //     console.log('해당 상품이 없습니다. 2');
+  //   }
+  //   return filteredProducts.filter((product) => product.productType === category); // 카테고리 상품만 반환
+  // }
 };
 
-const productNameSearch = () => {
+const productNameSearch = async () => {
   // 상품 검색
-  shopStore.searchProduct(searchKeyword.value);
+  await shopStore.searchProduct(searchKeyword.value);
   searchedProducts.value = shopStore.searchedProducts.value;
+  console.log('디버깅테스트중', searchedProducts.value);
   return searchedProducts;
 };
 
-onMounted(async () => {
-  await shopStore.getProducts(); // 전체 상품 목록 가져오기
-  products.value = shopStore.products.value;
+onBeforeMount(async () => {
+  try {
+    await shopStore.getProducts(); // 전체 상품 목록 가져오기
+    console.log('데이터 확인', shopStore.products.value);
+    // products.value = shopStore.products.value;
+    // console.log('로딩 후 데이터', products.value);
+  } catch (error) {
+    console.error('Error', error);
+  }
 });
 
 // export default {
@@ -230,5 +254,20 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-/* 필요한 스타일이 있다면 추가 */
+.search-field {
+  width: 705px;
+  height: 60px;
+  margin-right: 10px;
+  background-color: white;
+  border-radius: 31px;
+  border: 1px solid #898989;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.searchBtn {
+  position: relative;
+  bottom: 10px;
+  border-radius: 30px;
+}
 </style>

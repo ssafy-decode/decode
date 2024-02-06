@@ -7,30 +7,27 @@
     >
       <v-row>
         <v-col :cols="2">
+          <!-- 프로필 사진, 커마 아이콘 추후 수정-->
           {{ userStore.loginUserProfile.nickname }}
           <br />
           <br />
           <!-- <input type="file" accept="image/*" @change="handleFileChange" style="display: none" ref="fileInput" /> -->
           <!-- <img style="width: 70%" :src="'./' + userStore.loginUserProfile.profileImg + '.png'" /> -->
-          <!-- 추후 url로 받아오는 걸로 수정 -->
+          <img style="width: 70%" src="../default.png" />
           <br />
           {{ userStore.loginUserProfile.tier }}
           <br />
           ((커마아이콘))
-          <!-- 추후 수정 -->
         </v-col>
 
-        <!-- 본인 기술 스택 v-chip들 나열 (소제목은 없애고)-->
         <v-col :cols="1"
-          ><v-chip>{{ userTags }}</v-chip> <br />아직 get 없어서
-          <!-- <div v-if="userStore.tagIdList.length > 0"> -->
-          <v-chip v-for="tag in userTags" :key="tag" label color="primary" class="mr-2 mb-2">{{ tag }}</v-chip>
-          <!-- {{ userStore.tagIdList.value }} (값이 없어서 빈칸이 뜨는 중입니다) -->
-          <!-- </div> -->
-          <!-- <div v-else>선택한 기술 스택이 없습니다.</div> -->
-          기술스택 안 뜸</v-col
+          ><div v-if="userStore.tagIdList.length > 0">
+            <v-chip v-for="tag in userStore.tagIdList" :key="tag" label color="primary" class="mr-2 mb-2">
+              {{ tagName[tag] }}</v-chip
+            >
+          </div>
+          <div v-else><br /><br />기술<br />스택<br />없음</div></v-col
         >
-        <!-- 일단 숫자로라도 뜨나 테스트 -->
 
         <v-col :cols="6">
           출석 스트릭
@@ -60,11 +57,12 @@
     </v-card>
   </div>
 
+  <!-- 로딩 끝나고 데이터 가져왔다면 하단 탭들 렌더링 -->
   <MyProfileWindow v-if="!loading && isFetched" />
 </template>
 
 <script setup>
-import { onMounted, ref, computed } from 'vue';
+import { ref, computed, onBeforeMount } from 'vue';
 import { useUserStore } from '@/stores/userStore';
 import AttendanceLog from '@/components/profile/AttendanceLog.vue';
 import ExpLog from '@/components/profile/ExpLog.vue';
@@ -73,11 +71,9 @@ import MyProfileWindow from '@/components/profile/MyProfileWindow.vue';
 
 const userStore = useUserStore();
 const { loginUserId: uid } = storeToRefs(userStore);
-// const loading = ref(true);
-const isFetched = ref(false);
 
 // DB에 수정된 번호를 다시 태그명으로 전환
-const tagNum = {
+const tagName = {
   1: 'python',
   2: 'java',
   3: 'C++',
@@ -91,18 +87,15 @@ const tagNum = {
   11: 'vue',
   12: 'C#',
 };
-const userTags = userStore.tagIdList.map((item) => tagNum[item]); // 아직 미완성
 
-// 배열을 제대로 가져오고는 있음. => 그러나 그 값을 저장하기 직전에 렌더링이 먼저 되어 버림. 순서의 문제.
-// 일단 const loading 같은 변수를 두고 T/F로 해서 v-if로 렌더링을 잠시 막는 방법을 생각해보도록 하자.
-const loading = computed(() => !isFetched.value);
-onMounted(async () => {
-  // try {
+const isFetched = ref(false); // data를 가져오고 나서 렌더링하도록
+const loading = computed(() => !isFetched.value); // 가져오기 전까지는 로딩 상태로
+onBeforeMount(async () => {
   await userStore.myProfile();
-  isFetched.value = true;
-  // } finally {
-  //   loading.value = false;
-  // }
+  await userStore.getTagNumList(userStore.loginUserId);
+  setTimeout(() => {
+    isFetched.value = true; // 가져오면 렌더링
+  }, 1000); // 1초 후에
 });
 </script>
 

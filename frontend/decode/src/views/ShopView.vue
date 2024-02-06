@@ -2,6 +2,7 @@
   <v-container class="itemshop">
     <ExchangeTab />
     <br />
+    <br />
     <ShopTab />
   </v-container>
 </template>
@@ -20,4 +21,5 @@ export default {
   }),
 };
 </script>
+
 <style></style>
