@@ -30,7 +30,10 @@ public class CommentController {
         log.debug("createCommentDto : {}", createCommentDto);
         Long commentId = commentService.save(createCommentDto);
         log.debug("created commentId : {}", commentId);
-        return ResponseDto.builder().status(HttpStatus.OK).message("댓글 생성 성공").data(commentId)
+        return ResponseDto.builder()
+                .status(HttpStatus.OK)
+                .message("댓글 생성 성공")
+                .data(commentId)
                 .build();
     }
 
@@ -38,13 +41,21 @@ public class CommentController {
     @DeleteMapping("/{commentId}")
     public ResponseDto deleteComment(@PathVariable Long commentId) {
         commentService.delete(commentId);
-        return ResponseDto.builder().status(HttpStatus.OK).message("댓글 삭제 성공").build();
+        return ResponseDto.
+                builder()
+                .status(HttpStatus.OK)
+                .message("댓글 삭제 성공")
+                .data("")
+                .build();
     }
 
     @PatchMapping()
     public ResponseDto updateComment(UpdateCommentDto updateCommentDto) {
         CommentEntity commentEntity = commentService.update(updateCommentDto);
-        return ResponseDto.builder().status(HttpStatus.OK).message("댓글 업데이트 성공").data(commentEntity)
+        return ResponseDto.builder()
+                .status(HttpStatus.OK)
+                .message("댓글 업데이트 성공")
+                .data(commentEntity)
                 .build();
     }
 
