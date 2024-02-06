@@ -1,6 +1,9 @@
 package com.decode.web.domain.user.service;
 
+import com.decode.web.domain.common.redis.RedisService;
 import com.decode.web.domain.user.dto.AuthDto;
+import com.decode.web.domain.user.dto.AuthDto.TokenDto;
+import com.decode.web.exception.CustomLoginException;
 import com.decode.web.global.utils.authentication.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +11,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +22,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final RedisService redisService;
+    private final UserService userService;
     private final String SERVER = "Server";
 
     @Override
@@ -27,14 +30,17 @@ public class AuthServiceImpl implements AuthService {
     public AuthDto.TokenDto login(AuthDto.LoginDto loginDto) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 loginDto.getEmail(), loginDto.getPassword());
-        Authentication authentication = authenticationManagerBuilder.getObject()
-                .authenticate(authenticationToken);
-        if (!authentication.isAuthenticated()) {
-            throw new BadCredentialsException("Invalid username/password supplied");
-        }
+        try {
+            Authentication authentication = authenticationManagerBuilder.getObject()
+                    .authenticate(authenticationToken);
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        return generateToken(SERVER, authentication.getName());
+            TokenDto tokenDto = generateToken(SERVER, authentication.getName());
+            userService.setAttendance(loginDto.getEmail());
+            userService.setExp(jwtTokenProvider.getAuthUserId(tokenDto.getAccessToken()), 1);
+            return tokenDto;
+        } catch (BadCredentialsException e) {
+            throw new CustomLoginException("아이디/비밀번호가 일치하지 않아요.");
+        }
     }
 
     @Override
@@ -96,11 +102,13 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public void logout(String token) {
         String requestAccessToken = resolveToken(token);
-        String principal = getPrincipal(requestAccessToken);
+        String principal = jwtTokenProvider.getPrincipal(requestAccessToken);
+        String provider = jwtTokenProvider.getProvider(requestAccessToken);
+        log.info("logout principal : {}", principal);
 
-        String refreshTokenInRedis = redisService.getValues("RT:" + SERVER + ":" + principal);
+        String refreshTokenInRedis = redisService.getValues("RT:" + provider + ":" + principal);
         if (refreshTokenInRedis != null) {
-            redisService.deleteValues("RT:" + SERVER + ":" + principal);
+            redisService.deleteValues("RT:" + provider + ":" + principal);
         }
 
     }

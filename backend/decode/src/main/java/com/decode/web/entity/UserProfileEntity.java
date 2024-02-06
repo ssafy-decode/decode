@@ -1,8 +1,11 @@
 package com.decode.web.entity;
 
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.decode.web.exception.NotEnoughCoinException;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -27,8 +30,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@Setter
 public class UserProfileEntity {
 
     @OneToOne
@@ -66,6 +69,9 @@ public class UserProfileEntity {
     @OneToMany(mappedBy = "fromUser", fetch = FetchType.LAZY)
     private List<FollowEntity> followers;
 
+    @OneToMany(mappedBy = "userProfile", fetch = FetchType.LAZY)
+    private List<UserTagEntity> userTags;
+
 
     @Builder
     public UserProfileEntity(String nickname, int exp, String tier, String profileImg, int point,
@@ -86,5 +92,12 @@ public class UserProfileEntity {
         this.profileImg = profile.getProfileImg();
         this.point = profile.getPoint();
         this.coin = profile.getCoin();
+    }
+
+    public void decreaseCoin(int amount) {
+        if (amount > this.coin) {
+            throw new NotEnoughCoinException("amount = " + amount + " coin = " + coin);
+        }
+        this.coin -= amount;
     }
 }

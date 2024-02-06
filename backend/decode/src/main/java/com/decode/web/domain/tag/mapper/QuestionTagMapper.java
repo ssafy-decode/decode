@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface QuestionTagMapper {
 
-    public QuestionTagEntity toEntity(QuestionTagDto questionTagDto);
+    QuestionTagEntity toEntity(QuestionTagDto questionTagDto);
 
-    public QuestionTagDto toDto(QuestionTagEntity entity);
+    QuestionTagDto toDto(QuestionTagEntity entity);
 }
