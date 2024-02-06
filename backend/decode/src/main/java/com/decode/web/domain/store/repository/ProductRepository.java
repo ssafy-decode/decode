@@ -12,6 +12,13 @@ public class ProductRepository {
 
     private final EntityManager entityManager;
 
+    public ProductEntity findById(Long productId) {
+        return entityManager.createQuery("select p from ProductEntity p "
+                        + "where p.id =: productId", ProductEntity.class)
+                .setParameter("productId", productId)
+                .getSingleResult();
+    }
+
     public List<ProductEntity> findAll() {
         return entityManager.createQuery("select p "
                         + "from ProductEntity p "
