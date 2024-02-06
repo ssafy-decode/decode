@@ -24,8 +24,8 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col :cols="12">
-          <MyViewer />
+        <v-col :cols="12" v-if="isFetched">
+          <QuestionViewer />
         </v-col>
       </v-row>
       <br /><br />
@@ -49,19 +49,21 @@
 
 <script setup>
 import axios from '@/utils/common-axios';
-import { ref, onMounted } from 'vue';
+import { ref, onBeforeMount } from 'vue';
 import { useQuestionStore } from '@/stores/questionStore';
 import { useAnswerStore } from '@/stores/answerStore';
 import { useUserStore } from '@/stores/userStore';
 import { useRoute, useRouter } from 'vue-router';
 import AnswerList from '@/components/answer/AnswerList.vue';
-import MyViewer from '@/components/common/MyViewer.vue';
+import QuestionViewer from '@/components/common/QuestionViewer.vue';
 
 const questionStore = useQuestionStore();
 const answerStore = useAnswerStore();
 const userStore = useUserStore();
 const router = useRouter();
 const route = useRoute();
+
+const isFetched = ref(false);
 
 const questionId = ref(0);
 const question = ref({});
@@ -79,6 +81,7 @@ const getDetailQuestion = function () {
       isAnswerExist.value = question.value.answerList.length > 0;
       writerNickname.value = question.value.questionWriter.nickname;
       questionStore.originalContent = question.value.content;
+      console.log('답변리스트', question.value.answerList);
     })
     .catch((err) => {
       console.log(err);
@@ -118,8 +121,11 @@ const goCreateAnswer = function () {
   router.push({ path: `/answer-create` });
 };
 
-onMounted(() => {
-  getDetailQuestion();
+onBeforeMount(async () => {
+  await getDetailQuestion();
+  setTimeout(() => {
+    isFetched.value = true; // 가져오면 렌더링
+  }, 250);
 });
 </script>
 

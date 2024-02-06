@@ -15,13 +15,12 @@
         </div>
       </div>
       <div class="answerBox listItem answerContent">
-        {{ answer.content }}
+        <AnswerViewer :initialValue="answer.content" :answerId="answer.answerId" />
       </div>
       <div class="editDeleteBox" @click="answerStore.deleteAnswer(answer.answerId)">
         <span class="deleteText">답변삭제</span>
       </div>
     </div>
-    <!-- <br /> -->
     <div class="commentBox">
       <CommentList :comment-list="answer.commentList" />
       <div class="searchBox">
@@ -56,6 +55,7 @@ import { useUserStore } from '@/stores/userStore';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 import axios from '@/utils/common-axios';
+import AnswerViewer from '@/components/common/AnswerViewer.vue';
 
 const router = useRouter();
 

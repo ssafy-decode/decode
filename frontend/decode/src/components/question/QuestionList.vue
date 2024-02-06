@@ -46,7 +46,6 @@
   <div id="app">
     <v-card color="#f3f3f3" elevation="16" max-width="60%" class="card mx-auto px-5">
       <v-row>
-        <!-- <v-col :cols="12"> -->
         <v-col :cols="9">
           <v-list-item class="titleBox">
             <v-list-item-title class="text-center title"> 질 문 </v-list-item-title>

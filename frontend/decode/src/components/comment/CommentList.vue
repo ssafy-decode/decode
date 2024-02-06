@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- <p>{{ commentList }}</p> -->
     <CommentListItem v-for="comment in commentList" :key="comment.commentId" :comment="comment" />
   </div>
 </template>
