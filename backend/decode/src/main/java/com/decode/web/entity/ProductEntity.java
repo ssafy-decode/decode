@@ -54,7 +54,7 @@ public class ProductEntity extends CommonEntity {
     public ProductDto toDto() {
         return ProductDto.builder()
                 .productId(id)
-                .productImageUrl(productImageUrl)
+                .productImage(productImageUrl)
                 .productDetail(productDetail)
                 .productName(productName)
                 .productPrice(productPrice)

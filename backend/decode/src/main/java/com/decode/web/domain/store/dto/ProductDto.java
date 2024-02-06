@@ -10,7 +10,7 @@ public class ProductDto {
     private Long productId;
     private String productName;
     private String productDetail;
-    private String productImageUrl;
+    private String productImage;
     private Integer productPrice;
     private Integer productType;
 }
