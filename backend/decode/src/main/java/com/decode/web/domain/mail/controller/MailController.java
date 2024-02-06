@@ -24,10 +24,7 @@ public class MailController {
         return ResponseDto.builder()
                 .message("메일 전송 성공")
                 .status(HttpStatus.OK)
+                .data("")
                 .build();
-
-
     }
-
-
 }

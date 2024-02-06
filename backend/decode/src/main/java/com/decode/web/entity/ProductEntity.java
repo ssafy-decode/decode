@@ -38,6 +38,9 @@ public class ProductEntity extends CommonEntity {
     @Column(name = "product_type")
     private Integer productType;
 
+    @Column(name = "product_iamge")
+    private String productImageUrl;
+
     @ColumnDefault("false")
     @Column(columnDefinition = "TINYINT(1)", name = "is_sale")
     private boolean isSale;
@@ -51,6 +54,7 @@ public class ProductEntity extends CommonEntity {
     public ProductDto toDto() {
         return ProductDto.builder()
                 .productId(id)
+                .productImage(productImageUrl)
                 .productDetail(productDetail)
                 .productName(productName)
                 .productPrice(productPrice)

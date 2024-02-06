@@ -6,6 +6,7 @@ import com.decode.web.domain.tag.service.TagService;
 import com.decode.web.global.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,11 +22,15 @@ public class TagController {
 
     @PostMapping("/addTag")
     @Operation(summary = "태그 추가", description = "태그 이름을 입력받아 태그 추가")
-    public ResponseDto addTag(@RequestBody TagDto tagName) {
-        if (tagService.addTag(tagName)) {
-            return ResponseDto.builder().status(HttpStatus.OK).message(tagName + "add").build();
+    public ResponseDto addTag(@RequestBody TagDto tagName) throws BadRequestException {
+        if (!tagService.addTag(tagName)) {
+            throw new BadRequestException("'" + tagName + "'은 중복입니다.");
         }
-        return ResponseDto.builder().status(HttpStatus.OK).message(tagName + "duplicate").build();
+        return ResponseDto.builder()
+                .status(HttpStatus.OK)
+                .message(tagName + "add")
+                .data("")
+                .build();
     }
 
     @GetMapping("/tag/{userId}")
