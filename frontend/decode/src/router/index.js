@@ -13,7 +13,7 @@ import AnswerCreateView from '@/views/AnswerCreateView.vue';
 import RankView from '@/views/RankView.vue';
 import ShopView from '@/views/ShopView.vue';
 import AuthenticationRedirectView from '@/views/AuthenticationRedirect.vue';
-
+import MyprofileView from '@/views/MyprofileView.vue';
 // Components
 import LoginForm from '@/components/LoginForm.vue';
 import UserRegist from '@/components/user/UserRegist.vue';
@@ -23,7 +23,6 @@ import FindEmail from '@/components/user/FindEmail.vue';
 import FindPwd from '@/components/user/FindPwd.vue';
 import FoundEmail from '@/components/user/FoundEmail.vue';
 import FoundPwd from '@/components/user/FoundPwd.vue';
-import MyProfile from '@/components/profile/MyProfile.vue';
 import OtherProfile from '@/components/profile/OtherProfile.vue';
 import MyProfileUpdateCheckPwd from '@/components/profile/MyProfileUpdateCheckPwd.vue';
 import MyProfileUpdate from '@/components/profile/MyProfileUpdate.vue';
@@ -132,7 +131,7 @@ const router = createRouter({
     {
       path: '/mypage',
       name: 'myprofile',
-      component: MyProfile,
+      component: MyprofileView,
     },
     {
       path: '/checkpwd',
@@ -150,7 +149,7 @@ const router = createRouter({
       component: MyProfileUpdate,
     },
     {
-      path: '/detail',
+      path: '/detail/:id',
       name: 'otherprofile',
       component: OtherProfile,
     },
