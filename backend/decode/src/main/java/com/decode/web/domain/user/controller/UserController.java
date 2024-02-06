@@ -112,7 +112,8 @@ public class UserController {
         return ResponseDto.builder()
                 .data(result)
                 .status(HttpStatus.OK)
-                .message("update user info").build();
+                .message("update user info")
+                .build();
     }
 
     @GetMapping("/profile/{id}")
@@ -121,7 +122,8 @@ public class UserController {
         return ResponseDto.builder()
                 .data(userProfileMapper.toDto(userService.getUserProfileById(id)))
                 .status(HttpStatus.OK)
-                .message("select user profile info").build();
+                .message("select user profile info")
+                .build();
     }
 
     @GetMapping("/info")
@@ -131,7 +133,8 @@ public class UserController {
         return ResponseDto.builder()
                 .data(userProfileMapper.toDto(userService.getUserProfileById(userId)))
                 .status(HttpStatus.OK)
-                .message("get user info").build();
+                .message("get user info")
+                .build();
     }
 
     @PostMapping("/regist")
@@ -157,7 +160,8 @@ public class UserController {
         return ResponseDto.builder()
                 .data(id)
                 .status(HttpStatus.OK)
-                .message("create user").build();
+                .message("create user")
+                .build();
     }
 
     @PostMapping("/login")
@@ -177,7 +181,8 @@ public class UserController {
         return ResponseDto.builder()
                 .data(jwtTokenProvider.getAuthUserId(tokenDto.getAccessToken()))
                 .status(HttpStatus.OK)
-                .message("login").build();
+                .message("login")
+                .build();
     }
 
     @PostMapping("/logout")
@@ -198,8 +203,10 @@ public class UserController {
         res.setHeader("Authorization", null);
 
         return ResponseDto.builder()
+                .data("")
                 .status(HttpStatus.OK)
-                .message("logout").build();
+                .message("logout")
+                .build();
 
     }
 
@@ -213,7 +220,8 @@ public class UserController {
         return ResponseDto.builder()
                 .data(result)
                 .status(HttpStatus.OK)
-                .message("email duplicate check").build();
+                .message("email duplicate check")
+                .build();
     }
 
     @GetMapping("/nickname")
@@ -226,7 +234,8 @@ public class UserController {
         return ResponseDto.builder()
                 .data(result)
                 .status(HttpStatus.OK)
-                .message("nickname duplicate check").build();
+                .message("nickname duplicate check")
+                .build();
     }
 
     @PostMapping("/password-validation")
@@ -235,7 +244,8 @@ public class UserController {
         return ResponseDto.builder()
                 .data(userService.pwCheck(password))
                 .status(HttpStatus.OK)
-                .message("password validation check").build();
+                .message("password validation check")
+                .build();
     }
 
     @PostMapping("/confirm")
@@ -253,7 +263,8 @@ public class UserController {
         return ResponseDto.builder()
                 .data(result)
                 .status(HttpStatus.OK)
-                .message("password confirm").build();
+                .message("password confirm")
+                .build();
     }
 
     @PostMapping("/profile/{id}")
@@ -262,8 +273,10 @@ public class UserController {
             @RequestBody UserProfileDto userProfileDto) {
         userService.updateUserProfile(id, userProfileMapper.toEntity(userProfileDto));
         return ResponseDto.builder()
+                .data("")
                 .status(HttpStatus.OK)
-                .message("update user profile").build();
+                .message("update user profile")
+                .build();
     }
 
     @PostMapping("/email")
@@ -273,7 +286,8 @@ public class UserController {
                 .data(userService.findEmail(findEmailDto.getName(), findEmailDto.getPhoneNumber(),
                         findEmailDto.getBirth()))
                 .status(HttpStatus.OK)
-                .message("find email").build();
+                .message("find email")
+                .build();
     }
 
 
@@ -282,7 +296,11 @@ public class UserController {
     public ResponseDto addUserTag(@RequestBody
     RequestUserTagDto requestUserTagDto) {
         userService.addUserTag(requestUserTagDto);
-        return ResponseDto.builder().status(HttpStatus.OK).build();
+        return ResponseDto.builder()
+                .status(HttpStatus.OK)
+                .data("")
+                .message("기술 태그 추가 완료")
+                .build();
     }
 
     @PatchMapping("/updateUserTag")
@@ -293,7 +311,11 @@ public class UserController {
             return ResponseDto.builder().status(HttpStatus.BAD_REQUEST).message("사용자 불일치").build();
         }
         userService.updateUserTag(requestUserTagDto);
-        return ResponseDto.builder().status(HttpStatus.OK).build();
+        return ResponseDto.builder()
+                .data("")
+                .message("기술 태그 수정 완료")
+                .status(HttpStatus.OK)
+                .build();
     }
 
     @PostMapping("/password")
@@ -318,8 +340,10 @@ public class UserController {
             mailService.sendMail(mailDto);
         }
         return ResponseDto.builder()
+                .data("")
                 .status(HttpStatus.OK)
-                .message("임시 비밀번호 발급").build();
+                .message("임시 비밀번호 발급")
+                .build();
     }
 
     @GetMapping("/attendance/{id}")
@@ -328,7 +352,8 @@ public class UserController {
         return ResponseDto.builder()
                 .data(userService.getAttendance(id))
                 .status(HttpStatus.OK)
-                .message("출석 로그 확인").build();
+                .message("출석 로그 확인")
+                .build();
     }
 
     @GetMapping("/exp/{id}")
@@ -337,7 +362,8 @@ public class UserController {
         return ResponseDto.builder()
                 .data(userService.getExp(id))
                 .status(HttpStatus.OK)
-                .message("경험치 로그").build();
+                .message("경험치 로그")
+                .build();
     }
 
     @GetMapping("/rank")
@@ -346,7 +372,8 @@ public class UserController {
         return ResponseDto.builder()
                 .data(userProfileMapper.toDto(userService.getRank()))
                 .status(HttpStatus.OK)
-                .message("랭킹").build();
+                .message("랭킹")
+                .build();
     }
 
 }

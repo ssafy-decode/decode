@@ -26,7 +26,11 @@ public class TagController {
         if (!tagService.addTag(tagName)) {
             throw new BadRequestException("'" + tagName + "'은 중복입니다.");
         }
-        return ResponseDto.builder().status(HttpStatus.OK).message(tagName + "add").build();
+        return ResponseDto.builder()
+                .status(HttpStatus.OK)
+                .message(tagName + "add")
+                .data("")
+                .build();
     }
 
     @GetMapping("/tag/{userId}")
