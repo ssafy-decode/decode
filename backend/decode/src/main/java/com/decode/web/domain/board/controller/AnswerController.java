@@ -7,7 +7,6 @@ import com.decode.web.domain.board.dto.CreateAnswerDto;
 import com.decode.web.domain.board.dto.RecommendDto;
 import com.decode.web.domain.board.dto.UpdateAnswerDto;
 import com.decode.web.domain.board.repository.AnswerRepository;
-import com.decode.web.domain.board.repository.RecommendRepository;
 import com.decode.web.domain.board.service.AnswerService;
 import com.decode.web.entity.AnswerEntity;
 import com.decode.web.global.ResponseDto;
@@ -34,7 +33,6 @@ public class AnswerController {
 
     private final AnswerService answerService;
     private final AnswerRepository answerRepository;
-    private final RecommendRepository recommendRepository;
 
 
     @PostMapping

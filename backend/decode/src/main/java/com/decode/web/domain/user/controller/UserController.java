@@ -280,7 +280,7 @@ public class UserController {
     @PostMapping("/addUserTag")
     @Operation(summary = "유저 태그 선택", description = "신규 유저의 선호 기술 태그 추가")
     public ResponseDto addUserTag(@RequestBody
-            RequestUserTagDto requestUserTagDto) {
+    RequestUserTagDto requestUserTagDto) {
         userService.addUserTag(requestUserTagDto);
         return ResponseDto.builder().status(HttpStatus.OK).build();
     }

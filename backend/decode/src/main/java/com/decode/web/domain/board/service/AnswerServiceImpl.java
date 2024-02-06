@@ -4,6 +4,7 @@ import com.decode.web.domain.board.dto.AnswerCountResponseDto;
 import com.decode.web.domain.board.dto.BoardProfileDto;
 import com.decode.web.domain.board.dto.BoardProfileResponseDto;
 import com.decode.web.domain.board.dto.CreateAnswerDto;
+import com.decode.web.domain.board.dto.QuestionDocument;
 import com.decode.web.domain.board.dto.RecommendDto;
 import com.decode.web.domain.board.dto.ResponseAnswerDto;
 import com.decode.web.domain.board.dto.ResponseCommentDto;
@@ -11,6 +12,7 @@ import com.decode.web.domain.board.dto.UpdateAnswerDto;
 import com.decode.web.domain.board.mapper.AnswerMapper;
 import com.decode.web.domain.board.repository.AnswerJpaRepository;
 import com.decode.web.domain.board.repository.AnswerRepository;
+import com.decode.web.domain.board.repository.QuestionELKRepository;
 import com.decode.web.domain.board.repository.QuestionRepository;
 import com.decode.web.domain.board.repository.RecommendRepository;
 import com.decode.web.domain.user.dto.ResponseUserProfileDto;
@@ -43,7 +45,7 @@ public class AnswerServiceImpl implements AnswerService {
     private final ResponseUserProfileMapper responseUserProfileMapper;
     private final RecommendRepository recommendRepository;
     private final AnswerJpaRepository answerJpaRepository;
-
+    private final QuestionELKRepository questionELKRepository;
 
     @Override
     public List<AnswerEntity> findAllByQuestion(QuestionEntity question) {
@@ -120,6 +122,7 @@ public class AnswerServiceImpl implements AnswerService {
         return responseAnswerDto;
     }
 
+    @Override
     public Long recommend(RecommendDto recommendDto) {
         // redis cache hit 조사
         // ...
@@ -147,7 +150,7 @@ public class AnswerServiceImpl implements AnswerService {
                         "User not found with id: " + userId));
         AnswerEntity answerEntity = answerRepository.findById(answerId)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "User not found with id: " + answerId));
+                        "Answer not found with id: " + answerId));
         RecommendEntity recommendEntity = recommendRepository.findByAnswerAndUserProfile(
                 answerEntity, userProfileEntity);
         if (recommendEntity == null) {
@@ -161,7 +164,7 @@ public class AnswerServiceImpl implements AnswerService {
     public BoardProfileResponseDto findAllByUserId(Long userId) {
         List<BoardProfileDto> questions = answerJpaRepository.findAllByUserId(userId)
                 .stream()
-                .map(answer -> answer.getQuestion().toDto())
+                .map(this::convertAnswerToBoardProfileDto)
                 .distinct()
                 .collect(Collectors.toList());
         return BoardProfileResponseDto.builder()
@@ -170,11 +173,23 @@ public class AnswerServiceImpl implements AnswerService {
                 .build();
     }
 
+    public BoardProfileDto convertAnswerToBoardProfileDto(AnswerEntity answer) {
+        Long questionId = answer.getQuestion().getId();
+        QuestionDocument questionDocument = questionELKRepository.findById(questionId).orElseThrow(
+                () -> new EntityNotFoundException(
+                        "Question not found with id: " + questionId));
+        return new BoardProfileDto(questionDocument.getTitle(), questionDocument.getId());
+    }
+
     @Override
     @Transactional
     public void doAdopt(Long userId, Long answerId) {
         AnswerEntity answer = answerJpaRepository.findOneByAnswerId(answerId);
-        if (!answer.getQuestion().getQuestionWriter().getId().equals(userId)) {
+        Long questionId = answer.getQuestion().getId();
+        QuestionDocument questionDocument = questionELKRepository.findById(questionId).orElseThrow(
+                () -> new EntityNotFoundException(
+                        "Question not found with id: " + questionId));
+        if (!questionDocument.getWriterId().equals(userId)) {
             throw new InvalidWriterException("글 작성자가 아닙니다.");
         }
         answer.doAdopt();
