@@ -3,6 +3,7 @@ package com.decode.web.domain.store.repository;
 import com.decode.web.entity.ItemEntity;
 import jakarta.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -11,19 +12,6 @@ import org.springframework.stereotype.Repository;
 public class ItemRepository {
 
     private final EntityManager entityManager;
-
-    public ItemEntity findByProductIdAndUserInfoId(Long productId, Long userInfoId) {
-        return entityManager.createQuery("select i "
-                        + "from ItemEntity i "
-                        + "join fetch i.product "
-                        + "join fetch i.userInfo "
-                        + "join fetch i.userInfo.userProfileEntity "
-                        + "where i.product.id =: productId "
-                        + "and  i.userInfo.id =: userInfoId", ItemEntity.class)
-                .setParameter("productId", productId)
-                .setParameter("userInfoId", userInfoId)
-                .getSingleResult();
-    }
 
     public List<ItemEntity> findByUserInfoId(Long userInfoId) {
         return entityManager.createQuery("select i "
@@ -46,5 +34,22 @@ public class ItemRepository {
                 .setParameter("itemId", itemId)
                 .setParameter("userInfoId", userInfoId)
                 .getSingleResult();
+    }
+
+    public ItemEntity findByProductIdAndUserId(Long productId, Long userId) {
+        return entityManager.createQuery("select i from ItemEntity i "
+                        + "join fetch i.product "
+                        + "join fetch i.userInfo "
+                        + "where i.product.id =: productId and i.userInfo.id =: userId", ItemEntity.class)
+                .setParameter("productId", productId)
+                .setParameter("userId", userId)
+                .getResultList()
+                .stream()
+                .findFirst()
+                .orElse(ItemEntity.builder().productCount(0).build());
+    }
+
+    public void save(ItemEntity item) {
+        entityManager.persist(item);
     }
 }

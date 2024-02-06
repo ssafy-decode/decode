@@ -4,8 +4,11 @@ import com.decode.web.domain.store.dto.ProductBuyRequestDto;
 import com.decode.web.domain.store.dto.ProductDto;
 import com.decode.web.domain.store.repository.ItemRepository;
 import com.decode.web.domain.store.repository.ProductRepository;
+import com.decode.web.domain.user.repository.UserProfileRepository;
 import com.decode.web.entity.ItemEntity;
 import com.decode.web.entity.ProductEntity;
+import com.decode.web.entity.UserProfileEntity;
+import com.decode.web.exception.NotEnoughCoinException;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,6 +21,7 @@ public class ProductServiceImpl {
 
     private final ProductRepository productRepository;
     private final ItemRepository itemRepository;
+    private final UserProfileRepository userProfileRepository;
 
     public List<ProductDto> findAll() {
         return productRepository.findAll()
@@ -35,9 +39,17 @@ public class ProductServiceImpl {
 
     @Transactional
     public void buyProduct(ProductBuyRequestDto dto) {
-        ItemEntity item = itemRepository.findByProductIdAndUserInfoId(dto.getProductId(),
-                dto.getUserId());
-        ProductEntity product = item.getProduct();
-        product.buy(dto.getCount(), item, item.getUserInfo().getUserProfileEntity());
+        ProductEntity product = productRepository.findById(dto.getProductId());
+        UserProfileEntity userProfile = userProfileRepository.findById(dto.getUserId()).get();
+        if (product.getProductPrice() > userProfile.getCoin()) {
+            throw new NotEnoughCoinException("사용자 코인이 부족합니다.");
+        }
+        ItemEntity item = itemRepository.findByProductIdAndUserId(
+                dto.getProductId(), dto.getUserId());
+        item.setProduct(product);
+        item.setUserInfo(userProfile.getUserInfoEntity());
+        item.setProductCount(item.getProductCount() + dto.getCount());
+        itemRepository.save(item);
+        userProfile.decreaseCoin(product.getProductPrice());
     }
 }
