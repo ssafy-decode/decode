@@ -75,8 +75,6 @@ const createComment = function () {
     answerId: props.answer.answerId,
   };
 
-  console.log('data내용!!!!', data);
-
   axios({
     method: 'post',
     url: `/comment`,
@@ -101,11 +99,6 @@ div {
   margin: 20px;
 }
 
-.btn {
-  margin-left: 10px;
-  margin-right: 10px;
-}
-
 .answerBox {
   display: flex;
   justify-content: space-between;
@@ -123,30 +116,9 @@ div {
   align-items: center;
 }
 
-.img {
-  width: 75px;
-  height: 75px;
-}
-.metooImg {
-  width: 60px;
-  height: 70px;
-  margin-right: 5px;
-}
-.answerCountImg {
-  margin-right: 10px;
-  height: 45px;
-}
-
 .myListItem {
   background-color: white;
   border-radius: 35px;
-}
-.myListItem2 {
-  background-color: white;
-  border-radius: 35px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 .listItem {

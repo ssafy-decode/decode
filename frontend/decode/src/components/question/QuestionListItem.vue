@@ -14,7 +14,9 @@
                 {{ question.createdTime }}
               </span>
             </p>
-            <p class="title">{{ question.title }}</p>
+            <p class="title">
+              {{ question.title && question.title.length > 80 ? question.title.slice(0, 80) + '...' : question.title }}
+            </p>
           </div>
         </div>
       </div>
@@ -30,7 +32,6 @@
 </template>
 
 <script setup>
-import { useQuestionStore } from '@/stores/questionStore';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -48,15 +49,6 @@ defineProps({
 .img {
   width: 75px;
   height: 75px;
-}
-.metooImg {
-  width: 60px;
-  height: 70px;
-  margin-right: 5px;
-}
-.answerCountImg {
-  margin-right: 10px;
-  height: 45px;
 }
 
 .myListItem {

@@ -116,13 +116,11 @@ onMounted(() => {
   versions.value = Array.from({ length: tagIds.value.length }, () => '');
 });
 
-// 태그 입력 칸 추가 코드
 const addEmptyFields = function () {
   tagIds.value.push('');
   versions.value.push('');
 };
 
-// 태그 입력 칸 삭제 코드
 const removeField = function (index) {
   tagIds.value.splice(index, 1);
   versions.value.splice(index, 1);

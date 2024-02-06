@@ -12,11 +12,11 @@ export default {
   props: {
     initialValue: {
       type: String,
-      default: '값을 불러오지 못했습니다.', // 초기값으로 'temp' 설정
+      default: '값을 불러오지 못했습니다.',
     },
     answerId: {
       type: Number,
-      required: true, // answerId는 필수 prop으로 설정
+      required: true,
     },
   },
   data() {

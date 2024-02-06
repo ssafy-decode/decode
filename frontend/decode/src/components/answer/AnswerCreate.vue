@@ -7,7 +7,9 @@
             <div class="listItem">
               <img class="img" src="/questionIcon2.png" alt="질문아이콘" />
               <div>
-                <p class="title">{{ questionTitle }}</p>
+                <p class="title">
+                  {{ questionTitle }}
+                </p>
               </div>
             </div>
           </div>
@@ -16,7 +18,7 @@
       <v-row>
         <v-col :cols="12">
           <div class="contentBox">
-            <p>{{ questionContent }}</p>
+            <QuestionViewer />
           </div>
         </v-col>
       </v-row>
@@ -39,15 +41,13 @@
 import MyEditor from '@/components/common/MyEditor.vue';
 import { useUserStore } from '@/stores/userStore';
 import { useAnswerStore } from '@/stores/answerStore';
-import { useQuestionStore } from '@/stores/questionStore';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { ref, onMounted } from 'vue';
 import axios from '@/utils/common-axios';
+import QuestionViewer from '@/components/common/QuestionViewer.vue';
 
 const userStore = useUserStore();
 const answserStore = useAnswerStore();
-const questionStore = useQuestionStore();
-const route = useRoute();
 const router = useRouter();
 
 const questionInfo = ref({});
@@ -59,7 +59,6 @@ const questionCreatedTime = ref('');
 const questionUpdatedTime = ref('');
 const questionMeTooCnt = ref(null);
 
-// questionId, userId, content 필요
 const questionId = answserStore.questionId;
 const userId = userStore.loginUserId;
 
@@ -116,7 +115,6 @@ const createAnswer = function () {
       router.push({ path: `/board/${questionId}` });
     })
     .catch((err) => {
-      console.log(data);
       console.log(err);
       console.log('답변 생성 오류');
     });
@@ -124,27 +122,6 @@ const createAnswer = function () {
 </script>
 
 <style scoped>
-.addTagBox {
-  margin-top: 15px;
-}
-
-.xBtn {
-  margin-bottom: 20px;
-}
-
-.tagContainer {
-  padding: 5px 10px 5px;
-}
-
-.btnBox {
-  position: relative;
-  margin-top: 20px;
-}
-.addTagBtnBox {
-  position: relative;
-  top: -40px;
-}
-
 .submitBtn {
   position: absolute;
   right: 0px;
@@ -156,16 +133,8 @@ const createAnswer = function () {
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.4);
 }
 
-.createBox {
-  margin-bottom: 150px;
-}
-
 #btnBox {
   position: relative;
-}
-
-.createBox {
-  margin-bottom: 150px;
 }
 
 .card {
@@ -212,11 +181,6 @@ span {
 
 ::-webkit-scrollbar-track {
   background-color: #e6e6e6;
-}
-
-.stackBox ::v-deep(.v-field) {
-  border-radius: 45px;
-  padding: 5px 10px;
 }
 
 .myListItem {

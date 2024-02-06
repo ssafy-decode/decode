@@ -71,8 +71,8 @@ const questionId = ref(null);
 const questionWriterId = ref(null);
 const questionTitle = ref('');
 const questionContent = ref('');
-const tagList = ref([]); // DB에 있는 태그리스트를 불러와서
-// 아래 두 배열에 각각 저장
+const tagList = ref([]);
+
 const tagIds = ref([]);
 const versions = ref([]);
 
@@ -109,16 +109,14 @@ const getOriginalQuestion = function () {
 
 onMounted(() => {
   questionId.value = route.params.id;
-  getOriginalQuestion(); // 기존 변수들이 담김
+  getOriginalQuestion();
 });
 
-// 태그 입력 칸 추가 코드
 const addEmptyFields = function () {
   numToStr.value.push('');
   versions.value.push('');
 };
 
-// 태그 입력 칸 삭제 코드
 const removeField = function (index) {
   numToStr.value.splice(index, 1);
   versions.value.splice(index, 1);
@@ -128,7 +126,6 @@ const updateQuestion = function () {
   const tags = numToStr.value.map((tag, index) => {
     return {
       tagId: items[tag],
-      // tagName: tag, // API 수정 이후 임시 수정한 부분(테스트 전)
       version: versions.value[index],
     };
   });

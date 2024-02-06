@@ -140,24 +140,13 @@ button {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
 }
 
-.bgColorWhite {
-  background-color: white;
-}
-
 .card {
   border-top-left-radius: 50px;
   border-bottom-left-radius: 50px;
   border-bottom-right-radius: 50px;
   margin: 40 px;
 }
-.answerRelatedBox {
-  display: flex;
-  justify-content: flex-end;
-}
 
-.answerListBox {
-  padding: 20px;
-}
 .btnBox {
   display: flex;
   justify-content: space-between;
@@ -168,27 +157,11 @@ button {
   height: 75px;
   margin: 5px 10px 5px 5px;
 }
-.metooImg {
-  width: 60px;
-  height: 70px;
-  margin-right: 5px;
-}
-.answerCountImg {
-  margin-right: 10px;
-  height: 45px;
-}
 
 .myListItem {
   border-radius: 35px;
   padding-bottom: 10px;
   background-color: white;
-}
-.myListItem2 {
-  background-color: white;
-  border-radius: 35px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 .contentBox {
