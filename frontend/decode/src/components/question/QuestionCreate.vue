@@ -6,7 +6,7 @@
           <img src="/questionIcon2.png" alt="검색아이콘" style="width: 40px; height: 40px" />
         </template>
       </v-text-field>
-      <v-container class="tagContainer" v-if="tagIds.length > 0">
+      <v-container class="tagContainer" v-if="tagIds">
         <template v-for="(tag, index) in tagIds" :key="index">
           <v-row align="center" class="d-flex justify-end">
             <v-col cols="12" sm="6" md="4" class="tagContainer">
@@ -102,7 +102,6 @@ const createQuestion = function () {
     .then((res) => {
       console.log('질문 생성 완료');
       router.push({ name: 'questionview' });
-      router.go(0);
     })
     .catch((err) => {
       console.log(err);
