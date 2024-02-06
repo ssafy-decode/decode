@@ -31,12 +31,18 @@ const buyProduct = () => {
     <div class="product-info">
       <div class="product-info1">
         <h3>{{ product.productName }}</h3>
-        <h4>{{ product.productPrice }}</h4>
       </div>
       <div class="product-info2">
         <p>{{ product.productDetail }}</p>
       </div>
-      <div style="margin-top: 10px" v-if="profile">
+      <div class="product-info3">
+        <div class="price-container">
+          <h5>{{ product.productPrice }}</h5>
+          &nbsp;
+          <img src="./coin.png" width="25px" height="25px" />
+        </div>
+      </div>
+      <div class="mycurrency">
         보유 포인트: {{ profile.point }}&nbsp;&nbsp; 보유 코인:
         {{ profile.coin }}
       </div>
@@ -115,12 +121,24 @@ const buyProduct = () => {
   text-align: center;
 }
 .product-info1 {
-  display: flex;
-  justify-content: space-between;
 }
 .product-info2 {
   margin-top: 15px;
   height: 100px;
+}
+.prodcut-info3 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.price-container {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.currency-icon {
+  margin-left: 5px;
 }
 .product-buy-btn {
   margin-top: 20px;
