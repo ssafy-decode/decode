@@ -1,6 +1,5 @@
 <template>
   <v-row justify="center">
-    (아직 해당 회원 id로 수정 안 함)
     <v-card width="1036" style="box-shadow: none; margin-top: 10px; background-color: transparent">
       <v-tabs v-model="tab" background-color="transparent" grow>
         <v-tab
@@ -129,7 +128,7 @@ import { useUserStore } from '@/stores/userStore';
 
 const userStore = useUserStore();
 const tab = ref(0);
-const items = [`${userStore.loginUserProfile.nickname}의 질문 / 답변`, '팔로워', '팔로잉'];
+const items = [`(아직 수정 중)의 질문 / 답변`, '팔로워', '팔로잉'];
 
 // DB에 수정된 번호를 다시 태그명으로 전환
 const tagNum = {

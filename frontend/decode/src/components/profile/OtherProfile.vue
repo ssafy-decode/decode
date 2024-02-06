@@ -31,10 +31,10 @@
 
         <v-col :cols="6">
           출석 스트릭
-          <!-- <AttendanceLog :uid="uid" /> -->그 사람의 출석 로그
+          <!-- <AttendanceLog :uid="uid" /> --><br />그 사람의 출석 로그
         </v-col>
 
-        <v-col :cols="3"> <!-- <ExpLog :uid="uid" /> -->그 사람의 경험치 로그 </v-col>
+        <v-col :cols="3"> <!-- <ExpLog :uid="uid" /> --><br />그 사람의 경험치 로그 </v-col>
       </v-row>
 
       <div class="buttons">
@@ -48,8 +48,9 @@
             variant="elevated"
             style="color: #000000"
           >
-            팔로우하기 (팔로우취소도 구현하기)
+            팔로우하기
           </v-btn>
+          <!-- 팔로우 여부에 따라 팔로우 취소 전환도 구현 예정 -->
         </span>
       </div>
     </v-card>
@@ -65,7 +66,7 @@ import { useUserStore } from '@/stores/userStore';
 // import AttendanceLog from '@/components/profile/AttendanceLog.vue';
 // import ExpLog from '@/components/profile/ExpLog.vue';
 // import { storeToRefs } from 'pinia';
-import OtherProfileWindow from '@/components/rank/OtherProfileWindow.vue';
+import OtherProfileWindow from '@/components/profile/OtherProfileWindow.vue';
 
 const userStore = useUserStore();
 // const { loginUserId: uid } = storeToRefs(userStore);

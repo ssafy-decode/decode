@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="!loading && isFetched">
     <div class="pa-5" rounded style="color: #575757; font-weight: bold">
       <v-card
         class="mx-auto px-4 py-8"
@@ -15,23 +15,25 @@
           </v-col>
           <v-col cols="8">
             <div style="font-size: 16px">
-              <span> 이 &nbsp;&nbsp; 름: {{ userName }}</span>
+              <span> 이 &nbsp;&nbsp; 름: {{ userStore.loginUserName }}</span>
               <br />
               <br />
-              <span>닉 네 임: {{ userNickName }}</span>
+              <span>닉 네 임: {{ userStore.loginUserProfile.nickname }}</span>
               <br />
               <br />
-              <span>생년월일: {{ userBirthday }}</span>
+              <span>생년월일: {{ userStore.loginUserBirthday }}</span>
               <br />
             </div>
           </v-col>
         </v-row>
         <br />
         <div style="text-align: left; margin-left: 20px">
-          <span>이&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 메&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 일: {{ userEmail }}</span>
+          <span
+            >이&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 메&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 일: {{ userStore.loginUserEmail }}</span
+          >
           <br />
           <br />
-          <span>휴대폰 뒷자리: {{ userPhone }}</span>
+          <span>휴대폰 뒷자리: {{ userStore.loginUserPhone }}</span>
           <br />
           <br />
         </div>
@@ -104,7 +106,7 @@
 </template>
 
 <script setup>
-import { onBeforeMount, ref } from 'vue';
+import { onBeforeMount, ref, computed } from 'vue';
 import { useUserStore } from '@/stores/userStore';
 
 const userStore = useUserStore();
@@ -151,16 +153,14 @@ const isPasswordValid = (pwd) => {
   return pwd.length >= 8 && /[!@#$%^&*(),.?":{}|<>]/g.test(pwd);
 };
 
-// 이름, 닉네임, 생년월일, 이메일, 전화번호는 변경 불가 (+ 프로필 사진도)
-const userNickName = userStore.loginUserProfile.nickname;
-const userName = userStore.loginUserName;
-const userBirthday = userStore.loginUserBirthday;
-const userEmail = userStore.loginUserEmail;
-const userPhone = userStore.loginUserPhone;
-
-onBeforeMount(() => {
-  userStore.setUser(userStore.loginUserId);
-  userStore.getTagNumList(userStore.loginUserId);
+const isFetched = ref(false); // data를 가져오고 나서 렌더링하도록
+const loading = computed(() => !isFetched.value); // 가져오기 전까지는 로딩 상태로
+onBeforeMount(async () => {
+  await userStore.setUser(userStore.loginUserId);
+  setTimeout(() => {
+    userStore.getTagNumList(userStore.loginUserId);
+    isFetched.value = true;
+  }, 1000); // 1초 후에
 });
 
 const updatepwd = () => {
