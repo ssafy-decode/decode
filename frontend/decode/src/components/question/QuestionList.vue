@@ -11,13 +11,11 @@
           bg-color="fff"
           clearable
         >
-          <!-- 이미지 아이콘 넣는 코드 -->
           <template #append-inner>
             <v-btn class="searchBtn" size="medium" @click="searchParams(keyword, tagIds)">
               <img src="./searchicon.png" alt="검색아이콘" style="width: 40px; height: auto" />
             </v-btn>
           </template>
-          <!-- 이미지 아이콘 넣는 코드 -->
         </v-text-field>
       </div>
     </div>
@@ -46,7 +44,6 @@
   <br />
 
   <div id="app">
-    <v-responsive max-width="400" class="mx-auto mb-4"> </v-responsive>
     <v-card color="#f3f3f3" elevation="16" max-width="60%" class="card mx-auto px-5">
       <v-row>
         <!-- <v-col :cols="12"> -->
@@ -97,6 +94,7 @@ const items = questionStore.items;
   border-top-left-radius: 50px;
   border-bottom-left-radius: 50px;
   border-bottom-right-radius: 50px;
+  padding-bottom: 20px;
 }
 
 input {
