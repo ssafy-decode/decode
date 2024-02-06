@@ -58,6 +58,13 @@ public class GptApiServiceImpl {
                 .block();
     }
 
+    private List<Map<String, String>> generateMessage(String title, String type) {
+        List<Map<String, String>> messages = new ArrayList<>();
+        messages.add(createMessageMap(SYSTEM_ROLE_VALUE, type));
+        messages.add(createMessageMap(USER_ROLE_VALUE, title));
+        return messages;
+    }
+
     private Map<String, String> createMessageMap(String role, String content) {
         return Map.of(ROLE_KEY, role, CONTENT_KEY, content);
     }

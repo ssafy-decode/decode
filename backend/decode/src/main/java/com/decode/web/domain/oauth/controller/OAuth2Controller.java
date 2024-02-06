@@ -8,6 +8,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +21,8 @@ public class OAuth2Controller {
 
     private final OAuth2Service oAuth2Service;
 
+    @Value("${domain.cookie.max-age}")
+    private String COOKIE_MAX_AGE;
 
     @GetMapping("/auth/github")
     public ResponseDto githubLogin(@RequestParam("code") String code,
@@ -37,7 +40,7 @@ public class OAuth2Controller {
         // 4. 이후엔 기존 로그인과 똑같이 처리
         Cookie cookie = new Cookie("refresh-token", tokenDto.getRefreshToken());
         cookie.setHttpOnly(true);
-        cookie.setMaxAge(60 * 60 * 24 * 30);
+        cookie.setMaxAge(Integer.parseInt(COOKIE_MAX_AGE));
         cookie.setPath("/");
         response.addCookie(cookie);
 

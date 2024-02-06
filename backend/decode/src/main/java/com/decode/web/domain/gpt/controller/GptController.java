@@ -20,14 +20,15 @@ public class GptController {
 
     @PostMapping
     public ResponseDto generateGptAnswer(@RequestBody GptApiRequestDto gptApiDto) {
-        GptApiResponseDto gptApiResponseDto = new GptApiResponseDto();
-        gptApiResponseDto.setTagIds(gptApiService.keywordsByError(gptApiDto.getContent()));
-        gptApiResponseDto.setTitles(gptApiService.titlesByError(gptApiDto.getContent()));
+        GptApiResponseDto data = GptApiResponseDto.builder()
+                .tagIds(gptApiService.keywordsByError(gptApiDto.getContent()))
+                .titles(gptApiService.titlesByError(gptApiDto.getContent()))
+                .build();
 
         return ResponseDto.builder()
                 .status(HttpStatus.OK)
                 .message("GPT 추천 완료")
-                .data(gptApiResponseDto)
+                .data(data)
                 .build();
     }
 
