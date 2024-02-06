@@ -1,0 +1,134 @@
+package com.decode.web.domain.chat.service;
+
+import com.decode.web.domain.chat.dto.ChatRoomRequestDto;
+import com.decode.web.domain.chat.mapper.ChatRoomMapper;
+import com.decode.web.domain.chat.repository.ChatRepository;
+import com.decode.web.domain.chat.repository.ChatRoomRepository;
+import com.decode.web.domain.chat.repository.ChatSubRoomRepository;
+import com.decode.web.domain.common.redis.RedisSubscriber;
+import com.decode.web.domain.user.repository.UserProfileRepository;
+import com.decode.web.entity.ChatEntity;
+import com.decode.web.entity.ChatRoomEntity;
+import com.decode.web.entity.ChatSubRoomEntity;
+import com.decode.web.entity.UserProfileEntity;
+import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityNotFoundException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.stereotype.Service;
+
+@Service
+@Slf4j
+@RequiredArgsConstructor
+public class ChatRoomServiceImpl implements ChatRoomService {
+    // redis topic 정보. 서버별로 채팅방에 매치되는 topic info -> Map 넣어 roomId로 찾을수 있도록 한다.
+    private Map<String, ChannelTopic> topics;
+
+    private HashOperations<String, String, ChatRoomEntity> opsHashChatRoom;
+    // Topic 발행되는 메시지를 처리할 Listener
+    private final RedisMessageListenerContainer redisMessageListener;
+    // 구독 처리 서비스
+    private final RedisSubscriber redisSubscriber;
+
+    private final ChatRoomRepository chatRoomRepository;
+    private final ChatRepository chatRepository;
+    private final ChatSubRoomRepository chatSubRoomRepository;
+
+    private final UserProfileRepository userProfileRepository;
+    @Autowired
+    @Qualifier(value = "chatRedisTemplate")
+    private final RedisTemplate<String, Object> redisTemplate;
+    private final ChatRoomMapper chatRoomMapper;
+    // redis HASH 데이터 다루기
+    @PostConstruct
+    private void init() {
+        opsHashChatRoom = redisTemplate.opsForHash();
+        topics = new ConcurrentHashMap<>();
+    }
+    // GET TOPIC 과정에 NULL 이면 만드는 과정 포함
+    /*
+        토픽 생성
+     */
+    @Override
+    public ChannelTopic getTopic(Long roomId){
+        log.debug("ChatRoomRepository getTopic method roomId: {}", roomId);
+        // Before send message, 구독이 된 topic 확인 후 없으면 새로 생성
+        return topics.computeIfAbsent(String.valueOf(roomId), id -> {
+            ChannelTopic newTopic = new ChannelTopic(id);
+            log.debug("new topic, roomId : {}, id : {}", roomId, id);
+            redisMessageListener.addMessageListener(redisSubscriber, newTopic);
+            return newTopic;
+        });
+    }
+    /*
+        채팅방 입장
+     */
+    @Override
+    public void enterChatRoom(Long roomId) {
+        ChannelTopic topic = getTopic(roomId);
+        redisMessageListener.addMessageListener(redisSubscriber, topic);        // pub/sub 통신을 위해 리스너를 설정. 대화가 가능해진다
+        topics.put(String.valueOf(roomId), topic);
+    }
+    /*
+        채팅방 생성
+     */
+    @Override
+    public Long createRoom(ChatRoomRequestDto chatRoomRequestDto) {
+        // dto -> entity
+        ChatRoomEntity chatRoomEntity = chatRoomMapper.toEntity(chatRoomRequestDto);
+        log.debug("service createRoom ChatRoomRequestDto : {}", chatRoomRequestDto);
+        return chatRoomRepository.save(chatRoomEntity).getId();
+    }
+
+    /*
+        유저별 채팅방 조회
+     */
+    @Override
+    public List<ChatRoomEntity> findAllRoomByUser(Long userId) {
+
+        List<ChatSubRoomEntity> chatSubRoomList = chatSubRoomRepository.findByUserId(userId);
+        List<ChatRoomEntity> chatRoomList = new ArrayList<>();
+        // List 생성
+        for (ChatSubRoomEntity chatSubRoom : chatSubRoomList) {
+            ChatRoomEntity chatRoom = chatSubRoom.getChatRoomEntity();
+            chatRoomList.add(chatRoom);
+        }
+
+        return chatRoomList;
+    }
+
+    /*
+        채팅방 세부 조회
+     */
+    public List<ChatEntity> findAllByRoomId(Long roomId){
+        return chatRoomRepository.findById(roomId)
+                .map(chatRoomEntity -> chatRepository.findAllByChatRoomEntity_Id(roomId))
+                .orElseThrow(() -> new EntityNotFoundException("ChatRoomEntity not found with ID: " + roomId));
+    }
+
+
+
+    /**
+     *  1. redis check -> NULL -> Repository
+     */
+//    public ChatRoom findByRoomId(Long roomId) {
+//        ChatRoom chatRoom = chatRoomRepository.cashFindByRoomId(roomId);
+//        return chatRoom;
+//    }
+
+
+
+
+}
