@@ -70,6 +70,8 @@ import OtherProfileWindow from '@/components/rank/OtherProfileWindow.vue';
 const userStore = useUserStore();
 // const { loginUserId: uid } = storeToRefs(userStore);
 
+// userId는 랭킹/질문게시판에서 response로 받아와서 들고 올 수 있음. hidden으로 숨기고 그걸로 돌리기
+
 // DB에 수정된 번호를 다시 태그명으로 전환 (아직 작성중)
 const tagName = {
   1: 'python',
