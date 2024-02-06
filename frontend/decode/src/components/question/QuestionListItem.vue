@@ -24,10 +24,7 @@
         <img class="img" src="./answerIcon.png" aslt="답변 아이콘" />
         <p>답변: {{ question.answerCnt }}</p>
         <p>나도궁금: {{ question.meTooCnt }}</p>
-        <!-- <img class="answerCountImg" src="./answerCountIcon.png" aslt="답변수 아이콘" /> -->
-        <!-- <img class="metooImg" src="./metoo.png" aslt="나도궁금해요 아이콘" /> -->
       </div>
-      <!-- <p>질문태그: {{ question.tagList }}</p> -->
     </v-col>
   </v-row>
 </template>
@@ -37,7 +34,6 @@ import { useQuestionStore } from '@/stores/questionStore';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-const questionStore = useQuestionStore();
 
 const goDetail = function (questionId) {
   router.push({ path: `/board/${questionId}` });

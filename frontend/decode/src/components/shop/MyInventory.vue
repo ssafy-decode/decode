@@ -1,10 +1,6 @@
 <template>
   <v-container style="text-align: center">
-<<<<<<< HEAD
-    <h2>인벤토리</h2>
-=======
     <h2 style="color: #34a080">인벤토리</h2>
->>>>>>> 345d7605d72541ffa47475b234788df79a6a8b64
     <br />
     <br />
     <v-row style="display: flex; align-items: center; margin-left: 500px; margin-right: 30px">

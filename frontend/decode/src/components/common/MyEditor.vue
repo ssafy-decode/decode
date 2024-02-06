@@ -15,10 +15,11 @@ export default {
       editor: null,
     };
   },
+
   mounted() {
     this.editor = new Editor({
       el: document.querySelector('#editor'),
-      height: '600px',
+      height: '570px',
       initialEditType: 'markdown',
       initialValue: '내용을 마크다운 형식으로 입력해주세요!',
       previewStyle: 'vertical',
