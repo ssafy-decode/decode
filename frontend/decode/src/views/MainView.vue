@@ -6,8 +6,8 @@
     </div>
 
     <div class="box wrapper">
-      <img id="hate" src="public/error.png" alt="에러이미지" />
-      <img id="like" src="public/code.png" alt="코드이미지" />
+      <img id="hate" src="../public/error.png" alt="에러이미지" />
+      <img id="like" src="./public/code.png" alt="코드이미지" />
     </div>
   </div>
 </template>
