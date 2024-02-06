@@ -8,7 +8,9 @@ import com.decode.web.domain.board.service.BookmarkService;
 import com.decode.web.global.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
+import javax.security.auth.login.CredentialException;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -30,6 +32,7 @@ public class BookmarkController {
     private final QuestionRepository questionRepository;
     private final QuestionELKRepository questionELKRepository;
 
+    @SneakyThrows
     @PostMapping
     @Operation(summary = "북마크 생성", description = "유저와 Question 간의 북마크 생성")
     public ResponseDto bookMark(@RequestBody BookmarkDto bookmarkDto, Authentication auth) {
@@ -37,21 +40,26 @@ public class BookmarkController {
         Long userId = (Long) auth.getPrincipal();
 
         if (!userId.equals(bookmarkDto.getUserId())) {
-            return ResponseDto.builder().status(HttpStatus.BAD_REQUEST).message("사용자 불일치").build();
+            throw new CredentialException("사용자 불일치");
         }
         Long bookMarkId = bookmarkService.bookMark(bookmarkDto);
-        return ResponseDto.builder().status(HttpStatus.OK).message(bookMarkId + "북마크 완료").build();
+        return ResponseDto.builder()
+                .status(HttpStatus.OK)
+                .message(bookMarkId + "북마크 완료")
+                .data("")
+                .build();
     }
 
     @DeleteMapping("/{questionId}")
     @Operation(summary = "북마크 삭제", description = "해당 질문에 대한 유저 북마크 삭제")
     public ResponseDto unBookMark(@PathVariable Long questionId, Authentication auth) {
         Long userId = (Long) auth.getPrincipal();
-//        if (!userId.equals()) {
-//            return ResponseDto.builder().status(HttpStatus.BAD_REQUEST).message("사용자 불일치").build();
-//        }
         bookmarkService.unBookMark(userId, questionId);
-        return ResponseDto.builder().status(HttpStatus.OK).build();
+        return ResponseDto.
+                builder()
+                .status(HttpStatus.OK)
+                .data("")
+                .build();
     }
 
     @GetMapping("/{userId}")
@@ -59,7 +67,11 @@ public class BookmarkController {
     public ResponseDto getBookMarkQuestionList(@PathVariable Long userId) {
         List<ResponseQuestionListDto> bookMarkQuestionList = bookmarkService.getBookMarkQuetionList(
                 userId);
-        return ResponseDto.builder().data(bookMarkQuestionList).status(HttpStatus.OK).build();
+        return ResponseDto.builder()
+                .message("북마크 질문 리스트 조회 완료")
+                .data(bookMarkQuestionList)
+                .status(HttpStatus.OK)
+                .build();
     }
 
 
