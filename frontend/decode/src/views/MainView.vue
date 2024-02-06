@@ -9,6 +9,14 @@
       <img id="hate" src="../public/error.png" alt="에러이미지" />
       <img id="like" src="./public/code.png" alt="코드이미지" />
     </div>
+    <img src="./error.png" alt="에러이미지1" />
+    <img src="../error.png" alt="에러이미지2" />
+    <img src="./public/error.png" alt="에러이미지3" />
+    <img src="../public/error.png" alt="에러이미지4" />
+    <img src="error.png" alt="에러이미지5" />
+    <img src="@/../public/error.png" alt="에러이미지6" />
+    <img src="@/../error.png" alt="에러이미지7" />
+    <img src="@/public/error.png" alt="에러이미지8" />
   </div>
 </template>
 
