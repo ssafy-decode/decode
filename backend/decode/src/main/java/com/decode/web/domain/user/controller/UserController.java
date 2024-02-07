@@ -294,7 +294,7 @@ public class UserController {
     @PostMapping("/addUserTag")
     @Operation(summary = "유저 태그 선택", description = "신규 유저의 선호 기술 태그 추가")
     public ResponseDto addUserTag(@RequestBody
-    RequestUserTagDto requestUserTagDto) {
+            RequestUserTagDto requestUserTagDto) {
         userService.addUserTag(requestUserTagDto);
         return ResponseDto.builder()
                 .status(HttpStatus.OK)
@@ -305,10 +305,13 @@ public class UserController {
 
     @PatchMapping("/updateUserTag")
     @Operation(summary = "유저 태그 수정", description = "기존 유저의 선후 기술 태그 수정")
-    public ResponseDto updateUserTag(@RequestBody RequestUserTagDto requestUserTagDto) {
-        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public ResponseDto updateUserTag(@RequestBody RequestUserTagDto requestUserTagDto,
+            Authentication authentication) {
+        Long userId = (Long) authentication.getPrincipal();
         if (!userId.equals(requestUserTagDto.getUserId())) {
-            return ResponseDto.builder().status(HttpStatus.BAD_REQUEST).message("사용자 불일치").build();
+            return ResponseDto.builder()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .message("사용자 불일치").build();
         }
         userService.updateUserTag(requestUserTagDto);
         return ResponseDto.builder()
