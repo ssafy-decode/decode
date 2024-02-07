@@ -9,7 +9,7 @@
             </span>
             &nbsp;
             <span class="time info">
-              {{ answer.createdTime }}
+              {{ answer.createdTime[0] }}년 {{ answer.createdTime[1] }}월 {{ answer.createdTime[2] }}일
             </span>
           </p>
         </div>
@@ -18,7 +18,7 @@
         <AnswerViewer :initialValue="answer.content" :answerId="answer.answerId" />
       </div>
       <div class="editDeleteBox" @click="answerStore.deleteAnswer(answer.answerId)">
-        <span class="deleteText">답변삭제</span>
+        <span v-if="answer.answerWriter.id === userStore.loginUserId" class="deleteText">답변삭제</span>
       </div>
     </div>
     <div class="commentBox">
