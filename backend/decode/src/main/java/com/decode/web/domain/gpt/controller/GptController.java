@@ -1,5 +1,6 @@
 package com.decode.web.domain.gpt.controller;
 
+import com.decode.web.domain.gpt.dto.GptApiAnswerResponseDto;
 import com.decode.web.domain.gpt.dto.GptApiRequestDto;
 import com.decode.web.domain.gpt.dto.GptApiResponseDto;
 import com.decode.web.domain.gpt.service.GptApiServiceImpl;
@@ -19,7 +20,7 @@ public class GptController {
     private final GptApiServiceImpl gptApiService;
 
     @PostMapping
-    public ResponseDto generateGptAnswer(@RequestBody GptApiRequestDto gptApiDto) {
+    public ResponseDto generateTitleAndKeywords(@RequestBody GptApiRequestDto gptApiDto) {
         GptApiResponseDto data = GptApiResponseDto.builder()
                 .tagIds(gptApiService.keywordsByError(gptApiDto.getContent()))
                 .titles(gptApiService.titlesByError(gptApiDto.getContent()))
@@ -28,6 +29,20 @@ public class GptController {
         return ResponseDto.builder()
                 .status(HttpStatus.OK)
                 .message("GPT 추천 완료")
+                .data(data)
+                .build();
+    }
+
+
+    @PostMapping("/answer")
+    public ResponseDto generateAnswer(@RequestBody GptApiRequestDto gptApiDto) {
+        GptApiAnswerResponseDto data = GptApiAnswerResponseDto.builder()
+                .answer(gptApiService.answerByError(gptApiDto.getContent()))
+                .build();
+
+        return ResponseDto.builder()
+                .status(HttpStatus.OK)
+                .message("GPT 답변 완료")
                 .data(data)
                 .build();
     }
