@@ -6,6 +6,7 @@ import com.decode.web.domain.board.dto.UpdateCommentDto;
 import com.decode.web.entity.AnswerEntity;
 import com.decode.web.entity.CommentEntity;
 import java.util.List;
+import org.apache.coyote.BadRequestException;
 
 public interface CommentService {
 
@@ -16,7 +17,7 @@ public interface CommentService {
 
     CommentEntity update(UpdateCommentDto updateCommentDto);
 
-    void delete(Long commentId);
+    void delete(Long userId, Long commentId) throws BadRequestException;
 
     List<ResponseCommentDto> getResponseAnswerDtoList(AnswerEntity answerEntity);
 
