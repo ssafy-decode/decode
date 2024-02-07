@@ -43,35 +43,34 @@ import MyProfile from '@/components/profile/MyProfile.vue';
 //   });
 // };
 
-onBeforeMount(async () => {
-  const loginUserId = await userStore.loginUserId;
-  // console.log(loginUserId);
-  // const myProfile = await userStore.myProfile();
-  // await userStore.setTagNumList(loginUserId);
+// onBeforeMount(async () => {
+//   const loginUserId = await userStore.loginUserId;
+//   // console.log(loginUserId);
+//   // const myProfile = await userStore.myProfile();
+//   // await userStore.setTagNumList(loginUserId);
 
-  try {
-    await userStore.setQList(loginUserId);
-    console.log('qList : ', userStore.qList.value);
-  } catch (error) {
-    console.error('Error setting question list:', error);
-  }
-  // let qListLength = qList.length;
-  // const aList = userStore.getAList(loginUserId);
-  // let aListLength = aList.length;
+//   try {
+//     await userStore.setQList(loginUserId);
+//     console.log('qList : ', userStore.qList.value);
+//   } catch (error) {
+//     console.error('Error setting question list:', error);
+//   }
+// let qListLength = qList.length;
+// const aList = userStore.getAList(loginUserId);
+// let aListLength = aList.length;
 
-  // userStore.getRank();
-  // const followerList = await userStore.getFollowerList(loginUserId);
-  // const followingList = await userStore.getFollowingList(loginUserId);
+// userStore.getRank();
+// const followerList = await userStore.getFollowerList(loginUserId);
+// const followingList = await userStore.getFollowingList(loginUserId);
 
-  // matchId(followerList, followerProfiles);
-  // matchId(followingList, followingProfiles);
-  // console.log('qList : ', qList);
-  // console.log('aList : ', aList);
-  // console.log('tagNumList : ', tagNumList);
-  // console.log('myProfile : ', myProfile);
-  // console.log('followerList : ', followerList);
-  // console.log('followingList : ', followingList);
-});
+// matchId(followerList, followerProfiles);
+// matchId(followingList, followingProfiles);
+// console.log('qList : ', qList);
+// console.log('aList : ', aList);
+// console.log('tagNumList : ', tagNumList);
+// console.log('myProfile : ', myProfile);
+// console.log('followerList : ', followerList);
+// console.log('followingList : ', followingList);
 </script>
 
 <style scoped>
