@@ -1,4 +1,5 @@
 <template>
+  <!-- profileview로 통합 예정 -->
   <OtherProfile />
   <OtherProfileWindow />
 </template>

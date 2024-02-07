@@ -12,9 +12,9 @@
             index === 0
               ? `${item}`
               : index === 1
-                ? `${item} ${userStore.followerList.length}`
+                ? `${item} ${followStore.followerList.length}`
                 : index === 2
-                  ? `${item} ${userStore.followingList.length}`
+                  ? `${item} ${followStore.followingList.length}`
                   : item
           }}
         </v-tab>
@@ -35,8 +35,8 @@
                 max-width="518"
                 style="text-align: center; background-color: #f3f3f3; border-radius: 31px; border: 15px solid #d9d9d9"
               >
-                질문 &nbsp;&nbsp;{{ qListLength }}개 <br /><br />
-                <div v-for="(question, questionIndex) in qList" :key="questionIndex">
+                질문 &nbsp;&nbsp;{{ profileStore.qListLength }}개 <br /><br />
+                <div v-for="(question, questionIndex) in profileStore.qList" :key="questionIndex">
                   {{ questionIndex + 1 }} &nbsp; {{ question.questionId }} &nbsp;
                   {{ question.title }}
                 </div>
@@ -51,8 +51,8 @@
                 max-width="518"
                 style="text-align: center; background-color: #f3f3f3; border-radius: 31px; border: 15px solid #d9d9d9"
               >
-                답변 &nbsp;&nbsp;{{ aListLength }}개 <br /><br />
-                <div v-for="(answer, answerIndex) in aList" :key="answerIndex">
+                답변 &nbsp;&nbsp;{{ profileStore.aListLength }}개 <br /><br />
+                <div v-for="(answer, answerIndex) in profileStore.aList" :key="answerIndex">
                   {{ answerIndex + 1 }} &nbsp; {{ answer.questionId }} &nbsp;
                   {{ answer.title }}
                 </div>
@@ -76,9 +76,8 @@
                   <!-- 티어 나타내는 커마 아이콘 -->
                   {{ follower.tier }} &nbsp;
                   {{ follower.rank !== null ? `${follower.rank}위` : '순위없음' }}
-                  <!-- 프로필 사진 (보류)-->
-                  <!-- 일단 default.png로 임시 통일 -->
-                  <img style="width: 30px" src="../default.png" />
+                  <!-- 프로필 사진-->
+                  <!-- <img style="width: 30px" src={{follower.profileImg}} /> -->
                   {{ follower.profileImg }} &nbsp; {{ follower.nickname }} &nbsp;
                   <!-- 선택한 기술 스택들 -->
                   <div v-if="follower.userTagList && follower.userTagList.length > 0">
@@ -149,32 +148,19 @@
 </template>
 
 <script setup>
-// import { ref } from 'vue';
-// import { useUserStore } from '@/stores/userStore';
+import { ref } from 'vue';
+import { useFollowStore } from '@/stores/followStore';
+import { useProfileStore } from '@/stores/profileStore';
 
-// const props = defineProps({
-
-// });
-
-// const userStore = useUserStore();
-// const tab = ref(0);
-// const items = [`${userStore.loginUserProfile.nickname}의 질문 / 답변`, '팔로워', '팔로잉'];
-
-// onBeforeMount(() => {
-//   userStore.setQList(userStore.loginUserId);
-//   userStore.setAList(userStore.loginUserId);
-//   userStore.getRank();
-//   userStore.setFollowerList(userStore.loginUserId);
-//   userStore.setFollowingList(userStore.loginUserId);
-//   matchId(userStore.followerList, followerProfiles);
-//   matchId(userStore.followingList, followingProfiles);
-// });
-// 또 렌더링 순서 문제가 발생 중: 팔로워/팔로잉 목록 바로 안 뜸. 팔로추 취소 누르면 새로고침해야 목록 길이 줄고 한 번 더 새로고침해야 줄어든 목록으로 갱신됨.
+const tab = ref(0);
+const items = [`${profileStore.loginUserProfile.nickname}의 질문 / 답변`, '팔로워', '팔로잉'];
+const followStore = useFollowStore();
+const profileStore = useProfileStore();
 
 // 팔로우 취소
-// const unfollowBtn = (id) => {
-//   userStore.unFollow(id);
-// };
+const unfollowBtn = (id) => {
+  followStore.unFollow(id);
+};
 </script>
 
 <style scoped>
