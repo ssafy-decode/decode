@@ -24,8 +24,8 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col :cols="12">
-          <div class="listItem title">{{ question.content }}</div>
+        <v-col :cols="12" v-if="isFetched">
+          <QuestionViewer />
         </v-col>
       </v-row>
       <br /><br />
@@ -35,18 +35,6 @@
           <v-btn @click="deleteQuestion()">질문삭제</v-btn>
         </div>
         <div>
-          <!-- 나도 궁금 -->
-          <!-- 누르면 나도 궁금 되도록 -->
-
-          <!-- <span>{{ question.meTooCnt }}</span>
-          &nbsp; &nbsp; -->
-
-          <!-- 북마크 카운트수 불러올 수 있도록? -->
-          <!-- 누르면 북마크 되도록 -->
-
-          <!-- <span>{{ question.meTooCnt }}</span>
-          &nbsp; &nbsp; -->
-
           <v-btn @click="goCreateAnswer()">답변달기</v-btn>
         </div>
       </div>
@@ -61,18 +49,21 @@
 
 <script setup>
 import axios from '@/utils/common-axios';
-import { onMounted, ref } from 'vue';
+import { ref, onBeforeMount } from 'vue';
 import { useQuestionStore } from '@/stores/questionStore';
 import { useAnswerStore } from '@/stores/answerStore';
 import { useUserStore } from '@/stores/userStore';
 import { useRoute, useRouter } from 'vue-router';
 import AnswerList from '@/components/answer/AnswerList.vue';
+import QuestionViewer from '@/components/common/QuestionViewer.vue';
 
 const questionStore = useQuestionStore();
 const answerStore = useAnswerStore();
 const userStore = useUserStore();
 const router = useRouter();
 const route = useRoute();
+
+const isFetched = ref(false);
 
 const questionId = ref(0);
 const question = ref({});
@@ -89,6 +80,8 @@ const getDetailQuestion = function () {
       question.value = res.data.data;
       isAnswerExist.value = question.value.answerList.length > 0;
       writerNickname.value = question.value.questionWriter.nickname;
+      questionStore.originalContent = question.value.content;
+      console.log('답변리스트', question.value.answerList);
     })
     .catch((err) => {
       console.log(err);
@@ -120,7 +113,6 @@ const deleteQuestion = function () {
 };
 
 const goUpdate = function () {
-  questionStore.originalContent = question.value.content;
   router.push({ path: `/question-update/${questionId.value}` });
 };
 
@@ -129,8 +121,11 @@ const goCreateAnswer = function () {
   router.push({ path: `/answer-create` });
 };
 
-onMounted(() => {
-  getDetailQuestion();
+onBeforeMount(async () => {
+  await getDetailQuestion();
+  setTimeout(() => {
+    isFetched.value = true; // 가져오면 렌더링
+  }, 250);
 });
 </script>
 
@@ -139,13 +134,10 @@ button {
   background-color: #62c0a6;
   border-radius: 35px;
   font-size: small;
+  font-weight: 800;
   padding: 0 10 0;
   margin: 5px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
-}
-
-.bgColorWhite {
-  background-color: white;
 }
 
 .card {
@@ -154,22 +146,10 @@ button {
   border-bottom-right-radius: 50px;
   margin: 40 px;
 }
-.answerRelatedBox {
-  display: flex;
-  justify-content: flex-end;
-}
 
-.answerListBox {
-  padding: 20px;
-}
 .btnBox {
   display: flex;
   justify-content: space-between;
-}
-
-.btn {
-  margin-left: 10px;
-  margin-right: 10px;
 }
 
 .img {
@@ -177,27 +157,11 @@ button {
   height: 75px;
   margin: 5px 10px 5px 5px;
 }
-.metooImg {
-  width: 60px;
-  height: 70px;
-  margin-right: 5px;
-}
-.answerCountImg {
-  margin-right: 10px;
-  height: 45px;
-}
 
 .myListItem {
   border-radius: 35px;
   padding-bottom: 10px;
   background-color: white;
-}
-.myListItem2 {
-  background-color: white;
-  border-radius: 35px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 .contentBox {

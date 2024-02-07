@@ -46,7 +46,6 @@
   <div id="app">
     <v-card color="#f3f3f3" elevation="16" max-width="60%" class="card mx-auto px-5">
       <v-row>
-        <!-- <v-col :cols="12"> -->
         <v-col :cols="9">
           <v-list-item class="titleBox">
             <v-list-item-title class="text-center title"> 질 문 </v-list-item-title>
@@ -66,7 +65,7 @@
 
 <script setup>
 import { useQuestionStore } from '@/stores/questionStore';
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import QuestionListItem from './QuestionListItem.vue';
 import { useRouter } from 'vue-router';
 
@@ -81,8 +80,6 @@ const keyword = ref('');
 const tagIds = ref([]);
 
 const searchParams = function (keyword, tagIds) {
-  console.log('키워드는', keyword);
-  console.log('태그는', ...tagIds);
   questionStore.getQuestions(keyword, ...tagIds);
 };
 
@@ -99,10 +96,6 @@ const items = questionStore.items;
 
 input {
   border-left: 1px solid black;
-}
-
-.chips-switch-container {
-  align-items: center;
 }
 
 span {
@@ -175,6 +168,7 @@ span {
 .createBtn {
   border-radius: 30px;
   background-color: #62c0a6;
+  font-weight: 800;
 }
 
 .titleBox {

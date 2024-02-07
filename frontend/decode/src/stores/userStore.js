@@ -10,7 +10,6 @@ export const useUserStore = defineStore(
     const users = ref([]); // 회원 목록
     const searchUsers = ref([]); // 아직은 쓸 일 없지만 검색된 회원 목록
     const tagIdList = ref([]); // 선택한 기술 태그 목록
-    // const userTagIdList = ref([]); // 특정 유저 선택한 기술 태그 목록
     const loginUserProfile = ref([]); // 로그인 유저 프로필 data 저장 목록
     const userProfile = ref([]); // 특정 유저 프로필 data 저장 목록
     const qList = ref([]); // 질문 목록
@@ -200,8 +199,48 @@ export const useUserStore = defineStore(
         });
     };
 
+    // 다른 사용자 프로필 조회
+    // (exp, point, coin, nickname, tier, profileImg)
+    const setUserProfile = (userid) => {
+      axios
+        .get(`/profile/${userid}`, {
+          withCredentials: true,
+        })
+        .then((res) => {
+          accessToken.value = parseToken(res);
+          const response = res.data;
+          if (response.status === 'OK') {
+            userProfile.value = response.data;
+            // // 프로필 사진만 변경했을 경우 data.profileImg 에 값 갱신 가능한가??
+            // userProfileImg.value = updatedUserProfileImg.value;
+          } else {
+            console.log('Failed to get current user profile');
+          }
+        });
+    };
+
+    // 특정 회원 정보 조회
+    // (id, email, 암호화된password, phoneNumber, birth, name, createdTime, updatedTime)
+    const setUser = (userid) => {
+      axios
+        .get(`/user/${userid}`, {
+          withCredentials: true,
+        })
+        .then((res) => {
+          accessToken.value = parseToken(res);
+          const response = res.data;
+          if (response.status === 'OK') {
+            loginUserName.value = response.data.name;
+            loginUserBirthday.value = response.data.birth;
+            loginUserEmail.value = response.data.email;
+            loginUserPhone.value = response.data.phoneNumber;
+            user.value = { ...res.data };
+          }
+        });
+    };
+
     // 특정 회원 선호 기술 스택 (번호) 조회
-    const getTagNumList = (userid) => {
+    const setTagNumList = (userid) => {
       axios
         .get(`/tag/${userid}`, {
           withCredentials: true,
@@ -225,6 +264,7 @@ export const useUserStore = defineStore(
           accessToken.value = parseToken(res);
           const response = res.data;
           if (response.status === 'OK') {
+            console.log(response.data);
             qList.value = response.data.list;
             qListLength.value = response.data.size;
           }
@@ -294,17 +334,18 @@ export const useUserStore = defineStore(
             // 요청이 정상인 경우
             if (userid === loginUserId) {
               // 본인 자신을 팔로우 시 X
-              console.log('본인을 팔로우할 수 없습니다.');
+              alert('본인을 팔로우할 수 없습니다.');
               return;
             }
             // 팔로우 여부 확인 (T/F)
             isFollowOrNot(userid);
             if (isFollow.value) {
               // 이미 팔로우한 사람을 팔로우 시 X
-              console.log('이미 팔로우한 사용자는 팔로우할 수 없습니다.');
+              alert('이미 팔로우한 사용자는 팔로우할 수 없습니다.');
               return;
             } else {
               // 정상적으로 팔로우 시
+              isFollow.value = true;
               console.log('팔로우 성공');
             }
           } else {
@@ -347,8 +388,11 @@ export const useUserStore = defineStore(
             // 정상적으로 팔로우되어 있는 상태라면
             if (isFollow.value) {
               isFollow.value = false;
+              console.log('isFollow.value:', isFollow.value);
               console.log('팔로우 취소 성공');
+              followingList.value = followingList.value.filter((following) => following.id !== userid);
             } else {
+              console.log('isFollow.value 취소 불가 시:', isFollow.value);
               console.log('팔로우 취소 불가');
               return;
             }
@@ -438,46 +482,6 @@ export const useUserStore = defineStore(
           const response = res.data;
           if (response.status === 'OK') {
             router.push({ name: 'myprofile' });
-          }
-        });
-    };
-
-    // 다른 사용자 프로필 조회
-    // (exp, point, coin, nickname, tier, profileImg)
-    const setUserProfile = (userid) => {
-      axios
-        .get(`/profile/${userid}`, {
-          withCredentials: true,
-        })
-        .then((res) => {
-          accessToken.value = parseToken(res);
-          const response = res.data;
-          if (response.status === 'OK') {
-            userProfile.value = response.data;
-            // 프로필 사진만 변경했을 경우 data.profileImg 에 값 갱신 가능한가??
-            userProfileImg.value = updatedUserProfileImg.value;
-          } else {
-            console.log('Failed to get current user profile');
-          }
-        });
-    };
-
-    // 특정 회원 정보 조회
-    // (id, email, 암호화된password, phoneNumber, birth, name, createdTime, updatedTime)
-    const setUser = (userid) => {
-      axios
-        .get(`/user/${userid}`, {
-          withCredentials: true,
-        })
-        .then((res) => {
-          accessToken.value = parseToken(res);
-          const response = res.data;
-          if (response.status === 'OK') {
-            loginUserName.value = response.data.name;
-            loginUserBirthday.value = response.data.birth;
-            loginUserEmail.value = response.data.email;
-            loginUserPhone.value = response.data.phoneNumber;
-            user.value = { ...res.data };
           }
         });
     };
@@ -626,7 +630,7 @@ export const useUserStore = defineStore(
       findUserEmail,
       findUserPwd,
       myProfile,
-      getTagNumList,
+      setTagNumList,
       setQList,
       setAList,
       setFollowerList,
