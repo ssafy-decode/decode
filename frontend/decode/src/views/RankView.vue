@@ -1,16 +1,18 @@
 <template>
   <v-container class="main">
-    <div style="border: 5px solid #cfcfcf; text-align: center; width: 1250px">
+    <div class="user-info-container">
       <UserInfo />
     </div>
     <br />
-    <Search></Search>
-    <RankingTable></RankingTable>
+    <div class="rank-list-container">
+      <Search></Search>
+      <RankingTable></RankingTable>
+    </div>
   </v-container>
 </template>
 
 <script setup>
-import { ref, onMounted,onBeforeMount } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useProfileStore } from '@/stores/profileStore';
 import { useUserStore } from '@/stores/userStore';
 import Search from '@/components/rank/Search.vue';
@@ -22,27 +24,30 @@ const profileStore = useProfileStore();
 
 console.log("userID: " + userStore.loginUserId);
 
-onBeforeMount(() => {
+onMounted(() => {
   profileStore.setUserProfile(userStore.loginUserId);
 });
 
-// export default {
-//   data() {
-//     return {};
-//   },
-//   methods: {},
-//   components: {
-//     Search,
-//     RankingTable,
-//     UserInfo,
-//   },
-// };
 </script>
 
 <style>
 .main {
   text-align: center;
+  /* justify-content: center; */
   /* margin: 0 auto; */
+}
+.user-info-container {
+  border: 5px solid #cfcfcf;
+  background-color: #ffffff;
+  max-width: 1250px;
+  margin: auto;
+}
+
+.rank-list-container {
+  border-radius: 15px;
+  border: 1px solid #ccc;
+  max-width: 1250px;
+  margin: auto;
 }
 
 .user-info {

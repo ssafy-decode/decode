@@ -1,58 +1,46 @@
 <template>
   <v-container class="user-info">
-    {{ profile }}
     <v-row v-if="userStore && profile">
       <v-col cols="2">
-        <br />
-        <img width="70px" src="../../default.png" />
-        <br />
-        <br />
-        <div class="text-center">
-          랭킹 <br />
-          상위 {{ rankPercentile }}%
-        </div>
+        <v-avatar size="100">
+          <img src="../../default.png" alt="Profile" />
+        </v-avatar>
+        <p>{{ profile.nickname}}</p>
+        <p>100위(상위 10%)</p>
       </v-col>
-
-      <v-col cols="2" v-if="profile.tier">
-        <br />
-        <div class="text-center">
-          <img width="70px;" src="../../커마아이콘샘플.png" /> <br />
-          {{ profile.tier }}
-        </div>
+      <v-col cols="2">
+        <img src="../../커마아이콘샘플.png" width="50px" />
       </v-col>
-
-      <v-col
-        cols="2"
-        v-if="profile.nickname !== undefined && profile.point !== undefined"
-      >
-        <br />
-        <div class="text-center">
-          {{ profile.nickname }} <br />
-          보유 포인트: {{ profile.point }}p
-        </div>
+      <v-col cols="8">
+        <v-row>
+          <v-col cols="2">
+            <p> 100 </p>
+            <p> 답변수 </p>
+          </v-col>
+          <v-col cols="2">
+            <p> 100 </p>
+            <p> 채택수 </p>
+          </v-col>
+          <v-col cols="2">
+            <p> 100 </p>
+            <p> 팔로워 </p>
+          </v-col>
+          <v-col cols="2">
+            <p> 100 </p>
+            <p> 팔로우 </p>
+          </v-col>
+        </v-row>
+        <v-row justify="center">
+          <v-col sm="10">
+            <v-progress-linear
+            color="green" 
+            height="20"
+            :model-value="profile.exp / 180 *100"
+            >
+          </v-progress-linear>
+          </v-col>
+        </v-row>
       </v-col>
-
-      <!-- <v-col cols="2">
-        <br />
-        <div class="text-center">팔로워 / 팔로잉</div>
-        <div class="text-center">{{ profile.followerList.length }} / {{ profile.followingList.length }}</div>
-        <br />
-        <div class="text-center">
-          답변 수: {{ profile.aListLength }}개
-          <br />
-          채택 수: 0개
-        </div>
-      </v-col> -->
-
-      <!-- <v-col cols="4" v-if="profile.exp">
-        <div class="text-center">내 랭크</div>
-        <div>((경험치 그래프))</div>
-        <br />
-        <div>
-          현재 티어명 &nbsp;&nbsp; {{ profile.exp }} / {{ neededExp }} &nbsp;&nbsp; 다음 티어명
-        </div>
-        <div class="text-center">다음 {티어}까지 {{ moreExp }}!</div>
-      </v-col> -->
     </v-row>
   </v-container>
 </template>
@@ -77,8 +65,8 @@ onMounted(() => {
   };
   showProfile();
   console.log("profile: " + profile.value);
-  // neededExp.value = nextTierExp();
-  // moreExp.value = neededExp.value - userStore.loginUserProfile.exp; // 다음 티어까지 필요한 경험치 차액
+  neededExp.value = nextTierExp();
+  moreExp.value = neededExp.value - profile.exp; // 다음 티어까지 필요한 경험치 차액
 });
 
 const countRankPercent = () => {
