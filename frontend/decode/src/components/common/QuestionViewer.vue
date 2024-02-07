@@ -10,6 +10,12 @@ import '@toast-ui/editor/dist/toastui-editor-viewer.css';
 import { useQuestionStore } from '@/stores/questionStore';
 
 export default {
+  props: {
+    initialValue: {
+      type: String,
+      default: '값을 불러오지 못했습니다.',
+    },
+  },
   data() {
     return {
       viewer: null,
