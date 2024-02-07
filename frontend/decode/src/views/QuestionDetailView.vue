@@ -26,8 +26,8 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col :cols="12" v-if="isFetched">
-          <QuestionViewer />
+        <v-col :cols="12">
+          <QuestionViewer :initialValue="questionStore.originalContent" />
         </v-col>
       </v-row>
       <br /><br />
@@ -51,7 +51,7 @@
 
 <script setup>
 import axios from '@/utils/common-axios';
-import { ref, onBeforeMount } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useQuestionStore } from '@/stores/questionStore';
 import { useAnswerStore } from '@/stores/answerStore';
 import { useUserStore } from '@/stores/userStore';
@@ -64,8 +64,6 @@ const answerStore = useAnswerStore();
 const userStore = useUserStore();
 const router = useRouter();
 const route = useRoute();
-
-const isFetched = ref(false);
 
 const questionId = ref(0);
 const question = ref({});
@@ -87,7 +85,6 @@ const getDetailQuestion = function () {
       questionWriterId.value = question.value.questionWriter.id;
       questionCreatedTime.value = question.value.createdTime;
       questionStore.originalContent = question.value.content;
-      console.log('답변리스트', question.value.answerList);
     })
     .catch((err) => {
       console.log(err);
@@ -127,11 +124,8 @@ const goCreateAnswer = function () {
   router.push({ path: `/answer-create` });
 };
 
-onBeforeMount(async () => {
-  await getDetailQuestion();
-  setTimeout(() => {
-    isFetched.value = true; // 가져오면 렌더링
-  }, 250);
+onMounted(() => {
+  getDetailQuestion();
 });
 </script>
 
