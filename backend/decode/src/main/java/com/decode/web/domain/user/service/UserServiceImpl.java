@@ -3,11 +3,13 @@ package com.decode.web.domain.user.service;
 import com.decode.web.domain.common.redis.RedisService;
 import com.decode.web.domain.tag.repository.UserTagRepository;
 import com.decode.web.domain.user.dto.FindPasswordDto;
+import com.decode.web.domain.user.dto.RankResponseDto;
 import com.decode.web.domain.user.dto.RequestUserTagDto;
 import com.decode.web.domain.user.dto.ResponseUserProfileDto;
 import com.decode.web.domain.user.mapper.ResponseUserProfileMapper;
 import com.decode.web.domain.user.repository.UserInfoRepository;
 import com.decode.web.domain.user.repository.UserProfileRepository;
+import com.decode.web.entity.AnswerEntity;
 import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.entity.UserProfileEntity;
 import com.decode.web.entity.UserTagEntity;
@@ -19,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -236,4 +239,32 @@ public class UserServiceImpl implements UserService {
         return userProfileDto;
     }
 
+    @Override
+    public List<RankResponseDto> getRankV2() {
+        List<UserProfileEntity> userProfiles = userProfileRepository.findAll(); // 사용자 프로필 엔티티들을 가져옴
+
+        // UserProfileEntity 리스트를 RankResponseDto 리스트로 매핑
+        List<RankResponseDto> rankResponseDtos = userProfiles.stream()
+                .map(this::mapToRankResponseDto)
+                .collect(Collectors.toList());
+
+        return rankResponseDtos;
+    }
+
+    // UserProfileEntity를 RankResponseDto로 매핑하는 메소드
+    private RankResponseDto mapToRankResponseDto(UserProfileEntity userProfile) {
+        return RankResponseDto.builder()
+                .userId(userProfile.getId())
+                .nickname(userProfile.getNickname())
+                .tier(userProfile.getTier())
+                .profileImg(userProfile.getProfileImg())
+                .exp(userProfile.getExp())
+                .answerCount(userProfile.getAnswers().size()) // 답변 수 계산
+                .adoptCount((int) userProfile.getAnswers().stream().filter(AnswerEntity::isAdopted)
+                        .count()) // 채택된 답변 수 계산
+                .followerCount(userProfile.getFollowers().size()) // 팔로워 수 계산
+                .tagIds(userProfile.getUserTags().stream().map(UserTagEntity::getTagId)
+                        .collect(Collectors.toList())) // 태그 ID 리스트 가져오기
+                .build();
+    }
 }

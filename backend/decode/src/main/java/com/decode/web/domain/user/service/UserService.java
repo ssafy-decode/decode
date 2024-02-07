@@ -1,6 +1,7 @@
 package com.decode.web.domain.user.service;
 
 import com.decode.web.domain.user.dto.FindPasswordDto;
+import com.decode.web.domain.user.dto.RankResponseDto;
 import com.decode.web.domain.user.dto.RequestUserTagDto;
 import com.decode.web.domain.user.dto.ResponseUserProfileDto;
 import com.decode.web.entity.UserInfoEntity;
@@ -62,4 +63,6 @@ public interface UserService {
     List<UserProfileEntity> getRank();
 
     ResponseUserProfileDto getUserProfileDtoById(Long id);
+
+    List<RankResponseDto> getRankV2();
 }

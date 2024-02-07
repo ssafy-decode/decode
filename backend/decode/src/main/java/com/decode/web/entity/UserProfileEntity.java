@@ -15,6 +15,7 @@ import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -71,6 +72,9 @@ public class UserProfileEntity {
 
     @OneToMany(mappedBy = "userProfile", fetch = FetchType.LAZY)
     private List<UserTagEntity> userTags;
+
+    @OneToMany(mappedBy = "answerWriter", fetch = FetchType.LAZY)
+    private List<AnswerEntity> answers = new ArrayList<>();
 
 
     @Builder
