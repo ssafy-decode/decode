@@ -80,8 +80,7 @@ const useUserStore = defineStore(
           // 새 토큰 값 없으면 기존 토큰 값 유지
           return accessToken.value;
         }
-        accessToken.value = newToken;
-        return accessToken.value;
+        return newToken;
       }
     };
 
@@ -104,7 +103,7 @@ const useUserStore = defineStore(
             accessToken.value = '';
             loginUserId.value = '';
             user.value = [];
-            profileStore.userProfile.value = [];
+            profileStore.profile.value = [];
             // session storage에서 모든 store 데이터 제거 (작동하는지 불확실 => 401에러)
             sessionStorage.removeItem('pinia:useProfileStore');
             sessionStorage.removeItem('pinia:useQuestionStore');

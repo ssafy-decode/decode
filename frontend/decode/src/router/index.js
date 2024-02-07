@@ -25,7 +25,6 @@ import FoundEmail from '@/components/user/FoundEmail.vue';
 import FoundPwd from '@/components/user/FoundPwd.vue';
 import MyProfileUpdateCheckPwd from '@/components/profile/MyProfileUpdateCheckPwd.vue';
 import MyProfileUpdate from '@/components/profile/MyProfileUpdate.vue';
-import MyTagUpdate from '@/components/profile/MyTagUpdate.vue';
 import QuestionUpdate from '@/components/question/QuestionUpdate.vue';
 
 // stores
@@ -140,12 +139,7 @@ const router = createRouter({
       component: MyProfileUpdateCheckPwd,
     },
     {
-      path: '/updatetechstack',
-      name: 'mytagupdate',
-      component: MyTagUpdate,
-    },
-    {
-      path: '/updatepwd',
+      path: '/updateprofile',
       name: 'myprofileupdate',
       component: MyProfileUpdate,
     },

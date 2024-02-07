@@ -12,8 +12,8 @@
           border: 15px solid #d9d9d9;
         "
       >
-        <!-- 뒤로가기 버튼--><router-link :to="`/detail/${userStore.loginUserId}`"
-          ><img width="30px" src="../../../public/leftarrowicon.png"
+        <!-- 뒤로가기 버튼--><router-link :to="`/profile/${userStore.loginUserId}`"
+          ><img width="15px" src="../../leftarrowicon.png"
         /></router-link>
         <v-row style="margin-left: 5px">
           <v-col cols="4">
@@ -52,7 +52,27 @@
           <br />
           <br />
           <div v-if="tagStore.tagIdList.length > 0">
-            <v-chip v-for="tag in tagStore.tagIdList" :key="tag" label color="primary" class="mr-2 mb-2">
+            <v-combobox
+              v-if="editing"
+              variant="solo"
+              class="combo"
+              bg-color="#d9d9d9"
+              v-model="select"
+              :items="items"
+              placeholder="ex) java, spring boot, sql"
+              label="기술 스택"
+              multiple
+              chips
+              clearable
+            ></v-combobox>
+            <v-chip
+              v-for="tag in tagStore.tagIdList"
+              :clearable="editing"
+              :key="tag"
+              label
+              color="primary"
+              class="mr-2 mb-2"
+            >
               {{ tagName[tag] }}</v-chip
             >
           </div>
@@ -125,6 +145,37 @@ const userStore = useUserStore();
 const tagStore = useTagStore();
 const profileStore = useProfileStore();
 const { loginUserId: uid } = storeToRefs(userStore);
+
+const select = ref([]);
+const items = ref([
+  'python',
+  'java',
+  'C++',
+  'javascript',
+  'django',
+  'spring',
+  'spring boot',
+  'kotlin',
+  'sql',
+  'react',
+  'vue',
+  'C#',
+]);
+
+const filtered = ref(items.value.slice(0, 10));
+
+const isSelected = (item) => {
+  return select.value.includes(item);
+};
+
+const toggleSelection = (item) => {
+  const index = select.value.indexOf(item);
+  if (index !== -1) {
+    select.value.splice(index, 1);
+  } else {
+    select.value.push(item);
+  }
+};
 
 // DB에 수정된 번호를 다시 태그명으로 전환
 const tagName = {
