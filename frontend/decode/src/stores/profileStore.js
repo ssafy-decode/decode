@@ -4,6 +4,7 @@ import router from '@/router';
 import axios from '@/utils/common-axios';
 import { useUserStore } from './userStore';
 import { useTagStore } from './tagStore';
+import { storeToRefs } from 'pinia';
 
 const useProfileStore = defineStore(
   'useProfileStore',
@@ -11,6 +12,7 @@ const useProfileStore = defineStore(
     // 스토어
     const userStore = useUserStore();
     const tagStore = useTagStore();
+    const { handleAccessToken } = storeToRefs(userStore);
 
     // 배열
 
@@ -85,7 +87,7 @@ const useProfileStore = defineStore(
       await axios
         .post(`/confirm`, password, {
           headers: {
-            Authorization: `Bearer ${userStore.accessToken}`,
+            Authorization: `Bearer ${handleAccessToken.value}`,
           },
         })
         .then((res) => {
@@ -186,9 +188,7 @@ const useProfileStore = defineStore(
     };
   },
   {
-    persist: {
-      storage: sessionStorage,
-    },
+    persist: true,
   },
 );
 

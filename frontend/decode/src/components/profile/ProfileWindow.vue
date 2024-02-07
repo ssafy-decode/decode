@@ -61,37 +61,26 @@
             ></v-row
           >
 
-          <!-- <ul v-else-if="index === 1">
+          <ul v-else-if="index === 1">
             <v-card
-              class="mx-auto px-4 py-8"
+              class="mx-auto px-4 py-8 text-left"
               max-width="1036"
               style="text-align: center; background-color: #f3f3f3; border-radius: 31px; border: 15px solid #d9d9d9"
             >
-              <v-row v-if="followerList.length > 0">
-                <v-col v-for="(follower, followerIdx) in followerList" :key="followerIdx">
-                  {{ followerIdx + 1 }} &nbsp;
+              <div v-if="followerList.length > 0">
+                <v-row v-for="(follower, followerIdx) in followerList" :key="followerIdx">
                   <span hidden>{{ follower.id }}</span>
-
-                  {{ follower.tier }} &nbsp;
-                  {{ follower.rank !== null ? `${follower.rank}위` : '순위없음' }}
-
-                  {{ follower.profileImg }} &nbsp; {{ follower.nickname }} &nbsp;
-
-                  <div v-if="follower.userTagList && follower.userTagList.length > 0">
-                    <v-chip
-                      v-for="(tag, tagIndex) in follower.userTagList"
-                      :key="tagIndex"
-                      label
-                      color="primary"
-                      class="mr-2 mb-2"
-                    >
-                      {{ tagName[tag] }}
-                    </v-chip>
-                  </div>
-                  <div v-else>기술 스택 없음</div>
-                  &nbsp;&nbsp;&nbsp;
-                </v-col>
-              </v-row>
+                  <v-col cols="1"> {{ followerIdx + 1 }} </v-col>
+                  <v-col cols="2"> {{ follower.tier }}</v-col>
+                  <v-col cols="3">
+                    <img style="width: 30px" src="../default.png" />
+                    {{ follower.profileImg }}
+                  </v-col>
+                  <v-col cols="4">
+                    {{ follower.nickname }}
+                  </v-col>
+                </v-row>
+              </div>
               <v-row v-else>
                 <v-col>아싸시네요.</v-col>
               </v-row>
@@ -100,42 +89,38 @@
 
           <ul v-else-if="index === 2">
             <v-card
-              class="mx-auto px-4 py-8"
+              class="mx-auto px-4 py-8 text-left"
               max-width="1036"
               style="text-align: center; background-color: #f3f3f3; border-radius: 31px; border: 15px solid #d9d9d9"
             >
-              <v-row v-if="followingList.length > 0">
-                <v-col v-for="(following, followingIdx) in followingList" :key="followingIdx">
-                  {{ followingIdx + 1 }} &nbsp;
+              <div v-if="followingList.length > 0">
+                <v-row>
+                  <v-col cols="1">번호</v-col>
+                  <v-col cols="2">티어</v-col>
+                  <v-col cols="3">프로필</v-col>
+                  <v-col cols="4">닉네임</v-col>
+                </v-row>
+                <v-row v-for="(following, followingIdx) in followingList" :key="followingIdx">
                   <span hidden>{{ following.id }}</span>
-
-                  {{ following.tier }} &nbsp;
-                  {{ following.rank !== null ? `${following.rank}위` : '순위없음' }}
-
-                  <img style="width: 30px" src="../default.png" />
-                  {{ following.profileImg }} &nbsp; {{ following.nickname }} &nbsp;
-
-                  <div v-if="following.userTagList && following.userTagList.length > 0">
-                    <v-chip
-                      v-for="(tagId, tagIndex) in following.userTagList"
-                      :key="tagIndex"
-                      label
-                      color="primary"
-                      class="mr-2 mb-2"
-                    >
-                      {{ tagName[tagId] }}
-                    </v-chip>
-                  </div>
-                  <div v-else>기술 스택 없음</div>
-                  &nbsp;&nbsp;&nbsp;
-                  <v-btn @click="unfollowBtn(following.id)">팔로우 취소</v-btn>
-                </v-col>
-              </v-row>
-              <v-row v-else>
+                  <v-col cols="1"> {{ followingIdx + 1 }} </v-col>
+                  <v-col cols="2"> {{ following.tier }}</v-col>
+                  <v-col cols="3">
+                    <img style="width: 30px" src="../default.png" />
+                    {{ following.profileImg }}
+                  </v-col>
+                  <v-col cols="4">
+                    {{ following.nickname }}
+                  </v-col>
+                  <v-col cols="2">
+                    <v-btn @click="unfollowById(following.id)">팔로우 취소</v-btn>
+                  </v-col>
+                </v-row>
+              </div>
+              <v-col v-else>
                 <v-col>친구가 없으시네요.</v-col>
-              </v-row>
+              </v-col>
             </v-card>
-          </ul> -->
+          </ul>
         </v-window-item>
       </v-window>
     </v-card>
@@ -146,6 +131,7 @@
 import { ref, defineProps } from 'vue';
 import { useFollowStore } from '@/stores/followStore';
 import { useProfileStore } from '@/stores/profileStore';
+import { useUserStore } from '@/stores/userStore';
 import { storeToRefs } from 'pinia';
 
 const props = defineProps({
@@ -155,15 +141,18 @@ const props = defineProps({
 });
 
 const tab = ref(0);
-// const followStore = useFollowStore();
 const profileStore = useProfileStore();
-const { handleQuestions: qList, handleAnswers: aList } = storeToRefs(profileStore);
-// console.log(props.followingList);
+const followStore = useFollowStore();
+const userStore = useUserStore();
 
-// // 팔로우 취소
-// const unfollowBtn = (id) => {
-//   followStore.unFollow(id);
-// };
+const { handleQuestions: qList, handleAnswers: aList } = storeToRefs(profileStore);
+const { handleAccessToken: accessToken } = storeToRefs(userStore);
+
+const { unFollow } = followStore;
+
+const unfollowById = (id) => {
+  unFollow(id, accessToken.value);
+};
 </script>
 
 <style scoped>
