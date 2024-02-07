@@ -3,7 +3,6 @@ import { defineStore } from 'pinia';
 import router from '@/router';
 import axios from '@/utils/common-axios';
 import { useUserStore } from './userStore';
-import { useFollowStore } from './followStore';
 import { useTagStore } from './tagStore';
 
 const useProfileStore = defineStore(
@@ -11,12 +10,11 @@ const useProfileStore = defineStore(
   () => {
     // 스토어
     const userStore = useUserStore();
-    const followStore = useFollowStore();
     const tagStore = useTagStore();
 
     // 배열
-    const loginUserProfile = ref([]); // 로그인 유저 프로필 data 저장 목록
-    const userProfile = ref([]); // 로그인 유저가 아닌 다른 유저 프로필 data 저장 목록
+
+    const profile = ref({}); // 로그인 유저가 아닌 다른 유저 프로필 data 저장 목록
     const qList = ref([]); // 질문 목록
     const aList = ref([]); // 답변이 작성된 질문 목록
     const rankList = ref([]); // 경험치순 모든 유저 목록 조회
@@ -34,20 +32,20 @@ const useProfileStore = defineStore(
     // 함수
     // 로그인 사용자 프로필 조회 (아마 사용 안 하게 될 예정: id 넘겨서 setUserProfile로 통합해서 사용할 예정)
     // (exp, point, coin, nickname, tier, profileImg)
-    const myProfile = async () => {
-      await axios
-        .get(`/info`, {
-          headers: {
-            Authorization: `Bearer ${userStore.accessToken}`,
-          },
-        })
-        .then((res) => {
-          userStore.accessToken = userStore.parseToken(res);
-          if (res.data.status === 'OK') {
-            loginUserProfile.value = res.data.data;
-          }
-        });
-    };
+    // const myProfile = async () => {
+    //   await axios
+    //     .get(`/info`, {
+    //       headers: {
+    //         Authorization: `Bearer ${userStore.accessToken}`,
+    //       },
+    //     })
+    //     .then((res) => {
+    //       userStore.accessToken = userStore.parseToken(res);
+    //       if (res.data.status === 'OK') {
+    //         loginUserProfile.value = res.data.data;
+    //       }
+    //     });
+    // };
 
     // 다른 사용자 프로필 조회
     // (exp, point, coin, nickname, tier, profileImg)
@@ -55,7 +53,7 @@ const useProfileStore = defineStore(
       await axios.get(`/profile/${userid}`).then((res) => {
         userStore.accessToken = userStore.parseToken(res);
         if (res.data.status === 'OK') {
-          userProfile.value = res.data.data;
+          profile.value = res.data.data;
         }
       });
     };
@@ -79,22 +77,6 @@ const useProfileStore = defineStore(
           aList.value = res.data.data.list;
           aListLength.value = res.data.data.size;
         }
-      });
-    };
-
-    // 해당 유저 프로필에서 팔로워 목록 조회
-    const setFollowerList = async (userid) => {
-      await axios.get(`/followerlist/${userid}`).then((res) => {
-        userStore.accessToken = userStore.parseToken(res);
-        followStore.followerList.value = res.data.data;
-      });
-    };
-
-    // 프로필에서 팔로잉 목록 조회
-    const setFollowingList = async (userid) => {
-      await axios.get(`/followinglist/${userid}`).then((res) => {
-        userStore.accessToken = userStore.parseToken(res);
-        followStore.followingList.value = res.data.data;
       });
     };
 
@@ -168,8 +150,8 @@ const useProfileStore = defineStore(
     };
 
     // computed
-    const handleMyProfile = computed(() => loginUserProfile.value);
-    const handleUserProfile = computed(() => userProfile.value);
+    // const handleMyProfile = computed(() => loginUserProfile.value);
+    const handleUserProfile = computed(() => profile.value);
     const handleQuestions = computed(() => qList.value);
     const handleAnswers = computed(() => aList.value);
     const handleQuestionsNumber = computed(() => qListLength.value);
@@ -178,8 +160,8 @@ const useProfileStore = defineStore(
 
     // 반환
     return {
-      loginUserProfile,
-      userProfile,
+      // loginUserProfile,
+      // userProfile,
       qList,
       aList,
       rankList,
@@ -187,17 +169,14 @@ const useProfileStore = defineStore(
       aListLength,
       mypwd,
       userProfileImgURL,
-      myProfile,
       setUserProfile,
       setQList,
       setAList,
-      setFollowerList,
-      setFollowingList,
       checkPwd,
       updateProfileImg,
       updateTechStack,
       updatePwd,
-      handleMyProfile,
+      // handleMyProfile,
       handleUserProfile,
       handleQuestions,
       handleAnswers,

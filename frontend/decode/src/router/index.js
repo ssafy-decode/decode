@@ -135,11 +135,6 @@ const router = createRouter({
       component: ProfileView,
     },
     {
-      path: '/detail/:id',
-      name: 'profile',
-      component: ProfileView,
-    },
-    {
       path: '/checkpwd',
       name: 'myprofileupdatecheckpwd',
       component: MyProfileUpdateCheckPwd,

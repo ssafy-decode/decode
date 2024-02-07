@@ -115,7 +115,7 @@ const useUserStore = defineStore(
       await axios.get(`/user/${userid}`).then((res) => {
         accessToken.value = parseToken(res);
         if (res.data.status === 'OK') {
-          if (userid === loginUserId) {
+          if (userid === loginUserId.value) {
             // 로그인 유저와 일치할 경우
             // loginUserName.value = res.data.data.name;
             // loginUserBirthday.value = res.data.data.birth;
@@ -170,11 +170,19 @@ const useUserStore = defineStore(
     //       users.value = res.data;
     //     });
     // };
+    const setLoginUserId = (id) => {
+      loginUserId.value = id;
+    };
+    const setToken = (token) => {
+      accessToken.value = token;
+    };
 
     // computed
     const handleUsers = computed(() => users.value);
     const handleUser = computed(() => user.value);
     const handleLoginUser = computed(() => loginUser.value);
+    const handleLoginUserId = computed(() => loginUserId.value);
+    const handleAccessToken = computed(() => accessToken.value);
 
     // 반환
     return {
@@ -188,17 +196,21 @@ const useUserStore = defineStore(
       foundEmail,
       createUser,
       // githubLogin,
+      setLoginUserId,
       saveTechStack,
       setLoginUser,
       parseToken,
       setLogout,
       setUser,
+      setToken,
       findUserEmail,
       findUserPwd,
       // setUsers,
       handleUsers,
       handleUser,
       handleLoginUser,
+      handleLoginUserId,
+      handleAccessToken,
     };
   },
   {
