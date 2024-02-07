@@ -11,7 +11,7 @@ import AnswerCreateView from '@/views/AnswerCreateView.vue';
 import RankView from '@/views/RankView.vue';
 import ShopView from '@/views/ShopView.vue';
 import AuthenticationRedirectView from '@/views/AuthenticationRedirect.vue';
-import MyProfileView from '@/views/MyprofileView.vue';
+import ProfileView from '@/views/ProfileView.vue';
 import OtherProfileView from '@/views/OtherProfileView.vue';
 import InventoryView from '@/views/InventoryView.vue';
 
@@ -128,9 +128,9 @@ const router = createRouter({
       component: QuestionUpdate,
     },
     {
-      path: '/mypage',
-      name: 'myprofile',
-      component: MyProfileView,
+      path: '/profile/:id',
+      name: 'userProfile',
+      component: ProfileView,
     },
     {
       path: '/detail/:id',
