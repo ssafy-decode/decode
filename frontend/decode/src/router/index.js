@@ -1,7 +1,5 @@
 import { createWebHistory, createRouter } from 'vue-router';
 
-// **백엔드 명세서 url과 다르게 작성할 것!**
-
 // Views
 import MainView from '@/views/MainView.vue';
 import UserView from '@/views/UserView.vue';
@@ -13,6 +11,8 @@ import AnswerCreateView from '@/views/AnswerCreateView.vue';
 import RankView from '@/views/RankView.vue';
 import ShopView from '@/views/ShopView.vue';
 import AuthenticationRedirectView from '@/views/AuthenticationRedirect.vue';
+import ProfileView from '@/views/ProfileView.vue';
+import InventoryView from '@/views/InventoryView.vue';
 
 // Components
 import LoginForm from '@/components/LoginForm.vue';
@@ -23,13 +23,13 @@ import FindEmail from '@/components/user/FindEmail.vue';
 import FindPwd from '@/components/user/FindPwd.vue';
 import FoundEmail from '@/components/user/FoundEmail.vue';
 import FoundPwd from '@/components/user/FoundPwd.vue';
-import MyProfile from '@/components/profile/MyProfile.vue';
 import MyProfileUpdateCheckPwd from '@/components/profile/MyProfileUpdateCheckPwd.vue';
-import MyTagUpdate from '@/components/profile/MyTagUpdate.vue';
 import MyProfileUpdate from '@/components/profile/MyProfileUpdate.vue';
-import MyInventory from '@/components/shop/MyInventory.vue';
+import MyTagUpdate from '@/components/profile/MyTagUpdate.vue';
 import QuestionUpdate from '@/components/question/QuestionUpdate.vue';
-import OtherProfile from '@/components/rank/OtherProfile.vue';
+
+// stores
+import { useUserStore } from '@/stores/userStore';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -130,9 +130,9 @@ const router = createRouter({
       component: QuestionUpdate,
     },
     {
-      path: '/mypage',
-      name: 'myprofile',
-      component: MyProfile,
+      path: '/profile/:id',
+      name: 'userProfile',
+      component: ProfileView,
     },
     {
       path: '/checkpwd',
@@ -150,16 +150,32 @@ const router = createRouter({
       component: MyProfileUpdate,
     },
     {
-      path: '/detail',
-      name: 'otherprofile',
-      component: OtherProfile,
-    },
-    {
       path: '/inventory',
-      name: 'myinventory',
-      component: MyInventory,
+      name: 'inventory',
+      component: InventoryView,
     },
   ],
+});
+
+// 로그인 없이 직접 URL 작성으로 접근할 때를 방지
+// (메인페이지, 로그인페이지, 깃허브인증페이지, 아이디찾기페이지, 비번찾기페이지, 회원가입페이지, 질문게시판목록페이지는 허용)
+router.beforeEach((to, from, next) => {
+  const userStore = useUserStore();
+  const accessRoutes = [
+    'mainview',
+    'login',
+    'authenticationloading',
+    'findemail',
+    'findpwd',
+    'userregist',
+    'questionview',
+  ];
+  if (accessRoutes.includes(to.name) || userStore.isLoggedIn) {
+    next();
+  } else {
+    alert('로그인이 필요합니다.');
+    next('/login'); // 리다이렉트
+  }
 });
 
 export default router;

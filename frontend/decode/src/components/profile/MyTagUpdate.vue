@@ -109,16 +109,18 @@ const checkboxIcon = (item) => {
     : require('../../../public/checkboxunchecked.png');
 };
 
-const complete = () => {
+const complete = async () => {
   const updateuser = {
     userId: userStore.loginUserId,
     tagIdList: select.value,
   };
   try {
-    userStore.updateTechStack(updateuser);
-    router.push({ name: 'myprofileupdate' });
+    await userStore.updateTechStack(updateuser);
+    setTimeout(() => {
+      router.push({ name: 'myprofileupdate' });
+    }, 1000); // 1초 후에
   } catch (error) {
-    console.error('Error saving tech stack:', error);
+    console.error('Error', error);
   }
 };
 

@@ -10,7 +10,7 @@
             </span>
             &nbsp;
             <span class="time info">
-              {{ comment.createdTime }}
+              {{ comment.createdTime[0] }}년 {{ comment.createdTime[1] }}월 {{ comment.createdTime[2] }}일
             </span>
           </p>
         </div>
@@ -19,7 +19,7 @@
         {{ comment.content }}
       </div>
       <div class="editDeleteBox" @click="commentStore.deleteComment(comment.commentId)">
-        <span class="deleteText">댓글삭제</span>
+        <span v-if="comment.commentWriter.id === userStore.loginUserId" class="deleteText">댓글삭제</span>
       </div>
     </div>
   </div>
@@ -27,8 +27,10 @@
 
 <script setup>
 import { useCommentStore } from '@/stores/commentStore';
+import { useUserStore } from '@/stores/userStore';
 
 const commentStore = useCommentStore();
+const userStore = useUserStore();
 
 defineProps({
   comment: Object,
@@ -45,39 +47,8 @@ div {
   right: -80px;
 }
 
-.btn {
-  margin-left: 10px;
-  margin-right: 10px;
-}
-
-.answerBox {
-  display: flex;
-  justify-content: space-between;
-}
-
 .commentBox {
   margin-left: 40px;
-}
-
-.commentInputArea {
-  margin: 0px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.img {
-  width: 75px;
-  height: 75px;
-}
-.metooImg {
-  width: 60px;
-  height: 70px;
-  margin-right: 5px;
-}
-.answerCountImg {
-  margin-right: 10px;
-  height: 45px;
 }
 
 .myListItem {
@@ -85,13 +56,6 @@ div {
   background-color: white;
   border-radius: 35px;
   border: #d9d9d9 2px solid;
-}
-.myListItem2 {
-  background-color: white;
-  border-radius: 35px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 .listItem {
@@ -118,12 +82,6 @@ div {
 
 .time {
   color: #d9d9d9;
-}
-
-.answerContent {
-  border: #62c0a6 solid 2px;
-  border-radius: 24px;
-  padding: 40px;
 }
 
 .editDeleteBox {

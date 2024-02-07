@@ -6,7 +6,7 @@
           <img src="/questionIcon2.png" alt="검색아이콘" style="width: 40px; height: 40px" />
         </template>
       </v-text-field>
-      <v-container class="tagContainer" v-if="tagIds.length > 0">
+      <v-container class="tagContainer" v-if="tagIds">
         <template v-for="(tag, index) in tagIds" :key="index">
           <v-row align="center" class="d-flex justify-end">
             <v-col cols="12" sm="6" md="4" class="tagContainer">
@@ -65,9 +65,9 @@ const questionStore = useQuestionStore();
 const userStore = useUserStore();
 const router = useRouter();
 
-const questionTitle = ref('');
+const questionTitle = ref(['']);
 const questionContent = ref('');
-const tagIds = ref([]);
+const tagIds = ref(['']);
 const versions = ref([]);
 
 const items = questionStore.items;
@@ -102,31 +102,38 @@ const createQuestion = function () {
     .then((res) => {
       console.log('질문 생성 완료');
       router.push({ name: 'questionview' });
-      router.go(0);
+      questionStore.gptTitles = [''];
+      questionStore.gptTagIds = [''];
     })
     .catch((err) => {
       console.log(err);
       console.log('질문 생성 오류');
+      alert('제목과 내용, 태그를 입력해주세요');
     });
 };
 
 onMounted(() => {
-  questionTitle.value = questionStore.gptTitles.value;
-
-  tagIds.value = questionStore.gptTagIds.value;
-  versions.value = Array.from({ length: tagIds.value.length }, () => '');
+  questionTitle.value = questionStore.gptTitles;
+  tagIds.value = questionStore.gptTagIds;
+  if (tagIds.value == [] || tagIds.value == ['']) {
+    versions.value = [''];
+  } else {
+    versions.value = Array.from({ length: tagIds.value.length }, () => '');
+  }
 });
 
-// 태그 입력 칸 추가 코드
 const addEmptyFields = function () {
   tagIds.value.push('');
   versions.value.push('');
 };
 
-// 태그 입력 칸 삭제 코드
 const removeField = function (index) {
-  tagIds.value.splice(index, 1);
-  versions.value.splice(index, 1);
+  if (tagIds.value.length >= 2) {
+    tagIds.value.splice(index, 1);
+    versions.value.splice(index, 1);
+  } else {
+    alert('관련 태그를 최소 1개 이상 입력해주세요');
+  }
 };
 </script>
 

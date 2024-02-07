@@ -7,38 +7,30 @@
     >
       <v-row>
         <v-col :cols="2">
-          {{ userStore.loginUserProfile.nickname }}
+          {{ profile.nickname }}
           <br />
           <br />
-          <input type="file" accept="image/*" @change="handleFileChange" style="display: none" ref="fileInput" />
-          <!-- <img style="width: 70%" :src="'./' + userStore.loginUserProfile.profileImg + '.png'" /> -->
-          <!-- 추후 url로 받아오는 걸로 수정 -->
           <br />
-          {{ userStore.loginUserProfile.tier }}
+          {{ profile.tier }}
           <br />
-          ((커마아이콘))
-          <!-- 추후 수정 -->
         </v-col>
 
-        <!-- 본인 기술 스택 v-chip들 나열 (소제목은 없애고)-->
         <v-col :cols="1"
-          ><v-chip>{{ userTags }}</v-chip> <br />아직 get 없어서
-          <!-- <div v-if="userStore.tagIdList.length > 0"> -->
-          <v-chip v-for="tag in userTags" :key="tag" label color="primary" class="mr-2 mb-2">{{ tag }}</v-chip>
-          <!-- {{ userStore.tagIdList.value }} (값이 없어서 빈칸이 뜨는 중입니다) -->
-          <!-- </div> -->
-          <!-- <div v-else>선택한 기술 스택이 없습니다.</div> -->
-          기술스택 안 뜸</v-col
+          ><div v-if="tagStore.tagIdList.length > 0">
+            <v-chip v-for="tag in tagStore.tagIdList" :key="tag" label color="primary" class="mr-2 mb-2">
+              {{ tagName[tag] }}</v-chip
+            >
+          </div>
+          <div v-else><br /><br />기술<br />스택<br />없음</div></v-col
         >
-        <!-- 일단 숫자로라도 뜨나 테스트 -->
 
         <v-col :cols="6">
           출석 스트릭
-          <AttendanceLog :uid="uid" />
+          <!-- <AttendanceLog :uid="profile.id" /> -->
         </v-col>
 
         <v-col :cols="3">
-          <ExpLog :uid="uid" />
+          <!-- <ExpLog :uid="profile.id" /> -->
         </v-col>
       </v-row>
 
@@ -59,23 +51,26 @@
       </div>
     </v-card>
   </div>
-
-  <MyProfileWindow />
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
-import { useUserStore } from '@/stores/userStore';
 import AttendanceLog from '@/components/profile/AttendanceLog.vue';
 import ExpLog from '@/components/profile/ExpLog.vue';
 import { storeToRefs } from 'pinia';
-import MyProfileWindow from '@/components/profile/MyProfileWindow.vue';
+import { useUserStore } from '@/stores/userStore';
+import { useProfileStore } from '@/stores/profileStore';
+import { useTagStore } from '@/stores/tagStore';
 
 const userStore = useUserStore();
-const { loginUserId: uid } = storeToRefs(userStore);
+const profileStore = useProfileStore();
+const tagStore = useTagStore();
+
+const props = defineProps({
+  profile: Object,
+});
 
 // DB에 수정된 번호를 다시 태그명으로 전환
-const tagNum = {
+const tagName = {
   1: 'python',
   2: 'java',
   3: 'C++',
@@ -89,11 +84,6 @@ const tagNum = {
   11: 'vue',
   12: 'C#',
 };
-const userTags = userStore.tagIdList.map((item) => tagNum[item]);
-
-onMounted(() => {
-  userStore.myProfile();
-});
 </script>
 
 <style scoped>

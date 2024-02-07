@@ -3,9 +3,8 @@
   <div style="text-align: center">
     <v-btn
       class="githubbtn"
+      style="color: #ffffff"
       :style="{ backgroundColor: githubButtonColor }"
-      @mouseenter="githubMouseEnter"
-      @mouseleave="githubMouseLeave"
       @click="authenticate"
     >
       <div class="icons">
@@ -21,22 +20,12 @@ import { ref } from 'vue';
 import router from '@/router';
 
 // hover 전 색깔
-const githubButtonColor = ref('#d9d9d9');
+const githubButtonColor = ref('#000000');
 
-// hover 후 색깔
-const githubMouseEnter = () => {
-  githubButtonColor.value = '#000000';
-};
-
-// hover 커서 다시 나가면 원 색깔로
-const githubMouseLeave = () => {
-  githubButtonColor.value = '#d9d9d9';
-};
-
-// 로딩 창으로 이동 + 팝업창 띄우기 (아직 링크 연결 안 됨)
+// 로딩 창으로 이동 + 팝업창 띄우기
 const authenticate = () => {
-  window.open(`https://i10a507.p.ssafy.io/decode/oauth2/authorization/github`, `_blank`, `width=400, height=600`);
   router.push(`/loading`);
+  window.open(`https://i10a507.p.ssafy.io/decode/oauth2/authorization/github`, `_blank`, `width=400, height=600`);
 };
 </script>
 

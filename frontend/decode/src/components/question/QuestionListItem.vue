@@ -11,10 +11,12 @@
               </span>
               &nbsp;
               <span class="time">
-                {{ question.createdTime }}
+                {{ question.createdTime[0] }}년 {{ question.createdTime[1] }}월 {{ question.createdTime[2] }}일
               </span>
             </p>
-            <p class="title">{{ question.title }}</p>
+            <p class="title">
+              {{ question.title && question.title.length > 80 ? question.title.slice(0, 80) + '...' : question.title }}
+            </p>
           </div>
         </div>
       </div>
@@ -24,20 +26,15 @@
         <img class="img" src="./answerIcon.png" aslt="답변 아이콘" />
         <p>답변: {{ question.answerCnt }}</p>
         <p>나도궁금: {{ question.meTooCnt }}</p>
-        <!-- <img class="answerCountImg" src="./answerCountIcon.png" aslt="답변수 아이콘" /> -->
-        <!-- <img class="metooImg" src="./metoo.png" aslt="나도궁금해요 아이콘" /> -->
       </div>
-      <!-- <p>질문태그: {{ question.tagList }}</p> -->
     </v-col>
   </v-row>
 </template>
 
 <script setup>
-import { useQuestionStore } from '@/stores/questionStore';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-const questionStore = useQuestionStore();
 
 const goDetail = function (questionId) {
   router.push({ path: `/board/${questionId}` });
@@ -52,15 +49,6 @@ defineProps({
 .img {
   width: 75px;
   height: 75px;
-}
-.metooImg {
-  width: 60px;
-  height: 70px;
-  margin-right: 5px;
-}
-.answerCountImg {
-  margin-right: 10px;
-  height: 45px;
 }
 
 .myListItem {

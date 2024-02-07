@@ -1,7 +1,7 @@
 <template>
   <v-container class="main">
     <div style="border: 5px solid #cfcfcf; text-align: center; width: 1250px">
-      <UserInfo></UserInfo>
+      <UserInfo />
     </div>
     <br />
     <Search></Search>
@@ -9,22 +9,34 @@
   </v-container>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted,onBeforeMount } from 'vue';
+import { useProfileStore } from '@/stores/profileStore';
+import { useUserStore } from '@/stores/userStore';
 import Search from '@/components/rank/Search.vue';
 import UserInfo from '@/components/rank/UserInfo.vue';
 import RankingTable from '@/components/rank/RankingTable.vue';
 
-export default {
-  data() {
-    return {};
-  },
-  methods: {},
-  components: {
-    Search,
-    RankingTable,
-    UserInfo,
-  },
-};
+const userStore = useUserStore();
+const profileStore = useProfileStore();
+
+console.log("userID: " + userStore.loginUserId);
+
+onBeforeMount(() => {
+  profileStore.setUserProfile(userStore.loginUserId);
+});
+
+// export default {
+//   data() {
+//     return {};
+//   },
+//   methods: {},
+//   components: {
+//     Search,
+//     RankingTable,
+//     UserInfo,
+//   },
+// };
 </script>
 
 <style>

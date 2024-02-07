@@ -2,8 +2,11 @@
   <div class="app">
     <NavBar />
     <br />
-    <router-view></router-view>
-    <br />
+    <div style="min-height: 1100px">
+      <router-view></router-view>
+      <br />
+      <Chat></Chat>
+    </div>
     <FooterBar />
   </div>
 </template>
@@ -11,6 +14,7 @@
 <script setup>
 import FooterBar from '@/components/common/FooterBar.vue';
 import NavBar from '@/components/common/NavBar.vue';
+import Chat from '@/components/chat/Chat.vue';
 </script>
 
 <style>

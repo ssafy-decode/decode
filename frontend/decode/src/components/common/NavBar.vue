@@ -29,8 +29,7 @@
         <v-toolbar-items class="font-weight-bold">랭킹</v-toolbar-items>
       </v-btn>
     </router-link>
-
-    <router-link to="/mypage">
+    <router-link :to="'/profile/' + uid">
       <v-btn v-show="userStore.isLoggedIn">
         <v-toolbar-items class="font-weight-bold">마이페이지</v-toolbar-items>
       </v-btn>
@@ -46,10 +45,12 @@
 
 <script setup>
 import { useUserStore } from '@/stores/userStore';
+import { storeToRefs } from 'pinia';
 
 const userStore = useUserStore();
 
 const { setLogout: logout } = userStore;
+const { handleLoginUserId: uid } = storeToRefs(userStore);
 </script>
 
 <style scoped>
@@ -66,5 +67,6 @@ a {
   background-color: #62c0a6;
   margin-right: 20px;
   border-radius: 40px;
+  font-weight: 800;
 }
 </style>

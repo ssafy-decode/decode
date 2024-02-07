@@ -19,34 +19,24 @@
           <div class="listItem writerBox">
             <span class="nickname title">{{ writerNickname }}</span>
             &nbsp; &nbsp;
-            <span class="time info">{{ question.createdTime }}</span>
+            <span class="time info">
+              {{ questionCreatedTime[0] }}년 {{ questionCreatedTime[1] }}월 {{ questionCreatedTime[2] }}일
+            </span>
           </div>
         </v-col>
       </v-row>
       <v-row>
         <v-col :cols="12">
-          <div class="listItem title">{{ question.content }}</div>
+          <QuestionViewer :initialValue="questionStore.originalContent" />
         </v-col>
       </v-row>
       <br /><br />
       <div class="btnBox">
         <div>
-          <v-btn @click="goUpdate()">질문수정</v-btn>
-          <v-btn @click="deleteQuestion()">질문삭제</v-btn>
+          <v-btn v-if="questionWriterId === userStore.loginUserId" @click="goUpdate()">질문수정</v-btn>
+          <v-btn v-if="questionWriterId === userStore.loginUserId" @click="deleteQuestion()">질문삭제</v-btn>
         </div>
         <div>
-          <!-- 나도 궁금 -->
-          <!-- 누르면 나도 궁금 되도록 -->
-
-          <!-- <span>{{ question.meTooCnt }}</span>
-          &nbsp; &nbsp; -->
-
-          <!-- 북마크 카운트수 불러올 수 있도록? -->
-          <!-- 누르면 북마크 되도록 -->
-
-          <!-- <span>{{ question.meTooCnt }}</span>
-          &nbsp; &nbsp; -->
-
           <v-btn @click="goCreateAnswer()">답변달기</v-btn>
         </div>
       </div>
@@ -61,12 +51,13 @@
 
 <script setup>
 import axios from '@/utils/common-axios';
-import { onMounted, ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useQuestionStore } from '@/stores/questionStore';
 import { useAnswerStore } from '@/stores/answerStore';
 import { useUserStore } from '@/stores/userStore';
 import { useRoute, useRouter } from 'vue-router';
 import AnswerList from '@/components/answer/AnswerList.vue';
+import QuestionViewer from '@/components/common/QuestionViewer.vue';
 
 const questionStore = useQuestionStore();
 const answerStore = useAnswerStore();
@@ -77,7 +68,9 @@ const route = useRoute();
 const questionId = ref(0);
 const question = ref({});
 const writerNickname = ref('');
+const questionWriterId = ref(null);
 const isAnswerExist = ref(false);
+const questionCreatedTime = ref('');
 
 const getDetailQuestion = function () {
   axios({
@@ -89,6 +82,9 @@ const getDetailQuestion = function () {
       question.value = res.data.data;
       isAnswerExist.value = question.value.answerList.length > 0;
       writerNickname.value = question.value.questionWriter.nickname;
+      questionWriterId.value = question.value.questionWriter.id;
+      questionCreatedTime.value = question.value.createdTime;
+      questionStore.originalContent = question.value.content;
     })
     .catch((err) => {
       console.log(err);
@@ -120,7 +116,6 @@ const deleteQuestion = function () {
 };
 
 const goUpdate = function () {
-  questionStore.originalContent = question.value.content;
   router.push({ path: `/question-update/${questionId.value}` });
 };
 
@@ -139,37 +134,22 @@ button {
   background-color: #62c0a6;
   border-radius: 35px;
   font-size: small;
+  font-weight: 800;
   padding: 0 10 0;
   margin: 5px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
-}
-
-.bgColorWhite {
-  background-color: white;
 }
 
 .card {
   border-top-left-radius: 50px;
   border-bottom-left-radius: 50px;
   border-bottom-right-radius: 50px;
-  margin: 40 px;
-}
-.answerRelatedBox {
-  display: flex;
-  justify-content: flex-end;
+  margin: 100px 40px;
 }
 
-.answerListBox {
-  padding: 20px;
-}
 .btnBox {
   display: flex;
   justify-content: space-between;
-}
-
-.btn {
-  margin-left: 10px;
-  margin-right: 10px;
 }
 
 .img {
@@ -177,27 +157,11 @@ button {
   height: 75px;
   margin: 5px 10px 5px 5px;
 }
-.metooImg {
-  width: 60px;
-  height: 70px;
-  margin-right: 5px;
-}
-.answerCountImg {
-  margin-right: 10px;
-  height: 45px;
-}
 
 .myListItem {
   border-radius: 35px;
   padding-bottom: 10px;
   background-color: white;
-}
-.myListItem2 {
-  background-color: white;
-  border-radius: 35px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 .contentBox {
