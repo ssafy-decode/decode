@@ -28,7 +28,6 @@ const openModal = () => {
 
 const buyProduct = async () => {
   data.count = count.value;
-  console.table(data);
   await axios
     .post('/product', data, {
       headers: {
