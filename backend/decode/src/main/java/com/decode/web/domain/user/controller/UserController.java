@@ -7,6 +7,7 @@ import com.decode.web.domain.user.dto.AuthDto.TokenDto;
 import com.decode.web.domain.user.dto.FindEmailDto;
 import com.decode.web.domain.user.dto.FindPasswordDto;
 import com.decode.web.domain.user.dto.InfoUpdateDto;
+import com.decode.web.domain.user.dto.RankResponseDto;
 import com.decode.web.domain.user.dto.RequestUserTagDto;
 import com.decode.web.domain.user.dto.ResponseUserProfileDto;
 import com.decode.web.domain.user.dto.UserInfoDto;
@@ -294,7 +295,7 @@ public class UserController {
     @PostMapping("/addUserTag")
     @Operation(summary = "유저 태그 선택", description = "신규 유저의 선호 기술 태그 추가")
     public ResponseDto addUserTag(@RequestBody
-    RequestUserTagDto requestUserTagDto) {
+            RequestUserTagDto requestUserTagDto) {
         userService.addUserTag(requestUserTagDto);
         return ResponseDto.builder()
                 .status(HttpStatus.OK)
@@ -367,10 +368,11 @@ public class UserController {
     }
 
     @GetMapping("/rank")
-    @Operation(summary = "랭킹", description = "랭킹 API")
-    public ResponseDto getRank() {
+    @Operation(summary = "랭킹 V2", description = "랭킹 API V2")
+    public ResponseDto getRankV2() {
+        List<RankResponseDto> data = userService.getRankV2();
         return ResponseDto.builder()
-                .data(userProfileMapper.toDto(userService.getRank()))
+                .data(data)
                 .status(HttpStatus.OK)
                 .message("랭킹")
                 .build();
