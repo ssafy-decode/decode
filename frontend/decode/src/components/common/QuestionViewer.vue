@@ -7,7 +7,6 @@
 <script>
 import Viewer from '@toast-ui/editor/dist/toastui-editor-viewer';
 import '@toast-ui/editor/dist/toastui-editor-viewer.css';
-import { useQuestionStore } from '@/stores/questionStore';
 
 export default {
   props: {
@@ -22,11 +21,11 @@ export default {
     };
   },
   mounted() {
-    const questionStore = useQuestionStore();
+    console.log('this.initialValue의 값: ', this.initialValue);
     this.viewer = new Viewer({
       el: document.querySelector('#viewer'),
       initialEditType: 'wysiwyg',
-      initialValue: questionStore.originalContent,
+      initialValue: this.initialValue,
       previewStyle: 'vertical',
     });
   },
