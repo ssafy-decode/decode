@@ -11,7 +11,7 @@
               </span>
               &nbsp;
               <span class="time">
-                {{ question.createdTime }}
+                {{ question.createdTime[0] }}년 {{ question.createdTime[1] }}월 {{ question.createdTime[2] }}일
               </span>
             </p>
             <p class="title">
