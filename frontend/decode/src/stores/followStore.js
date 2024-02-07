@@ -2,13 +2,10 @@ import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
 import axios from '@/utils/common-axios';
 import { useUserStore } from './userStore';
-
+import { storeToRefs } from 'pinia';
 const useFollowStore = defineStore(
   'useFollowStore',
   () => {
-    // 스토어
-    const userStore = useUserStore();
-
     // 배열
     const followerList = ref([]); // 팔로워 목록
     const followingList = ref([]); // 팔로잉 목록
@@ -63,38 +60,31 @@ const useFollowStore = defineStore(
     // };
 
     // 팔로우 여부 확인 (T/F)
-    const isFollowOrNot = async (userid) => {
-      await axios
-        .get(`/isfollow/${userid}`, {
-          headers: {
-            Authorization: `Bearer ${userStore.accessToken.value}`,
-          },
-        })
-        .then((res) => {
-          userStore.accessToken.value = userStore.parseToken(res);
-          isFollow.value = res.data;
-        });
-    };
+    // const isFollowOrNot = async (userid) => {
+    //   await axios
+    //     .get(`/isfollow/${userid}`, {
+    //       headers: {
+    //         Authorization: `Bearer ${userStore.accessToken.value}`,
+    //       },
+    //     })
+    //     .then((res) => {
+    //       userStore.accessToken.value = userStore.parseToken(res);
+    //       isFollow.value = res.data;
+    //     });
+    // };
 
     // 팔로우하고 있는 특정 회원을 팔로우취소
-    const unFollow = async (userid) => {
+    const unFollow = async (userid, token) => {
       await axios
         .delete(`/follow/${userid}`, {
           headers: {
-            Authorization: `Bearer ${userStore.accessToken.value}`,
+            Authorization: `Bearer ${token}`,
           },
         })
-        .then((res) => {
-          userStore.accessToken.value = userStore.parseToken(res);
-          isFollowOrNot(userid); // 팔로우 여부 확인 (T/F)
-          if (res.data.status !== 'BAD_REQUEST') {
-            if (isFollow.value) {
-              isFollow.value = false;
-            } else {
-              alert('팔로우를 취소할 수 없습니다.');
-              return;
-            }
-          }
+        .then((res) => {})
+        .catch((error) => {
+          console.error('unFollow error:', error);
+          alert('팔로우 취소에 실패했습니다.');
         });
     };
 
@@ -107,8 +97,7 @@ const useFollowStore = defineStore(
       followerList,
       followingList,
       isFollow,
-      // toFollow,
-      isFollowOrNot,
+
       unFollow,
       setFollowerList,
       setFollowingList,
@@ -117,9 +106,7 @@ const useFollowStore = defineStore(
     };
   },
   {
-    persist: {
-      storage: sessionStorage,
-    },
+    persist: true,
   },
 );
 
