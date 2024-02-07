@@ -1,4 +1,5 @@
 <template>
+  <!-- profilewindow로 통합 예정 -->
   <v-row justify="center">
     <v-card width="1036" style="box-shadow: none; margin-top: 10px; background-color: transparent">
       <v-tabs v-model="tab" background-color="transparent" grow>

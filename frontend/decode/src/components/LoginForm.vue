@@ -57,10 +57,14 @@
         </v-text-field>
 
         <div style="display: flex; justify-content: end; margin-right: 50px">
-          <span style="color: #34a080; font-size: x-small"
-            ><a href="/findemail" style="text-decoration: none; color: #34a080">이메일 찾기</a>
+          <span style="color: #34a080; font-size: 13px"
+            ><router-link style="text-decoration: none" to="/findemail"
+              ><a href="/findemail" style="text-decoration: none; color: #34a080">이메일 찾기</a></router-link
+            >
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <a href="/findpwd" style="text-decoration: none; color: #34a080">비밀번호 찾기</a></span
+            <router-link style="text-decoration: none" to="/findpwd"
+              ><a href="/findpwd" style="text-decoration: none; color: #34a080">비밀번호 찾기</a></router-link
+            ></span
           >
         </div>
         <br />
@@ -141,19 +145,7 @@ const login = async () => {
     email: email.value,
     password: password.value,
   };
-  console.log(user);
-
-  try {
-    const result = await userStore.setLoginUser(user);
-
-    if (result.success) {
-      console.log('Login result:', result.data);
-    } else {
-      console.log('Login failed:', result.error);
-    }
-  } catch (error) {
-    console.error('Login error:', error);
-  }
+  await userStore.setLoginUser(user);
 };
 </script>
 

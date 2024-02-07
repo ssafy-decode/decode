@@ -1,4 +1,5 @@
 <template>
+  <!-- profile로 통합 예정 -->
   <div class="pa-5" rounded style="color: #575757; font-weight: bold">
     <v-card
       class="mx-auto px-4 py-8"

@@ -2,9 +2,11 @@
   <div class="app">
     <NavBar />
     <br />
-    <router-view></router-view>
-    <br />
-    <Chat></Chat>
+    <div style="min-height: 1100px">
+      <router-view></router-view>
+      <br />
+      <Chat></Chat>
+    </div>
     <FooterBar />
   </div>
 </template>
