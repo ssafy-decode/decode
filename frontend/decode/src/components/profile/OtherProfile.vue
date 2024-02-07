@@ -7,34 +7,35 @@
     >
       <v-row>
         <v-col :cols="2">
+          일단 잘 나오나 확인해보자 {{ userStore.userProfile }} 어떻게 나왔을까
           <!-- 프로필 사진, 커마 아이콘 추후 수정-->
-          <!-- {{ userStore.loginUserProfile.nickname }} -->닉네임
+          {{ userStore.userProfile.nickname }}닉네임
           <br />
           <br />
           <!-- <input type="file" accept="image/*" @change="handleFileChange" style="display: none" ref="fileInput" /> -->
-          <!-- <img style="width: 70%" :src="'./' + userStore.loginUserProfile.profileImg + '.png'" /> -->
+          <!-- <img style="width: 70%" :src="'./' + userStore.userProfile.profileImg + '.png'" /> -->
           프사
           <br />
-          <!-- {{ userStore.loginUserProfile.tier }} -->티어
+          {{ userStore.userProfile.tier }}
           <br />
           ((커마아이콘))
         </v-col>
 
         <v-col :cols="1"
           ><div v-if="userStore.tagIdList.length > 0">
-            <!-- <v-chip v-for="tag in userStore.tagIdList" :key="tag" label color="primary" class="mr-2 mb-2">
+            <v-chip v-for="tag in userStore.tagIdList" :key="tag" label color="primary" class="mr-2 mb-2">
               {{ tagName[tag] }}</v-chip
-            > -->기술 스택 목록
+            >
           </div>
           <div v-else><br /><br />기술<br />스택<br />없음</div></v-col
         >
 
         <v-col :cols="6">
           출석 스트릭
-          <!-- <AttendanceLog :uid="uid" /> --><br />그 사람의 출석 로그
+          <AttendanceLog :uid="uid" /><br />
         </v-col>
 
-        <v-col :cols="3"> <!-- <ExpLog :uid="uid" /> --><br />그 사람의 경험치 로그 </v-col>
+        <v-col :cols="3"> <ExpLog :uid="uid" /><br /></v-col>
       </v-row>
 
       <div class="buttons">
@@ -57,21 +58,19 @@
   </div>
 
   <!-- 로딩 끝나고 데이터 가져왔다면 하단 탭들 렌더링 -->
-  <OtherProfileWindow v-if="!loading && isFetched" />
+  <!-- <OtherProfileWindow v-if="!loading && isFetched" /> -->
 </template>
 
 <script setup>
 import { ref, computed, onBeforeMount } from 'vue';
 import { useUserStore } from '@/stores/userStore';
-// import AttendanceLog from '@/components/profile/AttendanceLog.vue';
-// import ExpLog from '@/components/profile/ExpLog.vue';
-// import { storeToRefs } from 'pinia';
-import OtherProfileWindow from '@/components/profile/OtherProfileWindow.vue';
+import AttendanceLog from '@/components/profile/AttendanceLog.vue';
+import ExpLog from '@/components/profile/ExpLog.vue';
+import { storeToRefs } from 'pinia';
+// import OtherProfileWindow from '@/components/profile/OtherProfileWindow.vue';
 
 const userStore = useUserStore();
-// const { loginUserId: uid } = storeToRefs(userStore);
-
-// userId는 랭킹/질문게시판에서 response로 받아와서 들고 올 수 있음. hidden으로 숨기고 그걸로 돌리기
+const { id: uid } = storeToRefs(userStore); // id 필요
 
 // DB에 수정된 번호를 다시 태그명으로 전환 (아직 작성중)
 const tagName = {
@@ -96,8 +95,8 @@ const handleFollow = () => {
 const isFetched = ref(false); // data를 가져오고 나서 렌더링하도록
 const loading = computed(() => !isFetched.value); // 가져오기 전까지는 로딩 상태로
 onBeforeMount(async () => {
-  await userStore.myProfile();
-  await userStore.getTagNumList(userStore.loginUserId);
+  await userStore.userProfile(id); // id 필요
+  await userStore.getTagNumList(id); // id 필요
   setTimeout(() => {
     isFetched.value = true; // 가져오면 렌더링
   }, 1000); // 1초 후에

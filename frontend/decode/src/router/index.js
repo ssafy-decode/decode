@@ -11,6 +11,9 @@ import AnswerCreateView from '@/views/AnswerCreateView.vue';
 import RankView from '@/views/RankView.vue';
 import ShopView from '@/views/ShopView.vue';
 import AuthenticationRedirectView from '@/views/AuthenticationRedirect.vue';
+import MyProfileView from '@/views/MyprofileView.vue';
+import OtherProfileView from '@/views/OtherProfileView.vue';
+import InventoryView from '@/views/InventoryView.vue';
 
 // Components
 import LoginForm from '@/components/LoginForm.vue';
@@ -21,12 +24,9 @@ import FindEmail from '@/components/user/FindEmail.vue';
 import FindPwd from '@/components/user/FindPwd.vue';
 import FoundEmail from '@/components/user/FoundEmail.vue';
 import FoundPwd from '@/components/user/FoundPwd.vue';
-import MyProfile from '@/components/profile/MyProfile.vue';
-import OtherProfile from '@/components/profile/OtherProfile.vue';
 import MyProfileUpdateCheckPwd from '@/components/profile/MyProfileUpdateCheckPwd.vue';
 import MyProfileUpdate from '@/components/profile/MyProfileUpdate.vue';
 import MyTagUpdate from '@/components/profile/MyTagUpdate.vue';
-import MyInventory from '@/components/shop/MyInventory.vue';
 import QuestionUpdate from '@/components/question/QuestionUpdate.vue';
 
 const router = createRouter({
@@ -130,7 +130,12 @@ const router = createRouter({
     {
       path: '/mypage',
       name: 'myprofile',
-      component: MyProfile,
+      component: MyProfileView,
+    },
+    {
+      path: '/detail/:id',
+      name: 'otherprofile',
+      component: OtherProfileView,
     },
     {
       path: '/checkpwd',
@@ -148,14 +153,9 @@ const router = createRouter({
       component: MyProfileUpdate,
     },
     {
-      path: '/detail',
-      name: 'otherprofile',
-      component: OtherProfile,
-    },
-    {
       path: '/inventory',
-      name: 'myinventory',
-      component: MyInventory,
+      name: 'inventory',
+      component: InventoryView,
     },
   ],
 });

@@ -5,8 +5,6 @@ import { storeToRefs } from 'pinia';
 import { useShopStore } from '@/stores/shopStore';
 const shopStore = useShopStore();
 const { allProducts } = storeToRefs(shopStore);
-
-console.log('allProducts', allProducts.value);
 </script>
 <template>
   <v-container style="text-align: center">
