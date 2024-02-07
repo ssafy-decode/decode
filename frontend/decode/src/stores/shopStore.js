@@ -33,6 +33,7 @@ const useShopStore = defineStore('useShopStore', () => {
       .get(`/item/list/${uid}`)
       .then((res) => {
         myItems.value = res.data.data;
+        console.log(myItems.value);
       })
       .catch((err) => {
         console.log(err);
