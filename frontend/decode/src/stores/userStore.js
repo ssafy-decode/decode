@@ -59,15 +59,14 @@ const useUserStore = defineStore(
     const setLoginUser = async (loginuser) => {
       try {
         const res = await axios.post(`/login`, loginuser);
-        accessToken.value = parseToken(res);
+
         if (res.data.status === 'OK') {
+          setToken(parseToken(res));
           isLoggedIn.value = true;
           loginUserId.value = res.data.data;
           router.push({ name: 'mainview' });
-          return accessToken.value;
         } else {
           alert('로그인에 실패했습니다.');
-          return;
         }
       } catch (error) {
         console.error('Login error:', error);
@@ -79,17 +78,14 @@ const useUserStore = defineStore(
     const parseToken = (response) => {
       if (response.data && response.headers && response.headers.authorization) {
         const newToken = response.headers.authorization.substring(7); // 파싱한 새 accessToken 값 갱신
-        console.log(newToken); // 헤더에 넣어 테스트할 토큰 값
-        if (newToken === null) {
-          // 새 토큰 값 없으면 기존 토큰 값 유지
-          return accessToken.value;
-        }
         return newToken;
       }
+      return accessToken.value;
     };
 
     // 로그아웃
     const setLogout = async () => {
+      console.log(accessToken.value);
       await axios
         .post(
           `/logout`,
@@ -215,9 +211,7 @@ const useUserStore = defineStore(
   },
   {
     // 새로고침해도 로그인 풀리지 않게 설정
-    persist: {
-      storage: sessionStorage,
-    },
+    persist: {},
   },
 );
 
