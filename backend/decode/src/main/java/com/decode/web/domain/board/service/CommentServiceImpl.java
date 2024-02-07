@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -68,9 +69,14 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void delete(Long commentId) {
+    public void delete(Long userId, Long commentId) throws BadRequestException {
         // 삭제하기
-        commentRepository.deleteById(commentId);
+        CommentEntity comment = commentRepository.findByCommentWriterIdAndId(userId,
+                commentId);
+        if (comment == null) {
+            throw new BadRequestException("댓글 삭제 불가");
+        }
+        commentRepository.delete(comment);
     }
 
     @Override
