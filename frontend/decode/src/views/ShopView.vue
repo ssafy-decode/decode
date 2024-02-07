@@ -12,7 +12,6 @@
 <script setup>
 import ExchangeTab from '@/components/shop/ExchangeTab.vue';
 import ShopTab from '@/components/shop/ShopTab.vue';
-import OpenviduModal from '@/components/chat/OpenviduModal.vue';
 import { useShopStore } from '@/stores/shopStore.js';
 const shopStore = useShopStore();
 const { fetchProducts } = shopStore;

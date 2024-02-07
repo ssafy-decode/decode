@@ -13,14 +13,18 @@
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/userStore';
 import { storeToRefs } from 'pinia';
+import { parseJwt } from '@/utils/jwtParser';
 
 const userStore = useUserStore();
-const { accessToken: accessToken, isLoggedIn: isLoggedIn } = storeToRefs(userStore);
+const { setLoginUserId, setToken } = userStore;
+const { isLoggedIn: isLoggedIn } = storeToRefs(userStore);
 const router = useRouter();
 
 window.addEventListener('message', (event) => {
-  accessToken.value = event.data;
+  const token = event.data;
   isLoggedIn.value = true;
+  setToken(token);
+  setLoginUserId(parseJwt(token)['userId']);
   router.push('/');
 });
 </script>
