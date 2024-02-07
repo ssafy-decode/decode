@@ -130,8 +130,8 @@ const router = createRouter({
       component: QuestionUpdate,
     },
     {
-      path: '/detail/:id',
-      name: 'profile',
+      path: '/profile/:id',
+      name: 'userProfile',
       component: ProfileView,
     },
     {

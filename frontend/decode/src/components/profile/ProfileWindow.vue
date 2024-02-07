@@ -3,18 +3,18 @@
     <v-card width="1036" style="box-shadow: none; margin-top: 10px; background-color: transparent">
       <v-tabs v-model="tab" background-color="transparent" grow>
         <v-tab
-          v-for="(item, index) in items"
+          v-for="(item, index) in 3"
           :key="index"
           :value="index"
           style="font-size: 16px; font-weight: bold; flex: 1"
         >
           {{
             index === 0
-              ? `${item}`
+              ? profile.nickname + '의 질문 / 답변'
               : index === 1
-                ? `${item} ${followStore.followerList.length}`
+                ? '팔로워 ' + followerList.length
                 : index === 2
-                  ? `${item} ${followStore.followingList.length}`
+                  ? '팔로잉 ' + followingList.length
                   : item
           }}
         </v-tab>
@@ -22,12 +22,11 @@
 
       <v-window v-model="tab">
         <v-window-item
-          v-for="(item, index) in items"
+          v-for="(item, index) in 3"
           :key="index"
           :value="index"
           :class="{ 'v-window-item-active': tab === index }"
         >
-          <!-- 0번 탭 누를 시 -->
           <v-row v-if="index === 0">
             <v-col cols="6">
               <v-card
@@ -41,8 +40,8 @@
                   border: 15px solid #d9d9d9;
                 "
               >
-                질문 &nbsp;&nbsp;{{ profileStore.qListLength }}개 <br /><br />
-                <div v-for="(question, questionIndex) in profileStore.qList" :key="questionIndex">
+                질문 &nbsp;&nbsp;{{ qList.length }}개 <br /><br />
+                <div v-for="(question, questionIndex) in qList" :key="questionIndex">
                   {{ questionIndex + 1 }} &nbsp; {{ question.questionId }} &nbsp;
                   {{ question.title }}
                 </div>
@@ -63,8 +62,8 @@
                   border: 15px solid #d9d9d9;
                 "
               >
-                답변 &nbsp;&nbsp;{{ profileStore.aListLength }}개 <br /><br />
-                <div v-for="(answer, answerIndex) in profileStore.aList" :key="answerIndex">
+                답변 &nbsp;&nbsp;{{ aList.length }}개 <br /><br />
+                <div v-for="(answer, answerIndex) in aList" :key="answerIndex">
                   {{ answerIndex + 1 }} &nbsp; {{ answer.questionId }} &nbsp;
                   {{ answer.title }}
                 </div>
@@ -74,8 +73,7 @@
             ></v-row
           >
 
-          <ul v-else-if="index === 1">
-            <!-- 1번 탭 누를 시 -->
+          <!-- <ul v-else-if="index === 1">
             <v-card
               class="mx-auto px-4 py-8"
               max-width="1036"
@@ -87,17 +85,16 @@
                 border: 15px solid #d9d9d9;
               "
             >
-              <v-row v-if="followerProfiles.length > 0">
-                <v-col v-for="(follower, followerIdx) in followerProfiles" :key="followerIdx">
+              <v-row v-if="followerList.length > 0">
+                <v-col v-for="(follower, followerIdx) in followerList" :key="followerIdx">
                   {{ followerIdx + 1 }} &nbsp;
                   <span hidden>{{ follower.id }}</span>
-                  <!-- 티어 나타내는 커마 아이콘 -->
+
                   {{ follower.tier }} &nbsp;
                   {{ follower.rank !== null ? `${follower.rank}위` : '순위없음' }}
-                  <!-- 프로필 사진-->
-                  <!-- <img style="width: 30px" src={{follower.profileImg}} /> -->
+
                   {{ follower.profileImg }} &nbsp; {{ follower.nickname }} &nbsp;
-                  <!-- 선택한 기술 스택들 -->
+
                   <div v-if="follower.userTagList && follower.userTagList.length > 0">
                     <v-chip
                       v-for="(tag, tagIndex) in follower.userTagList"
@@ -120,7 +117,6 @@
           </ul>
 
           <ul v-else-if="index === 2">
-            <!-- 2번 탭 누를 시 -->
             <v-card
               class="mx-auto px-4 py-8"
               max-width="1036"
@@ -132,18 +128,17 @@
                 border: 15px solid #d9d9d9;
               "
             >
-              <v-row v-if="followingProfiles.length > 0">
-                <v-col v-for="(following, followingIdx) in followingProfiles" :key="followingIdx">
+              <v-row v-if="followingList.length > 0">
+                <v-col v-for="(following, followingIdx) in followingList" :key="followingIdx">
                   {{ followingIdx + 1 }} &nbsp;
                   <span hidden>{{ following.id }}</span>
-                  <!-- 티어 나타내는 커마 아이콘 -->
+
                   {{ following.tier }} &nbsp;
                   {{ following.rank !== null ? `${following.rank}위` : '순위없음' }}
-                  <!-- 프로필 사진 (보류) -->
-                  <!-- 일단 default.png로 임시 통일 -->
+
                   <img style="width: 30px" src="../default.png" />
                   {{ following.profileImg }} &nbsp; {{ following.nickname }} &nbsp;
-                  <!-- 선택한 기술 스택들 -->
+
                   <div v-if="following.userTagList && following.userTagList.length > 0">
                     <v-chip
                       v-for="(tagId, tagIndex) in following.userTagList"
@@ -164,7 +159,7 @@
                 <v-col>친구가 없으시네요.</v-col>
               </v-row>
             </v-card>
-          </ul>
+          </ul> -->
         </v-window-item>
       </v-window>
     </v-card>
@@ -172,19 +167,27 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, defineProps } from 'vue';
 import { useFollowStore } from '@/stores/followStore';
 import { useProfileStore } from '@/stores/profileStore';
+import { storeToRefs } from 'pinia';
+
+const props = defineProps({
+  followerList: Array,
+  followingList: Array,
+  profile: Object,
+});
 
 const tab = ref(0);
-const items = [`${profileStore.loginUserProfile.nickname}의 질문 / 답변`, '팔로워', '팔로잉'];
-const followStore = useFollowStore();
+// const followStore = useFollowStore();
 const profileStore = useProfileStore();
+const { handleQuestions: qList, handleAnswers: aList } = storeToRefs(profileStore);
+// console.log(props.followingList);
 
-// 팔로우 취소
-const unfollowBtn = (id) => {
-  followStore.unFollow(id);
-};
+// // 팔로우 취소
+// const unfollowBtn = (id) => {
+//   followStore.unFollow(id);
+// };
 </script>
 
 <style scoped>

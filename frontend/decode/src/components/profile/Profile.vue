@@ -13,14 +13,12 @@
     >
       <v-row>
         <v-col :cols="2">
-          {{ profileStore.loginUserProfile.nickname }}
+          {{ profile.nickname }}
           <br />
           <br />
-          <!-- <img style="width: 70%" src={{profileStore.loginUserProfile.profileImg}} /> -->
           <br />
-          {{ profileStore.loginUserProfile.tier }}
+          {{ profile.tier }}
           <br />
-          <!-- 커마아이콘 -->
         </v-col>
 
         <v-col :cols="1"
@@ -34,16 +32,15 @@
 
         <v-col :cols="6">
           출석 스트릭
-          <AttendanceLog :uid="uid" />
+          <!-- <AttendanceLog :uid="profile.id" /> -->
         </v-col>
 
         <v-col :cols="3">
-          <ExpLog :uid="uid" />
+          <!-- <ExpLog :uid="profile.id" /> -->
         </v-col>
       </v-row>
 
       <div class="buttons">
-        <!-- 본인이 아닐 경우: 팔로우하기/팔로우취소 버튼만 구현하기 -->
         <span>
           <router-link to="/inventory">
             <v-btn class="btn" color="#62C0A6" size="x-large" type="submit" variant="elevated" style="color: #000000">
@@ -73,7 +70,10 @@ import { useTagStore } from '@/stores/tagStore';
 const userStore = useUserStore();
 const profileStore = useProfileStore();
 const tagStore = useTagStore();
-const { loginUserId: uid } = storeToRefs(userStore);
+
+const props = defineProps({
+  profile: Object,
+});
 
 // DB에 수정된 번호를 다시 태그명으로 전환
 const tagName = {
