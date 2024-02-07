@@ -9,7 +9,7 @@
             </span>
             &nbsp;
             <span class="time info">
-              {{ answer.createdTime }}
+              {{ answer.createdTime[0] }}년 {{ answer.createdTime[1] }}월 {{ answer.createdTime[2] }}일
             </span>
           </p>
         </div>
@@ -18,7 +18,7 @@
         <AnswerViewer :initialValue="answer.content" :answerId="answer.answerId" />
       </div>
       <div class="editDeleteBox" @click="answerStore.deleteAnswer(answer.answerId)">
-        <span class="deleteText">답변삭제</span>
+        <span v-if="answer.answerWriter.id === userStore.loginUserId" class="deleteText">답변삭제</span>
       </div>
     </div>
     <div class="commentBox">
@@ -75,8 +75,6 @@ const createComment = function () {
     answerId: props.answer.answerId,
   };
 
-  console.log('data내용!!!!', data);
-
   axios({
     method: 'post',
     url: `/comment`,
@@ -101,11 +99,6 @@ div {
   margin: 20px;
 }
 
-.btn {
-  margin-left: 10px;
-  margin-right: 10px;
-}
-
 .answerBox {
   display: flex;
   justify-content: space-between;
@@ -123,30 +116,9 @@ div {
   align-items: center;
 }
 
-.img {
-  width: 75px;
-  height: 75px;
-}
-.metooImg {
-  width: 60px;
-  height: 70px;
-  margin-right: 5px;
-}
-.answerCountImg {
-  margin-right: 10px;
-  height: 45px;
-}
-
 .myListItem {
   background-color: white;
   border-radius: 35px;
-}
-.myListItem2 {
-  background-color: white;
-  border-radius: 35px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 .listItem {

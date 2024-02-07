@@ -73,6 +73,7 @@
               <v-row v-if="followerProfiles.length > 0">
                 <v-col v-for="(follower, followerIdx) in followerProfiles" :key="followerIdx">
                   {{ followerIdx + 1 }} &nbsp;
+                  <span hidden>{{ follower.id }}</span>
                   <!-- 티어 나타내는 커마 아이콘 -->
                   {{ follower.tier }} &nbsp;
                   {{ follower.rank !== null ? `${follower.rank}위` : '순위없음' }}
@@ -81,7 +82,17 @@
                   <img style="width: 30px" src="../default.png" />
                   {{ follower.profileImg }} &nbsp; {{ follower.nickname }} &nbsp;
                   <!-- 선택한 기술 스택들 (여기선 data 아직 안 뽑아옴) (userStore의 tagIdList를 기술명으로 전환해야) -->
-                  {{ follower.tagIdLisit }} &nbsp;&nbsp;&nbsp;
+                  {{ follower.userTagList }} &nbsp;&nbsp;&nbsp;
+                  <v-btn
+                    v-if="!isSelfProfile && !userStore.isFollowOrNot(follower.id)"
+                    @click="userStore.toFollow(follower.id)"
+                    >팔로우하기</v-btn
+                  >
+                  <v-btn
+                    v-else-if="!isSelfProfile && userStore.isFollowOrNot(follower.id)"
+                    @click="userStore.unFollow(follower.id)"
+                    >팔로우 취소</v-btn
+                  >
                 </v-col>
               </v-row>
               <v-row v-else>
@@ -100,6 +111,7 @@
               <v-row v-if="followingProfiles.length > 0">
                 <v-col v-for="(following, followingIdx) in followingProfiles" :key="followingIdx">
                   {{ followingIdx + 1 }} &nbsp;
+                  <span hidden>{{ following.id }}</span>
                   <!-- 티어 나타내는 커마 아이콘 -->
                   {{ following.tier }} &nbsp;
                   {{ following.rank !== null ? `${following.rank}위` : '순위없음' }}
@@ -108,7 +120,17 @@
                   <img style="width: 30px" src="../default.png" />
                   {{ following.profileImg }} &nbsp; {{ following.nickname }} &nbsp;
                   <!-- 선택한 기술 스택들 (여기선 data 아직 안 뽑아옴) (userStore의 tagIdList를 기술명으로 전환해야)-->
-                  {{ following.userTagList }} &nbsp;&nbsp;&nbsp; <v-btn @click="unfollowBtn">팔로우 취소</v-btn>
+                  {{ following.userTagList }} &nbsp;&nbsp;&nbsp;
+                  <v-btn
+                    v-if="!isSelfProfile && !userStore.isFollowOrNot(following.id)"
+                    @click="userStore.toFollow(following.id)"
+                    >팔로우하기</v-btn
+                  >
+                  <v-btn
+                    v-else-if="!isSelfProfile && userStore.isFollowOrNot(following.id)"
+                    @click="userStore.unFollow(following.id)"
+                    >팔로우 취소</v-btn
+                  >
                 </v-col>
               </v-row>
               <v-row v-else>
@@ -123,7 +145,7 @@
 </template>
 
 <script setup>
-import { onBeforeMount, ref } from 'vue';
+import { onBeforeMount, ref, computed } from 'vue';
 import { useUserStore } from '@/stores/userStore';
 
 const userStore = useUserStore();
@@ -131,7 +153,7 @@ const tab = ref(0);
 const items = [`(아직 수정 중)의 질문 / 답변`, '팔로워', '팔로잉'];
 
 // DB에 수정된 번호를 다시 태그명으로 전환
-const tagNum = {
+const tagName = {
   1: 'python',
   2: 'java',
   3: 'C++',
@@ -146,10 +168,13 @@ const tagNum = {
   12: 'C#',
 };
 
-// const userTags = userStore.tagIdList.map((item) => tagNum[item]);
-
 const followerProfiles = ref([]); // 팔로워 목록에 rank 포함한 새 배열
 const followingProfiles = ref([]); // 팔로잉 목록에 rank 포함한 새 배열
+
+const isSelfProfile = computed(() => {
+  // 본인인지 여부
+  return userStore.loginUserId === id; // 외부에서 받아오는 id 필요
+});
 
 // 경험치순 순위 목록의 회원번호와 팔로워/팔로잉 목록 회원번호 대조
 const matchId = (list, profiles) => {
@@ -165,18 +190,19 @@ const matchId = (list, profiles) => {
 };
 
 onBeforeMount(() => {
-  userStore.setQList(userStore.loginUserId);
-  userStore.setAList(userStore.loginUserId);
+  // loginUserId를 id로 변경함, 외부에서 받아오는 id 필요
+  userStore.setQList(id);
+  userStore.setAList(id);
   userStore.getRank();
-  userStore.setFollowerList(userStore.loginUserId);
-  userStore.setFollowingList(userStore.loginUserId);
+  userStore.setFollowerList(id);
+  userStore.setFollowingList(id);
   matchId(userStore.followerList, followerProfiles);
   matchId(userStore.followingList, followingProfiles);
 });
 
 // 팔로우 취소
-const unfollowBtn = () => {
-  // 아직 작성 안 함
+const unfollowBtn = (id) => {
+  userStore.unFollow(id);
 };
 </script>
 

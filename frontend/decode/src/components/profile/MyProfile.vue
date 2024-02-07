@@ -56,9 +56,6 @@
       </div>
     </v-card>
   </div>
-
-  <!-- 로딩 끝나고 데이터 가져왔다면 하단 탭들 렌더링 -->
-  <MyProfileWindow v-if="!loading && isFetched" />
 </template>
 
 <script setup>
@@ -67,7 +64,6 @@ import { useUserStore } from '@/stores/userStore';
 import AttendanceLog from '@/components/profile/AttendanceLog.vue';
 import ExpLog from '@/components/profile/ExpLog.vue';
 import { storeToRefs } from 'pinia';
-import MyProfileWindow from '@/components/profile/MyProfileWindow.vue';
 
 const userStore = useUserStore();
 const { loginUserId: uid } = storeToRefs(userStore);
@@ -88,15 +84,43 @@ const tagName = {
   12: 'C#',
 };
 
-const isFetched = ref(false); // data를 가져오고 나서 렌더링하도록
-const loading = computed(() => !isFetched.value); // 가져오기 전까지는 로딩 상태로
-onBeforeMount(async () => {
-  await userStore.myProfile();
-  await userStore.getTagNumList(userStore.loginUserId);
-  setTimeout(() => {
-    isFetched.value = true; // 가져오면 렌더링
-  }, 1000); // 1초 후에
-});
+const followerProfiles = ref([]); // 팔로워 목록에 rank 포함한 새 배열
+const followingProfiles = ref([]); // 팔로잉 목록에 rank 포함한 새 배열
+
+// 경험치순 순위 목록의 회원번호와 팔로워/팔로잉 목록 회원번호 대조
+// const matchId = (list, profiles) => {
+//   list.forEach((user) => {
+//     const userRankListIdx = userStore.rankList.findIndex((rank) => rank.id === user.id);
+//     if (userRankListIdx !== -1) {
+//       user.rank = userRankListIdx + 1;
+//       profiles.value.push(user);
+//     } else {
+//       user.rank = null;
+//     }
+//   });
+// };
+
+// const isFetched = ref(false); // data를 가져오고 나서 렌더링하도록
+// const loading = computed(() => !isFetched.value); // 가져오기 전까지는 로딩 상태로
+// onBeforeMount(async () => {
+//   await userStore.myProfile();
+//   await userStore.getTagNumList(userStore.loginUserId);
+//   userStore.setQList(userStore.loginUserId);
+//   const qList = userStore.qList;
+//   const qListLength = userStore.qListLength;
+//   userStore.setAList(userStore.loginUserId);
+//   const aList = userStore.aList;
+//   const aListLength = userStore.aListLength;
+//   userStore.getRank();
+//   userStore.setFollowerList(userStore.loginUserId);
+//   userStore.setFollowingList(userStore.loginUserId);
+//   matchId(userStore.followerList, followerProfiles);
+//   matchId(userStore.followingList, followingProfiles);
+//   setTimeout(() => {
+//     isFetched.value = true; // 가져오면 렌더링
+//   }, 1000); // 1초 후에
+// });
+//
 </script>
 
 <style scoped>

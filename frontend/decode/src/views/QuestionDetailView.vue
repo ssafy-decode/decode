@@ -19,7 +19,9 @@
           <div class="listItem writerBox">
             <span class="nickname title">{{ writerNickname }}</span>
             &nbsp; &nbsp;
-            <span class="time info">{{ question.createdTime }}</span>
+            <span class="time info">
+              {{ questionCreatedTime[0] }}년 {{ questionCreatedTime[1] }}월 {{ questionCreatedTime[2] }}일
+            </span>
           </div>
         </v-col>
       </v-row>
@@ -31,8 +33,8 @@
       <br /><br />
       <div class="btnBox">
         <div>
-          <v-btn @click="goUpdate()">질문수정</v-btn>
-          <v-btn @click="deleteQuestion()">질문삭제</v-btn>
+          <v-btn v-if="questionWriterId === userStore.loginUserId" @click="goUpdate()">질문수정</v-btn>
+          <v-btn v-if="questionWriterId === userStore.loginUserId" @click="deleteQuestion()">질문삭제</v-btn>
         </div>
         <div>
           <v-btn @click="goCreateAnswer()">답변달기</v-btn>
@@ -68,7 +70,9 @@ const isFetched = ref(false);
 const questionId = ref(0);
 const question = ref({});
 const writerNickname = ref('');
+const questionWriterId = ref(null);
 const isAnswerExist = ref(false);
+const questionCreatedTime = ref('');
 
 const getDetailQuestion = function () {
   axios({
@@ -80,6 +84,8 @@ const getDetailQuestion = function () {
       question.value = res.data.data;
       isAnswerExist.value = question.value.answerList.length > 0;
       writerNickname.value = question.value.questionWriter.nickname;
+      questionWriterId.value = question.value.questionWriter.id;
+      questionCreatedTime.value = question.value.createdTime;
       questionStore.originalContent = question.value.content;
       console.log('답변리스트', question.value.answerList);
     })
@@ -140,24 +146,13 @@ button {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
 }
 
-.bgColorWhite {
-  background-color: white;
-}
-
 .card {
   border-top-left-radius: 50px;
   border-bottom-left-radius: 50px;
   border-bottom-right-radius: 50px;
-  margin: 40 px;
-}
-.answerRelatedBox {
-  display: flex;
-  justify-content: flex-end;
+  margin: 100px 40px;
 }
 
-.answerListBox {
-  padding: 20px;
-}
 .btnBox {
   display: flex;
   justify-content: space-between;
@@ -168,27 +163,11 @@ button {
   height: 75px;
   margin: 5px 10px 5px 5px;
 }
-.metooImg {
-  width: 60px;
-  height: 70px;
-  margin-right: 5px;
-}
-.answerCountImg {
-  margin-right: 10px;
-  height: 45px;
-}
 
 .myListItem {
   border-radius: 35px;
   padding-bottom: 10px;
   background-color: white;
-}
-.myListItem2 {
-  background-color: white;
-  border-radius: 35px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 .contentBox {
