@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 import axios from '@/utils/common-axios';
 
 export const useQuestionStore = defineStore(
-  'question',
+  'useQuestionStore',
   () => {
     const accessToken = ref(null);
     const questions = ref([]);

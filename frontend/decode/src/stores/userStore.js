@@ -3,11 +3,13 @@ import { defineStore } from 'pinia';
 import router from '@/router';
 import axios from '@/utils/common-axios';
 import { useTagStore } from './tagStore';
+import { useProfileStore } from './profileStore';
 
 const useUserStore = defineStore(
   'useUserStore',
   () => {
     // 스토어
+    const profileStore = useProfileStore();
     const tagStore = useTagStore();
 
     // 토큰 정보
@@ -16,7 +18,7 @@ const useUserStore = defineStore(
     // 배열
     const users = ref([]); // 전체 회원 목록
     const user = ref([]); // 해당 유저의 id, email, password, phoneNumber, birth, name, createdTime, updatedTime 저장한 목록
-    const loginUser = ref([]); // 로그인 유저의 id, email, password, phoneNumber, birth, name, createdTime, updatedTime 저장한 목록
+    // const loginUser = ref([]); // 로그인 유저의 id, email, password, phoneNumber, birth, name, createdTime, updatedTime 저장한 목록
 
     // 값
     const registId = ref(''); // 회원 가입 2단계에 필요한 회원 번호
@@ -25,7 +27,7 @@ const useUserStore = defineStore(
     const foundEmail = ref(''); // 이메일 찾기에서의 이메일
 
     // 함수
-    // 회원 가입 1단계 (1): 일반 가입
+    // 회원 가입 1단계: 일반 가입
     const createUser = async (user) => {
       await axios.post(`/regist`, user).then((res) => {
         if (res.data.status === 'OK') {
@@ -35,11 +37,6 @@ const useUserStore = defineStore(
         }
       });
     };
-
-    // 회원 가입 1단계 (2): 소셜 로그인 (Github oauth)
-    // (경로: /auth/github  파라미터: code(string)  응답: status가 100 CONTINUE면 2단계로 페이지 넘어가도록)
-    // (아직 미완성)
-    // const githubLogin = async (code) => {}
 
     // 회원 가입 2단계: 선택한 기술 스택 저장
     const saveTechStack = async (selectedTechStack) => {
@@ -86,48 +83,57 @@ const useUserStore = defineStore(
     // 로그아웃
     const setLogout = async () => {
       console.log(accessToken.value);
-      await axios
-        .post(
-          `/logout`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken.value}`,
+      try {
+        await axios
+          .post(
+            `/logout`,
+            {},
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken.value}`,
+              },
             },
-          },
-        )
-        .then((res) => {
-          if (res.data.status === 'OK') {
-            isLoggedIn.value = false;
-            accessToken.value = '';
-            router.push({ name: 'mainview' });
-          }
-        });
+          )
+          .then((res) => {
+            if (res.data.status === 'OK') {
+              // session storage에 저장된 로그인 관련 data 초기화
+              isLoggedIn.value = false;
+              accessToken.value = '';
+              router.push({ name: 'mainview' });
+            }
+          });
+      } catch (error) {
+        console.error('Logout error:', error);
+        return;
+      }
     };
 
     // 특정 회원 정보 조회
     // (id, email, 암호화된password, phoneNumber, birth, name, createdTime, updatedTime)
     const setUser = async (userid) => {
+      console.log('userid.value:', userid.value); // 4로 출력됨
+      console.log('userid:', userid);
       await axios.get(`/user/${userid}`).then((res) => {
         accessToken.value = parseToken(res);
         if (res.data.status === 'OK') {
-          if (userid === loginUserId.value) {
-            // 로그인 유저와 일치할 경우
-            // loginUserName.value = res.data.data.name;
-            // loginUserBirthday.value = res.data.data.birth;
-            // loginUserEmail.value = res.data.data.email;
-            // loginUserPhone.value = res.data.data.phoneNumber;
-            // loginUser.value = { ...res.data };
-            loginUser.value = res.data.data;
-          } else {
-            // 그 외일 경우
-            // userName.value = res.data.data.name;
-            // userBirthday.value = res.data.data.birth;
-            // userEmail.value = res.data.data.email;
-            // userPhone.value = res.data.data.phoneNumber;
-            // user.value = { ...res.data };
-            user.value = res.data.data;
-          }
+          user.value = res.data.data;
+          // if (userid === loginUserId.value) {
+          //   // 로그인 유저와 일치할 경우
+          //   // loginUserName.value = res.data.data.name;
+          //   // loginUserBirthday.value = res.data.data.birth;
+          //   // loginUserEmail.value = res.data.data.email;
+          //   // loginUserPhone.value = res.data.data.phoneNumber;
+          //   // loginUser.value = { ...res.data };
+          //   loginUser.value = res.data.data;
+          // } else {
+          //   // 그 외일 경우
+          //   // userName.value = res.data.data.name;
+          //   // userBirthday.value = res.data.data.birth;
+          //   // userEmail.value = res.data.data.email;
+          //   // userPhone.value = res.data.data.phoneNumber;
+          //   // user.value = { ...res.data };
+          //   user.value = res.data.data;
+          // }
         }
       });
     };
@@ -176,7 +182,7 @@ const useUserStore = defineStore(
     // computed
     const handleUsers = computed(() => users.value);
     const handleUser = computed(() => user.value);
-    const handleLoginUser = computed(() => loginUser.value);
+    // const handleLoginUser = computed(() => loginUser.value);
     const handleLoginUserId = computed(() => loginUserId.value);
     const handleAccessToken = computed(() => accessToken.value);
 
@@ -185,7 +191,7 @@ const useUserStore = defineStore(
       accessToken,
       users,
       user,
-      loginUser,
+      // loginUser,
       registId,
       isLoggedIn,
       loginUserId,
@@ -204,7 +210,7 @@ const useUserStore = defineStore(
       // setUsers,
       handleUsers,
       handleUser,
-      handleLoginUser,
+      // handleLoginUser,
       handleLoginUserId,
       handleAccessToken,
     };

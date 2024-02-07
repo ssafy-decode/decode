@@ -31,7 +31,7 @@ const useTagStore = defineStore(
     // 특정 회원 선호 기술 스택 (번호) 조회
     const setTagNumList = async (userid) => {
       await axios.get(`/tag/${userid}`).then((res) => {
-        userStore.accessToken.value = userStore.parseToken(res);
+        userStore.accessToken = userStore.parseToken(res);
         if (res.data.status === 'OK') {
           tagIdList.value = res.data.data.tagIdList;
         }

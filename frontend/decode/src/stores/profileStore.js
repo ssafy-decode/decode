@@ -12,7 +12,7 @@ const useProfileStore = defineStore(
     // 스토어
     const userStore = useUserStore();
     const tagStore = useTagStore();
-    const { handleAccessToken } = storeToRefs(userStore);
+    // const { handleAccessToken: accessToken } = storeToRefs(userStore);
 
     // 배열
 
@@ -49,7 +49,7 @@ const useProfileStore = defineStore(
     //     });
     // };
 
-    // 다른 사용자 프로필 조회
+    // 사용자 프로필 조회
     // (exp, point, coin, nickname, tier, profileImg)
     const setUserProfile = async (userid) => {
       await axios.get(`/profile/${userid}`).then((res) => {
@@ -83,11 +83,12 @@ const useProfileStore = defineStore(
     };
 
     // 회원 수정 전 비밀번호 확인
-    const checkPwd = async (password) => {
+    const checkPwd = async (password, token) => {
+      console.log(token);
       await axios
         .post(`/confirm`, password, {
           headers: {
-            Authorization: `Bearer ${handleAccessToken.value}`,
+            Authorization: `Bearer ${token}`,
           },
         })
         .then((res) => {
@@ -96,11 +97,13 @@ const useProfileStore = defineStore(
             mypwd.value = res.data.data;
             if (mypwd.value) {
               router.push({ name: 'myprofileupdate' });
-            } else {
-              alert('비밀번호가 일치하지 않습니다.');
-              return;
             }
           }
+        })
+        .catch((error) => {
+          alert('비밀번호가 일치하지 않습니다.');
+          console.error(error);
+          return;
         });
     };
 
@@ -119,7 +122,7 @@ const useProfileStore = defineStore(
     };
 
     // 로그인 유저 선택한 기술 스택 변경
-    const updateTechStack = async (user) => {
+    const updateTechStack = async (user, token) => {
       const updatedTagNums = user.tagIdList.map((item) => tagStore.tagNum[item]);
       console.log('확인', updatedTagNums);
       await axios
@@ -128,7 +131,7 @@ const useProfileStore = defineStore(
           { userId: user.userId, tagIdList: updatedTagNums },
           {
             headers: {
-              Authorization: `Bearer ${userStore.accessToken}`,
+              Authorization: `Bearer ${token}`,
             },
           },
         )
@@ -142,17 +145,18 @@ const useProfileStore = defineStore(
     };
 
     // 로그인 유저 비밀번호 변경
-    const updatePwd = async (user) => {
+    const updatePwd = async (user, token) => {
       await axios
         .post(`/user`, user, {
           headers: {
-            Authorization: `Bearer ${userStore.accessToken}`,
+            Authorization: `Bearer ${token}`,
           },
         })
         .then((res) => {
           userStore.accessToken = userStore.parseToken(res);
           if (res.data.status === 'OK') {
-            router.push({ name: 'myprofile' });
+            console.log('비밀번호 변경에 성공했습니다.');
+            return;
           }
         });
     };
