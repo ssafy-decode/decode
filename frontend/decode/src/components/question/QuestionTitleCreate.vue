@@ -1,9 +1,9 @@
-<template>
+<template v-slot:actions>
   <div>
     <v-sheet class="mx-auto createBox card">
       <v-form @submit.prevent="createQuestionTitle">
         <v-text-field class="stackBox" disabled="true" variant="solo">
-          <div>제목 자동 생성 중...</div>
+          <div>제목 자동 생성 예정</div>
           <template #prepend-inner>
             <img src="/questionIcon2.png" alt="검색아이콘" style="width: 40px; height: 40px" />
           </template>
@@ -11,7 +11,8 @@
         <ErrorEditor @editor-content-updated="updateEditorContent" />
         <br />
         <div id="btnBox">
-          <v-btn id="submitBtn" type="submit">질문 제목 생성</v-btn>
+          <v-btn id="submitBtn" @click="goCreate()">제목 직접 생성</v-btn>
+          <v-btn id="submitBtn" type="submit" :loading="loading" @click="load">제목 생성</v-btn>
         </div>
       </v-form>
     </v-sheet>
@@ -26,6 +27,13 @@ import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 import axios from '@/utils/common-axios';
 
+const loading = ref(false);
+
+const load = () => {
+  loading.value = true;
+  setTimeout(() => (loading.value = false), 5000);
+};
+
 const questionStore = useQuestionStore();
 const userStore = useUserStore();
 const router = useRouter();
@@ -36,11 +44,14 @@ const updateEditorContent = function (content) {
   inputContent.value = content;
 };
 
+const goCreate = function () {
+  router.push({ path: `/question-create` });
+};
+
 const createQuestionTitle = function () {
   let data = {
     content: inputContent.value,
   };
-
   axios({
     method: 'post',
     url: `/gpt`,
@@ -64,13 +75,13 @@ const createQuestionTitle = function () {
 
 <style scoped>
 #btnBox {
-  position: relative;
+  display: flex;
+  justify-content: flex-end;
 }
 
 #submitBtn {
-  position: absolute;
-  right: 10px;
-  top: 5px;
+  margin-left: 20px;
+  margin-top: 20px;
   border-radius: 40px;
   background-color: #62c0a6;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
