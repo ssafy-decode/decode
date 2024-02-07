@@ -4,8 +4,17 @@
       <v-card
         class="mx-auto px-4 py-8"
         max-width="481"
-        style="text-align: center; background-color: #f3f3f3; border-radius: 68px; border: 15px solid #d9d9d9"
+        style="
+          box-shadow: none;
+          text-align: center;
+          background-color: #f3f3f3;
+          border-radius: 68px;
+          border: 15px solid #d9d9d9;
+        "
       >
+        <!-- 뒤로가기 버튼--><router-link :to="`/detail/${userStore.loginUserId}`"
+          ><img width="30px" src="../../../public/leftarrowicon.png"
+        /></router-link>
         <v-row style="margin-left: 5px">
           <v-col cols="4">
             <img style="width: 70%" src="../default.png" />
@@ -18,7 +27,7 @@
               <span> 이 &nbsp;&nbsp; 름: {{ userStore.loginUserName }}</span>
               <br />
               <br />
-              <span>닉 네 임: {{ userStore.loginUserProfile.nickname }}</span>
+              <span>닉 네 임: {{ profileStore.loginUserProfile.nickname }}</span>
               <br />
               <br />
               <span>생년월일: {{ userStore.loginUserBirthday }}</span>
@@ -42,16 +51,16 @@
           기술 스택 변경
           <br />
           <br />
-          <div v-if="userStore.tagIdList.length > 0">
-            <v-chip v-for="tag in userStore.tagIdList" :key="tag" label color="primary" class="mr-2 mb-2">
+          <div v-if="tagStore.tagIdList.length > 0">
+            <v-chip v-for="tag in tagStore.tagIdList" :key="tag" label color="primary" class="mr-2 mb-2">
               {{ tagName[tag] }}</v-chip
             >
           </div>
           <div v-else>선택한 기술 스택이 없습니다.</div>
           <br />
-          <router-link to="/updatetechstack"
-            ><v-btn class="tagbtn" color="#62C0A6" type="submit" variant="elevated">기술 스택 변경</v-btn></router-link
-          >
+          <v-btn @click="toggleEdit" class="tagbtn" color="#62C0A6" type="submit" variant="elevated">{{
+            editing ? '기술 스택 변경 저장' : '기술 스택 변경'
+          }}</v-btn>
         </div>
         <br />
         <br />
@@ -98,7 +107,7 @@
           >
         </div>
         <v-btn class="updatebtn" @click="updatepwd" color="#62C0A6" type="submit" variant="elevated"
-          >변경 내용 저장</v-btn
+          >비밀번호 변경 저장</v-btn
         >
       </v-card>
     </div>
@@ -107,9 +116,15 @@
 
 <script setup>
 import { onBeforeMount, ref, computed } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/stores/userStore';
+import { useTagStore } from '@/stores/tagStore';
+import { useProfileStore } from '@/stores/profileStore';
 
 const userStore = useUserStore();
+const tagStore = useTagStore();
+const profileStore = useProfileStore();
+const { loginUserId: uid } = storeToRefs(userStore);
 
 // DB에 수정된 번호를 다시 태그명으로 전환
 const tagName = {
@@ -131,6 +146,7 @@ const password = ref('');
 const password2 = ref('');
 const showPassword = ref(false);
 const showPassword2 = ref(false);
+const editing = ref(false);
 
 // 눈 버튼 누르면 비밀번호 가렸다 보였다
 const toggleEye = () => {
@@ -153,16 +169,37 @@ const isPasswordValid = (pwd) => {
   return pwd.length >= 8 && /[!@#$%^&*(),.?":{}|<>]/g.test(pwd);
 };
 
-const isFetched = ref(false); // data를 가져오고 나서 렌더링하도록
-const loading = computed(() => !isFetched.value); // 가져오기 전까지는 로딩 상태로
-onBeforeMount(async () => {
-  await userStore.setUser(userStore.loginUserId);
-  setTimeout(() => {
-    userStore.getTagNumList(userStore.loginUserId);
-    isFetched.value = true;
-  }, 1000); // 1초 후에
+onBeforeMount(() => {
+  userStore.setUser(uid);
+  tagStore.setTagNumList(uid);
 });
 
+// 기술 스택 목록 변경
+const toggleEdit = () => {
+  if (editing.value) {
+    const user = {
+      userId: uid,
+      tagIdList: tagStore.tagIdList,
+    };
+    profileStore.updateTechStack(user);
+  }
+  editing.value = !editing.value;
+};
+
+// 선택한 기술 스택 목록 (tagIdList를 tagName으로 전환)
+const selectedTags = computed(() => {
+  return tagStore.tagIdList.map((tag) => tagName[tag]);
+});
+
+// 선택한 기술 스택 제거
+const removeTag = (tag) => {
+  const idx = tagStore.tagIdList.indexOf(Object.keys(tagName).find((key) => tagName[key] === tag));
+  if (idx !== -1) {
+    tagStore.tagIdList.splice(idx, 1);
+  }
+};
+
+// 비밀번호 변경
 const updatepwd = () => {
   if (!isPasswordValid(password.value)) {
     alert('비밀번호는 8자리 이상이며, 특수문자를 포함해야 합니다.');
@@ -175,11 +212,11 @@ const updatepwd = () => {
   }
 
   const user = {
-    id: userStore.loginUserId,
+    id: uid,
     password: password.value,
   };
 
-  userStore.updatePwd(user);
+  profileStore.updatePwd(user);
 };
 </script>
 

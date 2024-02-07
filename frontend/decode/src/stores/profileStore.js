@@ -112,11 +112,13 @@ const useProfileStore = defineStore(
             mypwd.value = res.data.data;
             if (mypwd.value) {
               router.push({ name: 'myprofileupdate' });
-            } else {
-              alert('비밀번호가 일치하지 않습니다.');
-              return;
             }
           }
+        })
+        .catch((error) => {
+          alert('비밀번호가 일치하지 않습니다.');
+          console.error(error);
+          return;
         });
     };
 
@@ -162,7 +164,8 @@ const useProfileStore = defineStore(
         .then((res) => {
           userStore.accessToken = userStore.parseToken(res);
           if (res.data.status === 'OK') {
-            router.push({ name: 'myprofile' });
+            console.log('비밀번호 변경에 성공했습니다.');
+            return;
           }
         });
     };

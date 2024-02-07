@@ -33,7 +33,13 @@
               <v-card
                 class="mx-auto px-4 py-8"
                 max-width="518"
-                style="text-align: center; background-color: #f3f3f3; border-radius: 31px; border: 15px solid #d9d9d9"
+                style="
+                  box-shadow: none;
+                  text-align: center;
+                  background-color: #f3f3f3;
+                  border-radius: 31px;
+                  border: 15px solid #d9d9d9;
+                "
               >
                 질문 &nbsp;&nbsp;{{ profileStore.qListLength }}개 <br /><br />
                 <div v-for="(question, questionIndex) in profileStore.qList" :key="questionIndex">
@@ -49,7 +55,13 @@
               <v-card
                 class="mx-auto px-4 py-8"
                 max-width="518"
-                style="text-align: center; background-color: #f3f3f3; border-radius: 31px; border: 15px solid #d9d9d9"
+                style="
+                  box-shadow: none;
+                  text-align: center;
+                  background-color: #f3f3f3;
+                  border-radius: 31px;
+                  border: 15px solid #d9d9d9;
+                "
               >
                 답변 &nbsp;&nbsp;{{ profileStore.aListLength }}개 <br /><br />
                 <div v-for="(answer, answerIndex) in profileStore.aList" :key="answerIndex">
@@ -67,7 +79,13 @@
             <v-card
               class="mx-auto px-4 py-8"
               max-width="1036"
-              style="text-align: center; background-color: #f3f3f3; border-radius: 31px; border: 15px solid #d9d9d9"
+              style="
+                box-shadow: none;
+                text-align: center;
+                background-color: #f3f3f3;
+                border-radius: 31px;
+                border: 15px solid #d9d9d9;
+              "
             >
               <v-row v-if="followerProfiles.length > 0">
                 <v-col v-for="(follower, followerIdx) in followerProfiles" :key="followerIdx">
@@ -106,7 +124,13 @@
             <v-card
               class="mx-auto px-4 py-8"
               max-width="1036"
-              style="text-align: center; background-color: #f3f3f3; border-radius: 31px; border: 15px solid #d9d9d9"
+              style="
+                box-shadow: none;
+                text-align: center;
+                background-color: #f3f3f3;
+                border-radius: 31px;
+                border: 15px solid #d9d9d9;
+              "
             >
               <v-row v-if="followingProfiles.length > 0">
                 <v-col v-for="(following, followingIdx) in followingProfiles" :key="followingIdx">

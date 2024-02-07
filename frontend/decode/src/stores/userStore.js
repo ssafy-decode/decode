@@ -3,11 +3,13 @@ import { defineStore } from 'pinia';
 import router from '@/router';
 import axios from '@/utils/common-axios';
 import { useTagStore } from './tagStore';
+import { useProfileStore } from './profileStore';
 
 const useUserStore = defineStore(
   'useUserStore',
   () => {
     // 스토어
+    const profileStore = useProfileStore();
     const tagStore = useTagStore();
 
     // 토큰 정보
@@ -19,13 +21,13 @@ const useUserStore = defineStore(
     const loginUser = ref([]); // 로그인 유저의 id, email, password, phoneNumber, birth, name, createdTime, updatedTime 저장한 목록
 
     // 값
-    const registId = ref(''); // 회원 가입 2단계에 필요한 회원 번호
+    const registId = ref(0); // 회원 가입 2단계에 필요한 회원 번호
     const isLoggedIn = ref(false); // 로그인 여부 T/F
     const loginUserId = ref(0); // 로그인 유저 회원 번호
     const foundEmail = ref(''); // 이메일 찾기에서의 이메일
 
     // 함수
-    // 회원 가입 1단계 (1): 일반 가입
+    // 회원 가입 1단계: 일반 가입
     const createUser = async (user) => {
       await axios.post(`/regist`, user).then((res) => {
         if (res.data.status === 'OK') {
@@ -35,11 +37,6 @@ const useUserStore = defineStore(
         }
       });
     };
-
-    // 회원 가입 1단계 (2): 소셜 로그인 (Github oauth)
-    // (경로: /auth/github  파라미터: code(string)  응답: status가 100 CONTINUE면 2단계로 페이지 넘어가도록)
-    // (아직 미완성)
-    // const githubLogin = async (code) => {}
 
     // 회원 가입 2단계: 선택한 기술 스택 저장
     const saveTechStack = async (selectedTechStack) => {
@@ -65,11 +62,9 @@ const useUserStore = defineStore(
           loginUserId.value = res.data.data;
           router.push({ name: 'mainview' });
           return accessToken.value;
-        } else {
-          alert('로그인에 실패했습니다.');
-          return;
         }
       } catch (error) {
+        alert('로그인에 실패했습니다.');
         console.error('Login error:', error);
         return;
       }
@@ -79,12 +74,14 @@ const useUserStore = defineStore(
     const parseToken = (response) => {
       if (response.data && response.headers && response.headers.authorization) {
         const newToken = response.headers.authorization.substring(7); // 파싱한 새 accessToken 값 갱신
-        console.log(newToken); // 헤더에 넣어 테스트할 토큰 값
+        console.log('기존 토큰:', accessToken.value);
+        console.log('새 토큰:', newToken); // 헤더에 넣어 테스트할 토큰 값
         if (newToken === null) {
           // 새 토큰 값 없으면 기존 토큰 값 유지
           return accessToken.value;
         }
-        return newToken;
+        accessToken.value = newToken;
+        return accessToken.value;
       }
     };
 
@@ -102,8 +99,16 @@ const useUserStore = defineStore(
         )
         .then((res) => {
           if (res.data.status === 'OK') {
+            // session storage에 저장된 로그인 관련 data 초기화
             isLoggedIn.value = false;
             accessToken.value = '';
+            loginUserId.value = '';
+            user.value = [];
+            profileStore.userProfile.value = [];
+            // session storage에서 모든 store 데이터 제거 (작동하는지 불확실 => 401에러)
+            sessionStorage.removeItem('pinia:useProfileStore');
+            sessionStorage.removeItem('pinia:useQuestionStore');
+            sessionStorage.removeItem('pinia:useUserStore');
             router.push({ name: 'mainview' });
           }
         });
@@ -187,7 +192,6 @@ const useUserStore = defineStore(
       loginUserId,
       foundEmail,
       createUser,
-      // githubLogin,
       saveTechStack,
       setLoginUser,
       parseToken,

@@ -158,7 +158,7 @@ const router = createRouter({
 });
 
 // 로그인 없이 직접 URL 작성으로 접근할 때를 방지
-// (메인페이지, 로그인페이지, 깃허브인증페이지, 아이디찾기페이지, 비번찾기페이지, 회원가입페이지, 질문게시판목록페이지는 허용)
+// (메인페이지, 로그인페이지, 깃허브인증페이지, 아이디찾기/찾은후페이지, 비번찾기/찾은후페이지, 회원가입페이지, 질문게시판목록페이지는 허용)
 router.beforeEach((to, from, next) => {
   const userStore = useUserStore();
   const accessRoutes = [
@@ -166,7 +166,9 @@ router.beforeEach((to, from, next) => {
     'login',
     'authenticationloading',
     'findemail',
+    'foundemail',
     'findpwd',
+    'foundpwd',
     'userregist',
     'questionview',
   ];

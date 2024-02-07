@@ -87,25 +87,23 @@
 
         <div style="text-align: center">
           <span style="display: flex; justify-content: end; margin-right: 50px">
-            <router-link to="/foundpwd"
-              ><v-btn
-                @click.prevent="findpwd"
-                color="#62C0A6"
-                size="x-large"
-                type="submit"
-                variant="elevated"
-                style="
-                  width: 95px;
-                  font-size: 15px;
-                  font-weight: bold;
-                  margin-top: 10px;
-                  border-radius: 34px;
-                  color: #000000;
-                "
-              >
-                확인
-              </v-btn></router-link
+            <v-btn
+              @click.prevent="findpwd"
+              color="#62C0A6"
+              size="x-large"
+              type="submit"
+              variant="elevated"
+              style="
+                width: 95px;
+                font-size: 15px;
+                font-weight: bold;
+                margin-top: 10px;
+                border-radius: 34px;
+                color: #000000;
+              "
             >
+              확인
+            </v-btn>
           </span>
         </div>
       </v-form>
@@ -116,6 +114,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useUserStore } from '@/stores/userStore';
+import router from '@/router';
 
 const userStore = useUserStore();
 
@@ -163,6 +162,7 @@ const isPhoneValid = (phone) => {
 
 // 확인 버튼 누르면 전체 정보 올바른지 확인
 const findpwd = () => {
+  router.push({ name: 'foundpwd' });
   try {
     if (email.value === '' || name.value === '' || birthday.value === '' || phone.value === '') {
       alert('필수 정보를 모두 입력해주세요.');

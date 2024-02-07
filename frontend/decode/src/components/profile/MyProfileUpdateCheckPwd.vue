@@ -8,7 +8,7 @@
       <v-card
         class="mx-auto px-4 py-8"
         max-width="418"
-        style="background-color: #f3f3f3; border-radius: 31px; border: 15px solid #d9d9d9"
+        style="box-shadow: none; background-color: #f3f3f3; border-radius: 31px; border: 15px solid #d9d9d9"
       >
         <h3 style="color: #575757; font-size: 25px">비밀번호를 입력해주세요</h3>
         <br />
@@ -53,9 +53,11 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useUserStore } from '@/stores/userStore';
+// import { useUserStore } from '@/stores/userStore';
+import { useProfileStore } from '@/stores/profileStore';
 
-const userStore = useUserStore();
+// const userStore = useUserStore();
+const profileStore = useProfileStore();
 
 const password = ref('');
 const showPassword = ref(false);
@@ -73,7 +75,7 @@ const confirmpwd = () => {
   const confirmuserpwd = {
     password: password.value,
   };
-  userStore.checkPwd(confirmuserpwd);
+  profileStore.checkPwd(confirmuserpwd);
 };
 </script>
 

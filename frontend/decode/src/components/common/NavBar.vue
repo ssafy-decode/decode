@@ -30,7 +30,7 @@
       </v-btn>
     </router-link>
 
-    <router-link to="/mypage">
+    <router-link :to="`/detail/${userStore.loginUserId}`">
       <v-btn v-show="userStore.isLoggedIn">
         <v-toolbar-items class="font-weight-bold">마이페이지</v-toolbar-items>
       </v-btn>
