@@ -121,16 +121,22 @@ const useProfileStore = defineStore(
     // 로그인 유저 선택한 기술 스택 변경
     const updateTechStack = async (user) => {
       const updatedTagNums = user.tagIdList.map((item) => tagStore.tagNum[item]);
+      console.log('확인', updatedTagNums);
       await axios
-        .patch(`/updateUserTag`, user, {
-          headers: {
-            Authorization: `Bearer ${userStore.accessToken}`,
+        .patch(
+          `/updateUserTag`,
+          { userId: user.userId, tagIdList: updatedTagNums },
+          {
+            headers: {
+              Authorization: `Bearer ${userStore.accessToken}`,
+            },
           },
-        })
+        )
         .then((res) => {
           userStore.accessToken = userStore.parseToken(res);
           if (res.data.status === 'OK') {
             tagStore.tagIdList = updatedTagNums;
+            console.log('들어가는지', tagStore.tagIdList);
           }
         });
     };
