@@ -83,7 +83,9 @@ const useUserStore = defineStore(
 
     // 로그아웃
     const setLogout = async () => {
-      console.log(accessToken.value);
+      isLoggedIn.value = false;
+      router.push({ name: 'mainview' });
+      if (!accessToken.value) return;
       await axios
         .post(
           `/logout`,
@@ -95,11 +97,7 @@ const useUserStore = defineStore(
           },
         )
         .then((res) => {
-          if (res.data.status === 'OK') {
-            isLoggedIn.value = false;
-            accessToken.value = '';
-            router.push({ name: 'mainview' });
-          }
+          accessToken.value = '';
         });
     };
 
