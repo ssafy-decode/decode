@@ -1,5 +1,5 @@
 <template>
-  <Profile :profile="profile" :isMyProfile="isMyProfile" />
+  <Profile :profile="profile" :isMyProfile="isMyProfile" :isFollowing="isFollowing" />
   <ProfileWindow
     :followerList="followerList"
     :followingList="followingList"
@@ -25,12 +25,16 @@ const userStore = useUserStore();
 const followStore = useFollowStore();
 const profileStore = useProfileStore();
 
-const { setFollowerList, setFollowingList } = followStore;
+const { setFollowerList, setFollowingList, getFollowState } = followStore;
 const { setUserProfile, setAList, setQList } = profileStore;
 
-const { handleFollowerList: followerList, handleFollowingList: followingList } = storeToRefs(followStore);
+const {
+  handleFollowerList: followerList,
+  handleFollowingList: followingList,
+  handleFollowState: isFollowing,
+} = storeToRefs(followStore);
 const { handleUserProfile: profile } = storeToRefs(profileStore);
-const { handleLoginUserId: loginUserId } = storeToRefs(userStore);
+const { handleLoginUserId: loginUserId, handleAccessToken: accessToken } = storeToRefs(userStore);
 
 const isMyProfile = ref(false);
 
@@ -46,6 +50,9 @@ watch(
 
     if (newUid == loginUserId.value) {
       isMyProfile.value = true;
+    } else {
+      isMyProfile.value = false;
+      getFollowState(newUid, accessToken.value);
     }
   },
   {
