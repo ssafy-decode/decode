@@ -31,45 +31,42 @@ const useFollowStore = defineStore(
       });
     };
 
-    // 특정 회원을 팔로우하기
-    // const toFollow = async (userid) => {
-    //   await axios
-    //     .post(`/follow/${userid}`, {
-    //       headers: {
-    //         Authorization: `Bearer ${userStore.accessToken.value}`,
-    //       },
-    //     })
-    //     .then((res) => {
-    //       userStore.accessToken.value = userStore.parseToken(res);
-    //       const response = res.data;
-    //       if (res.data.status !== 'BAD_REQUEST') {
-    //         if (userid === loginUserId) {
-    //           alert('본인을 팔로우할 수 없습니다.');
-    //           return;
-    //         }
-    //         isFollowOrNot(userid); // 팔로우 여부 확인 (T/F)
-    //         if (isFollow.value) {
-    //           alert('이미 팔로우하고 있습니다.');
-    //           return;
-    //         } else {
-    //           isFollow.value = true;
-    //         }
-    //       }
-    //     });
-    // };
+    const follow = async (userid, token) => {
+      await axios
+        .post(
+          `/follow/${userid}`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        )
+        .then((res) => {
+          if (res.data.status === 'OK') {
+            isFollow.value = true;
+          }
+        })
+        .catch((error) => {
+          console.error('follow error:', error);
+          alert('팔로우에 실패했습니다.');
+        });
+    };
+    const setFollowState = (value) => {
+      isFollow.value = value;
+    };
 
-    // const isFollowOrNot = async (userid) => {
-    //   await axios
-    //     .get(`/isfollow/${userid}`, {
-    //       headers: {
-    //         Authorization: `Bearer ${userStore.accessToken.value}`,
-    //       },
-    //     })
-    //     .then((res) => {
-    //       userStore.accessToken.value = userStore.parseToken(res);
-    //       isFollow.value = res.data;
-    //     });
-    // };
+    const getFollowState = async (userid, token) => {
+      await axios
+        .get(`/isfollow/${userid}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          setFollowState(res.data.data);
+        });
+    };
 
     // 팔로우하고 있는 특정 회원을 팔로우취소
     const unFollow = async (userid, token) => {
@@ -79,7 +76,11 @@ const useFollowStore = defineStore(
             Authorization: `Bearer ${token}`,
           },
         })
-        .then((res) => {})
+        .then((res) => {
+          if (res.data.status === 'OK') {
+            isFollow.value = false;
+          }
+        })
         .catch((error) => {
           console.error('unFollow error:', error);
           alert('팔로우 취소에 실패했습니다.');
@@ -89,18 +90,21 @@ const useFollowStore = defineStore(
     // computed
     const handleFollowerList = computed(() => followerList.value);
     const handleFollowingList = computed(() => followingList.value);
+    const handleFollowState = computed(() => isFollow.value);
 
     // 반환
     return {
       followerList,
       followingList,
       isFollow,
-
+      follow,
       unFollow,
       setFollowerList,
       setFollowingList,
+      getFollowState,
       handleFollowerList,
       handleFollowingList,
+      handleFollowState,
     };
   },
   {

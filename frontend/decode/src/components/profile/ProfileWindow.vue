@@ -155,11 +155,8 @@ const { handleAccessToken: accessToken } = storeToRefs(userStore);
 const { unFollow } = followStore;
 
 const unfollowById = (id, index) => {
-  if (confirm('팔로우를 취소하시겠습니까?')) {
-    props.followingList.splice(index, 1);
-
-    // unFollow(id, accessToken.value);
-  }
+  props.followingList.splice(index, 1);
+  unFollow(id, accessToken.value);
 };
 </script>
 

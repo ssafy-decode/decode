@@ -46,7 +46,26 @@
         </span>
       </div>
       <div v-else class="buttons">
-        <v-btn class="btn" color="#62C0A6" size="x-large" type="submit" variant="elevated" @click="follow(profile.id)">
+        <v-btn
+          v-if="isFollowing"
+          class="btn"
+          color="#62C0A6"
+          size="x-large"
+          type="submit"
+          variant="elevated"
+          @click="unfollowById(profile.id)"
+        >
+          팔로우 취소
+        </v-btn>
+        <v-btn
+          v-else
+          class="btn"
+          color="#62C0A6"
+          size="x-large"
+          type="submit"
+          variant="elevated"
+          @click="followById(profile.id)"
+        >
           팔로우
         </v-btn>
       </div>
@@ -61,14 +80,19 @@ import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/stores/userStore';
 import { useProfileStore } from '@/stores/profileStore';
 import { useTagStore } from '@/stores/tagStore';
-
+import { useFollowStore } from '@/stores/followStore';
 const userStore = useUserStore();
 const profileStore = useProfileStore();
+const followStore = useFollowStore();
 const tagStore = useTagStore();
+const { handleAccessToken: accessToken } = storeToRefs(userStore);
+
+const { unFollow, follow } = followStore;
 
 const props = defineProps({
   profile: Object,
   isMyProfile: Boolean,
+  isFollowing: Boolean,
 });
 
 // DB에 수정된 번호를 다시 태그명으로 전환
@@ -87,9 +111,11 @@ const tagName = {
   12: 'C#',
 };
 
-const follow = (id) => {
-  console.log('팔로우 ㅋ');
-  // follow(id, accessToken.value);
+const followById = (id) => {
+  follow(id, accessToken.value);
+};
+const unfollowById = (id) => {
+  unFollow(id, accessToken.value);
 };
 </script>
 
