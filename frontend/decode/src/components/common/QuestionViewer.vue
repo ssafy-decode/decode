@@ -16,7 +16,6 @@ const props = defineProps({
 const viewer = ref(null);
 
 watchEffect(() => {
-  console.log('디스 이니셜 밸류의 값:', props.initialValue);
   if (props.initialValue) {
     viewer.value = new Viewer({
       el: document.querySelector('#viewer'),

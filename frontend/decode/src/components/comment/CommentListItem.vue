@@ -6,7 +6,7 @@
         <div class="writerInfo">
           <p>
             <span class="nickname title">
-              {{ comment.commentWriter.nickname }}
+              <profileRouter :uid="comment.commentWriter.id" :nickName="comment.commentWriter.nickname" />
             </span>
             &nbsp;
             <span class="time info">
@@ -28,6 +28,7 @@
 <script setup>
 import { useCommentStore } from '@/stores/commentStore';
 import { useUserStore } from '@/stores/userStore';
+import profileRouter from '@/components/common/profileRouter.vue';
 
 const commentStore = useCommentStore();
 const userStore = useUserStore();

@@ -22,6 +22,9 @@ const goToProfile = () => {
   cursor: pointer;
   color: #34a080;
   font-weight: bold;
+  margin: 0px;
+  padding: 0px;
+  display: inline;
 }
 .profile-link:hover {
   text-decoration: underline;
