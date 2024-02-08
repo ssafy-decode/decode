@@ -155,7 +155,7 @@ const useProfileStore = defineStore(
         .then((res) => {
           userStore.accessToken = userStore.parseToken(res);
           if (res.data.status === 'OK') {
-            console.log('비밀번호 변경에 성공했습니다.');
+            alert('비밀번호가 변경되었습니다.');
             return;
           }
         });

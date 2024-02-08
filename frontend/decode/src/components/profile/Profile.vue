@@ -12,7 +12,7 @@
       "
     >
       <v-row>
-        <v-col :cols="2">
+        <v-col :cols="1">
           {{ profile.nickname }}
           <br />
           <br />
@@ -21,13 +21,40 @@
           <br />
         </v-col>
 
-        <v-col :cols="1"
-          ><div v-if="tagStore.tagIdList.length > 0">
-            <v-chip v-for="tag in tagStore.tagIdList" :key="tag" label color="primary" class="mr-2 mb-2">
-              {{ tagName[tag] }}</v-chip
-            >
-          </div>
-          <div v-else><br /><br />기술<br />스택<br />없음</div></v-col
+        <v-col :cols="2"
+          ><div>
+            <div>
+              <template v-if="editing">
+                <v-combobox
+                  v-if="editing"
+                  variant="solo"
+                  class="combo"
+                  bg-color="#d9d9d9"
+                  v-model="selectedTags"
+                  :items="items"
+                  placeholder="ex) java, spring boot, sql"
+                  label="기술 스택"
+                  multiple
+                  chips
+                  clearable
+                ></v-combobox>
+              </template>
+              <template v-else-if="tagIdList.length > 0">
+                <div v-for="tag in tagIdList" :key="tag" style="display: block">
+                  <v-chip :clearable="editing" :key="tag" label color="primary" class="mr-2 mb-2 chips">
+                    {{ tagName[tag] }}</v-chip
+                  >
+                </div>
+              </template>
+              <template v-else>
+                <div>선택한 기술 스택이 없습니다.</div>
+              </template>
+            </div>
+            <br />
+            <v-btn @click="toggleEdit" class="tagbtn" color="#62C0A6" type="submit" variant="elevated">{{
+              editing ? '기술 스택 변경 저장' : '기술 스택 변경'
+            }}</v-btn>
+          </div></v-col
         >
 
         <v-col :cols="6">
@@ -62,6 +89,7 @@
 <script setup>
 import AttendanceLog from '@/components/profile/AttendanceLog.vue';
 import ExpLog from '@/components/profile/ExpLog.vue';
+import { ref, onBeforeMount, defineProps } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/stores/userStore';
 import { useProfileStore } from '@/stores/profileStore';
@@ -70,6 +98,11 @@ import { useTagStore } from '@/stores/tagStore';
 const userStore = useUserStore();
 const profileStore = useProfileStore();
 const tagStore = useTagStore();
+
+const { updateTechStack } = profileStore;
+const { setTagNumList } = tagStore;
+const { handleTags: tagIdList } = storeToRefs(tagStore);
+const { handleAccessToken: accessToken } = storeToRefs(userStore);
 
 const props = defineProps({
   profile: Object,
@@ -90,9 +123,50 @@ const tagName = {
   11: 'vue',
   12: 'C#',
 };
+
+const editing = ref(false);
+const selectedTags = ref([]);
+const items = ref([
+  'python',
+  'java',
+  'C++',
+  'javascript',
+  'django',
+  'spring',
+  'spring boot',
+  'kotlin',
+  'sql',
+  'react',
+  'vue',
+  'C#',
+]);
+
+onBeforeMount(() => {
+  setTagNumList(userStore.loginUserId);
+  selectedTags.value = tagIdList.value.map((tag) => tagName[tag]);
+});
+
+// 기술 스택 목록 변경
+const toggleEdit = () => {
+  if (editing.value) {
+    const user = {
+      userId: userStore.loginUserId,
+      tagIdList: selectedTags.value,
+    };
+    updateTechStack(user, accessToken.value);
+  }
+  editing.value = !editing.value;
+  setTagNumList(userStore.loginUserId);
+};
 </script>
 
 <style scoped>
+.chips {
+  border-radius: 31px;
+  background-color: #9dd0ff;
+  color: #447cb0;
+  font-weight: bold;
+}
 .buttons {
   text-align: end;
 }

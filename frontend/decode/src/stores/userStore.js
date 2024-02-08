@@ -21,7 +21,7 @@ const useUserStore = defineStore(
     // const loginUser = ref([]); // 로그인 유저의 id, email, password, phoneNumber, birth, name, createdTime, updatedTime 저장한 목록
 
     // 값
-    const registId = ref(''); // 회원 가입 2단계에 필요한 회원 번호
+    const registId = ref(0); // 회원 가입 2단계에 필요한 회원 번호
     const isLoggedIn = ref(false); // 로그인 여부 T/F
     const loginUserId = ref(0); // 로그인 유저 회원 번호
     const foundEmail = ref(''); // 이메일 찾기에서의 이메일
@@ -42,9 +42,12 @@ const useUserStore = defineStore(
     const saveTechStack = async (selectedTechStack) => {
       // 1단계 정보(registId)가 비어있을 경우 에러 처리
       if (!registId.value) {
+        alert('먼저 회원 가입 1단계를 진행해주세요.');
         console.error('userId가 없습니다.');
         return;
       }
+      console.log('registId:', registId);
+      console.log('registId.value', registId.value); // 17로 잘 뜸
       const tagNums = selectedTechStack.map((item) => tagStore.tagNum[item]);
       const res = await axios.post(`/addUserTag`, { userId: registId.value, tagIdList: tagNums });
       if (res.data.status === 'OK') {

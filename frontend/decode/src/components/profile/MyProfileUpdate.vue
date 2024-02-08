@@ -14,41 +14,52 @@
       >
         <div style="display: flex; justify-content: flex-start">
           <!-- 뒤로가기 버튼--><router-link :to="`/profile/${userStore.loginUserId}`"
-            ><img style="margin-left: 5px" width="15px" src="../../leftarrowicon.png"
+            ><img style="margin-left: 5px" width="18px" src="../../leftarrowicon.png"
           /></router-link>
         </div>
         <v-row style="margin-left: 5px">
-          <v-col cols="4">
+          <v-col cols="5">
             <img style="width: 70%" src="../default.png" />
             <br />
             <v-btn class="photobtn" color="#62C0A6" type="submit" variant="elevated">사진 변경</v-btn>
             <!-- 추후 API 연결 -->
           </v-col>
-          <v-col cols="8">
+          <v-col cols="7">
             <div style="font-size: 16px">
-              <span> 이 &nbsp;&nbsp; 름: {{ user.name }}</span>
-              <br />
-              <br />
-              <span>닉 네 임: {{ profile.nickname }}</span>
-              <br />
-              <br />
-              <span>생년월일: {{ user.birth }}</span>
-              <br />
+              <table class="profile-table">
+                <tr>
+                  <td>이름:</td>
+                  <td>{{ user.name }}</td>
+                </tr>
+                <tr>
+                  <td>닉네임:</td>
+                  <td>{{ profile.nickname }}</td>
+                </tr>
+                <tr>
+                  <td>생년월일:</td>
+                  <td>{{ user.birth }}</td>
+                </tr>
+              </table>
             </div>
           </v-col>
         </v-row>
         <br />
         <div style="text-align: left; margin-left: 20px">
-          <span>이&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 메&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 일: {{ user.email }}</span>
-          <br />
-          <br />
-          <span>휴대폰 뒷자리: {{ user.phoneNumber }}</span>
-          <br />
+          <table class="profile-table">
+            <tr>
+              <td>이메일:</td>
+              <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+              <td>휴대폰 뒷자리:</td>
+              <td>{{ user.phoneNumber }}</td>
+            </tr>
+          </table>
           <br />
         </div>
         <br />
         <div>
-          기술 스택 변경
+          <span style="margin-bottom: 20px; color: #34a080; font-weight: bold">기술 스택 변경</span>
           <br />
           <br />
           <div>
@@ -68,7 +79,14 @@
               ></v-combobox>
             </template>
             <template v-else-if="tagIdList.length > 0">
-              <v-chip v-for="tag in tagIdList" :clearable="editing" :key="tag" label color="primary" class="mr-2 mb-2">
+              <v-chip
+                v-for="tag in tagIdList"
+                :clearable="editing"
+                :key="tag"
+                label
+                color="primary"
+                class="mr-2 mb-2 chips"
+              >
                 {{ tagName[tag] }}</v-chip
               >
             </template>
@@ -84,7 +102,7 @@
         <br />
         <br />
         <div>
-          비밀번호 변경
+          <span style="color: #34a080; font-weight: bold">비밀번호 변경</span>
           <br />
           <br />
           <v-text-field
@@ -159,8 +177,10 @@ onBeforeMount(() => {
   setUser(userStore.loginUserId);
   setTagNumList(userStore.loginUserId);
   setUserProfile(userStore.loginUserId);
+  selectedTags.value = tagIdList.value.map((tag) => tagName[tag]);
 });
 
+const editing = ref(false);
 const selectedTags = ref([]);
 const items = ref([
   'python',
@@ -176,19 +196,6 @@ const items = ref([
   'vue',
   'C#',
 ]);
-
-// const isSelected = (item) => {
-//   return select.value.includes(item);
-// };
-
-// const toggleSelection = (item) => {
-//   const index = select.value.indexOf(item);
-//   if (index !== -1) {
-//     select.value.splice(index, 1);
-//   } else {
-//     select.value.push(item);
-//   }
-// };
 
 // DB에 수정된 번호를 다시 태그명으로 전환
 const tagName = {
@@ -209,7 +216,6 @@ const tagName = {
 // 기술 스택 목록 변경
 const toggleEdit = () => {
   if (editing.value) {
-    // const selectedTagNames = selectedTags.value.map((tag) => tag.tagName);
     const user = {
       userId: userStore.loginUserId,
       tagIdList: selectedTags.value,
@@ -224,7 +230,6 @@ const password = ref('');
 const password2 = ref('');
 const showPassword = ref(false);
 const showPassword2 = ref(false);
-const editing = ref(false);
 
 // 눈 버튼 누르면 비밀번호 가렸다 보였다
 const toggleEye = () => {
@@ -269,6 +274,24 @@ const updatepwd = () => {
 </script>
 
 <style scoped>
+.profile-table {
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 100%;
+}
+
+.profile-table td {
+  padding: 5px;
+  text-align: left;
+}
+
+.chips {
+  border-radius: 31px;
+  background-color: #9dd0ff;
+  color: #447cb0;
+  font-weight: bold;
+}
+
 .photobtn {
   height: 34px;
   width: 95px;

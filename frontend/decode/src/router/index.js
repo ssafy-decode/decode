@@ -164,6 +164,7 @@ router.beforeEach((to, from, next) => {
     'findpwd',
     'foundpwd',
     'userregist',
+    'techstack',
     'questionview',
   ];
   if (accessRoutes.includes(to.name) || userStore.isLoggedIn) {
