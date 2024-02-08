@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class ImageServiceImpl implements ImageService {
 
     private final AmazonS3 amazonS3;
-    private final int MAX_IMAGE_SIZE = 1000000 * 20; // 20mb
+    private final int MAX_IMAGE_SIZE = 1_000_000 * 20; // 20mb
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;

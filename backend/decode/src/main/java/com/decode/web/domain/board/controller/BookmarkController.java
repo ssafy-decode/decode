@@ -29,8 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class BookmarkController {
 
     private final BookmarkService bookmarkService;
-    private final QuestionRepository questionRepository;
-    private final QuestionELKRepository questionELKRepository;
 
     @SneakyThrows
     @PostMapping
@@ -65,7 +63,7 @@ public class BookmarkController {
     @GetMapping("/{userId}")
     @Operation(summary = "북마크 질문 리스트 조회", description = "유저가 북마크한 질문 조회")
     public ResponseDto getBookMarkQuestionList(@PathVariable Long userId) {
-        List<ResponseQuestionListDto> bookMarkQuestionList = bookmarkService.getBookMarkQuetionList(
+        List<ResponseQuestionListDto> bookMarkQuestionList = bookmarkService.getBookMarkQuestionList(
                 userId);
         return ResponseDto.builder()
                 .message("북마크 질문 리스트 조회 완료")

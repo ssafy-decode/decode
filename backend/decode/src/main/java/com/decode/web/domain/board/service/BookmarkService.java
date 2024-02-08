@@ -10,5 +10,5 @@ public interface BookmarkService {
 
     void unBookMark(Long userId, Long questionId);
 
-    List<ResponseQuestionListDto> getBookMarkQuetionList(Long userId);
+    List<ResponseQuestionListDto> getBookMarkQuestionList(Long userId);
 }

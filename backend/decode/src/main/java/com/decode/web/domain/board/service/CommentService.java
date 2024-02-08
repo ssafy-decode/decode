@@ -12,9 +12,6 @@ public interface CommentService {
 
     Long save(CreateCommentDto commentEntity);
 
-    List<CommentEntity> findByAnswer(AnswerEntity answerEntity);
-//    List<CommentEntity> findByAnswerId(String answerId);
-
     CommentEntity update(UpdateCommentDto updateCommentDto);
 
     void delete(Long userId, Long commentId) throws BadRequestException;

@@ -7,7 +7,6 @@ import com.decode.web.domain.user.repository.UserProfileRepository;
 import com.decode.web.entity.ChatEntity;
 import com.decode.web.entity.ChatRoomEntity;
 import com.decode.web.entity.UserProfileEntity;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +31,6 @@ public class ChatServiceImpl implements ChatService {
     private final ChatRepository chatRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final UserProfileRepository userProfileRepository;
-    private final ObjectMapper objectMapper;
 
     @Override
     @Transactional
