@@ -25,7 +25,7 @@ const githubButtonColor = ref('#000000');
 // 로딩 창으로 이동 + 팝업창 띄우기
 const authenticate = () => {
   router.push(`/loading`);
-  window.open(`https://i10a507.p.ssafy.io/decode/oauth2/authorization/github`, `_blank`, `width=400, height=600`);
+  window.open(`https://i10a507.p.ssafy.io/decode/oauth2/authorization/github`, `_blank`, `width=500, height=800`);
 };
 </script>
 
