@@ -173,7 +173,6 @@ const items = ref([
 
 // 기술 스택 목록 변경
 const toggleEdit = () => {
-  selectedTags.value = tagIdList.value.map((tag) => tagName[tag]);
   if (editing.value) {
     const user = {
       userId: userStore.loginUserId,
@@ -182,8 +181,12 @@ const toggleEdit = () => {
     updateTechStack(user, accessToken.value);
   }
   editing.value = !editing.value;
-  setTagNumList(userStore.loginUserId);
+  // setTagNumList(userStore.loginUserId);
 };
+
+onBeforeMount(() => {
+  selectedTags.value = tagIdList.value.map((tag) => tagName[tag]);
+});
 
 const followById = (id) => {
   follow(id, accessToken.value);
