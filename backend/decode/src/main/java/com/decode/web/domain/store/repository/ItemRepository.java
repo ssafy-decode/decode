@@ -3,7 +3,6 @@ package com.decode.web.domain.store.repository;
 import com.decode.web.entity.ItemEntity;
 import jakarta.persistence.EntityManager;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

@@ -1,7 +1,6 @@
 package com.decode.web.domain.chat.service;
 
 import com.decode.web.domain.chat.dto.ChatRequestDto;
-import com.decode.web.domain.chat.mapper.ChatMapper;
 import com.decode.web.domain.chat.repository.ChatRepository;
 import com.decode.web.domain.chat.repository.ChatRoomRepository;
 import com.decode.web.domain.user.repository.UserProfileRepository;
@@ -13,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +54,8 @@ public class ChatServiceImpl implements ChatService {
                     .build();
 //            log.debug("apic UserProfileEntity : {}", userProfile);
 //            log.debug("apic ChatRoomEntity : {}", chatRoom);
-            log.debug("apic ChatEntity room {}, message {}, user {}", chat.getChatRoomEntity().getId(), chat.getMessage(), chat.getSender().getId());
+            log.debug("apic ChatEntity room {}, message {}, user {}",
+                    chat.getChatRoomEntity().getId(), chat.getMessage(), chat.getSender().getId());
 
             chatRepository.save(chat);
 
