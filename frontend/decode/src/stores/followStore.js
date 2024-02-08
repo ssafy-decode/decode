@@ -32,7 +32,6 @@ const useFollowStore = defineStore(
     };
 
     const follow = async (userid, token) => {
-      console.log(token);
       await axios
         .post(
           `/follow/${userid}`,
