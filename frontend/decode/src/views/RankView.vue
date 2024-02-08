@@ -15,17 +15,20 @@
 import { ref, onMounted } from 'vue';
 import { useProfileStore } from '@/stores/profileStore';
 import { useUserStore } from '@/stores/userStore';
+import { useRankStore } from '@/stores/rankStore';
 import Search from '@/components/rank/Search.vue';
 import UserInfo from '@/components/rank/UserInfo.vue';
 import RankingTable from '@/components/rank/RankingTable.vue';
 
 const userStore = useUserStore();
 const profileStore = useProfileStore();
+const rankStore = useRankStore();
 
 console.log("userID: " + userStore.loginUserId);
 
 onMounted(() => {
   profileStore.setUserProfile(userStore.loginUserId);
+  rankStore.getUserRank(userStore.loginUserId);
 });
 
 </script>
@@ -41,11 +44,14 @@ onMounted(() => {
   background-color: #ffffff;
   max-width: 1250px;
   margin: auto;
+  padding: 10; /* 간격 설정 */
+
 }
 
 .rank-list-container {
   border-radius: 15px;
   border: 1px solid #ccc;
+  background-color: #ffffff;
   max-width: 1250px;
   margin: auto;
 }
@@ -65,6 +71,5 @@ onMounted(() => {
 .rounded-border {
   border-radius: 15px;
   border: 1px solid #ccc;
-  overflow: hidden;
 }
 </style>

@@ -1,78 +1,87 @@
 <template>
   <v-container class="ranking-list">
-    <v-container class="rounded-border">
-      <v-data-table :headers="headers" :items="desserts" :page.sync="page" :items-per-page.sync="itemsPerPage">
-        <template v-slot:header="{ props }">
-          <thead>
-            <tr>
-              <th v-for="header in props.headers" :key="header.text" :class="`text-${header.align}`">
-                {{ header.text }}
-              </th>
-            </tr>
-          </thead>
-        </template>
-
-        <template v-for="column in headers" v-slot:[`item.${column.value}`]="{ item }">
-          <td :class="`text-${column.align}`">{{ item[column.value] }}</td>
-        </template>
-      </v-data-table>
-    </v-container>
+    <v-data-table
+      :headers="headers"
+      :items="rank"
+      :items-per-page="10"
+      :server-items-length="100"
+      :sort-by.sync="sortBy"
+      :sort-desc.sync="sortDesc"
+      class="ranking-table"
+      v-model:page="page"
+    >
+    <template v-slot:item.ranking="{ index }">
+      {{ index + 1 + (page - 1) * 10 }}
+    </template>
+    <template v-slot:item.nickname="{ item }">
+      <div class="nickname-container">
+        <img src="../../default.png" alt="Profile" width="28"/>
+        {{ item.nickname }}
+      </div>
+    </template>
+    <template v-slot:item.tier="{ item }">
+      <div class="tier-container">
+        <img :src="`../../${item.tier}.png`" :width="35"/>
+      </div>
+    </template>
+    <template v-slot:item.answerCount="{ item }">
+      {{ item.answerCount }}
+    </template>
+    <template v-slot:item.exp="{ item }">
+      {{ item.exp }}
+    </template>
+    <template v-slot:item.adoptCount="{ item }">
+      {{ item.adoptCount }}
+    </template>
+    <template v-slot:item.followerCount="{ item }">
+      {{ item.followerCount }}
+    </template>
+    </v-data-table>
   </v-container>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      // 유저 정보에 대한 가상의 데이터
-      userRankingPercentile: 25,
-      userTier: 'Gold',
-      userName: 'JohnDoe',
-      userPoints: 500,
-      userFollowers: 1000,
-      userFollowing: 500,
-      userAnswerCount: 200,
-      userSelectionCount: 50,
-      userExperience: 1200,
-      userExperienceNeeded: 2000,
+<script setup>
+import { ref, onMounted } from 'vue';
+import { useRankStore } from '@/stores/rankStore';
+import { storeToRefs } from 'pinia';
 
-      page: 1,
-      itemsPerPage: 10,
-      headers: [
-        { title: '랭킹', key: 'ranking', align: 'start' },
-        { title: '닉네임', key: 'nickname', align: 'start' },
-        { title: '티어', key: 'tier', align: 'start' },
-        { title: '답변 수', key: 'answerCount', align: 'end' },
-        { title: '채택 수', key: 'selectionCount', align: 'end' },
-        { title: '팔로워 수', key: 'followerCount', align: 'end' },
-      ],
-      desserts: Array.from({ length: 100 }, (_, index) => ({
-        ranking: index + 1,
-        nickname: `User${index + 1}`,
-        tier: `Tier ${Math.floor(Math.random() * 5) + 1}`,
-        answerCount: Math.floor(Math.random() * 100),
-        selectionCount: Math.floor(Math.random() * 50),
-        followerCount: Math.floor(Math.random() * 1000),
-      })),
-    };
-  },
-  methods: {},
-};
+const rankStore = useRankStore();
+const { handleRank: rank } = storeToRefs(rankStore);
+const sortBy = ref(['exp']);
+const sortDesc = ref([true]);
+const page = ref(1);
+const headers = ref([
+  { title: '랭킹', align: 'center', value: 'ranking' },
+  { title: '닉네임', align: 'center' , value: 'nickname', width: '200px' },
+  { title: '티어', align: 'start', value: 'tier', width: '100px'},
+  { title: '경험치', align: 'center', value: 'exp', sortable: true, width: '250px'},
+  { title: '답변수', align: 'center', value: 'answerCount', sortable: true , width: '150px' },
+  { title: '채택수', align: 'center', value: 'adoptCount', sortable: true , width: '150px' },
+  { title: '팔로워수', align: 'center', value: 'followerCount', sortable: true , width: '150px' },
+]);
+
+onMounted(() => {
+  rankStore.getRank();
+});
+
 </script>
 
 <style>
 .ranking-list {
-  width: 1210px;
-  margin-top: 20px;
+  max-width: 1150px;
+  margin-left: 10;
+  margin-right: 10;
+  margin-bottom: 10px;
   border: 1px solid #ccc;
   background-color: white;
   border-radius: 15px;
 }
-
-.rounded-border {
-  width: 1260px;
-  border-radius: 15px;
-  border: 1px solid #ccc;
-  overflow: hidden;
+.nickname-container {
+  display: flex;
+  align-items: center;
+}
+.tier-container {
+  display: flex;
+  align-items: center;
 }
 </style>
