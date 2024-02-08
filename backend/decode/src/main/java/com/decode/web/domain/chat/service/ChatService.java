@@ -7,5 +7,6 @@ public interface ChatService {
 
 
     void saveChat(ChatRequestDto message);
+
     List<Object> loadMessage(Long roomId);
 }

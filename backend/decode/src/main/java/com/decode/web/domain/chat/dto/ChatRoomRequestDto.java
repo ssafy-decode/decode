@@ -14,6 +14,7 @@ import lombok.ToString;
 @Builder
 @ToString
 public class ChatRoomRequestDto {
+
     private String roomName;
     private String roomDescription;
     private String creator;

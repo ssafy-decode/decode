@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class FollowController {
 
     private final SocialService socialService;
-    private final UserProfileMapper userProfileMapper;
 
     @PostMapping("/follow/{toUserId}")
     public ResponseDto follow(@PathVariable Long toUserId, Authentication auth) {

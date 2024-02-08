@@ -7,7 +7,6 @@ import com.decode.web.domain.common.redis.RedisPublisher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -18,6 +17,7 @@ public class ChatController {
     private final RedisPublisher redisPublisher;
     private final ChatRoomService chatRoomService;
     private final ChatService chatService;
+
     /**
      * websocket "/pub/chat/message"로 들어오는 메시징을 처리한다.
      */

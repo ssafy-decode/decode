@@ -24,34 +24,28 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AnswerEntity extends CommonEntity {
 
+    @OneToMany(mappedBy = "answer", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private final List<RecommendEntity> recommends = new ArrayList<>();
+    @OneToMany(mappedBy = "answer", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private final List<CommentEntity> comments = new ArrayList<>();
     @Id
     @Column(name = "answer_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "answer_writer_id")
     @Setter
     private UserProfileEntity answerWriter;
-
     @ManyToOne
     @JoinColumn(name = "question_id")
     @Setter
     private QuestionEntity question;
-
     @Setter
     @Column(name = "answer_content")
     private String content;
-
     @Setter
     @Column(name = "is_adopted")
     private boolean isAdopted;
-
-    @OneToMany(mappedBy = "answer", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private final List<RecommendEntity> recommends = new ArrayList<>();
-
-    @OneToMany(mappedBy = "answer", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private final List<CommentEntity> comments = new ArrayList<>();
 
     public AnswerEntity(Long id, UserProfileEntity answerWriter, QuestionEntity question,
             String content, boolean idAdopted) {

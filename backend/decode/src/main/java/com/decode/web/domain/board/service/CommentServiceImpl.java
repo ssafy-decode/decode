@@ -50,12 +50,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentEntity> findByAnswer(AnswerEntity answerEntity) {
-        // 우선 정답쪽에서 관련 comment 들을 불러올 때 객체로 들어오는 것으로 구현
-        return commentRepository.findAllByAnswer(answerEntity);
-    }
-
-    @Override
     public CommentEntity update(UpdateCommentDto updateCommentDto) {
         CommentEntity comment = commentRepository.findById(updateCommentDto.getId()).orElseThrow(
                 () -> new EntityNotFoundException(

@@ -5,6 +5,7 @@ import com.decode.web.domain.gpt.dto.GptApiRequestDto;
 import com.decode.web.domain.gpt.dto.GptApiResponseDto;
 import com.decode.web.domain.gpt.service.GptApiServiceImpl;
 import com.decode.web.global.ResponseDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +21,7 @@ public class GptController {
     private final GptApiServiceImpl gptApiService;
 
     @PostMapping
-    public ResponseDto generateTitleAndKeywords(@RequestBody GptApiRequestDto gptApiDto) {
+    public ResponseDto generateTitleAndKeywords(@RequestBody @Valid GptApiRequestDto gptApiDto) {
         GptApiResponseDto data = GptApiResponseDto.builder()
                 .tagIds(gptApiService.keywordsByError(gptApiDto.getContent()))
                 .titles(gptApiService.titlesByError(gptApiDto.getContent()))
@@ -35,7 +36,7 @@ public class GptController {
 
 
     @PostMapping("/answer")
-    public ResponseDto generateAnswer(@RequestBody GptApiRequestDto gptApiDto) {
+    public ResponseDto generateAnswer(@RequestBody @Valid GptApiRequestDto gptApiDto) {
         GptApiAnswerResponseDto data = GptApiAnswerResponseDto.builder()
                 .answer(gptApiService.answerByError(gptApiDto.getContent()))
                 .build();
