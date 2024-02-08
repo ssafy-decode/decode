@@ -5,7 +5,7 @@
         <div>
           <p>
             <span class="nickname title">
-              {{ answer.answerWriter.nickname }}
+              <profileRouter :uid="answer.answerWriter.id" :nickName="answer.answerWriter.nickname" />
             </span>
             &nbsp;
             <span class="time info">
@@ -52,15 +52,18 @@
 import CommentList from '@/components/comment/CommentList.vue';
 import { useAnswerStore } from '@/stores/answerStore';
 import { useUserStore } from '@/stores/userStore';
-import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 import axios from '@/utils/common-axios';
 import AnswerViewer from '@/components/common/AnswerViewer.vue';
+import { useRoute } from 'vue-router';
+import profileRouter from '@/components/common/profileRouter.vue';
 
-const router = useRouter();
+import { useQuestionStore } from '@/stores/questionStore';
+const questionStore = useQuestionStore();
 
 const answerStore = useAnswerStore();
 const userStore = useUserStore();
+const route = useRoute();
 
 const props = defineProps({
   answer: Object,
@@ -85,7 +88,6 @@ const createComment = function () {
   })
     .then((res) => {
       console.log('댓글 생성됨');
-      router.go(0);
     })
     .catch((err) => {
       console.log(err);
@@ -119,6 +121,7 @@ div {
 .myListItem {
   background-color: white;
   border-radius: 35px;
+  padding-top: 20px;
 }
 
 .listItem {
