@@ -12,7 +12,6 @@ const { loginUserId: uid } = storeToRefs(useUserStore());
 const shopStore = useShopStore();
 const { fetchInventory } = shopStore;
 fetchInventory(uid.value);
-console.log(123);
 </script>
 
 <style scoped></style>
