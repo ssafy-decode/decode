@@ -9,7 +9,6 @@ if (code) {
   const res = await myaxios.get('/auth/github?code=' + code);
 
   if (res.data.status === 'OK') {
-    // console.log(accessToken.value);
     window.opener.postMessage(res.data.data, '*');
     window.close();
   } else {

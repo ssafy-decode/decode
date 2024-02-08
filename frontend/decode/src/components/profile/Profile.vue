@@ -26,11 +26,11 @@
 
         <v-col :cols="6">
           출석 스트릭
-          <AttendanceLog :uid="profile.id" />
+          <!-- <AttendanceLog :uid="profile.id" /> -->
         </v-col>
 
         <v-col :cols="3">
-          <ExpLog :uid="profile.id" />
+          <!-- <ExpLog :uid="profile.id" /> -->
         </v-col>
       </v-row>
 

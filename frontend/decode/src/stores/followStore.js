@@ -43,9 +43,7 @@ const useFollowStore = defineStore(
           },
         )
         .then((res) => {
-          if (res.data.status === 'OK') {
-            isFollow.value = true;
-          }
+          isFollow.value = true;
         })
         .catch((error) => {
           console.error('follow error:', error);
@@ -77,9 +75,7 @@ const useFollowStore = defineStore(
           },
         })
         .then((res) => {
-          if (res.data.status === 'OK') {
-            isFollow.value = false;
-          }
+          isFollow.value = false;
         })
         .catch((error) => {
           console.error('unFollow error:', error);

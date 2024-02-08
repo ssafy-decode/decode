@@ -1,11 +1,36 @@
 <script setup>
+import axios from '@/utils/common-axios';
+import { useUserStore } from '@/stores/userStore';
+import { storeToRefs } from 'pinia';
+const userStore = useUserStore();
+const { handleLoginUserId: uid, handleAccessToken: accessToken } = storeToRefs(userStore);
+
 const props = defineProps({
   detail: Object,
   isSelected: Boolean,
 });
 
 const useItem = () => {
-  console.log('아이템 사용');
+  axios
+    .post(
+      '/item/use',
+      {
+        itemId: props.detail.itemId,
+        userId: uid.value,
+        count: 1,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken.value}`,
+        },
+      },
+    )
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
 };
 </script>
 
