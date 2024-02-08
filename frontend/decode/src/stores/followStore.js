@@ -9,9 +9,8 @@ const useFollowStore = defineStore(
     // 배열
     const followerList = ref([]); // 팔로워 목록
     const followingList = ref([]); // 팔로잉 목록
-
     // T/F
-    const isFollow = ref(false); // 로그인 유저가 그 대상을 팔로우했는지 여부 T/F
+    const isFollow = ref(false);
 
     // 함수
     const setFollowerList = async (userid) => {
@@ -59,7 +58,6 @@ const useFollowStore = defineStore(
     //     });
     // };
 
-    // 팔로우 여부 확인 (T/F)
     // const isFollowOrNot = async (userid) => {
     //   await axios
     //     .get(`/isfollow/${userid}`, {
