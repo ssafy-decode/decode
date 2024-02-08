@@ -18,7 +18,7 @@
       <v-row>
         <v-col :cols="12">
           <div class="contentBox">
-            <QuestionViewer />
+            <QuestionViewer :initialValue="questionContent" />
           </div>
         </v-col>
       </v-row>

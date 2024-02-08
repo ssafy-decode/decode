@@ -28,7 +28,6 @@
       <v-row>
         <v-col :cols="12">
           <QuestionViewer :initialValue="question.content" />
-          <!-- <div>{{ question.content }}</div> -->
         </v-col>
       </v-row>
       <br /><br />
@@ -123,7 +122,7 @@ const goCreateAnswer = function () {
 };
 
 onMounted(() => {
-  getDetailQuestion();
+  getDetailQuestion(route.params.id);
 });
 </script>
 

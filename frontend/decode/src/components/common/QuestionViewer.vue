@@ -21,7 +21,7 @@ export default {
     };
   },
   mounted() {
-    console.log('this.initialValue의 값: ', this.initialValue);
+    console.log('디스 이니셜 밸류의 값:', this.initialValue);
     this.viewer = new Viewer({
       el: document.querySelector('#viewer'),
       initialEditType: 'wysiwyg',
