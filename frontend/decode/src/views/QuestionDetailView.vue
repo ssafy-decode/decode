@@ -27,7 +27,7 @@
       </v-row>
       <v-row>
         <v-col :cols="12">
-          <QuestionViewer :initialValue="questionStore.originalContent" />
+          <QuestionViewer :initialValue="question.content" />
         </v-col>
       </v-row>
       <br /><br />
@@ -52,14 +52,12 @@
 <script setup>
 import axios from '@/utils/common-axios';
 import { ref, onMounted } from 'vue';
-import { useQuestionStore } from '@/stores/questionStore';
 import { useAnswerStore } from '@/stores/answerStore';
 import { useUserStore } from '@/stores/userStore';
 import { useRoute, useRouter } from 'vue-router';
 import AnswerList from '@/components/answer/AnswerList.vue';
 import QuestionViewer from '@/components/common/QuestionViewer.vue';
 
-const questionStore = useQuestionStore();
 const answerStore = useAnswerStore();
 const userStore = useUserStore();
 const router = useRouter();
@@ -84,7 +82,6 @@ const getDetailQuestion = function () {
       writerNickname.value = question.value.questionWriter.nickname;
       questionWriterId.value = question.value.questionWriter.id;
       questionCreatedTime.value = question.value.createdTime;
-      questionStore.originalContent = question.value.content;
     })
     .catch((err) => {
       console.log(err);
@@ -125,7 +122,7 @@ const goCreateAnswer = function () {
 };
 
 onMounted(() => {
-  getDetailQuestion();
+  getDetailQuestion(route.params.id);
 });
 </script>
 

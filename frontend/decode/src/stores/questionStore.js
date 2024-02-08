@@ -1,15 +1,16 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import axios from '@/utils/common-axios';
+import { useUserStore } from '@/stores/userStore';
 
 export const useQuestionStore = defineStore(
   'question',
   () => {
+    const userStore = useUserStore();
     const accessToken = ref(null);
     const questions = ref([]);
     const gptTitles = ref(['']);
     const gptTagIds = ref(['']);
-    const originalContent = ref('');
     const items = {
       python: 1,
       java: 2,
@@ -63,7 +64,6 @@ export const useQuestionStore = defineStore(
       questions,
       gptTitles,
       gptTagIds,
-      originalContent,
       items,
       reverseItems,
       getQuestions,
