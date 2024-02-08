@@ -26,28 +26,29 @@
 
         <v-col :cols="6">
           출석 스트릭
-          <!-- <AttendanceLog :uid="profile.id" /> -->
+          <AttendanceLog :uid="profile.id" />
         </v-col>
 
         <v-col :cols="3">
-          <!-- <ExpLog :uid="profile.id" /> -->
+          <ExpLog :uid="profile.id" />
         </v-col>
       </v-row>
 
-      <div class="buttons">
+      <div v-if="isMyProfile" class="buttons">
         <span>
           <router-link to="/inventory">
-            <v-btn class="btn" color="#62C0A6" size="x-large" type="submit" variant="elevated" style="color: #000000">
-              내 아이템
-            </v-btn>
+            <v-btn class="btn" color="#62C0A6" size="x-large" type="submit" variant="elevated"> 내 아이템 </v-btn>
           </router-link>
           &nbsp;
           <router-link to="/checkpwd">
-            <v-btn class="btn" color="#62C0A6" size="x-large" type="submit" variant="elevated" style="color: #000000">
-              회원정보 수정
-            </v-btn>
+            <v-btn class="btn" color="#62C0A6" size="x-large" type="submit" variant="elevated"> 회원정보 수정 </v-btn>
           </router-link>
         </span>
+      </div>
+      <div v-else class="buttons">
+        <v-btn class="btn" color="#62C0A6" size="x-large" type="submit" variant="elevated" @click="follow(profile.id)">
+          팔로우
+        </v-btn>
       </div>
     </v-card>
   </div>
@@ -67,6 +68,7 @@ const tagStore = useTagStore();
 
 const props = defineProps({
   profile: Object,
+  isMyProfile: Boolean,
 });
 
 // DB에 수정된 번호를 다시 태그명으로 전환
@@ -84,6 +86,11 @@ const tagName = {
   11: 'vue',
   12: 'C#',
 };
+
+const follow = (id) => {
+  console.log('팔로우 ㅋ');
+  // follow(id, accessToken.value);
+};
 </script>
 
 <style scoped>
@@ -91,6 +98,7 @@ const tagName = {
   text-align: end;
 }
 .btn {
+  color: #000000;
   width: 110px;
   height: 28px;
   border-radius: 34px;
