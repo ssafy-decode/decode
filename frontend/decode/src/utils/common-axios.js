@@ -4,8 +4,8 @@ import axios from 'axios';
 //const instance = axios.create(); 후에 기본값 설정
 
 export default axios.create({
-  // baseURL: process.env.VUE_APP_BACKEND_URL,
-  baseURL: 'http://localhost:80/decode',
+  baseURL: process.env.VUE_APP_BACKEND_URL,
+  // baseURL: 'http://localhost:80/decode',
   headers: {
     'Content-type': 'application/json',
   },
