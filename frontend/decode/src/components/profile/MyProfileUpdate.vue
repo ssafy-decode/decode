@@ -51,25 +51,31 @@
           기술 스택 변경
           <br />
           <br />
-          <div v-if="tagIdList.length > 0">
-            <v-combobox
-              v-if="editing"
-              variant="solo"
-              class="combo"
-              bg-color="#d9d9d9"
-              v-model="selectedTags"
-              :items="items"
-              placeholder="ex) java, spring boot, sql"
-              label="기술 스택"
-              multiple
-              chips
-              clearable
-            ></v-combobox>
-            <v-chip v-for="tag in selectedTags" :clearable="editing" :key="tag" label color="primary" class="mr-2 mb-2">
-              {{ tag }}</v-chip
-            >
+          <div>
+            <template v-if="editing">
+              <v-combobox
+                v-if="editing"
+                variant="solo"
+                class="combo"
+                bg-color="#d9d9d9"
+                v-model="selectedTags"
+                :items="items"
+                placeholder="ex) java, spring boot, sql"
+                label="기술 스택"
+                multiple
+                chips
+                clearable
+              ></v-combobox>
+            </template>
+            <template v-else-if="tagIdList.length > 0">
+              <v-chip v-for="tag in tagIdList" :clearable="editing" :key="tag" label color="primary" class="mr-2 mb-2">
+                {{ tagName[tag] }}</v-chip
+              >
+            </template>
+            <template v-else>
+              <div>선택한 기술 스택이 없습니다.</div>
+            </template>
           </div>
-          <div v-else>선택한 기술 스택이 없습니다.</div>
           <br />
           <v-btn @click="toggleEdit" class="tagbtn" color="#62C0A6" type="submit" variant="elevated">{{
             editing ? '기술 스택 변경 저장' : '기술 스택 변경'
@@ -147,7 +153,7 @@ const { handleAccessToken: accessToken } = storeToRefs(userStore);
 // const { loginUser: user } = storeToRefs(userStore);
 const { handleUser: user } = storeToRefs(userStore);
 const { handleUserProfile: profile } = storeToRefs(profileStore);
-const { tagIdList: tagIdList } = storeToRefs(tagStore);
+const { handleTags: tagIdList } = storeToRefs(tagStore);
 
 onBeforeMount(() => {
   setUser(userStore.loginUserId);
@@ -184,21 +190,21 @@ const items = ref([
 //   }
 // };
 
-// // DB에 수정된 번호를 다시 태그명으로 전환
-// const tagName = {
-//   1: 'python',
-//   2: 'java',
-//   3: 'C++',
-//   4: 'javascript',
-//   5: 'django',
-//   6: 'spring',
-//   7: 'spring boot',
-//   8: 'kotlin',
-//   9: 'sql',
-//   10: 'react',
-//   11: 'vue',
-//   12: 'C#',
-// };
+// DB에 수정된 번호를 다시 태그명으로 전환
+const tagName = {
+  1: 'python',
+  2: 'java',
+  3: 'C++',
+  4: 'javascript',
+  5: 'django',
+  6: 'spring',
+  7: 'spring boot',
+  8: 'kotlin',
+  9: 'sql',
+  10: 'react',
+  11: 'vue',
+  12: 'C#',
+};
 
 // 기술 스택 목록 변경
 const toggleEdit = () => {
@@ -211,6 +217,7 @@ const toggleEdit = () => {
     updateTechStack(user, accessToken.value);
   }
   editing.value = !editing.value;
+  setTagNumList(userStore.loginUserId);
 };
 
 const password = ref('');

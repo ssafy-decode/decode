@@ -22,7 +22,9 @@
             :type="showPassword ? 'text' : 'password'"
             label="비밀번호 확인"
             append-inner
+            @keyup.enter="confirmpwd"
           >
+            <!-- 마우스 클릭 말고도 엔터키를 누르는 것으로도 비번 확인이 작동되도록 수정 -->
             <template #append-inner>
               <v-icon @click="toggleEye" style="margin-right: 5px">{{
                 showPassword ? 'mdi-eye' : 'mdi-eye-off'

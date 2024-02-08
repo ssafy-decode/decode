@@ -138,7 +138,7 @@ const useProfileStore = defineStore(
         .then((res) => {
           userStore.accessToken = userStore.parseToken(res);
           if (res.data.status === 'OK') {
-            tagStore.tagIdList = updatedTagNums;
+            tagStore.setTagNumList(user.userId);
             console.log('들어가는지', tagStore.tagIdList);
           }
         });
