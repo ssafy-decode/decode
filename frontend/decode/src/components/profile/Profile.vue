@@ -13,11 +13,10 @@
     >
       <v-row>
         <v-col :cols="1">
-          {{ profile.nickname }}
           <br />
+          <div>{{ profile.nickname }}</div>
           <br />
-          <br />
-          {{ profile.tier }}
+          <div>{{ profile.tier }}</div>
           <br />
         </v-col>
 
@@ -51,9 +50,15 @@
               </template>
             </div>
             <br />
-            <v-btn @click="toggleEdit" class="tagbtn" color="#62C0A6" type="submit" variant="elevated">{{
-              editing ? '기술 스택 변경 저장' : '기술 스택 변경'
-            }}</v-btn>
+            <v-btn
+              v-if="isMyProfile"
+              @click="toggleEdit"
+              class="tagbtn"
+              color="#62C0A6"
+              type="submit"
+              variant="elevated"
+              >{{ editing ? '기술 스택 변경 저장' : '기술 스택 변경' }}</v-btn
+            >
           </div></v-col
         >
 
@@ -115,18 +120,17 @@ import { useUserStore } from '@/stores/userStore';
 import { useProfileStore } from '@/stores/profileStore';
 import { useTagStore } from '@/stores/tagStore';
 import { useFollowStore } from '@/stores/followStore';
+
 const userStore = useUserStore();
 const profileStore = useProfileStore();
-const followStore = useFollowStore();
 const tagStore = useTagStore();
-const { handleAccessToken: accessToken } = storeToRefs(userStore);
-
-const { unFollow, follow } = followStore;
+const followStore = useFollowStore();
 
 const { updateTechStack } = profileStore;
-const { setTagNumList } = tagStore;
+const { unFollow, follow } = followStore;
 const { handleTags: tagIdList } = storeToRefs(tagStore);
 const { handleAccessToken: accessToken } = storeToRefs(userStore);
+const { setTagNumList } = tagStore;
 
 const props = defineProps({
   profile: Object,
@@ -167,13 +171,9 @@ const items = ref([
   'C#',
 ]);
 
-onBeforeMount(() => {
-  setTagNumList(userStore.loginUserId);
-  selectedTags.value = tagIdList.value.map((tag) => tagName[tag]);
-});
-
 // 기술 스택 목록 변경
 const toggleEdit = () => {
+  selectedTags.value = tagIdList.value.map((tag) => tagName[tag]);
   if (editing.value) {
     const user = {
       userId: userStore.loginUserId,
@@ -183,6 +183,8 @@ const toggleEdit = () => {
   }
   editing.value = !editing.value;
   setTagNumList(userStore.loginUserId);
+};
+
 const followById = (id) => {
   follow(id, accessToken.value);
 };

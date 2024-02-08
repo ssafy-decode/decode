@@ -14,6 +14,7 @@ import { useRoute } from 'vue-router';
 import { useUserStore } from '@/stores/userStore';
 import { useProfileStore } from '@/stores/profileStore';
 import { useFollowStore } from '@/stores/followStore';
+import { useTagStore } from '@/stores/tagStore';
 import ProfileWindow from '@/components/profile/ProfileWindow.vue';
 import Profile from '@/components/profile/Profile.vue';
 import { storeToRefs } from 'pinia';
@@ -24,9 +25,11 @@ const uid = route.params.id;
 const userStore = useUserStore();
 const followStore = useFollowStore();
 const profileStore = useProfileStore();
+const tagStore = useTagStore();
 
 const { setFollowerList, setFollowingList, getFollowState } = followStore;
 const { setUserProfile, setAList, setQList } = profileStore;
+const { setTagNumList } = tagStore;
 
 const {
   handleFollowerList: followerList,
@@ -47,6 +50,7 @@ watch(
     setUserProfile(newUid);
     setAList(newUid);
     setQList(newUid);
+    setTagNumList(newUid);
 
     if (newUid == loginUserId.value) {
       isMyProfile.value = true;
