@@ -9,10 +9,8 @@ const useUserStore = defineStore(
   () => {
     // 스토어
     const tagStore = useTagStore();
-
     // 토큰 정보
     const accessToken = ref(''); // 파싱된 토큰 값 (활용 시 앞에 'Bearer '을 붙일 것!)
-
     // 배열
     const users = ref([]); // 전체 회원 목록
     const user = ref([]); // 해당 유저의 id, email, password, phoneNumber, birth, name, createdTime, updatedTime 저장한 목록
@@ -63,7 +61,7 @@ const useUserStore = defineStore(
         if (res.data.status === 'OK') {
           setToken(parseToken(res));
           isLoggedIn.value = true;
-          loginUserId.value = res.data.data;
+          setLoginUserId(res.data.data);
           router.push({ name: 'mainview' });
         } else {
           alert('로그인에 실패했습니다.');
