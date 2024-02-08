@@ -17,7 +17,9 @@
       <v-row>
         <v-col :cols="12">
           <div class="listItem writerBox">
-            <span class="nickname title">{{ writerNickname }}</span>
+            <span class="nickname title">
+              <profileRouter :uid="questionWriterId" :nickName="writerNickname" />
+            </span>
             &nbsp; &nbsp;
             <span class="time info">
               {{ questionCreatedTime[0] }}년 {{ questionCreatedTime[1] }}월 {{ questionCreatedTime[2] }}일
@@ -57,6 +59,7 @@ import { useUserStore } from '@/stores/userStore';
 import { useRoute, useRouter } from 'vue-router';
 import AnswerList from '@/components/answer/AnswerList.vue';
 import QuestionViewer from '@/components/common/QuestionViewer.vue';
+import profileRouter from '@/components/common/profileRouter.vue';
 
 const answerStore = useAnswerStore();
 const userStore = useUserStore();
@@ -122,7 +125,7 @@ const goCreateAnswer = function () {
 };
 
 onMounted(() => {
-  getDetailQuestion(route.params.id);
+  getDetailQuestion();
 });
 </script>
 
