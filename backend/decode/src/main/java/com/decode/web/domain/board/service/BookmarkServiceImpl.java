@@ -55,17 +55,18 @@ public class BookmarkServiceImpl implements BookmarkService {
     }
 
     @Override
-    public List<ResponseQuestionListDto> getBookMarkQuetionList(Long userId) {
+    public List<ResponseQuestionListDto> getBookMarkQuestionList(Long userId) {
         UserProfileEntity userProfile = userProfileRepository.findById(userId).orElseThrow(
                 () -> new EntityNotFoundException("User not found with ID: " + userId));
 
         List<BookmarkEntity> bookmarks = bookmarkRepository.findByUserProfile(userProfile);
 
         return bookmarks.stream()
-                .map(this::converBookmarkToResponseQuestionListDto).toList();
+                .map(this::convertBookmarkToResponseQuestionListDto)
+                .toList();
     }
 
-    public ResponseQuestionListDto converBookmarkToResponseQuestionListDto(
+    public ResponseQuestionListDto convertBookmarkToResponseQuestionListDto(
             BookmarkEntity bookmark) {
         QuestionEntity questionEntity = bookmark.getQuestion();
         QuestionDocument questionDocument = questionELKRepository.findById(questionEntity.getId())

@@ -7,6 +7,7 @@ import com.decode.web.entity.ItemEntity;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,9 +23,10 @@ public class ItemServiceImpl {
                 .collect(Collectors.toList());
     }
 
-    public Integer useItem(ItemUseDto itemUseDto) {
+    public Integer useItem(ItemUseDto itemUseDto) throws BadRequestException {
         ItemEntity item = itemRepository.findByItemIdAndUserId(itemUseDto.getItemId(),
-                itemUseDto.getUserId());
+                        itemUseDto.getUserId())
+                .orElseThrow(() -> new BadRequestException("아이템 사용 불가"));
         item.buy(itemUseDto.getCount());
         return item.getProductCount();
     }

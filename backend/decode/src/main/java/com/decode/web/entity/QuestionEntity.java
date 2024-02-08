@@ -26,18 +26,15 @@ import lombok.ToString;
 @ToString
 public class QuestionEntity extends CommonEntity {
 
+    @OneToMany(mappedBy = "question", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private final List<AnswerEntity> answers = new ArrayList<>();
+    @OneToMany(mappedBy = "question", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private final List<MetooEntity> metoos = new ArrayList<>();
+    @OneToMany(mappedBy = "question", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private final List<BookmarkEntity> bookmarks = new ArrayList<>();
     @Id
     @Column(name = "question_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @OneToMany(mappedBy = "question", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private final List<AnswerEntity> answers = new ArrayList<>();
-
-    @OneToMany(mappedBy = "question", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private final List<MetooEntity> metoos = new ArrayList<>();
-
-    @OneToMany(mappedBy = "question", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private final List<BookmarkEntity> bookmarks = new ArrayList<>();
 
 }

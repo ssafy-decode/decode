@@ -12,7 +12,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
@@ -29,6 +28,7 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class ChatEntity extends CommonEntity implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -45,7 +45,8 @@ public class ChatEntity extends CommonEntity implements Serializable {
     private ChatRoomEntity chatRoomEntity;
 
     // 대화 저장
-    public ChatEntity(UserProfileEntity userProfile, String message, ChatRoomEntity chatRoomEntity) {
+    public ChatEntity(UserProfileEntity userProfile, String message,
+            ChatRoomEntity chatRoomEntity) {
         super();
         this.sender = userProfile;
         this.message = message;

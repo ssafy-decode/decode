@@ -27,16 +27,14 @@ import org.springframework.web.client.RestTemplate;
 public class OAuth2ServiceImpl implements OAuth2Service {
 
     private final RestTemplate restTemplate = new RestTemplate();
-    @Value("${spring.security.oauth2.client.registration.github.client-id}")
-    private String clientId;
-    @Value("${spring.security.oauth2.client.registration.github.client-secret}")
-    private String clientSecret;
-
     private final UserInfoRepository userInfoRepository;
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthService authService;
-
+    @Value("${spring.security.oauth2.client.registration.github.client-id}")
+    private String clientId;
+    @Value("${spring.security.oauth2.client.registration.github.client-secret}")
+    private String clientSecret;
 
     @Override
     public String getAccessToken(String code) {

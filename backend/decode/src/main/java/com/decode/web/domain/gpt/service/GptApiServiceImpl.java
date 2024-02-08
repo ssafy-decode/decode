@@ -14,8 +14,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 @RequiredArgsConstructor
 public class GptApiServiceImpl {
 
-    private final WebClient webClient;
-
     private static final String MODEL_KEY = "model";
     private static final String MESSAGES_KEY = "messages";
     private static final String ROLE_KEY = "role";
@@ -28,9 +26,9 @@ public class GptApiServiceImpl {
                     + "Here's an example 'Java, Spring'";
     private static final String TITLE_VALUE =
             "Got an error programming, but going to post it on the board to fix the error. Please recommend a suitable title in Korean.";
-
     private static final String ANSWER_VALUE = "You are a 10 year software engineer from FAANG."
             + "Please kindly respond to the error sent by the user in Korean.";
+    private final WebClient webClient;
 
     public List<String> keywordsByError(String error) {
         return Arrays.stream(response(error, KEYWORD_VALUE).keywords())
@@ -62,13 +60,6 @@ public class GptApiServiceImpl {
                 .retrieve()
                 .bodyToMono(GPTResponseDto.class)
                 .block();
-    }
-
-    private List<Map<String, String>> generateMessage(String title, String type) {
-        List<Map<String, String>> messages = new ArrayList<>();
-        messages.add(createMessageMap(SYSTEM_ROLE_VALUE, type));
-        messages.add(createMessageMap(USER_ROLE_VALUE, title));
-        return messages;
     }
 
     private Map<String, String> createMessageMap(String role, String content) {

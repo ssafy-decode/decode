@@ -5,5 +5,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MetooRepository extends JpaRepository<MetooEntity, Long> {
 
-    int countByQuestionId(Long questionId);
 }
