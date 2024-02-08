@@ -12,6 +12,7 @@ import com.decode.web.domain.user.dto.RequestUserTagDto;
 import com.decode.web.domain.user.dto.ResponseUserProfileDto;
 import com.decode.web.domain.user.dto.UserInfoDto;
 import com.decode.web.domain.user.dto.UserProfileDto;
+import com.decode.web.domain.user.dto.UserRankInfoDto;
 import com.decode.web.domain.user.dto.UserRegistDto;
 import com.decode.web.domain.user.mapper.UserMapper;
 import com.decode.web.domain.user.mapper.UserProfileMapper;
@@ -374,6 +375,17 @@ public class UserController {
     @Operation(summary = "랭킹 V2", description = "랭킹 API V2")
     public ResponseDto getRankV2() {
         List<RankResponseDto> data = userService.getRankV2();
+        return ResponseDto.builder()
+                .data(data)
+                .status(HttpStatus.OK)
+                .message("랭킹")
+                .build();
+    }
+
+    @GetMapping("/rank/{userId}")
+    @Operation(summary = "유저아이디로 랭킹 조회", description = "유저아이디로 랭킹 조회")
+    public ResponseDto getRankByUserId(@PathVariable Long userId) {
+        UserRankInfoDto data = userService.getRankByUserId(userId);
         return ResponseDto.builder()
                 .data(data)
                 .status(HttpStatus.OK)
