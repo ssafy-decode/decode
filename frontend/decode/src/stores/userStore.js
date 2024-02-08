@@ -84,8 +84,8 @@ const useUserStore = defineStore(
     // 로그아웃
     const setLogout = async () => {
       isLoggedIn.value = false;
-      accessToken.value = '';
       router.push({ name: 'mainview' });
+      if (!accessToken.value) return;
       await axios
         .post(
           `/logout`,
@@ -96,7 +96,9 @@ const useUserStore = defineStore(
             },
           },
         )
-        .then((res) => {});
+        .then((res) => {
+          accessToken.value = '';
+        });
     };
 
     // 특정 회원 정보 조회
