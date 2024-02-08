@@ -11,10 +11,8 @@ const useUserStore = defineStore(
     // 스토어
     const profileStore = useProfileStore();
     const tagStore = useTagStore();
-
     // 토큰 정보
     const accessToken = ref(''); // 파싱된 토큰 값 (활용 시 앞에 'Bearer '을 붙일 것!)
-
     // 배열
     const users = ref([]); // 전체 회원 목록
     const user = ref([]); // 해당 유저의 id, email, password, phoneNumber, birth, name, createdTime, updatedTime 저장한 목록
@@ -63,7 +61,7 @@ const useUserStore = defineStore(
         if (res.data.status === 'OK') {
           setToken(parseToken(res));
           isLoggedIn.value = true;
-          loginUserId.value = res.data.data;
+          setLoginUserId(res.data.data);
           router.push({ name: 'mainview' });
         } else {
           alert('로그인에 실패했습니다.');
@@ -85,30 +83,22 @@ const useUserStore = defineStore(
 
     // 로그아웃
     const setLogout = async () => {
-      console.log(accessToken.value);
-      try {
-        await axios
-          .post(
-            `/logout`,
-            {},
-            {
-              headers: {
-                Authorization: `Bearer ${accessToken.value}`,
-              },
+      isLoggedIn.value = false;
+      router.push({ name: 'mainview' });
+      if (!accessToken.value) return;
+      await axios
+        .post(
+          `/logout`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken.value}`,
             },
-          )
-          .then((res) => {
-            if (res.data.status === 'OK') {
-              // session storage에 저장된 로그인 관련 data 초기화
-              isLoggedIn.value = false;
-              accessToken.value = '';
-              router.push({ name: 'mainview' });
-            }
-          });
-      } catch (error) {
-        console.error('Logout error:', error);
-        return;
-      }
+          },
+        )
+        .then((res) => {
+          accessToken.value = '';
+        });
     };
 
     // 특정 회원 정보 조회

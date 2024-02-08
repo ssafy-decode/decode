@@ -86,16 +86,20 @@
               "
             >
               <div v-if="followerList.length > 0">
+                <v-row>
+                  <v-col cols="1"></v-col>
+                  <v-col cols="1">티어</v-col>
+                  <v-col cols="4">닉네임</v-col>
+                </v-row>
                 <v-row v-for="(follower, followerIdx) in followerList" :key="followerIdx">
                   <span hidden>{{ follower.id }}</span>
-                  <v-col cols="1"> {{ followerIdx + 1 }} </v-col>
-                  <v-col cols="2"> {{ follower.tier }}</v-col>
-                  <v-col cols="3">
+                  <v-col cols="1"> {{ follower.tier }}</v-col>
+                  <v-col cols="1">
                     <img style="width: 30px" src="../default.png" />
                     {{ follower.profileImg }}
                   </v-col>
                   <v-col cols="4">
-                    {{ follower.nickname }}
+                    <profileRouter :uid="follower.id" :nickName="follower.nickname" />
                   </v-col>
                 </v-row>
               </div>
@@ -119,24 +123,22 @@
             >
               <div v-if="followingList.length > 0">
                 <v-row>
-                  <v-col cols="1">번호</v-col>
-                  <v-col cols="2">티어</v-col>
-                  <v-col cols="3">프로필</v-col>
+                  <v-col cols="1"></v-col>
+                  <v-col cols="1">티어</v-col>
                   <v-col cols="4">닉네임</v-col>
                 </v-row>
                 <v-row v-for="(following, followingIdx) in followingList" :key="followingIdx">
                   <span hidden>{{ following.id }}</span>
-                  <v-col cols="1"> {{ followingIdx + 1 }} </v-col>
-                  <v-col cols="2"> {{ following.tier }}</v-col>
-                  <v-col cols="3">
+                  <v-col cols="1">
                     <img style="width: 30px" src="../default.png" />
                     {{ following.profileImg }}
                   </v-col>
+                  <v-col cols="1"> {{ following.tier }}</v-col>
                   <v-col cols="4">
-                    {{ following.nickname }}
+                    <profileRouter :uid="following.id" :nickName="following.nickname" />
                   </v-col>
-                  <v-col cols="2">
-                    <v-btn @click="unfollowById(following.id)">팔로우 취소</v-btn>
+                  <v-col cols="2" offset="4">
+                    <v-btn @click="unfollowById(following.id, followingIdx)">팔로우 취소</v-btn>
                   </v-col>
                 </v-row>
               </div>
@@ -152,6 +154,8 @@
 </template>
 
 <script setup>
+import profileRouter from '@/components/common/profileRouter.vue';
+
 import { ref, defineProps } from 'vue';
 import { useFollowStore } from '@/stores/followStore';
 import { useProfileStore } from '@/stores/profileStore';
@@ -174,7 +178,8 @@ const { handleAccessToken: accessToken } = storeToRefs(userStore);
 
 const { unFollow } = followStore;
 
-const unfollowById = (id) => {
+const unfollowById = (id, index) => {
+  props.followingList.splice(index, 1);
   unFollow(id, accessToken.value);
 };
 </script>

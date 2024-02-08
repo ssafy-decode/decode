@@ -166,6 +166,7 @@ router.beforeEach((to, from, next) => {
     'userregist',
     'techstack',
     'questionview',
+    'oauth2redirect',
   ];
   if (accessRoutes.includes(to.name) || userStore.isLoggedIn) {
     next();

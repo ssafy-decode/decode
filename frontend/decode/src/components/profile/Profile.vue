@@ -67,20 +67,40 @@
         </v-col>
       </v-row>
 
-      <div class="buttons">
+      <div v-if="isMyProfile" class="buttons">
         <span>
           <router-link to="/inventory">
-            <v-btn class="btn" color="#62C0A6" size="x-large" type="submit" variant="elevated" style="color: #000000">
-              내 아이템
-            </v-btn>
+            <v-btn class="btn" color="#62C0A6" size="x-large" type="submit" variant="elevated"> 내 아이템 </v-btn>
           </router-link>
           &nbsp;
           <router-link to="/checkpwd">
-            <v-btn class="btn" color="#62C0A6" size="x-large" type="submit" variant="elevated" style="color: #000000">
-              회원정보 수정
-            </v-btn>
+            <v-btn class="btn" color="#62C0A6" size="x-large" type="submit" variant="elevated"> 회원정보 수정 </v-btn>
           </router-link>
         </span>
+      </div>
+      <div v-else class="buttons">
+        <v-btn
+          v-if="isFollowing"
+          class="btn"
+          color="#62C0A6"
+          size="x-large"
+          type="submit"
+          variant="elevated"
+          @click="unfollowById(profile.id)"
+        >
+          팔로우 취소
+        </v-btn>
+        <v-btn
+          v-else
+          class="btn"
+          color="#62C0A6"
+          size="x-large"
+          type="submit"
+          variant="elevated"
+          @click="followById(profile.id)"
+        >
+          팔로우
+        </v-btn>
       </div>
     </v-card>
   </div>
@@ -94,10 +114,14 @@ import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/stores/userStore';
 import { useProfileStore } from '@/stores/profileStore';
 import { useTagStore } from '@/stores/tagStore';
-
+import { useFollowStore } from '@/stores/followStore';
 const userStore = useUserStore();
 const profileStore = useProfileStore();
+const followStore = useFollowStore();
 const tagStore = useTagStore();
+const { handleAccessToken: accessToken } = storeToRefs(userStore);
+
+const { unFollow, follow } = followStore;
 
 const { updateTechStack } = profileStore;
 const { setTagNumList } = tagStore;
@@ -106,6 +130,8 @@ const { handleAccessToken: accessToken } = storeToRefs(userStore);
 
 const props = defineProps({
   profile: Object,
+  isMyProfile: Boolean,
+  isFollowing: Boolean,
 });
 
 // DB에 수정된 번호를 다시 태그명으로 전환
@@ -157,6 +183,11 @@ const toggleEdit = () => {
   }
   editing.value = !editing.value;
   setTagNumList(userStore.loginUserId);
+const followById = (id) => {
+  follow(id, accessToken.value);
+};
+const unfollowById = (id) => {
+  unFollow(id, accessToken.value);
 };
 </script>
 
@@ -171,6 +202,7 @@ const toggleEdit = () => {
   text-align: end;
 }
 .btn {
+  color: #000000;
   width: 110px;
   height: 28px;
   border-radius: 34px;
