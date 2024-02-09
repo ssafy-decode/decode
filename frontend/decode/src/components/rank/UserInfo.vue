@@ -15,19 +15,19 @@
         <v-row>
           <v-col cols="3">
             <p> {{ user.answerCount }} </p>
-            <p> 답변수 </p>
+            <p style="color: #999999;"> 답변수 </p>
           </v-col>
           <v-col cols="3">
             <p> {{ user.adoptCount }} </p>
-            <p> 채택수 </p>
+            <p style="color: #999999;"> 채택수 </p>
           </v-col>
           <v-col cols="3">
             <p> {{ user.followerCount }} </p>
-            <p> 팔로워 </p>
+            <p style="color: #999999;"> 팔로워 </p>
           </v-col>
           <v-col cols="3">
             <p> {{ user.followCount }} </p>
-            <p> 팔로우 </p>
+            <p style="color: #999999;"> 팔로우 </p>
           </v-col>
         </v-row>
         <v-row style="margin-bottom: -30px;">
@@ -42,7 +42,7 @@
         <v-row justify="center">
           <v-col sm="10">
             <v-progress-linear
-            color= #62C0A6 
+            color=#62C0A6 
             height="30px"
             rounded="true"
             :model-value="user.exp / rankStore.getNeedExp(user.tier) * 100"

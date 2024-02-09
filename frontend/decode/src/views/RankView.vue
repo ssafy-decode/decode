@@ -4,10 +4,8 @@
       <UserInfo />
     </div>
     <br />
-    <div class="rank-list-container">
-      <Search></Search>
-      <RankingTable></RankingTable>
-    </div>
+    <!-- <Search></Search> -->
+    <RankingTable/>
   </v-container>
 </template>
 
@@ -44,8 +42,6 @@ onMounted(() => {
   background-color: #ffffff;
   max-width: 1250px;
   margin: auto;
-  padding: 10; /* 간격 설정 */
-
 }
 
 .rank-list-container {
@@ -54,6 +50,7 @@ onMounted(() => {
   background-color: #ffffff;
   max-width: 1250px;
   margin: auto;
+  padding: 10px; /* 간격 설정 */
 }
 
 .user-info {
