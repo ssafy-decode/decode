@@ -3,6 +3,8 @@ package com.decode.web.entity;
 
 import com.decode.web.exception.NotEnoughCoinException;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.Column;
@@ -39,6 +41,7 @@ public class UserProfileEntity {
     @JoinColumn(name = "user_id")
     @Setter
     @JsonManagedReference
+
     private UserInfoEntity userInfoEntity;
 
     @Id
@@ -64,9 +67,13 @@ public class UserProfileEntity {
     private int coin;
 
     @OneToMany(mappedBy = "toUser", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    @JsonIgnore
     private List<FollowEntity> followings;
 
     @OneToMany(mappedBy = "fromUser", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    @JsonIgnore
     private List<FollowEntity> followers;
 
     @OneToMany(mappedBy = "userProfile", fetch = FetchType.LAZY)
