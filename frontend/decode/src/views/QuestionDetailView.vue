@@ -30,6 +30,8 @@
       <v-row>
         <v-col :cols="12">
           <QuestionViewer :initialValue="question.content" />
+          <br /><br /><br /><br />
+          {{ question.tagList }}
         </v-col>
       </v-row>
       <br /><br />
