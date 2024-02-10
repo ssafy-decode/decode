@@ -26,7 +26,7 @@
 
         <v-col :cols="6">
           출석 스트릭
-          <!-- <AttendanceLog :uid="profile.id" /> -->
+          <AttendanceLog />
         </v-col>
 
         <v-col :cols="3">
