@@ -1,6 +1,6 @@
 package com.decode.web.global.utils.authentication;
 
-import com.decode.web.domain.user.service.RedisService;
+import com.decode.web.domain.common.redis.RedisService;
 import com.decode.web.domain.user.service.UserDetailsImpl;
 import com.decode.web.domain.user.service.UserDetailsServiceImpl;
 import com.decode.web.domain.user.service.UserService;
@@ -30,7 +30,6 @@ public class JwtTokenProvider {
 
     private final UserDetailsServiceImpl userDetailsService;
     private final String secretKey;
-    private final RedisService redisService;
     private final Long accessTokenValidityInMilliseconds;
     private final Long refreshTokenValidityInMilliseconds;
 
@@ -40,7 +39,6 @@ public class JwtTokenProvider {
             @Value("${jwt.secret}") String secretKey,
             @Value("${jwt.access-token-expire-length}") Long accessTokenValidityInMilliseconds,
             @Value("${jwt.refresh-token-expire-length}") Long refreshTokenValidityInMilliseconds) {
-        this.redisService = redisService;
         this.userDetailsService = userDetailsService;
 
         this.secretKey = secretKey;
@@ -100,7 +98,6 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String token) {
         String email = getClaims(token).get("email", String.class);
         UserDetailsImpl userDetailsImpl = userDetailsService.loadUserByUsername(email);
-        log.info(userDetailsImpl.toString());
         return new UsernamePasswordAuthenticationToken(userDetailsImpl.getId(),
                 userDetailsImpl.getPassword(), userDetailsImpl.getAuthorities());
     }
@@ -135,29 +132,5 @@ public class JwtTokenProvider {
     public String getPrincipal(String token) {
         return getClaims(token).get("email", String.class);
     }
-//    public boolean validateToken(String token) {
-//        try {
-//            Jwts.parserBuilder()
-//                    .setSigningKey(signingKey)
-//                    .build()
-//                    .parseClaimsJws(token);
-//            return true;
-//        } catch (ExpiredJwtException e) {
-//            log.error("access token expired");
-//        } catch (SignatureException e) {
-//            log.error("Invalid JWT signature.");
-//        } catch (MalformedJwtException e) {
-//            log.error("Invalid JWT token.");
-//        } catch (UnsupportedJwtException e) {
-//            log.error("Unsupported JWT token.");
-//        } catch (IllegalArgumentException e) {
-//            log.error("JWT claims string is empty.");
-//        } catch (NullPointerException e) {
-//            log.error("JWT Token is empty.");
-//
-//        }
-//        return false;
-//    }
-
 
 }

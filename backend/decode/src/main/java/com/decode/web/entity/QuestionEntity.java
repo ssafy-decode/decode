@@ -7,21 +7,23 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Entity
 @Table(name = "Question")
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
+@ToString
 public class QuestionEntity extends CommonEntity {
 
     @Id
@@ -29,36 +31,13 @@ public class QuestionEntity extends CommonEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Setter
-    @Column(name = "question_title")
-    private String title;
-
-    @ManyToOne
-    @JoinColumn(name = "question_writer_id")
-    private UserProfileEntity questionWriter;
-
-    @Setter
-    @Column(name = "question_content")
-    private String content;
+    @OneToMany(mappedBy = "question", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private final List<AnswerEntity> answers = new ArrayList<>();
 
     @OneToMany(mappedBy = "question", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<AnswerEntity> answers = new ArrayList<>();
+    private final List<MetooEntity> metoos = new ArrayList<>();
 
     @OneToMany(mappedBy = "question", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<QuestionTagEntity> questionTags = new ArrayList<>();
-
-    @OneToMany(mappedBy = "question", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<MetooEntity> metoos = new ArrayList<>();
-
-    @OneToMany(mappedBy = "question", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<BookmarkEntity> bookmarks = new ArrayList<>();
-
-    @Builder
-    public QuestionEntity(Long id, String title, UserProfileEntity questionWriter, String content) {
-        this.id = id;
-        this.title = title;
-        this.questionWriter = questionWriter;
-        this.content = content;
-    }
+    private final List<BookmarkEntity> bookmarks = new ArrayList<>();
 
 }

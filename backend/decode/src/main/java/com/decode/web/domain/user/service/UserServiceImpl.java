@@ -1,17 +1,24 @@
 package com.decode.web.domain.user.service;
 
+import com.decode.web.domain.common.redis.RedisService;
 import com.decode.web.domain.tag.repository.UserTagRepository;
 import com.decode.web.domain.user.dto.FindPasswordDto;
 import com.decode.web.domain.user.dto.RequestUserTagDto;
+import com.decode.web.domain.user.dto.ResponseUserProfileDto;
+import com.decode.web.domain.user.mapper.ResponseUserProfileMapper;
 import com.decode.web.domain.user.repository.UserInfoRepository;
 import com.decode.web.domain.user.repository.UserProfileRepository;
 import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.entity.UserProfileEntity;
 import com.decode.web.entity.UserTagEntity;
 import com.decode.web.exception.UserException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,14 +32,13 @@ public class UserServiceImpl implements UserService {
     private final UserInfoRepository userInfoRepository;
     private final UserProfileRepository userProfileRepository;
     private final UserTagRepository userTagRepository;
+    private final RedisService redisService;
+    private final ResponseUserProfileMapper responseUserProfileMapper;
 
     @Override
     public UserInfoEntity getUserById(Long id) {
         UserInfoEntity user = userInfoRepository.getReferenceById(id);
-        if (user != null) {
-            return user;
-        }
-        return null;
+        return user;
     }
 
     @Override
@@ -65,14 +71,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean pwCheck(String password) {
         // 영어/숫자/특수문자 조합으로 8자리 이상
-        if (password.length() < 8
-                || !password.matches(".*[a-zA-Z].*")
-                || !password.matches(".*[0-9].*")
-                || !password.matches(".*[~!@#$%^&*()_+|<>?:{}].*")) {
-            return false;
-        }
-
-        return true;
+        return password.length() >= 8
+                && password.matches(".*[a-zA-Z].*")
+                && password.matches(".*[0-9].*")
+                && password.matches(".*[~!@#$%^&*()_+|<>?:{}].*");
     }
 
     @Override
@@ -90,7 +92,7 @@ public class UserServiceImpl implements UserService {
 
         profile.setUserInfoEntity(user);
         userProfileRepository.save(profile);
-        if(user.getId() == null){
+        if (user.getId() == null) {
             throw new UserException("회원가입 실패");
         }
         return user.getId();
@@ -176,6 +178,62 @@ public class UserServiceImpl implements UserService {
 
     }
 
-//    public void
+    @Override
+    @Transactional
+    public void setAttendance(String email) {
+        LocalDate date = LocalDate.now();
+        String key = "ATD:" + email;
+        String value = date.toString();
+        redisService.setValueForSet(key, value);
+    }
+
+    @Override
+    public Set<String> getAttendance(Long id) {
+        String key = "ATD:" + userInfoRepository.getReferenceById(id).getEmail();
+        return redisService.getValuesForSet(key);
+    }
+
+    @Override
+    @Transactional
+    public void setExp(Long id, int exp) {
+        LocalDate date = LocalDate.now();
+        String email = userInfoRepository.getReferenceById(id).getEmail();
+        String key = "EXP:" + email;
+        String hashKey = date.toString();
+        redisService.incrementValueForHash(key, hashKey, exp);
+        // 지금까지 경험치 총합에 += exp 해야함
+        UserProfileEntity profile = userProfileRepository.findById(id)
+                .orElseThrow(() -> new UserException("유저 정보가 없습니다."));
+        profile.setExp(profile.getExp() + exp);
+    }
+
+    @Override
+    public Map<String, Integer> getExp(Long id) {
+        String email = userInfoRepository.getReferenceById(id).getEmail();
+        String key = "EXP:" + email;
+        return redisService.getValuesForHash(key);
+    }
+
+    @Override
+    public List<UserProfileEntity> getRank() {
+        List<UserProfileEntity> rank = userProfileRepository.findAll();
+        rank.sort((o1, o2) -> o2.getExp() - o1.getExp());
+        return rank;
+    }
+
+    @Override
+    public ResponseUserProfileDto getUserProfileDtoById(Long userId) {
+        UserProfileEntity userProfileEntity = userProfileRepository.findById(userId).orElseThrow(
+                () -> new EntityNotFoundException(
+                        "user not found with id: " + userId));
+        ResponseUserProfileDto userProfileDto = responseUserProfileMapper.toDto(userProfileEntity);
+        List<UserTagEntity> userTagEntities = userProfileEntity.getUserTags();
+        List<Long> userTagIdList = userTagEntities.stream()
+                .map(UserTagEntity::getTagId)
+                .toList();
+        userProfileDto.setUserTagList(userTagIdList);
+
+        return userProfileDto;
+    }
 
 }
