@@ -38,6 +38,7 @@ onMounted(() => {
   /* margin: 0 auto; */
 }
 .user-info-container {
+  border-radius: 15px;
   border: 5px solid #cfcfcf;
   background-color: #ffffff;
   max-width: 1250px;
