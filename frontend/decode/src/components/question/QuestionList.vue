@@ -75,7 +75,8 @@ const keyword = ref('');
 const tagIds = ref([]);
 
 const searchParams = function (keyword, tagIds) {
-  questionStore.getQuestions(keyword, ...tagIds);
+  const temp = tagIds.map((tag) => items[tag]);
+  questionStore.getQuestions(keyword, ...temp);
 };
 
 const items = questionStore.items;

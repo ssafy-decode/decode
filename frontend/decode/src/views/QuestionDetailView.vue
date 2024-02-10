@@ -30,6 +30,9 @@
       <v-row>
         <v-col :cols="12">
           <QuestionViewer :initialValue="question.content" />
+          <!-- <div class="tagList">
+            {{ question.tagList }}
+          </div> -->
         </v-col>
       </v-row>
       <br /><br />
@@ -196,5 +199,9 @@ button {
 
 .time {
   color: #d9d9d9;
+}
+
+.tagList {
+  margin-top: 40px;
 }
 </style>
