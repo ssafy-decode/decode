@@ -1,6 +1,7 @@
 package com.decode.web.domain.chat.service;
 
 import com.decode.web.domain.chat.dto.ChatRequestDto;
+import com.decode.web.domain.chat.dto.ChatResponseDto;
 import java.util.List;
 
 public interface ChatService {
@@ -8,5 +9,7 @@ public interface ChatService {
 
     void saveChat(ChatRequestDto message);
 
-    List<Object> loadMessage(Long roomId);
+    List<ChatResponseDto> loadMessage(Long roomId);
+
+
 }

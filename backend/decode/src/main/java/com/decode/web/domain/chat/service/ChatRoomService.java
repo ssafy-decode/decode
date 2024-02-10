@@ -1,6 +1,7 @@
 package com.decode.web.domain.chat.service;
 
 import com.decode.web.domain.chat.dto.ChatRoomRequestDto;
+import com.decode.web.domain.chat.dto.ChatRoomResponseDto;
 import com.decode.web.entity.ChatRoomEntity;
 import java.util.List;
 import org.springframework.data.redis.listener.ChannelTopic;
@@ -14,4 +15,6 @@ public interface ChatRoomService {
     void enterChatRoom(Long roomId);
 
     List<ChatRoomEntity> findAllRoomByUser(Long userId);
+
+    List<ChatRoomResponseDto> findAll();
 }
