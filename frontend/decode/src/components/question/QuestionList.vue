@@ -146,7 +146,7 @@ span {
 
 .searchBtn {
   position: absolute;
-  bottom: 37px;
+  top: 23px;
   right: 1.5%;
   background-image: url('/public/searchicon.png');
   background-size: contain;
