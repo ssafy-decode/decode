@@ -1,5 +1,6 @@
 package com.decode.web.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,12 +15,14 @@ import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Setter
 @Getter
 @Table(name = "chatRoom")
 @NoArgsConstructor
+@ToString
 public class ChatRoomEntity implements Serializable {
 
     @Id
@@ -29,7 +32,7 @@ public class ChatRoomEntity implements Serializable {
     private String roomName;
     private String roomDescription;
 
-    private String creator;            // 채팅방 생성자
+    private Long creator;            // 채팅방 생성자
 
 
     @OneToMany(mappedBy = "chatRoomEntity", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)

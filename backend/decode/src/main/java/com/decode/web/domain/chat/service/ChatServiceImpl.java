@@ -1,12 +1,15 @@
 package com.decode.web.domain.chat.service;
 
 import com.decode.web.domain.chat.dto.ChatRequestDto;
+import com.decode.web.domain.chat.dto.ChatResponseDto;
 import com.decode.web.domain.chat.repository.ChatRepository;
 import com.decode.web.domain.chat.repository.ChatRoomRepository;
 import com.decode.web.domain.user.repository.UserProfileRepository;
 import com.decode.web.entity.ChatEntity;
 import com.decode.web.entity.ChatRoomEntity;
 import com.decode.web.entity.UserProfileEntity;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,18 +49,23 @@ public class ChatServiceImpl implements ChatService {
 
             ChatEntity chat = ChatEntity.builder()
                     .sender(userProfile)
-                    .message(message.getMessage())
+                    .message(message.getText())
                     .chatRoomEntity(chatRoom)
                     .build();
-//            log.debug("apic UserProfileEntity : {}", userProfile);
-//            log.debug("apic ChatRoomEntity : {}", chatRoom);
             log.debug("apic ChatEntity room {}, message {}, user {}",
                     chat.getChatRoomEntity().getId(), chat.getMessage(), chat.getSender().getId());
 
-            chatRepository.save(chat);
+            ChatEntity ce = chatRepository.save(chat);
 
             // 2. redis 저장
-            redisTemplate.opsForList().rightPush(String.valueOf(message.getRoomId()), chat);
+            ChatResponseDto chatResponseDto = ChatResponseDto.builder().id(ce.getId()).createAt(ce.getCreatedTime().toString()).nickName(ce.getSender().getNickname()).text(ce.getMessage()).userId(ce.getSender().getId()).build();
+            String chatResponseDtoJson;
+            try {
+                chatResponseDtoJson = objectMapper.writeValueAsString(chatResponseDto);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+            redisTemplate.opsForList().rightPush(String.valueOf(message.getRoomId()), chatResponseDtoJson);
 
             // 3. expire 을 이용해서, Key 를 만료시킬 수 있음
             redisTemplate.expire(String.valueOf(message.getRoomId()), 5, TimeUnit.MINUTES);
@@ -70,8 +77,8 @@ public class ChatServiceImpl implements ChatService {
 
     // 6. 대화 조회 - Redis & DB
     @Override
-    public List<Object> loadMessage(Long roomId) {
-        List<Object> messageList = new ArrayList<>();
+    public List<ChatResponseDto> loadMessage(Long roomId) {
+        List<ChatResponseDto> messageList = new ArrayList<>();
 
         // RedisTemplate을 통해 리스트의 전체 범위를 조회
         List<Object> rawMessages = redisTemplate.opsForList().range(String.valueOf(roomId), 0, 99);
@@ -83,15 +90,37 @@ public class ChatServiceImpl implements ChatService {
             List<ChatEntity> chatList = chatRepository.findTop100ByChatRoomEntity_IdOrderByCreatedTimeAsc(
                     roomId);
 
-            for (ChatEntity chat : chatList) {
-                redisTemplate.setValueSerializer(
-                        new Jackson2JsonRedisSerializer<>(ChatEntity.class));      // 직렬화
-                redisTemplate.opsForList().rightPush(String.valueOf(roomId),
-                        chat);                                // redis 저장
+            for (ChatEntity ce : chatList) {
+                // 2. redis 저장
+                ChatResponseDto chatResponseDto = ChatResponseDto.builder().id(ce.getId()).createAt(ce.getCreatedTime().toString()).nickName(ce.getSender().getNickname()).text(ce.getMessage()).userId(ce.getSender().getId()).build();
+                String chatResponseDtoJson;
+                try {
+                    chatResponseDtoJson = objectMapper.writeValueAsString(chatResponseDto);
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+                redisTemplate.opsForList().rightPush(String.valueOf(ce.getChatRoomEntity().getId()), chatResponseDtoJson);
+
+                // 3. expire 을 이용해서, Key 를 만료시킬 수 있음
+                redisTemplate.expire(String.valueOf(ce.getId()), 5, TimeUnit.MINUTES);
+                // messageList에 데이터 추가
+                // ChatResponseDto 리스트에 추가
+                messageList.add(chatResponseDto);
+
             }
         } else {
-            // 7.
-            messageList.addAll(rawMessages);
+            // Redis에서 데이터가 있을 경우, 해당 데이터를 ChatResponseDto 리스트에 추가
+            for (Object rawMessage : rawMessages) {
+                ChatResponseDto chat = null;
+                try {
+                    chat = objectMapper.readValue(rawMessage.toString(), ChatResponseDto.class);
+                    log.debug("ChatResponseDto : {}", chat);
+                    messageList.add(chat);
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
         }
 
         return messageList;
