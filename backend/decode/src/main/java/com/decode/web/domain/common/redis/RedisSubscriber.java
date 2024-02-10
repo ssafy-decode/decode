@@ -39,7 +39,7 @@ public class RedisSubscriber implements MessageListener {
 
             // WebSocket 구독자에게 채팅 메세지 Send
             messagingTemplate.convertAndSend("/topic/chat/room/" + roomMessage.getRoomId(),
-                    roomMessage.getMessage());
+                    roomMessage);
         } catch (Exception e) {
             log.error(e.getMessage());
         }

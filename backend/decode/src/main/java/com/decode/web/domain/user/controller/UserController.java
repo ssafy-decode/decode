@@ -111,15 +111,15 @@ public class UserController {
                 .message("select user profile info").build();
     }
 
-    @GetMapping("/info")
-    @Operation(summary = "로그인한 사용자 조회", description = "현재 사용자 정보를 조회합니다.")
-    public ResponseDto getUserProfileNow() {
-        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return ResponseDto.builder()
-                .data(userProfileMapper.toDto(userService.getUserProfileById(userId)))
-                .status(HttpStatus.OK)
-                .message("get user info").build();
-    }
+//    @GetMapping("/info")
+//    @Operation(summary = "로그인한 사용자 조회", description = "현재 사용자 정보를 조회합니다.")
+//    public ResponseDto getUserProfileNow() {
+//        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        return ResponseDto.builder()
+//                .data(userProfileMapper.toDto(userService.getUserProfileById(userId)))
+//                .status(HttpStatus.OK)
+//                .message("get user info").build();
+//    }
 
     @PostMapping("/regist")
     @Operation(summary = "회원 가입", description = "회원 가입 API")

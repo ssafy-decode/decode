@@ -1,6 +1,7 @@
 package com.decode.web.domain.chat.service;
 
 import com.decode.web.domain.chat.dto.ChatRoomRequestDto;
+import com.decode.web.domain.chat.dto.ChatRoomResponseDto;
 import com.decode.web.domain.chat.mapper.ChatRoomMapper;
 import com.decode.web.domain.chat.repository.ChatRepository;
 import com.decode.web.domain.chat.repository.ChatRoomRepository;
@@ -33,6 +34,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 public class ChatRoomServiceImpl implements ChatRoomService {
+
     // redis topic 정보. 서버별로 채팅방에 매치되는 topic info -> Map 넣어 roomId로 찾을수 있도록 한다.
     private Map<String, ChannelTopic> topics;
 
@@ -51,18 +53,20 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     @Qualifier(value = "chatRedisTemplate")
     private final RedisTemplate<String, Object> redisTemplate;
     private final ChatRoomMapper chatRoomMapper;
+
     // redis HASH 데이터 다루기
     @PostConstruct
     private void init() {
         opsHashChatRoom = redisTemplate.opsForHash();
         topics = new ConcurrentHashMap<>();
     }
+
     // GET TOPIC 과정에 NULL 이면 만드는 과정 포함
     /*
         토픽 생성
      */
     @Override
-    public ChannelTopic getTopic(Long roomId){
+    public ChannelTopic getTopic(Long roomId) {
         log.debug("ChatRoomRepository getTopic method roomId: {}", roomId);
         // Before send message, 구독이 된 topic 확인 후 없으면 새로 생성
         return topics.computeIfAbsent(String.valueOf(roomId), id -> {
@@ -72,15 +76,18 @@ public class ChatRoomServiceImpl implements ChatRoomService {
             return newTopic;
         });
     }
+
     /*
         채팅방 입장
      */
     @Override
     public void enterChatRoom(Long roomId) {
         ChannelTopic topic = getTopic(roomId);
-        redisMessageListener.addMessageListener(redisSubscriber, topic);        // pub/sub 통신을 위해 리스너를 설정. 대화가 가능해진다
+        redisMessageListener.addMessageListener(redisSubscriber,
+                topic);        // pub/sub 통신을 위해 리스너를 설정. 대화가 가능해진다
         topics.put(String.valueOf(roomId), topic);
     }
+
     /*
         채팅방 생성
      */
@@ -112,23 +119,22 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     /*
         채팅방 세부 조회
      */
-    public List<ChatEntity> findAllByRoomId(Long roomId){
+    public List<ChatEntity> findAllByRoomId(Long roomId) {
         return chatRoomRepository.findById(roomId)
                 .map(chatRoomEntity -> chatRepository.findAllByChatRoomEntity_Id(roomId))
-                .orElseThrow(() -> new EntityNotFoundException("ChatRoomEntity not found with ID: " + roomId));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "ChatRoomEntity not found with ID: " + roomId));
     }
 
-
-
-    /**
-     *  1. redis check -> NULL -> Repository
-     */
-//    public ChatRoom findByRoomId(Long roomId) {
-//        ChatRoom chatRoom = chatRoomRepository.cashFindByRoomId(roomId);
-//        return chatRoom;
-//    }
-
-
+    @Override
+    public List<ChatRoomResponseDto> findAll() {
+        List<ChatRoomEntity> chatRoomList = chatRoomRepository.findAll();
+        List<ChatRoomResponseDto> chatRoomResponseDtoList = new ArrayList<>();
+        for (ChatRoomEntity cr : chatRoomList){
+            chatRoomResponseDtoList.add(ChatRoomResponseDto.builder().id(cr.getId()).roomDescription(cr.getRoomDescription()).roomName(cr.getRoomName()).creator(cr.getCreator()).build());
+        }
+        return chatRoomResponseDtoList;
+    }
 
 
 }

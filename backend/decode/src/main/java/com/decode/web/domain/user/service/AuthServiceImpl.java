@@ -1,5 +1,6 @@
 package com.decode.web.domain.user.service;
 
+import com.decode.web.domain.common.redis.RedisService;
 import com.decode.web.domain.user.dto.AuthDto;
 import com.decode.web.global.utils.authentication.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
