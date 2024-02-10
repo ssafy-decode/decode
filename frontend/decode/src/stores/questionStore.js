@@ -51,6 +51,9 @@ export const useQuestionStore = defineStore(
       })
         .then((res) => {
           questions.value = res.data.data;
+          console.log('검색 성공');
+          console.log('검색 키워드: ', keyword);
+          console.log('검색 태그: ', tagIds);
         })
         .catch((err) => {
           console.log(err);
