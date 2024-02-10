@@ -5,9 +5,9 @@
 
   <div class="chat-container">
     <div class="chat-messages" ref="chatContainer">
-      <div v-for="(message, index) in messages" :key="index" :class="messageClass(message)">
+      <div v-for="(message, id) in messages" :key="id" :class="messageClass(message)">
         <div class="message-content">
-          <div class="nickname">{{ message.user }}</div>
+          <div class="nickname">{{ message.nickName }}</div>
           <p>{{ message.text }}</p>
         </div>
       </div>
@@ -39,9 +39,14 @@
   </div>
 </template>
 <script>
+import { ref, onMounted, nextTick, watchEffect, onUnmounted } from 'vue';
 import OpenviduDialog from './OpenviduDialog.vue';
 import OpenviduModal from '@/components/chat/OpenviduModal.vue';
+import { useChatStore } from '@/stores/chatStore.js';
+import { useStompStore } from '@/utils/StompUtil';
+
 export default {
+  name: 'App',
   components: {
     OpenviduDialog,
     OpenviduModal,
@@ -49,58 +54,102 @@ export default {
   props: {
     room: Object,
   },
-  data() {
-    return {
-      rommSessionId: '',
-      showOpenviduModal: false,
-      newMessage: '',
-      publisher: null, // screenSharingPublisher를 저장할 데이터
-      dialog: false, // 모달 보이고/안 보이고를 제어하는 데이터
-      messages: [
-        { user: '나', text: '안녕하세요!' },
-        { user: 'bot', text: '안녕하세요, 어떻게 도와드릴까요?' },
-        { user: '132', text: '안녕하세요, 어떻게 도와드릴까요?' },
-      ],
-    };
-  },
-  mounted() {
-    this.$nextTick(() => {
-      this.$refs.chatContainer.scrollTop = this.$refs.chatContainer.scrollHeight;
+  setup(props, { emit }) {
+    const chatStore = useChatStore();
+    const rommSessionId = ref('');
+    const showOpenviduModal = ref(false);
+    const newMessage = ref('');
+    const publisher = ref(null);
+    const dialog = ref(false);
+    const messages = ref([]);
+    const chatContainer = ref(null);
+    const stompStore = useStompStore();
+    watchEffect(() => {
+      if (stompStore.messages[props.room.id]) {
+        const newMessage = stompStore.messages[props.room.id][stompStore.messages[props.room.id].length - 1];
+        if (newMessage) {
+          messages.value.push(newMessage);
+        }
+      }
     });
-  },
-  methods: {
-    // OpenviduDialog 사용할 메소드들
-    openDialog() {
+    onMounted(async () => {
+      try {
+        const roomId = props.room.id;
+        const chatHistory = await chatStore.fetchChatHistory(roomId);
+        console.log(chatHistory, ' 반환됨.');
+        if (!Array.isArray(chatHistory)) {
+          console.error('빈 배열 반환:', chatHistory);
+        } else {
+          messages.value = chatHistory;
+        }
+      } catch (error) {
+        console.error('fetchChatHistory API 호출 중 오류', error);
+      }
+
+      nextTick(() => {
+        chatContainer.value.scrollTop = chatContainer.value.scrollHeight;
+      });
+    });
+    onUnmounted(() => {
+      // 구독 취소
+      if (stompStore[props.room.id]) {
+        stompStore.subscriptions[props.room.id].unsubscribe();
+      }
+    });
+    const openDialog = () => {
       console.log('click');
-      this.dialog = true;
-    },
-    handleYes(screenSharingPublisher, roomSessionId) {
+      dialog.value = true;
+    };
+
+    const handleYes = (screenSharingPublisher, roomSessionId) => {
       console.log('Yes 버튼 클릭');
-      this.publisher = screenSharingPublisher; // screenSharingPublisher 저장
-      this.roomSessionId = roomSessionId;
-      console.log('chat room ', this.publisher);
-      this.showOpenviduModal = true;
-      this.dialog = false;
-    },
-    handleNo() {
+      publisher.value = screenSharingPublisher;
+      rommSessionId.value = roomSessionId;
+      console.log('chat room ', publisher.value);
+      showOpenviduModal.value = true;
+      dialog.value = false;
+    };
+
+    const handleNo = () => {
       console.log('No 버튼 클릭');
-      this.dialog = false;
-    },
-    goBack() {
-      this.$emit('goBack');
-    },
-    sendMessage() {
-      if (this.newMessage !== '') {
-        this.messages.push({ user: '나', text: this.newMessage });
-        this.newMessage = '';
-        this.$nextTick(() => {
-          this.$refs.chatContainer.scrollTop = this.$refs.chatContainer.scrollHeight;
+      dialog.value = false;
+    };
+
+    const goBack = () => {
+      stompStore.subscriptions[props.room.id].unsubscribe();
+      emit('goBack');
+    };
+
+    const sendMessage = () => {
+      if (newMessage.value !== '') {
+        messages.value.push({ nickName: '나', text: newMessage.value });
+        stompStore.sendMessage(13, '제제제', newMessage.value, props.room.id);
+        newMessage.value = '';
+        nextTick(() => {
+          chatContainer.value.scrollTop = chatContainer.value.scrollHeight;
         });
       }
-    },
-    messageClass(message) {
-      return message.user === '나' ? 'my-message' : 'other-message';
-    },
+    };
+
+    const messageClass = (message) => {
+      return message.nickName === '나' ? 'my-message' : 'other-message';
+    };
+
+    return {
+      rommSessionId,
+      showOpenviduModal,
+      newMessage,
+      publisher,
+      dialog,
+      messages,
+      openDialog,
+      handleYes,
+      handleNo,
+      goBack,
+      sendMessage,
+      messageClass,
+      chatContainer,
+    };
   },
 };
 </script>

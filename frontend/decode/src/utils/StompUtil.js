@@ -1,57 +1,72 @@
-import Stomp from 'stompjs';
-import SockJS from 'sockjs-client';
-export default {
-  name: 'StompUtil',
-  data() {
-    return {
-      userName: '',
-      message: '',
-      recvList: [],
-    };
-  },
-  methods: {
-    sendMessage(e) {
-      if (e.keyCode === 13 && this.userName !== '' && this.message !== '') {
-        this.send();
-        this.message = '';
-      }
-    },
-    send() {
-      console.log('Send message:' + this.message);
-      if (this.stompClient && this.stompClient.connected) {
-        const msg = {
-          userId: this.userId,
-          messge: this.message,
-        };
-        this.stompClient.send('/app/chat/message', JSON.stringify(msg), {});
-      }
-    },
-    connect(roomId) {
-      const serverURL = process.env.VUE_APP_BACKEND_URL;
-      let socket = new SockJS(serverURL);
-      this.stompClient = Stomp.over(socket);
-      console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`);
-      this.stompClient.connect(
-        {},
-        (frame) => {
+import { defineStore } from 'pinia';
+import { Client } from '@stomp/stompjs';
+
+export const useStompStore = defineStore({
+  id: 'stompStore',
+  state: () => ({
+    stompClient: null,
+    connected: false,
+    messages: {}, // 각 방의 메시지 리스트를 저장하는 객체
+    subscriptions: {}, // 각 방의 구독 객체를 저장하는 객체
+  }),
+  actions: {
+    connect() {
+      const stompClient = new Client({
+        brokerURL: 'ws://localhost/decode/chattings',
+        connectHeaders: {},
+        onConnect: (frame) => {
           this.connected = true;
           console.log('소켓 연결 성공', frame);
-          this.stompClient.subscribe(`/topic/chat/room/${roomId}`, (res) => {
-            this.recvList.push(JSON.parse(res.body));
-          });
         },
-        (error) => {
-          // 소켓 연결 실패
+        onStompError: (error) => {
           console.log('소켓 연결 실패', error);
           this.connected = false;
         },
-      );
+      });
+      stompClient.activate();
+      this.stompClient = stompClient;
+    },
+    subscribeRoom(roomId) {
+      if (this.stompClient && this.connected) {
+        this.subscriptions[roomId] = this.stompClient.subscribe(`/topic/chat/room/${roomId}`, (res) => {
+          // 해당 방의 메시지 리스트에 메시지 추가
+          if (!this.messages[roomId]) {
+            this.messages[roomId] = [];
+          }
+          this.messages[roomId].push(JSON.parse(res.body));
+        });
+      }
+    },
+    sendMessage(userId, nickName, text, roomId) {
+      if (userId !== '' && text !== '' && roomId !== '') {
+        if (this.stompClient && this.connected) {
+          const msg = {
+            userId: userId,
+            nickName: nickName,
+            text: text,
+            roomId: roomId,
+          };
+          this.stompClient.publish({ destination: '/app/chat/message', body: JSON.stringify(msg) });
+        }
+      }
     },
     unsubscribe() {
+      if (this.subscriptions[roomId]) {
+        // 특정 방의 구독 취소
+        this.subscriptions[roomId].unsubscribe();
+        delete this.subscriptions[roomId];
+      }
+    },
+    unsubscribeAll() {
+      // 모든 방의 구독 취소
+      for (let roomId in this.subscriptions) {
+        this.subscriptions[roomId].unsubscribe();
+      }
+      this.subscriptions = {};
       if (this.stompClient) {
-        this.stompClient.disconnect();
+        this.stompClient.deactivate();
         this.connected = false;
       }
     },
   },
-};
+});

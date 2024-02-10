@@ -6,26 +6,35 @@
       class="room-item" 
       @click="selectRoom(room)"
     >
-      <div class="room-title">{{ room.name }}</div>
-      <div class="room-description">{{ room.description }}</div>
+      <div class="room-title">{{ room.roomName }}</div>
+      <div class="room-creator">{{ room.creator }}</div>
+      <div class="room-description">{{ room.roomDescription }}</div>
     </div>
   </div>
 </template>
 
 <script>
+import { ref } from 'vue';
+import {useStompStore} from '@/utils/StompUtil';
 export default {
   name: 'RoomList',
   props: {
     rooms: Array,
   },
-  methods: {
-    selectRoom(room) {
-      console.log("selected room", room)
-      this.$emit('selectRoom', room);
+  setup(props, context) {
+    const stompStore =  useStompStore();
+    const selectRoom = (room) => {
+      console.log("selected room", room.id)
+      stompStore.subscribeRoom(room.id);
+
+      context.emit('selectRoom', room);
     }
+
+    return { selectRoom };
   }
 };
 </script>
+
 
 <style scoped>
 .room-list {

@@ -1,69 +1,101 @@
 <template>
   <div class="chat-component">
-    <CreateRoomDialog :dialog="dialog" @close="dialog = false" @create-room="addRoom"/>
-    
-    <CreateRoomButton @open="dialog = true"/>
+    <CreateRoomDialog :dialog="dialog" @close="dialog = false" @create-room="addRoom" />
+
+    <CreateRoomButton @open="dialog = true" />
 
     <div id="app">
-        <v-text-field v-if="!selectedRoom"
-          v-model="nickname"
-          placeholder="채팅방을 검색하세요."
-          append-inner-icon="mdi-magnify"
-          @click:append="nickNameSearch"
-          variant="underlined"
+      <v-text-field
+        v-if="!selectedRoom"
+        v-model="nickname"
+        placeholder="채팅방을 검색하세요."
+        append-inner-icon="mdi-magnify"
+        @click:append="nickNameSearch"
+        variant="underlined"
       >
-
-      <template v-slot:append> <!-- 텍스트 필드 내에 버튼 추가 -->
-          <v-btn v-if="!selectedRoom" density="compact" icon="mdi-plus" @click="dialog = true" class="custom-icon-btn"></v-btn> 
-      </template>
+        <template v-slot:append>
+          <!-- 텍스트 필드 내에 버튼 추가 -->
+          <v-btn
+            v-if="!selectedRoom"
+            density="compact"
+            icon="mdi-plus"
+            @click="dialog = true"
+            class="custom-icon-btn"
+          ></v-btn>
+        </template>
       </v-text-field>
 
       <room-list v-if="!selectedRoom" :rooms="roomList" @selectRoom="selectRoom"></room-list>
-      <chat-room v-else :room="selectedRoom" @goBack="goBack"></chat-room>
-  </div>
+      <chat-room v-else :room="selectedRoom" :messages="messages" @goBack="goBack"></chat-room>
+    </div>
   </div>
 </template>
 
 <script>
+import { ref, onMounted } from 'vue';
 import CreateRoomDialog from './CreateRoomDialog.vue';
 import RoomList from './RoomList.vue';
-import ChatRoom from './ChatRoom.vue'
+import ChatRoom from './ChatRoom.vue';
+import { useChatStore } from '@/stores/chatStore.js';
 export default {
   name: 'App',
   components: {
     CreateRoomDialog,
     RoomList,
-    ChatRoom
+    ChatRoom,
   },
-  data() {
-    return {
-      dialog: false,
-      roomList: [],  // 방 리스트
-      selectedRoom: null,
+  setup() {
+    const dialog = ref(false);
+    const roomList = ref([]);
+    const selectedRoom = ref(null);
+    const chatStore = useChatStore();
+    const messages = ref([]); // 채팅 내역을 저장할 반응성 데이터
+
+    onMounted(async () => {
+      try {
+        const rooms = await chatStore.fetchRoomList();
+        if (!Array.isArray(rooms)) {
+          console.error('fetchRooms API가 배열을 반환하지 않았습니다:', rooms);
+        } else {
+          roomList.value = rooms;
+        }
+      } catch (error) {
+        console.error('fetchRooms API 호출 중 오류가 발생했습니다:', error);
+      }
+    });
+
+    const goBack = () => {
+      selectedRoom.value = null;
     };
-  },
-  methods: {
-    goBack() {
-      this.selectedRoom = null;
-    },
-    addRoom(room) {
-      this.roomList.push({ id: room.title, name: room.description });
-    },
-    selectRoom(room) {
-      console.log("selected room", room)
-      this.selectedRoom = room;
-    }
+
+    const addRoom = (room) => {
+      roomList.value.push({ id: room.title, name: room.description });
+    };
+
+    const selectRoom = async (room) => {
+      console.log('selected room', room.id);
+      selectedRoom.value = room;
+    };
+
+    return {
+      dialog,
+      roomList,
+      selectedRoom,
+      messages,
+      goBack,
+      addRoom,
+      selectRoom,
+    };
   },
 };
 </script>
 
 <style scoped>
-
 .custom-icon-btn {
   margin-top: -5px;
   margin-left: -5px; /* 원하는 만큼 왼쪽으로 이동 */
   font-size: 18px; /* 아이콘 크기 조정 */
-  color: #34A080; /* 아이콘 버튼의 색상 */
+  color: #34a080; /* 아이콘 버튼의 색상 */
   /* 다른 스타일 속성들... */
 }
 

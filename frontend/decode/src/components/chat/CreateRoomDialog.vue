@@ -28,43 +28,55 @@
       </v-card>
     </v-dialog>
   </template>
-  
-<script>
-export default {
-  name: 'CreateRoomDialog',
-  props: {
-    dialog: Boolean,
-  },
-  data() {
-    return {
-      localDialog: false,
-      newRoom: {
+  <script>
+  import { ref, watch, toRefs } from 'vue';
+import {useStompStore} from '@/utils/StompUtil';
+  import {useChatStore} from'@/stores/chatStore.js';
+  export default {
+    name: 'CreateRoomDialog',
+    props: {
+      dialog: Boolean,
+    },
+    setup(props, { emit }) {
+      const stompStore = useStompStore();
+      const { dialog } = toRefs(props);
+      const localDialog = ref(false);
+      const chatStore = useChatStore();
+      const newRoom = ref({
         title: '',
         description: '',
-      },
-    };
-  },
-  watch: {
-    dialog(val) {
-      this.localDialog = val;
-    },
-    localDialog(val) {
-      if (!val) {
-        this.$emit('close');
-      }
-    },
-  },
-  methods: {
-    createRoom() {
-      this.$emit('create-room', this.newRoom);
-      this.newRoom.title = '';
-      this.newRoom.description = '';
-      this.localDialog = false;
-    },
-  },
-};
-</script>
+      });
+  
+      watch(dialog, (val) => {
+        localDialog.value = val;
+      });
+  
+      watch(localDialog, (val) => {
+        if (!val) {
+          emit('close');
+        }
+      });
+  
+      const createRoom = async() => {
+        // stompUtil.subscribeRoom()
+        emit('create-room', newRoom.value);
+        const roomId = await chatStore.createChatRoom(newRoom.value.title, newRoom.value.description, 1);
+        console.log(roomId, "번방 생성 성공")
+        stompStore.subscribeRoom(roomId);
 
+        newRoom.value.title = '';
+        newRoom.value.description = '';
+        localDialog.value = false;
+      };
+  
+      return {
+        localDialog,
+        newRoom,
+        createRoom,
+      };
+    },
+  };
+  </script>
 <style scoped>
 .guide-card {
   background-color: rgba(52, 160, 128, 0.1);
