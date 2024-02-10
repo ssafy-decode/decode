@@ -4,6 +4,7 @@ import router from '@/router';
 import axios from '@/utils/common-axios';
 import { useTagStore } from './tagStore';
 import { useProfileStore } from './profileStore';
+import { P } from 'vue-dialog-drag';
 
 const useUserStore = defineStore(
   'useUserStore',
@@ -19,33 +20,52 @@ const useUserStore = defineStore(
     // const loginUser = ref([]); // 로그인 유저의 id, email, password, phoneNumber, birth, name, createdTime, updatedTime 저장한 목록
 
     // 값
-    const registId = ref(0); // 회원 가입 2단계에 필요한 회원 번호
+    const registId = ref(null); // 회원 가입 시 회원 번호
     const isLoggedIn = ref(false); // 로그인 여부 T/F
+    const isRegisting = ref(false); // 회원 가입 1단계 여부 T/F
     const loginUserId = ref(0); // 로그인 유저 회원 번호
     const foundEmail = ref(''); // 이메일 찾기에서의 이메일
 
     // 함수
     // 회원 가입 1단계: 일반 가입
     const createUser = async (user) => {
+      isRegisting.value = false;
       await axios.post(`/regist`, user).then((res) => {
         if (res.data.status === 'OK') {
           users.value.push(res.data.data);
           registId.value = res.data.data;
-          router.push({ name: 'techstack' });
+          console.log(isRegisting.value);
+          isRegisting.value = true;
+          console.log(isRegisting.value);
         }
       });
+      checkRegisted();
     };
 
-    // 회원 가입 2단계: 선택한 기술 스택 저장
+    // 회원 가입 1단계 완료 여부 확인 (아직 정상 작동이 안 되는 것 같음. isRegisting은 확실히 바뀌는데 뭔가 이상함)
+    const checkRegisted = async () => {
+      try {
+        console.log('확인차에', isRegisting.value);
+        if (!isRegisting.value) {
+          alert('회원가입 1단계를 먼저 완료해주세요.');
+          router.push({ name: `userregist` });
+          return;
+        }
+        router.push({ name: `techstack` });
+      } catch (error) {
+        console.error(`Error:`, error);
+      }
+    };
+
+    // 회원 가입 2단계: 선택한 기술 스택 저장 (401 에러)
     const saveTechStack = async (selectedTechStack) => {
       // 1단계 정보(registId)가 비어있을 경우 에러 처리
-      if (!registId.value) {
-        alert('먼저 회원 가입 1단계를 진행해주세요.');
-        console.error('userId가 없습니다.');
-        return;
-      }
-      console.log('registId:', registId);
-      console.log('registId.value', registId.value); // 17로 잘 뜸
+      // if (!isRegisting.value) {
+      //   alert('회원 가입 1단계를 먼저 완료해주세요.');
+      //   router.push({ name: `userregist` });
+      //   return;
+      // }
+      console.log('어떤데', isRegisting.value);
       const tagNums = selectedTechStack.map((item) => tagStore.tagNum[item]);
       const res = await axios.post(`/addUserTag`, { userId: registId.value, tagIdList: tagNums });
       if (res.data.status === 'OK') {
@@ -68,6 +88,7 @@ const useUserStore = defineStore(
         }
       } catch (error) {
         console.error('Login error:', error);
+        alert('로그인에 실패했습니다.');
         return;
       }
     };
@@ -165,9 +186,11 @@ const useUserStore = defineStore(
     //       users.value = res.data;
     //     });
     // };
+
     const setLoginUserId = (id) => {
       loginUserId.value = id;
     };
+
     const setToken = (token) => {
       accessToken.value = token;
     };
@@ -178,6 +201,7 @@ const useUserStore = defineStore(
     // const handleLoginUser = computed(() => loginUser.value);
     const handleLoginUserId = computed(() => loginUserId.value);
     const handleAccessToken = computed(() => accessToken.value);
+    const handleRegisting = computed(() => isRegisting.value);
 
     // 반환
     return {
@@ -187,6 +211,7 @@ const useUserStore = defineStore(
       // loginUser,
       registId,
       isLoggedIn,
+      isRegisting,
       loginUserId,
       foundEmail,
       createUser,
@@ -206,6 +231,7 @@ const useUserStore = defineStore(
       // handleLoginUser,
       handleLoginUserId,
       handleAccessToken,
+      handleRegisting,
     };
   },
   {

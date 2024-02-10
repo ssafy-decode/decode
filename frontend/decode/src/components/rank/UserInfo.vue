@@ -1,9 +1,8 @@
 <template>
   <v-container class="user-info">
-    <v-row v-if="userStore && userStore.loginUserProfile">
+    <v-row v-if="profile">
       <!-- 유저 랭킹 등수 -->
       <v-col cols="2">
-        <!-- <v-card-title class="text-center">랭킹</v-card-title> -->
         <br />
         <img width="70px" src="../../default.png" />
         <br />
@@ -15,50 +14,41 @@
       </v-col>
 
       <!-- 유저 티어 -->
-      <v-col cols="2" v-if="userStore.loginUserProfile.tier">
-        <!-- <v-card-title class="text-center">티어</v-card-title> -->
+      <v-col cols="2" v-if="profile.tier">
         <br />
         <div class="text-center">
           <img width="70px;" src="../../커마아이콘샘플.png" /> <br />
-          {{ userStore.loginUserProfile.tier }}
+          {{ profile.tier }}
         </div>
       </v-col>
 
       <!-- 유저 닉네임 및 포인트 -->
-      <v-col
-        cols="2"
-        v-if="userStore.loginUserProfile.nickname !== undefined && userStore.loginUserProfile.point !== undefined"
-      >
+      <v-col cols="2" v-if="profile.nickname !== undefined && profile.point !== undefined">
         <br />
-        <!-- <v-card-title class="text-center">닉네임 & 포인트</v-card-title> -->
         <div class="text-center">
-          {{ userStore.loginUserProfile.nickname }} <br />
-          보유 포인트: {{ userStore.loginUserProfile.point }}p
+          {{ profile.nickname }} <br />
+          보유 포인트: {{ profile.point }}p
         </div>
       </v-col>
 
       <v-col cols="2">
         <br />
         <div class="text-center">팔로워 / 팔로잉</div>
-        <div class="text-center">{{ userStore.followerList.length }} / {{ userStore.followingList.length }}</div>
+        <div class="text-center">{{ followerList.length }} / {{ followingList.length }}</div>
         <br />
-        <!-- <v-card-title class="text-center">답변 수 & 채택 수</v-card-title> -->
         <div class="text-center">
-          답변 수: {{ userStore.aListLength }}개
+          답변 수: {{ aList.length }}개
           <br />
-          채택 수: 0개
-          <!-- {{ userAnswerCount }} 답변, {{ userSelectionCount }} 채택 -->
+          채택 수: {{ selectedCnt }}개
         </div>
       </v-col>
 
-      <v-col cols="4" v-if="userStore.loginUserProfile.exp">
+      <v-col cols="4" v-if="profile.exp">
         <!-- 내랭크 경험치 현황 -->
         <div class="text-center">내 랭크</div>
         <div>((경험치 그래프))</div>
         <br />
-        <div>
-          현재 티어명 &nbsp;&nbsp; {{ userStore.loginUserProfile.exp }} / {{ neededExp }} &nbsp;&nbsp; 다음 티어명
-        </div>
+        <div>현재 티어명 &nbsp;&nbsp; {{ profile.exp }} / {{ neededExp }} &nbsp;&nbsp; 다음 티어명</div>
         <div class="text-center">다음 {티어}까지 {{ moreExp }}!</div>
       </v-col>
     </v-row>
@@ -68,22 +58,35 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useUserStore } from '@/stores/userStore';
+import { useProfileStore } from '@/stores/profileStore';
+import { useFollowStore } from '@/stores/followStore';
+import { storeToRefs } from 'pinia';
 
 const userStore = useUserStore();
+const profileStore = useProfileStore();
+const followStore = useFollowStore();
+
 const rankPercentile = ref(0);
 const neededExp = ref(0);
 const moreExp = ref(0);
+const { setUserProfile, setAList, getSelectCnt } = profileStore;
+const { handleUserProfile: profile } = storeToRefs(profileStore);
+const { handleAnswers: aList } = storeToRefs(profileStore);
+const { handleFollowerList: followerList } = storeToRefs(followStore);
+const { handleFollowingList: followingList } = storeToRefs(followStore);
+const { handleSelectCnt: selectedCnt } = storeToRefs(profileStore);
 
 onMounted(() => {
   const showProfile = async () => {
-    await userStore.myProfile();
-    await userStore.setAList(userStore.loginUserId);
+    await setUserProfile();
+    await setAList(userStore.loginUserId);
+    await getSelectCnt(userStore.loginUserId);
     rankPercentile.value = countRankPercent();
   };
   showProfile();
 
   neededExp.value = nextTierExp();
-  moreExp.value = neededExp.value - userStore.loginUserProfile.exp; // 다음 티어까지 필요한 경험치 차액
+  moreExp.value = neededExp.value - profile.exp; // 다음 티어까지 필요한 경험치 차액
 });
 
 const countRankPercent = () => {

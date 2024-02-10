@@ -114,7 +114,7 @@
 <script setup>
 import AttendanceLog from '@/components/profile/AttendanceLog.vue';
 import ExpLog from '@/components/profile/ExpLog.vue';
-import { ref, onBeforeMount, defineProps } from 'vue';
+import { ref, defineProps, onBeforeMount } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/stores/userStore';
 import { useProfileStore } from '@/stores/profileStore';
@@ -129,6 +129,7 @@ const followStore = useFollowStore();
 const { updateTechStack } = profileStore;
 const { unFollow, follow } = followStore;
 const { handleTags: tagIdList } = storeToRefs(tagStore);
+// const { handleSelectedTags: selectedTags } = storeToRefs(profileStore);
 const { handleAccessToken: accessToken } = storeToRefs(userStore);
 const { setTagNumList } = tagStore;
 
@@ -136,7 +137,11 @@ const props = defineProps({
   profile: Object,
   isMyProfile: Boolean,
   isFollowing: Boolean,
+  tagIdList: Array,
+  selectedTags: Array,
 });
+
+const selectedTags = ref([]);
 
 // DB에 수정된 번호를 다시 태그명으로 전환
 const tagName = {
@@ -155,7 +160,6 @@ const tagName = {
 };
 
 const editing = ref(false);
-const selectedTags = ref([]);
 const items = ref([
   'python',
   'java',
@@ -181,10 +185,12 @@ const toggleEdit = () => {
     updateTechStack(user, accessToken.value);
   }
   editing.value = !editing.value;
-  // setTagNumList(userStore.loginUserId);
+  setTagNumList(userStore.loginUserId);
+  selectedTags.value = tagIdList.value.map((tag) => tagName[tag]);
 };
 
 onBeforeMount(() => {
+  setTagNumList(userStore.loginUserId);
   selectedTags.value = tagIdList.value.map((tag) => tagName[tag]);
 });
 

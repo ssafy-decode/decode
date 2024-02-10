@@ -172,7 +172,7 @@ router.beforeEach((to, from, next) => {
     next();
   } else {
     alert('로그인이 필요합니다.');
-    next('/login'); // 리다이렉트
+    next('/login'); // 로그인 창으로 리다이렉트
   }
 });
 

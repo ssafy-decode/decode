@@ -15,8 +15,8 @@ const useProfileStore = defineStore(
     // const { handleAccessToken: accessToken } = storeToRefs(userStore);
 
     // 배열
-
-    const profile = ref({}); // 로그인 유저가 아닌 다른 유저 프로필 data 저장 목록
+    const profile = ref([]); // 로그인 유저가 아닌 다른 유저 프로필 data 저장 목록
+    const selectedTags = ref([]); // 수정한 기술 태그 목록
     const qList = ref([]); // 질문 목록
     const aList = ref([]); // 답변이 작성된 질문 목록
     const rankList = ref([]); // 경험치순 모든 유저 목록 조회
@@ -24,6 +24,7 @@ const useProfileStore = defineStore(
     // 개수
     const qListLength = ref(0); // 질문 목록 총 개수
     const aListLength = ref(0); // 답변 목록 총 개수
+    const selectedCount = ref(0); // 답변 채택 총 개수
 
     // T/F
     const mypwd = ref(false); // 회원 정보 수정 전 비번 확인 일치 여부 T/F
@@ -124,7 +125,7 @@ const useProfileStore = defineStore(
     // 로그인 유저 선택한 기술 스택 변경
     const updateTechStack = async (user, token) => {
       const updatedTagNums = user.tagIdList.map((item) => tagStore.tagNum[item]);
-      console.log('확인', updatedTagNums);
+      console.log('db보내기전확인', updatedTagNums);
       await axios
         .patch(
           `/updateUserTag`,
@@ -139,7 +140,7 @@ const useProfileStore = defineStore(
           userStore.accessToken = userStore.parseToken(res);
           if (res.data.status === 'OK') {
             tagStore.setTagNumList(user.userId);
-            console.log('들어가는지', tagStore.tagIdList);
+            selectedTags.value = tagStore.tagIdList.value;
           }
         });
     };
@@ -161,14 +162,26 @@ const useProfileStore = defineStore(
         });
     };
 
+    // 해당 유저 답변 채택 수 가져오기
+    const getSelectCnt = async (userid) => {
+      await axios.get(`/answer/count/${userid}`).then((res) => {
+        userStore.accessToken = userStore.parseToken(res);
+        if (res.data.status === 'OK') {
+          selectedCount.value = res.data.data.selectedCnt;
+        }
+      });
+    };
+
     // computed
     // const handleMyProfile = computed(() => loginUserProfile.value);
     const handleUserProfile = computed(() => profile.value);
     const handleQuestions = computed(() => qList.value);
     const handleAnswers = computed(() => aList.value);
+    const handleSelectCnt = computed(() => selectedCount.value);
     const handleQuestionsNumber = computed(() => qListLength.value);
     const handleAnswersNumber = computed(() => aListLength.value);
     const handleProfileImg = computed(() => userProfileImgURL.value);
+    const handleSelectedTags = computed(() => selectedTags.value);
 
     // 반환
     return {
@@ -181,6 +194,8 @@ const useProfileStore = defineStore(
       aListLength,
       mypwd,
       userProfileImgURL,
+      selectedCount,
+      selectedTags,
       setUserProfile,
       setQList,
       setAList,
@@ -188,6 +203,7 @@ const useProfileStore = defineStore(
       updateProfileImg,
       updateTechStack,
       updatePwd,
+      getSelectCnt,
       // handleMyProfile,
       handleUserProfile,
       handleQuestions,
@@ -195,6 +211,8 @@ const useProfileStore = defineStore(
       handleQuestionsNumber,
       handleAnswersNumber,
       handleProfileImg,
+      handleSelectCnt,
+      handleSelectedTags,
     };
   },
   {

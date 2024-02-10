@@ -17,7 +17,7 @@ const useRankStore = defineStore(
     // 경험치순 모든 회원 목록 조회
     const getRank = async () => {
       await axios.get(`/rank`).then((res) => {
-        userStore.accessToken.value = userStore.parseToken(res);
+        userStore.accessToken = userStore.parseToken(res);
         if (res.data.status === 'OK') {
           rankList.value = res.data.data;
         }
