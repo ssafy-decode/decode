@@ -6,11 +6,11 @@
         <div class="writerInfo">
           <p>
             <span class="nickname title">
-              {{ comment.commentWriter.nickname }}
+              <profileRouter :uid="comment.commentWriter.id" :nickName="comment.commentWriter.nickname" />
             </span>
             &nbsp;
             <span class="time info">
-              {{ comment.createdTime }}
+              {{ comment.createdTime[0] }}년 {{ comment.createdTime[1] }}월 {{ comment.createdTime[2] }}일
             </span>
           </p>
         </div>
@@ -19,7 +19,7 @@
         {{ comment.content }}
       </div>
       <div class="editDeleteBox" @click="commentStore.deleteComment(comment.commentId)">
-        <span class="deleteText">댓글삭제</span>
+        <span v-if="comment.commentWriter.id === userStore.loginUserId" class="deleteText">댓글삭제</span>
       </div>
     </div>
   </div>
@@ -27,10 +27,13 @@
 
 <script setup>
 import { useCommentStore } from '@/stores/commentStore';
+import { useUserStore } from '@/stores/userStore';
+import profileRouter from '@/components/common/profileRouter.vue';
 
 const commentStore = useCommentStore();
+const userStore = useUserStore();
 
-defineProps({
+const props = defineProps({
   comment: Object,
 });
 </script>

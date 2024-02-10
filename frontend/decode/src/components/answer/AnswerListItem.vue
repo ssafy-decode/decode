@@ -5,11 +5,11 @@
         <div>
           <p>
             <span class="nickname title">
-              {{ answer.answerWriter.nickname }}
+              <profileRouter :uid="answer.answerWriter.id" :nickName="answer.answerWriter.nickname" />
             </span>
             &nbsp;
             <span class="time info">
-              {{ answer.createdTime }}
+              {{ answer.createdTime[0] }}년 {{ answer.createdTime[1] }}월 {{ answer.createdTime[2] }}일
             </span>
           </p>
         </div>
@@ -18,7 +18,7 @@
         <AnswerViewer :initialValue="answer.content" :answerId="answer.answerId" />
       </div>
       <div class="editDeleteBox" @click="answerStore.deleteAnswer(answer.answerId)">
-        <span class="deleteText">답변삭제</span>
+        <span v-if="answer.answerWriter.id === userStore.loginUserId" class="deleteText">답변삭제</span>
       </div>
     </div>
     <div class="commentBox">
@@ -52,15 +52,18 @@
 import CommentList from '@/components/comment/CommentList.vue';
 import { useAnswerStore } from '@/stores/answerStore';
 import { useUserStore } from '@/stores/userStore';
-import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 import axios from '@/utils/common-axios';
 import AnswerViewer from '@/components/common/AnswerViewer.vue';
+import { useRoute } from 'vue-router';
+import profileRouter from '@/components/common/profileRouter.vue';
 
-const router = useRouter();
+import { useQuestionStore } from '@/stores/questionStore';
+const questionStore = useQuestionStore();
 
 const answerStore = useAnswerStore();
 const userStore = useUserStore();
+const route = useRoute();
 
 const props = defineProps({
   answer: Object,
@@ -85,7 +88,6 @@ const createComment = function () {
   })
     .then((res) => {
       console.log('댓글 생성됨');
-      router.go(0);
     })
     .catch((err) => {
       console.log(err);
@@ -119,6 +121,7 @@ div {
 .myListItem {
   background-color: white;
   border-radius: 35px;
+  padding-top: 20px;
 }
 
 .listItem {

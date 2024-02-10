@@ -4,27 +4,27 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import Viewer from '@toast-ui/editor/dist/toastui-editor-viewer';
 import '@toast-ui/editor/dist/toastui-editor-viewer.css';
-import { useQuestionStore } from '@/stores/questionStore';
+import { ref, watchEffect } from 'vue';
 
-export default {
-  data() {
-    return {
-      viewer: null,
-    };
-  },
-  mounted() {
-    const questionStore = useQuestionStore();
-    this.viewer = new Viewer({
+const props = defineProps({
+  initialValue: String,
+});
+
+const viewer = ref(null);
+
+watchEffect(() => {
+  if (props.initialValue) {
+    viewer.value = new Viewer({
       el: document.querySelector('#viewer'),
       initialEditType: 'wysiwyg',
-      initialValue: questionStore.originalContent,
+      initialValue: props.initialValue,
       previewStyle: 'vertical',
     });
-  },
-};
+  }
+});
 </script>
 
 <style scoped></style>

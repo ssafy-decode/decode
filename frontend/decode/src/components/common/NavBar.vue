@@ -18,19 +18,18 @@
       </v-btn>
     </router-link>
 
-    <router-link to="/shop">
+    <!-- <router-link to="/shop">
       <v-btn v-show="userStore.isLoggedIn">
         <v-toolbar-items class="font-weight-bold">상점</v-toolbar-items>
       </v-btn>
-    </router-link>
+    </router-link> -->
 
     <router-link to="/rank">
       <v-btn v-show="userStore.isLoggedIn">
         <v-toolbar-items class="font-weight-bold">랭킹</v-toolbar-items>
       </v-btn>
     </router-link>
-
-    <router-link to="/mypage">
+    <router-link :to="'/profile/' + uid">
       <v-btn v-show="userStore.isLoggedIn">
         <v-toolbar-items class="font-weight-bold">마이페이지</v-toolbar-items>
       </v-btn>
@@ -46,10 +45,12 @@
 
 <script setup>
 import { useUserStore } from '@/stores/userStore';
+import { storeToRefs } from 'pinia';
 
 const userStore = useUserStore();
 
 const { setLogout: logout } = userStore;
+const { handleLoginUserId: uid } = storeToRefs(userStore);
 </script>
 
 <style scoped>

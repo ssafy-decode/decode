@@ -1,23 +1,14 @@
 <script setup>
 import { useRoute } from 'vue-router';
-import { storeToRefs } from 'pinia';
 import myaxios from '@/utils/common-axios.js';
-import { useUserStore } from '@/stores/userStore';
-
-const userStore = useUserStore();
-const { accessToken: accessToken, isLoggedIn: isLoggedIn } = storeToRefs(userStore);
 
 const route = useRoute();
-
 const code = route.query.code;
 
 if (code) {
   const res = await myaxios.get('/auth/github?code=' + code);
 
   if (res.data.status === 'OK') {
-    accessToken.value = res.data.data;
-    isLoggedIn.value = true;
-    console.log(accessToken.value);
     window.opener.postMessage(res.data.data, '*');
     window.close();
   } else {

@@ -2,9 +2,17 @@
   <div class="app">
     <NavBar />
     <br />
+<<<<<<< HEAD
     <router-view></router-view>
     <br />
     <Chat v-if="isLoggedIn"></Chat>
+=======
+    <div style="min-height: 1100px">
+      <router-view></router-view>
+      <br />
+      <Chat></Chat>
+    </div>
+>>>>>>> 84644f8cf2593b512bfee8b03404d03bccc62f76
     <FooterBar />
   </div>
 </template>

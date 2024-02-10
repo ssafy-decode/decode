@@ -5,7 +5,7 @@ import axios from 'axios';
 
 export default axios.create({
   baseURL: process.env.VUE_APP_BACKEND_URL,
-  // baseURL: 'http://localhost/decode',
+  // baseURL: 'http://localhost:80/decode',
   headers: {
     'Content-type': 'application/json',
   },

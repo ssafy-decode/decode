@@ -1,10 +1,11 @@
 <script setup>
 import myaxios from '@/utils/common-axios.js';
-import { defineProps, ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
 
-const props = defineProps({
-  uid: Number,
-});
+const route = useRoute();
+
+const id = route.params.id;
 
 const now = new Date();
 const attendanceLog = reactive([]);
@@ -43,16 +44,18 @@ function hideTooltip() {
 }
 
 // uid로 해당 유저의 출석 로그 API 호출
-myaxios
-  .get(`/attendance/${props.uid}`)
-  .then((res) => {
-    res.data.data.forEach((date) => {
-      attendanceLog.push(date);
+onMounted(() => {
+  myaxios
+    .get(`/attendance/${id}`)
+    .then((res) => {
+      res.data.data.forEach((date) => {
+        attendanceLog.push(date);
+      });
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+});
 </script>
 
 <template>

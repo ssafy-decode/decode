@@ -65,9 +65,9 @@ const questionStore = useQuestionStore();
 const userStore = useUserStore();
 const router = useRouter();
 
-const questionTitle = ref('');
+const questionTitle = ref(['']);
 const questionContent = ref('');
-const tagIds = ref([]);
+const tagIds = ref(['']);
 const versions = ref([]);
 
 const items = questionStore.items;
@@ -102,18 +102,24 @@ const createQuestion = function () {
     .then((res) => {
       console.log('질문 생성 완료');
       router.push({ name: 'questionview' });
+      questionStore.gptTitles = [''];
+      questionStore.gptTagIds = [''];
     })
     .catch((err) => {
       console.log(err);
       console.log('질문 생성 오류');
+      alert('제목과 내용, 태그를 입력해주세요');
     });
 };
 
 onMounted(() => {
-  questionTitle.value = questionStore.gptTitles.value;
-
-  tagIds.value = questionStore.gptTagIds.value;
-  versions.value = Array.from({ length: tagIds.value.length }, () => '');
+  questionTitle.value = questionStore.gptTitles;
+  tagIds.value = questionStore.gptTagIds;
+  if (tagIds.value == [] || tagIds.value == ['']) {
+    versions.value = [''];
+  } else {
+    versions.value = Array.from({ length: tagIds.value.length }, () => '');
+  }
 });
 
 const addEmptyFields = function () {
@@ -122,8 +128,12 @@ const addEmptyFields = function () {
 };
 
 const removeField = function (index) {
-  tagIds.value.splice(index, 1);
-  versions.value.splice(index, 1);
+  if (tagIds.value.length >= 2) {
+    tagIds.value.splice(index, 1);
+    versions.value.splice(index, 1);
+  } else {
+    alert('관련 태그를 최소 1개 이상 입력해주세요');
+  }
 };
 </script>
 

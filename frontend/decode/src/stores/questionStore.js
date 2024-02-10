@@ -7,9 +7,8 @@ export const useQuestionStore = defineStore(
   () => {
     const accessToken = ref(null);
     const questions = ref([]);
-    const gptTitles = ref([]);
-    const gptTagIds = ref([]);
-    const originalContent = ref('');
+    const gptTitles = ref(['']);
+    const gptTagIds = ref(['']);
     const items = {
       python: 1,
       java: 2,
@@ -51,6 +50,7 @@ export const useQuestionStore = defineStore(
       })
         .then((res) => {
           questions.value = res.data.data;
+          console.log('검색 성공');
         })
         .catch((err) => {
           console.log(err);
@@ -63,7 +63,6 @@ export const useQuestionStore = defineStore(
       questions,
       gptTitles,
       gptTagIds,
-      originalContent,
       items,
       reverseItems,
       getQuestions,
