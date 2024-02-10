@@ -174,7 +174,7 @@ span {
 .titleBox {
   border-radius: 30px;
   background-color: #d9d9d9;
-  margin: 40px 60px;
+  margin: 40px 40px;
   height: 55px;
   color: #2f423d;
 }
