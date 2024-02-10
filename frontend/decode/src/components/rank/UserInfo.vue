@@ -1,55 +1,53 @@
 <template>
   <v-container class="user-info">
-    <v-row v-if="profile">
-      <!-- 유저 랭킹 등수 -->
+    <v-row v-if="user">
       <v-col cols="2">
-        <br />
-        <img width="70px" src="../../default.png" />
-        <br />
-        <br />
-        <div class="text-center">
-          랭킹 <br />
-          상위 {{ rankPercentile }}%
-        </div>
+        <v-avatar image="../../default.png" size="100px" />
+        <p>{{ user.nickname }}</p>
+        <p>{{ user.myRank }}위</p>
+        <p style="font-size: 12px; color: gray">(상위 {{ Math.round((user.myRank / user.totalUserCount) * 100) }}%)</p>
       </v-col>
-
-      <!-- 유저 티어 -->
-      <v-col cols="2" v-if="profile.tier">
-        <br />
-        <div class="text-center">
-          <img width="70px;" src="../../커마아이콘샘플.png" /> <br />
-          {{ profile.tier }}
-        </div>
+      <v-col cols="2" style="align-self: center">
+        <img :src="`../../${user.tier}.png`" width="120px" />
+        <p :style="{ fontWeight: 'bold', color: getTierColor(user.tier) }">{{ capitalize(user.tier) }}</p>
       </v-col>
-
-      <!-- 유저 닉네임 및 포인트 -->
-      <v-col cols="2" v-if="profile.nickname !== undefined && profile.point !== undefined">
-        <br />
-        <div class="text-center">
-          {{ profile.nickname }} <br />
-          보유 포인트: {{ profile.point }}p
-        </div>
-      </v-col>
-
-      <v-col cols="2">
-        <br />
-        <div class="text-center">팔로워 / 팔로잉</div>
-        <div class="text-center">{{ followerList.length }} / {{ followingList.length }}</div>
-        <br />
-        <div class="text-center">
-          답변 수: {{ aList.length }}개
-          <br />
-          채택 수: {{ selectedCnt }}개
-        </div>
-      </v-col>
-
-      <v-col cols="4" v-if="profile.exp">
-        <!-- 내랭크 경험치 현황 -->
-        <div class="text-center">내 랭크</div>
-        <div>((경험치 그래프))</div>
-        <br />
-        <div>현재 티어명 &nbsp;&nbsp; {{ profile.exp }} / {{ neededExp }} &nbsp;&nbsp; 다음 티어명</div>
-        <div class="text-center">다음 {티어}까지 {{ moreExp }}!</div>
+      <v-col cols="8">
+        <v-row>
+          <v-col cols="3">
+            <p>{{ user.answerCount }}</p>
+            <p style="color: #999999">답변수</p>
+          </v-col>
+          <v-col cols="3">
+            <p>{{ user.adoptCount }}</p>
+            <p style="color: #999999">채택수</p>
+          </v-col>
+          <v-col cols="3">
+            <p>{{ user.followerCount }}</p>
+            <p style="color: #999999">팔로워</p>
+          </v-col>
+          <v-col cols="3">
+            <p>{{ user.followCount }}</p>
+            <p style="color: #999999">팔로우</p>
+          </v-col>
+        </v-row>
+        <v-row style="margin-bottom: -30px">
+          <v-col cols="4" style="color: #575757"> {{ capitalize(user.tier) }}: {{ user.exp }} </v-col>
+          <v-col cols="4"></v-col>
+          <v-col v-if="rankStore.getNextTier(user.tier)" cols="4" style="color: lightgray">
+            {{ capitalize(rankStore.getNextTier(user.tier)) }}까지 -{{ rankStore.getNeedExp(user.tier) - user.exp }}
+          </v-col>
+        </v-row>
+        <v-row justify="center">
+          <v-col sm="10">
+            <v-progress-linear
+              color="#62C0A6"
+              height="30px"
+              rounded="true"
+              :model-value="(user.exp / rankStore.getNeedExp(user.tier)) * 100"
+            >
+            </v-progress-linear>
+          </v-col>
+        </v-row>
       </v-col>
     </v-row>
   </v-container>
@@ -57,46 +55,34 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useUserStore } from '@/stores/userStore';
-import { useProfileStore } from '@/stores/profileStore';
-import { useFollowStore } from '@/stores/followStore';
 import { storeToRefs } from 'pinia';
+import { useRankStore } from '@/stores/rankStore';
 
-const userStore = useUserStore();
-const profileStore = useProfileStore();
-const followStore = useFollowStore();
+const rankStore = useRankStore();
+const { handleUserRank: user } = storeToRefs(rankStore);
 
-const rankPercentile = ref(0);
-const neededExp = ref(0);
-const moreExp = ref(0);
-const { setUserProfile, setAList, getSelectCnt } = profileStore;
-const { handleUserProfile: profile } = storeToRefs(profileStore);
-const { handleAnswers: aList } = storeToRefs(profileStore);
-const { handleFollowerList: followerList } = storeToRefs(followStore);
-const { handleFollowingList: followingList } = storeToRefs(followStore);
-const { handleSelectCnt: selectedCnt } = storeToRefs(profileStore);
+onMounted(() => {});
 
-onMounted(() => {
-  const showProfile = async () => {
-    await setUserProfile();
-    await setAList(userStore.loginUserId);
-    await getSelectCnt(userStore.loginUserId);
-    rankPercentile.value = countRankPercent();
-  };
-  showProfile();
-
-  neededExp.value = nextTierExp();
-  moreExp.value = neededExp.value - profile.exp; // 다음 티어까지 필요한 경험치 차액
-});
-
-const countRankPercent = () => {
-  // 상위 몇 % 계산
-  return 50; // 임의로
-};
-
-const nextTierExp = () => {
-  // 다음 티어까지 필요한 총 경험치
-  return 100; //임의로
+function getTierColor(tier) {
+  if (tier === 'bronze') {
+    return '#D7C3BC';
+  } else if (tier === 'silver') {
+    return '#DCDCDC';
+  } else if (tier === 'gold') {
+    return '#EDE481';
+  } else if (tier === 'platinum') {
+    return '#C8EBB9';
+  } else if (tier === 'diamond') {
+    return '#97D2FF';
+  } else if (tier === 'ruby') {
+    return '#F4A5C5';
+  } else {
+    return 'black';
+  }
+}
+const capitalize = (value) => {
+  if (!value) return '';
+  return value.charAt(0).toUpperCase() + value.slice(1);
 };
 </script>
 

@@ -46,11 +46,11 @@ const useUserStore = defineStore(
     const checkRegisted = async () => {
       try {
         console.log('확인차에', isRegisting.value);
-        if (!isRegisting.value) {
-          alert('회원가입 1단계를 먼저 완료해주세요.');
-          router.push({ name: `userregist` });
-          return;
-        }
+        // if (!isRegisting.value) {
+        //   alert('회원가입 1단계를 먼저 완료해주세요.');
+        //   router.push({ name: `userregist` });
+        //   return;
+        // }
         router.push({ name: `techstack` });
       } catch (error) {
         console.error(`Error:`, error);

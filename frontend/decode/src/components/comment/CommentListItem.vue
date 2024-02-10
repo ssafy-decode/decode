@@ -33,7 +33,7 @@ import profileRouter from '@/components/common/profileRouter.vue';
 const commentStore = useCommentStore();
 const userStore = useUserStore();
 
-defineProps({
+const props = defineProps({
   comment: Object,
 });
 </script>

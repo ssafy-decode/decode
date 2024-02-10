@@ -129,11 +129,11 @@
                 </v-row>
                 <v-row v-for="(following, followingIdx) in followingList" :key="followingIdx">
                   <span hidden>{{ following.id }}</span>
+                  <v-col cols="1"> {{ following.tier }}</v-col>
                   <v-col cols="1">
                     <img style="width: 30px" src="../default.png" />
                     {{ following.profileImg }}
                   </v-col>
-                  <v-col cols="1"> {{ following.tier }}</v-col>
                   <v-col cols="4">
                     <profileRouter :uid="following.id" :nickName="following.nickname" />
                   </v-col>

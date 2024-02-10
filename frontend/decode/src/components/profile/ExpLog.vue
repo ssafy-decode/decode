@@ -6,12 +6,13 @@
 
 <script setup>
 import myaxios from '@/utils/common-axios.js';
-import { defineProps, ref, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
 import { Chart } from 'chart.js';
 
-const props = defineProps({
-  uid: Number,
-});
+const route = useRoute();
+
+const uid = route.params.id;
 
 // 차트 데이터를 저장할 배열
 const expLog = ref([]);
@@ -52,7 +53,7 @@ const initChart = () => {
 // 경험치 로그 데이터를 가져와 차트를 초기화하는 함수
 const fetchExpData = async () => {
   try {
-    const res = await myaxios.get(`/exp/${props.uid}`);
+    const res = await myaxios.get(`/exp/${uid}`);
     const data = res.data.data;
 
     // 데이터를 배열로 변환하여 저장
