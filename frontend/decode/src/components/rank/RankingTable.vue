@@ -1,78 +1,128 @@
 <template>
-  <v-container class="ranking-list">
-    <v-container class="rounded-border">
-      <v-data-table :headers="headers" :items="desserts" :page.sync="page" :items-per-page.sync="itemsPerPage">
-        <template v-slot:header="{ props }">
-          <thead>
-            <tr>
-              <th v-for="header in props.headers" :key="header.text" :class="`text-${header.align}`">
-                {{ header.text }}
-              </th>
-            </tr>
-          </thead>
-        </template>
-
-        <template v-for="column in headers" v-slot:[`item.${column.value}`]="{ item }">
-          <td :class="`text-${column.align}`">{{ item[column.value] }}</td>
-        </template>
-      </v-data-table>
-    </v-container>
+  <v-container style="padding: 0">
+    <v-card class="rank-list-container">
+      <v-row no-gutters>
+        <v-col cols="2" class="table-title">Top100</v-col>
+        <v-col cols="6"></v-col>
+        <v-col cols="4">
+          <div class="search-input">
+            <v-text-field
+              v-model="search"
+              variant="outlined"
+              rounded
+              label="닉네임 검색"
+              single-line
+              hide-details
+            ></v-text-field>
+          </div>
+        </v-col>
+      </v-row>
+      <div class="ranking-list">
+        <v-data-table
+          :headers="headers"
+          :items="rank"
+          :items-per-page="10"
+          :server-items-length="100"
+          :sort-by.sync="sortBy"
+          :sort-desc.sync="sortDesc"
+          class="ranking-table"
+          :page.sync="page"
+          :search="search"
+          :custom-key-filter="nicknameFilter"
+        >
+          <template v-slot:[`item.ranking`]="{ index }">
+            <p style="font-weight: bold">{{ index + 1 + (page - 1) * 10 }}</p>
+          </template>
+          <template v-slot:[`item.nickname`]="{ item }">
+            <div class="nickname-container" @click="userDetail(item.userId)">
+              <v-avatar image="../../default.png" size="28px" style="margin-right: 4px;"/>
+              {{ item.nickname }}
+            </div>
+          </template>
+          <template v-slot:[`item.tier`]="{ item }">
+            <div class="tier-container">
+              <img :src="`../../${item.tier}.png`" width="40px"/>
+            </div>
+          </template>
+          <template v-slot:[`item.answerCount`]="{ item }">
+            {{ item.answerCount }}
+          </template>
+          <template v-slot:[`item.exp`]="{ item }">
+            {{ item.exp }}
+          </template>
+          <template v-slot:[`item.adoptCount`]="{ item }">
+            {{ item.adoptCount }}
+          </template>
+          <template v-slot:[`item.followerCount`]="{ item }">
+            {{ item.followerCount }}
+          </template>
+        </v-data-table>
+      </div>
+    </v-card>
   </v-container>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      // 유저 정보에 대한 가상의 데이터
-      userRankingPercentile: 25,
-      userTier: 'Gold',
-      userName: 'JohnDoe',
-      userPoints: 500,
-      userFollowers: 1000,
-      userFollowing: 500,
-      userAnswerCount: 200,
-      userSelectionCount: 50,
-      userExperience: 1200,
-      userExperienceNeeded: 2000,
+<script setup>
+import { ref, onMounted } from 'vue';
+import { useRankStore } from '@/stores/rankStore';
+import { storeToRefs } from 'pinia';
+import { useRouter } from 'vue-router';
 
-      page: 1,
-      itemsPerPage: 10,
-      headers: [
-        { title: '랭킹', key: 'ranking', align: 'start' },
-        { title: '닉네임', key: 'nickname', align: 'start' },
-        { title: '티어', key: 'tier', align: 'start' },
-        { title: '답변 수', key: 'answerCount', align: 'end' },
-        { title: '채택 수', key: 'selectionCount', align: 'end' },
-        { title: '팔로워 수', key: 'followerCount', align: 'end' },
-      ],
-      desserts: Array.from({ length: 100 }, (_, index) => ({
-        ranking: index + 1,
-        nickname: `User${index + 1}`,
-        tier: `Tier ${Math.floor(Math.random() * 5) + 1}`,
-        answerCount: Math.floor(Math.random() * 100),
-        selectionCount: Math.floor(Math.random() * 50),
-        followerCount: Math.floor(Math.random() * 1000),
-      })),
-    };
-  },
-  methods: {},
+const rankStore = useRankStore();
+const { handleRank: rank } = storeToRefs(rankStore);
+const sortBy = ref(['exp']);
+const sortDesc = ref([true]);
+const page = ref(1);
+const headers = ref([
+  { title: '#', align: 'center', value: 'ranking', width:'100px'},
+  { title: '닉네임', align: 'center', value: 'nickname', width: '150px' },
+  { title: '티어', align: 'center', value: 'tier', width: '100px' },
+  { title: '경험치', align: 'center', value: 'exp', sortable: true, width: '250px' },
+  { title: '답변수', align: 'center', value: 'answerCount', sortable: true, width: '150px' },
+  { title: '채택수', align: 'center', value: 'adoptCount', sortable: true, width: '150px' },
+  { title: '팔로워수', align: 'center', value: 'followerCount', sortable: true, width: '150px' },
+]);
+const search = ref('');
+function nicknameFilter(value, search, item) {
+  return item.nickname.toLowerCase().includes(search.toLowerCase());
+}
+
+const router = useRouter();
+
+const userDetail = function (userId) {
+  router.push({ path: `/profile/${userId}` });
 };
+
+
+onMounted(() => {
+  rankStore.getRank();
+});
 </script>
 
 <style>
+.table-title {
+  align-self: center;
+  font-size: 25px;
+  font-weight: bold;
+  color: #999999;
+}
+.search-input {
+  height: 50px;
+  max-width: 400px;
+}
 .ranking-list {
-  width: 1210px;
-  margin-top: 20px;
   border: 1px solid #ccc;
   background-color: white;
   border-radius: 15px;
 }
-
-.rounded-border {
-  width: 1260px;
-  border-radius: 15px;
-  border: 1px solid #ccc;
-  overflow: hidden;
+.nickname-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.tier-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

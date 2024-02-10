@@ -7,7 +7,6 @@ export const useQuestionStore = defineStore(
   () => {
     const accessToken = ref(null);
     const questions = ref([]);
-    // const question = ref({});
     const gptTitles = ref(['']);
     const gptTagIds = ref(['']);
     const items = {
@@ -51,6 +50,7 @@ export const useQuestionStore = defineStore(
       })
         .then((res) => {
           questions.value = res.data.data;
+          console.log('검색 성공');
         })
         .catch((err) => {
           console.log(err);
@@ -58,32 +58,14 @@ export const useQuestionStore = defineStore(
         });
     };
 
-    // const getDetailQuestion = function (questionId) {
-    //   axios({
-    //     method: 'get',
-    //     url: `/question/${questionId}`,
-    //   })
-    //     .then((res) => {
-    //       console.log('스토어 함수 실행 후', res.data.data);
-    //       question.value = res.data.data;
-    //       console.log('스토어 퀘 밸류: ', question.value);
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //       console.log('상세 질문 조회 오류');
-    //     });
-    // };
-
     return {
       accessToken,
       questions,
-      // question,
       gptTitles,
       gptTagIds,
       items,
       reverseItems,
       getQuestions,
-      // getDetailQuestion,
     };
   },
   {

@@ -1,27 +1,22 @@
 <template>
   <div class="searchContainer">
-    <br />
-    <div class="searchBox">
-      <div class="midBox">
-        <v-text-field
-          variant="plain"
-          label="검색 키워드를 입력하세요"
-          class="searchInput"
-          v-model="keyword"
-          bg-color="fff"
-          clearable
-        >
-          <template #append-inner>
-            <v-btn class="searchBtn" size="medium" @click="searchParams(keyword, tagIds)">
-              <img src="./searchicon.png" alt="검색아이콘" style="width: 40px; height: auto" />
-            </v-btn>
-          </template>
-        </v-text-field>
-      </div>
-    </div>
-    <v-container class="stackContainer">
-      <v-row class="d-flex justify-end">
-        <v-col cols="12" sm="6" md="4">
+    <v-form class="searchBox" @submit.prevent="searchParams(keyword, tagIds)">
+      <v-row>
+        <v-col cols="4" sm="2" md="2"></v-col>
+        <v-col cols="6" sm="5" md="6" class="leftBox">
+          <v-text-field
+            variant="plain"
+            label="검색 키워드를 입력하세요"
+            class="searchInput"
+            v-model="keyword"
+            bg-color="fff"
+            clearable
+          >
+          </v-text-field>
+          <input class="searchBtn" type="submit" value=" " />
+        </v-col>
+
+        <v-col cols="1" sm="5" md="2" class="rightBox">
           <v-combobox
             variant="solo"
             class="stackBox"
@@ -35,16 +30,16 @@
             clearable
           ></v-combobox>
         </v-col>
+        <v-col cols="1" sm="0" md="2"></v-col>
       </v-row>
-    </v-container>
+    </v-form>
   </div>
   <div class="btnContainer d-flex justify-end">
     <v-btn class="createBtn" @click="goCreateQuestion()">질문등록</v-btn>
   </div>
-  <br />
 
-  <div id="app">
-    <v-card color="#f3f3f3" elevation="16" max-width="60%" class="card mx-auto px-5">
+  <div>
+    <v-card color="#f3f3f3" elevation="16" width="70%" class="card mx-auto px-5">
       <v-row>
         <v-col :cols="9">
           <v-list-item class="titleBox">
@@ -80,7 +75,8 @@ const keyword = ref('');
 const tagIds = ref([]);
 
 const searchParams = function (keyword, tagIds) {
-  questionStore.getQuestions(keyword, ...tagIds);
+  const temp = tagIds.map((tag) => items[tag]);
+  questionStore.getQuestions(keyword, ...temp);
 };
 
 const items = questionStore.items;
@@ -118,7 +114,7 @@ span {
 
 .searchContainer {
   position: sticky;
-  top: -25px;
+  top: 0px;
   z-index: 9;
 }
 
@@ -129,32 +125,37 @@ span {
   width: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding-left: 10px;
 }
 
-.midBox {
-  display: flex;
-  justify-content: center;
-  width: 60%;
+.leftBox {
+  padding-top: 17px;
+  margin: 0px;
+  position: relative;
+}
+
+.rightBox {
+  padding-top: 19px;
+  margin: 0px;
 }
 
 .searchInput {
+  border-radius: 30px;
+  padding-left: 20px;
   width: 100%;
   height: 60px;
-  margin-right: 10px;
   background-color: white;
 }
 
 .searchBtn {
-  position: relative;
-  bottom: 10px;
-  border-radius: 30px;
-}
-
-.stackContainer {
-  width: 50%;
-  margin-right: 375px;
+  position: absolute;
+  top: 23px;
+  right: 1.5%;
+  background-image: url('/public/searchicon.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 50px;
+  height: 50px;
+  border: none;
 }
 
 .stackBox ::v-deep(.v-field) {
@@ -162,10 +163,16 @@ span {
 }
 
 .btnContainer {
-  width: 80%;
+  width: 100%;
+  margin: 10px 0px 20px;
+  padding: 15px;
+  position: relative;
 }
 
 .createBtn {
+  position: absolute;
+  top: 0px;
+  right: 16%;
   border-radius: 30px;
   background-color: #62c0a6;
   font-weight: 800;
@@ -174,7 +181,7 @@ span {
 .titleBox {
   border-radius: 30px;
   background-color: #d9d9d9;
-  margin: 40px 60px;
+  margin: 40px 40px;
   height: 55px;
   color: #2f423d;
 }
