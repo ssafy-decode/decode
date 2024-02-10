@@ -7,10 +7,12 @@ import com.decode.web.domain.user.dto.AuthDto.TokenDto;
 import com.decode.web.domain.user.dto.FindEmailDto;
 import com.decode.web.domain.user.dto.FindPasswordDto;
 import com.decode.web.domain.user.dto.InfoUpdateDto;
+import com.decode.web.domain.user.dto.RankResponseDto;
 import com.decode.web.domain.user.dto.RequestUserTagDto;
 import com.decode.web.domain.user.dto.ResponseUserProfileDto;
 import com.decode.web.domain.user.dto.UserInfoDto;
 import com.decode.web.domain.user.dto.UserProfileDto;
+import com.decode.web.domain.user.dto.UserRankInfoDto;
 import com.decode.web.domain.user.dto.UserRegistDto;
 import com.decode.web.domain.user.mapper.UserMapper;
 import com.decode.web.domain.user.mapper.UserProfileMapper;
@@ -294,7 +296,7 @@ public class UserController {
     @PostMapping("/addUserTag")
     @Operation(summary = "유저 태그 선택", description = "신규 유저의 선호 기술 태그 추가")
     public ResponseDto addUserTag(@RequestBody
-    RequestUserTagDto requestUserTagDto) {
+            RequestUserTagDto requestUserTagDto) {
         userService.addUserTag(requestUserTagDto);
         return ResponseDto.builder()
                 .status(HttpStatus.OK)
@@ -305,10 +307,13 @@ public class UserController {
 
     @PatchMapping("/updateUserTag")
     @Operation(summary = "유저 태그 수정", description = "기존 유저의 선후 기술 태그 수정")
-    public ResponseDto updateUserTag(@RequestBody RequestUserTagDto requestUserTagDto) {
-        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public ResponseDto updateUserTag(@RequestBody RequestUserTagDto requestUserTagDto,
+            Authentication authentication) {
+        Long userId = (Long) authentication.getPrincipal();
         if (!userId.equals(requestUserTagDto.getUserId())) {
-            return ResponseDto.builder().status(HttpStatus.BAD_REQUEST).message("사용자 불일치").build();
+            return ResponseDto.builder()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .message("사용자 불일치").build();
         }
         userService.updateUserTag(requestUserTagDto);
         return ResponseDto.builder()
@@ -367,10 +372,22 @@ public class UserController {
     }
 
     @GetMapping("/rank")
-    @Operation(summary = "랭킹", description = "랭킹 API")
-    public ResponseDto getRank() {
+    @Operation(summary = "랭킹 V2", description = "랭킹 API V2")
+    public ResponseDto getRankV2() {
+        List<RankResponseDto> data = userService.getRankV2();
         return ResponseDto.builder()
-                .data(userProfileMapper.toDto(userService.getRank()))
+                .data(data)
+                .status(HttpStatus.OK)
+                .message("랭킹")
+                .build();
+    }
+
+    @GetMapping("/rank/{userId}")
+    @Operation(summary = "유저아이디로 랭킹 조회", description = "유저아이디로 랭킹 조회")
+    public ResponseDto getRankByUserId(@PathVariable Long userId) {
+        UserRankInfoDto data = userService.getRankByUserId(userId);
+        return ResponseDto.builder()
+                .data(data)
                 .status(HttpStatus.OK)
                 .message("랭킹")
                 .build();

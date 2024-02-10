@@ -33,7 +33,6 @@ public class QuestionServiceImpl implements QuestionService {
 
     private final QuestionRepository questionRepository;
     private final UserProfileRepository userProfileRepository;
-    private final QuestionMapper questionMapper;
     private final AnswerService answerService;
     private final ResponseUserProfileMapper responseUserProfileMapper;
     private final QuestionELKRepository questionELKRepository;

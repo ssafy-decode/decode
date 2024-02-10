@@ -7,6 +7,7 @@ import com.decode.web.global.ResponseDto;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,7 +35,7 @@ public class ItemController {
 
     @PostMapping("/use")
     @Transactional
-    public ResponseDto use(@RequestBody ItemUseDto itemUseDto) {
+    public ResponseDto use(@RequestBody ItemUseDto itemUseDto) throws BadRequestException {
         Integer data = itemService.useItem(itemUseDto);
         return ResponseDto.builder()
                 .message("아이템 사용 완료")

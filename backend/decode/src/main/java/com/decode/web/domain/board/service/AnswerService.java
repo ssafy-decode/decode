@@ -13,8 +13,6 @@ import java.util.List;
 
 public interface AnswerService {
 
-    List<AnswerEntity> findAllByQuestion(QuestionEntity question);
-
     Long save(CreateAnswerDto createAnswerDto);
 
     AnswerEntity update(UpdateAnswerDto updateAnswerDto, AnswerEntity answerEntity);

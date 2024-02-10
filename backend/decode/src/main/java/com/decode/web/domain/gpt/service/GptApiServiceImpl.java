@@ -14,8 +14,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 @RequiredArgsConstructor
 public class GptApiServiceImpl {
 
-    private final WebClient webClient;
-
     private static final String MODEL_KEY = "model";
     private static final String MESSAGES_KEY = "messages";
     private static final String ROLE_KEY = "role";
@@ -27,10 +25,10 @@ public class GptApiServiceImpl {
             "An error occurred while developing, so list the language used in the technology stack corresponding to the error as a keyword."
                     + "Here's an example 'Java, Spring'";
     private static final String TITLE_VALUE =
-            "Got an error programming, but going to post it on the board to fix the error. Please recommend a suitable title."
-                    + "Don't do a simple translation."
-                    + "The result should be no more than 30 characters exclude quotation marks."
-                    + "Only title.";
+            "Got an error programming, but going to post it on the board to fix the error. Please recommend a suitable title in Korean.";
+    private static final String ANSWER_VALUE = "You are a 10 year software engineer from FAANG."
+            + "Please kindly respond to the error sent by the user in Korean.";
+    private final WebClient webClient;
 
     public List<String> keywordsByError(String error) {
         return Arrays.stream(response(error, KEYWORD_VALUE).keywords())
@@ -40,6 +38,12 @@ public class GptApiServiceImpl {
 
     public String titlesByError(String error) {
         return response(error, TITLE_VALUE)
+                .title()
+                .trim();
+    }
+
+    public String answerByError(String error) {
+        return response(error, ANSWER_VALUE)
                 .title()
                 .trim();
     }
@@ -56,13 +60,6 @@ public class GptApiServiceImpl {
                 .retrieve()
                 .bodyToMono(GPTResponseDto.class)
                 .block();
-    }
-
-    private List<Map<String, String>> generateMessage(String title, String type) {
-        List<Map<String, String>> messages = new ArrayList<>();
-        messages.add(createMessageMap(SYSTEM_ROLE_VALUE, type));
-        messages.add(createMessageMap(USER_ROLE_VALUE, title));
-        return messages;
     }
 
     private Map<String, String> createMessageMap(String role, String content) {
