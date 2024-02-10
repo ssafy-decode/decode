@@ -1,5 +1,5 @@
 <template>
-  <v-card color="#f3f3f3" elevation="16" max-width="60%" class="card mx-auto px-5 py-5">
+  <v-card color="#f3f3f3" elevation="16" width="70%" class="card mx-auto px-5 py-5">
     <v-row>
       <v-col :cols="12">
         <div class="myListItem">
