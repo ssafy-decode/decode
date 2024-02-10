@@ -1,7 +1,6 @@
 package com.decode.web.domain.chat.service;
 
 import com.decode.web.domain.chat.dto.ChatRequestDto;
-
 import com.decode.web.domain.chat.dto.ChatResponseDto;
 import com.decode.web.domain.chat.repository.ChatRepository;
 import com.decode.web.domain.chat.repository.ChatRoomRepository;

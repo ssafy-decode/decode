@@ -121,10 +121,8 @@ public class ChatRoomServiceImpl implements ChatRoomService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         "ChatRoomEntity not found with ID: " + roomId));
 
+
     }
-
-
-
 
     @Override
     public List<ChatRoomResponseDto> findAll() {
