@@ -39,7 +39,7 @@
   </div>
 
   <div>
-    <v-card color="#f3f3f3" elevation="16" max-width="70%" class="card mx-auto px-5">
+    <v-card color="#f3f3f3" elevation="16" width="70%" class="card mx-auto px-5">
       <v-row>
         <v-col :cols="9">
           <v-list-item class="titleBox">
@@ -124,7 +124,6 @@ span {
   width: 100%;
   display: flex;
   justify-content: center;
-  /* position: relative; */
 }
 
 .leftBox {
@@ -139,6 +138,8 @@ span {
 }
 
 .searchInput {
+  border-radius: 30px;
+  padding-left: 20px;
   width: 100%;
   height: 60px;
   background-color: white;
