@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeMount } from 'vue';
 import { useProfileStore } from '@/stores/profileStore';
 import { useUserStore } from '@/stores/userStore';
 import { useRankStore } from '@/stores/rankStore';
@@ -24,7 +24,7 @@ const rankStore = useRankStore();
 
 console.log("userID: " + userStore.loginUserId);
 
-onMounted(() => {
+onBeforeMount(() => {
   profileStore.setUserProfile(userStore.loginUserId);
   rankStore.getUserRank(userStore.loginUserId);
 });

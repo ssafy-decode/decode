@@ -10,7 +10,6 @@
               v-model="search"
               variant="outlined"
               rounded
-              sd
               label="닉네임 검색"
               single-line
               hide-details
@@ -32,7 +31,7 @@
           :custom-key-filter="nicknameFilter"
         >
           <template v-slot:[`item.ranking`]="{ index }">
-            {{ index + 1 + (page - 1) * 10 }}
+            <p style="font-weight: bold">{{ index + 1 + (page - 1) * 10 }}</p>
           </template>
           <template v-slot:[`item.nickname`]="{ item }">
             <div class="nickname-container" @click="userDetail(item.userId)">
@@ -42,7 +41,7 @@
           </template>
           <template v-slot:[`item.tier`]="{ item }">
             <div class="tier-container">
-              <img :src="`../../${item.tier}.png`" width="40px" />
+              <img :src="`../../${item.tier}.png`" width="40px"/>
             </div>
           </template>
           <template v-slot:[`item.answerCount`]="{ item }">
@@ -75,9 +74,9 @@ const sortBy = ref(['exp']);
 const sortDesc = ref([true]);
 const page = ref(1);
 const headers = ref([
-  { title: '랭킹', align: 'center', value: 'ranking' },
-  { title: '닉네임', align: 'center', value: 'nickname', width: '200px' },
-  { title: '티어', align: 'start', value: 'tier', width: '100px' },
+  { title: '#', align: 'center', value: 'ranking', width:'100px'},
+  { title: '닉네임', align: 'center', value: 'nickname', width: '150px' },
+  { title: '티어', align: 'center', value: 'tier', width: '100px' },
   { title: '경험치', align: 'center', value: 'exp', sortable: true, width: '250px' },
   { title: '답변수', align: 'center', value: 'answerCount', sortable: true, width: '150px' },
   { title: '채택수', align: 'center', value: 'adoptCount', sortable: true, width: '150px' },
@@ -124,5 +123,6 @@ onMounted(() => {
 .tier-container {
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 </style>
