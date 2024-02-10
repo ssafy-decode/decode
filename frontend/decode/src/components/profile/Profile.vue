@@ -30,7 +30,7 @@
         </v-col>
 
         <v-col :cols="3">
-          <!-- <ExpLog :uid="profile.id" /> -->
+          <ExpLog />
         </v-col>
       </v-row>
 
