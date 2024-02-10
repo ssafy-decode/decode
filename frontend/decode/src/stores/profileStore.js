@@ -73,7 +73,7 @@ const useProfileStore = defineStore(
 
     // 해당 유저 프로필에서 그 사람이 작성한 답변이 들어 있는 질문 목록 조회
     const setAList = async (userid) => {
-      await axios.get(`/question/list/${userid}`).then((res) => {
+      await axios.get(`/answer/list/${userid}`).then((res) => {
         userStore.accessToken = userStore.parseToken(res);
         if (res.data.status === 'OK') {
           aList.value = res.data.data.list;
