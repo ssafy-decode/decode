@@ -2,6 +2,7 @@ package com.decode.web.entity;
 
 import com.decode.web.global.CommonEntity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.Column;
@@ -28,13 +29,16 @@ import lombok.NoArgsConstructor;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+
 public class ChatEntity extends CommonEntity implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender")
+
     private UserProfileEntity sender;
 
     @Column(name = "message")
@@ -44,11 +48,4 @@ public class ChatEntity extends CommonEntity implements Serializable {
     @JoinColumn(name = "roomId", referencedColumnName = "id")
     private ChatRoomEntity chatRoomEntity;
 
-    // 대화 저장
-    public ChatEntity(UserProfileEntity userProfile, String message, ChatRoomEntity chatRoomEntity) {
-        super();
-        this.sender = userProfile;
-        this.message = message;
-        this.chatRoomEntity = chatRoomEntity;
-    }
 }

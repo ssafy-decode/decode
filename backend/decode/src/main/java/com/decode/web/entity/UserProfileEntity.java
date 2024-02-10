@@ -1,6 +1,8 @@
 package com.decode.web.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.Column;
@@ -28,6 +30,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class UserProfileEntity {
 
@@ -36,6 +39,7 @@ public class UserProfileEntity {
     @JoinColumn(name = "user_id")
     @Setter
     @JsonManagedReference
+
     private UserInfoEntity userInfoEntity;
 
     @Id
@@ -61,9 +65,13 @@ public class UserProfileEntity {
     private int coin;
 
     @OneToMany(mappedBy = "toUser", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    @JsonIgnore
     private List<FollowEntity> followings;
 
     @OneToMany(mappedBy = "fromUser", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    @JsonIgnore
     private List<FollowEntity> followers;
 
 
