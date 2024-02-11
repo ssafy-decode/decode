@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class RedisPublisher {
+
     @Autowired
     @Qualifier(value = "chatRedisTemplate")
     private final RedisTemplate<String, Object> redisTemplate;

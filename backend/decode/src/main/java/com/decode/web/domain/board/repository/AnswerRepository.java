@@ -9,5 +9,4 @@ public interface AnswerRepository extends JpaRepository<AnswerEntity, Long> {
 
     List<AnswerEntity> findAllByQuestion(QuestionEntity question);
 
-    int countByQuestionId(Long questionId);
 }

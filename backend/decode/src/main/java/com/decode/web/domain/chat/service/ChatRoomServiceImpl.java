@@ -11,14 +11,11 @@ import com.decode.web.domain.user.repository.UserProfileRepository;
 import com.decode.web.entity.ChatEntity;
 import com.decode.web.entity.ChatRoomEntity;
 import com.decode.web.entity.ChatSubRoomEntity;
-import com.decode.web.entity.UserProfileEntity;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,16 +35,13 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     // redis topic 정보. 서버별로 채팅방에 매치되는 topic info -> Map 넣어 roomId로 찾을수 있도록 한다.
     private Map<String, ChannelTopic> topics;
 
-    private HashOperations<String, String, ChatRoomEntity> opsHashChatRoom;
     // Topic 발행되는 메시지를 처리할 Listener
     private final RedisMessageListenerContainer redisMessageListener;
     // 구독 처리 서비스
     private final RedisSubscriber redisSubscriber;
-
     private final ChatRoomRepository chatRoomRepository;
     private final ChatRepository chatRepository;
     private final ChatSubRoomRepository chatSubRoomRepository;
-
     private final UserProfileRepository userProfileRepository;
     @Autowired
     @Qualifier(value = "chatRedisTemplate")

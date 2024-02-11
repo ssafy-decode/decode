@@ -33,7 +33,6 @@ public class ChatServiceImpl implements ChatService {
     private final ChatRepository chatRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final UserProfileRepository userProfileRepository;
-    private final ObjectMapper objectMapper;
 
     @Override
     @Transactional

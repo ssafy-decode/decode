@@ -25,7 +25,7 @@ public class ItemRepository {
                 .getResultList();
     }
 
-    public ItemEntity findByItemIdAndUserId(Long itemId, Long userInfoId) {
+    public Optional<ItemEntity> findByItemIdAndUserId(Long itemId, Long userInfoId) {
         return entityManager.createQuery("select i "
                         + "from ItemEntity i "
                         + "join fetch i.userInfo "
@@ -33,7 +33,9 @@ public class ItemRepository {
                         + "and  i.userInfo.id =: userInfoId", ItemEntity.class)
                 .setParameter("itemId", itemId)
                 .setParameter("userInfoId", userInfoId)
-                .getSingleResult();
+                .getResultList()
+                .stream()
+                .findAny();
     }
 
     public ItemEntity findByProductIdAndUserId(Long productId, Long userId) {

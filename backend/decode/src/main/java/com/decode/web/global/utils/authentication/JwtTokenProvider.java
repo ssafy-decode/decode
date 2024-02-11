@@ -25,9 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class JwtTokenProvider {
 
-    private final String PROVIDER = "Server";
     private static Key signingKey;
-
+    private final String PROVIDER = "Server";
     private final UserDetailsServiceImpl userDetailsService;
     private final String secretKey;
     private final Long accessTokenValidityInMilliseconds;

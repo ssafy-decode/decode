@@ -48,12 +48,6 @@ public class AnswerServiceImpl implements AnswerService {
     private final QuestionELKRepository questionELKRepository;
 
     @Override
-    public List<AnswerEntity> findAllByQuestion(QuestionEntity question) {
-
-        return answerRepository.findAllByQuestion(question);
-    }
-
-    @Override
     public Long save(CreateAnswerDto createAnswerDto) {
         UserProfileEntity userProfile = userProfileRepository.findById(
                 createAnswerDto.getUserId()).orElseThrow(

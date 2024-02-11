@@ -24,14 +24,12 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    @Value("${spring.security.oauth2.client.registration.github.redirect-uri}")
-    private String redirectUri;
-
     private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
     private final UserInfoRepository userInfoRepository;
     private final AuthService authService;
-
+    @Value("${spring.security.oauth2.client.registration.github.redirect-uri}")
+    private String redirectUri;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,

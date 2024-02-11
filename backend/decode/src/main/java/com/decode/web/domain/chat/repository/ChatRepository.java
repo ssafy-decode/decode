@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ChatRepository extends JpaRepository<ChatEntity, Long> {
-    List<ChatEntity> findAllByChatRoomEntity(ChatRoomEntity chatRoom);
 
     List<ChatEntity> findAllByChatRoomEntity_Id(Long roomId);
+
     List<ChatEntity> findTop100ByChatRoomEntity_IdOrderByCreatedTimeAsc(Long roomId);
 }
