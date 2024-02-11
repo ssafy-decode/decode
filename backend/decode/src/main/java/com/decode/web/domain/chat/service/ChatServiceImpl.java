@@ -34,6 +34,7 @@ public class ChatServiceImpl implements ChatService {
     private final ChatRoomRepository chatRoomRepository;
     private final UserProfileRepository userProfileRepository;
     private final ObjectMapper objectMapper;
+
     @Override
     @Transactional
     public void saveChat(ChatRequestDto message) {
