@@ -1,5 +1,6 @@
 package com.decode.web.domain.chat.controller;
 
+import com.decode.web.domain.chat.dto.ChatResponseDto;
 import com.decode.web.domain.chat.dto.ChatRoomRequestDto;
 import com.decode.web.domain.chat.dto.ChatRoomResponseDto;
 import com.decode.web.domain.chat.service.ChatRoomService;
@@ -38,6 +39,7 @@ public class ChatRoomController {
         Long roomId = chatRoomService.createRoom(chatRoomRequestDto);
         return ResponseDto.builder().data(roomId).build();
     }
+
     /*
         모든 방 출력
      */
@@ -48,6 +50,7 @@ public class ChatRoomController {
         return ResponseDto.builder().data(roomList).status(HttpStatus.OK).message("모든 방 리스트 불러오기")
                 .build();
     }
+
     /*
         유저가 속해 있는 모든 방 출력
      */
