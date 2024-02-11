@@ -8,6 +8,8 @@ import com.decode.web.domain.board.dto.RecommendDto;
 import com.decode.web.domain.board.dto.UpdateAnswerDto;
 import com.decode.web.domain.board.repository.AnswerRepository;
 import com.decode.web.domain.board.service.AnswerService;
+import com.decode.web.domain.user.Point;
+import com.decode.web.domain.user.service.PointService;
 import com.decode.web.entity.AnswerEntity;
 import com.decode.web.global.ResponseDto;
 import javax.security.auth.login.CredentialException;
@@ -33,6 +35,7 @@ public class AnswerController {
 
     private final AnswerService answerService;
     private final AnswerRepository answerRepository;
+    private final PointService pointService;
 
 
     @PostMapping
@@ -44,6 +47,7 @@ public class AnswerController {
             throw new CredentialException("사용자 불일치");
         }
         Long answerId = answerService.save(createAnswerDto);
+        pointService.updateUserPointAndExp(userId, Point.ANSWER);
         return ResponseDto.builder()
                 .status(HttpStatus.OK)
                 .message("답변 등록 성공")

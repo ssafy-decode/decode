@@ -8,6 +8,8 @@ import com.decode.web.domain.board.dto.ResponseQuestionListDto;
 import com.decode.web.domain.board.dto.UpdateQuestionDto;
 import com.decode.web.domain.board.repository.QuestionELKRepository;
 import com.decode.web.domain.board.service.QuestionService;
+import com.decode.web.domain.user.Point;
+import com.decode.web.domain.user.service.PointService;
 import com.decode.web.global.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
@@ -37,6 +39,7 @@ public class QuestionController {
 
     private final QuestionService questionService;
     private final QuestionELKRepository questionELKRepository;
+    private final PointService pointService;
 
     @GetMapping
     @Operation(summary = "질문 검색(질문 목록 조회)", description = "keyword를 통한 질문 리스트 호출")
@@ -61,7 +64,7 @@ public class QuestionController {
         }
         Long questionId = questionService.createQuestion(question);
         ResponseQuestionDto responseQuestionDto = questionService.questionDetail(questionId);
-
+        pointService.updateUserPointAndExp(userId, Point.QUESTION);
         return ResponseDto.builder()
                 .status(HttpStatus.OK)
                 .data(responseQuestionDto)
