@@ -15,9 +15,11 @@ import com.decode.web.domain.board.repository.AnswerRepository;
 import com.decode.web.domain.board.repository.QuestionELKRepository;
 import com.decode.web.domain.board.repository.QuestionRepository;
 import com.decode.web.domain.board.repository.RecommendRepository;
+import com.decode.web.domain.user.Point;
 import com.decode.web.domain.user.dto.ResponseUserProfileDto;
 import com.decode.web.domain.user.mapper.ResponseUserProfileMapper;
 import com.decode.web.domain.user.repository.UserProfileRepository;
+import com.decode.web.domain.user.service.PointService;
 import com.decode.web.entity.AnswerEntity;
 import com.decode.web.entity.QuestionEntity;
 import com.decode.web.entity.RecommendEntity;
@@ -46,6 +48,7 @@ public class AnswerServiceImpl implements AnswerService {
     private final RecommendRepository recommendRepository;
     private final AnswerJpaRepository answerJpaRepository;
     private final QuestionELKRepository questionELKRepository;
+    private final PointService pointService;
 
     @Override
     public Long save(CreateAnswerDto createAnswerDto) {
@@ -187,6 +190,7 @@ public class AnswerServiceImpl implements AnswerService {
             throw new InvalidWriterException("글 작성자가 아닙니다.");
         }
         answer.doAdopt();
+        pointService.updateUserPointAndExp(answer.getAnswerWriter().getId(), Point.ADOPT);
     }
 
     @Override

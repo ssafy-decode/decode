@@ -2,6 +2,7 @@ package com.decode.web.domain.user.controller;
 
 import com.decode.web.domain.mail.dto.MailDto;
 import com.decode.web.domain.mail.service.MailService;
+import com.decode.web.domain.user.Point;
 import com.decode.web.domain.user.dto.AuthDto.LoginDto;
 import com.decode.web.domain.user.dto.AuthDto.TokenDto;
 import com.decode.web.domain.user.dto.FindEmailDto;
@@ -17,6 +18,7 @@ import com.decode.web.domain.user.dto.UserRegistDto;
 import com.decode.web.domain.user.mapper.UserMapper;
 import com.decode.web.domain.user.mapper.UserProfileMapper;
 import com.decode.web.domain.user.service.AuthService;
+import com.decode.web.domain.user.service.PointService;
 import com.decode.web.domain.user.service.UserService;
 import com.decode.web.entity.UserInfoEntity;
 import com.decode.web.global.ResponseDto;
@@ -59,6 +61,7 @@ public class UserController {
     private final BCryptPasswordEncoder encoder;
     private final MailService mailService;
     private final JwtTokenProvider jwtTokenProvider;
+    private final PointService pointService;
 
 
     @Value("${domain.cookie.max-age}")
@@ -179,7 +182,8 @@ public class UserController {
         res.addCookie(cookie);
 
         res.setHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
-
+        pointService.updateUserPointAndExp(
+                jwtTokenProvider.getAuthUserId(tokenDto.getAccessToken()), Point.LOGIN);
         return ResponseDto.builder()
                 .data(jwtTokenProvider.getAuthUserId(tokenDto.getAccessToken()))
                 .status(HttpStatus.OK)
