@@ -1,6 +1,7 @@
 package com.decode.web.entity;
 
 
+import com.decode.web.domain.user.Point;
 import com.decode.web.exception.NotEnoughCoinException;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -109,5 +110,10 @@ public class UserProfileEntity {
             throw new NotEnoughCoinException("amount = " + amount + " coin = " + coin);
         }
         this.coin -= amount;
+    }
+
+    public void updateUserPointAndExp(Point type) {
+        this.point += type.point();
+        this.exp += type.exp();
     }
 }

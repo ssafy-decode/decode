@@ -10,4 +10,6 @@ public interface UserProfileRepository extends JpaRepository<UserProfileEntity, 
     Optional<UserProfileEntity> findByNickname(String nickname);
 
     List<UserProfileEntity> findAllByOrderByExpDesc();
+
+    Optional<UserProfileEntity> findById(Long userId);
 }
