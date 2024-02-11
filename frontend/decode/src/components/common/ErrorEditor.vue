@@ -7,7 +7,6 @@
 <script>
 import Editor from '@toast-ui/editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
-import $ from 'jquery';
 export default {
   data() {
     return {
@@ -21,40 +20,6 @@ export default {
       initialEditType: 'wysiwyg',
       initialValue: '이 문장을 지우고 에러를 붙여넣어주세요!',
       previewStyle: 'vertical',
-      hooks: {
-        addImageBlobHook: (blob, callback) => {
-          const formData = new FormData();
-          formData.append('image', blob);
-          // 아래 경로 수정 필요
-          let url = '/images/';
-          $.ajax({
-            type: 'POST',
-            enctype: 'multipart/form-data',
-            url: '/writeTest.do',
-            data: formData,
-            dataType: 'json',
-            processData: false,
-            contentType: false,
-            cache: false,
-            timeout: 600000,
-            success: function (data) {
-              //console.log('ajax 이미지 업로드 성공');
-              url += data.filename;
-
-              // callback : 에디터(마크다운 편집기)에 표시할 텍스트, 뷰어에는 imageUrl 주소에 저장된 사진으로 나옴
-              // 형식 : ![대체 텍스트](주소)
-              callback(url, '사진 대체 텍스트 입력');
-            },
-            error: function (e) {
-              //console.log('ajax 이미지 업로드 실패');
-              //console.log(e.abort([statusText]));
-
-              callback('image_load_fail', '사진 대체 텍스트 입력');
-            },
-          });
-        },
-      },
-      // 여기까지가 추가된 내용
     });
     // 에디터의 내용이 변경될 때마다 change 이벤트 발생
     this.editor.on('change', () => {

@@ -38,10 +38,10 @@
             <br />
 
             <div
-              v-if="userStore.loginUserProfile"
+              v-if="profile"
               style="margin-left: 30px; margin-right: 30px; display: flex; justify-content: space-between"
             >
-              <span>보유 포인트: {{ userStore.loginUserProfile.point }}</span>
+              <span>보유 포인트: {{ profile.point }}</span>
               <!-- 색상 변경된 버튼 -->
               <span
                 ><v-btn
@@ -53,7 +53,7 @@
                   >환전</v-btn
                 >
               </span>
-              <span>보유 코인: {{ userStore.loginUserProfile.coin }}</span>
+              <span>보유 코인: {{ profile.coin }}</span>
             </div>
             <br />
 
@@ -84,18 +84,23 @@
 </template>
 
 <script>
+// import { ref, onBeforeMount } from 'vue';
+// import { storeToRefs } from 'pinia';
 import axios from 'axios';
-import { useUserStore } from '@/stores/userStore';
+// import { useUserStore } from '@/stores/userStore';
+// import { useProfileStore } from '@/stores/profileStore';
 import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
 
 let chart;
 
 export default {
-  setup() {
-    const userStore = useUserStore();
-    return { userStore };
-  },
+  // setup() {
+  //   const userStore = useUserStore();
+  //   const profileStore = useProfileStore();
+  //   const { setUserProfile } = profileStore;
+  //   const { handleUserProfile: profile } = storeToRefs(profileStore);
+  // },
   data() {
     return {
       writeCoinInput: false,
@@ -134,12 +139,12 @@ export default {
       isHovered: false,
     };
   },
-  beforeMount() {
-    const state = async () => {
-      await this.userStore.myProfile(); // 포인트, 코인 조회
-    };
-    state();
-  },
+  // beforeMount() {
+  //   const state = async () => {
+  //     await this.setUserProfile(this.userStore.loginUserId); // 포인트, 코인 조회
+  //   };
+  //   state();
+  // },
   mounted() {
     // 화면 이동 직후 바로 렌더링되지 않는 문제로 이전 차트 파괴
     if (chart) {
@@ -238,18 +243,18 @@ export default {
         if (this.coinAmount > 0 && this.writeCoinInput) {
           const minusCoins = Math.floor(this.coinAmount);
           const plusPoints = Math.floor(this.pointAmount);
-          if (minusCoins > 0 && minusCoins <= this.userStore.loginUserProfile.coin) {
-            this.userStore.loginUserProfile.coin -= minusCoins;
-            this.userStore.loginUserProfile.point += plusPoints;
+          if (minusCoins > 0 && minusCoins <= this.profile.coin) {
+            this.profile.coin -= minusCoins;
+            this.profile.point += plusPoints;
           } else {
             alert('보유 코인이 부족합니다.');
           }
         } else if (this.pointAmount > 0 && this.writePointInput) {
           const minusPoints = Math.floor(this.pointAmount);
           const plusCoins = Math.floor(this.coinAmount);
-          if (minusPoints > 0 && minusPoints <= this.userStore.loginUserProfile.point) {
-            this.userStore.loginUserProfile.point -= minusPoints;
-            this.userStore.loginUserProfile.coin += plusCoins;
+          if (minusPoints > 0 && minusPoints <= this.profile.point) {
+            this.profile.point -= minusPoints;
+            this.profile.coin += plusCoins;
           } else {
             alert('보유 포인트가 부족합니다.');
           }

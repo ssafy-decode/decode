@@ -18,7 +18,7 @@ const { allProducts } = storeToRefs(shopStore);
     <v-card class="product-container">
       <v-row>
         <v-col v-for="(product, index) in allProducts" :key="index" cols="4">
-          <ProductComponent :product="product" />
+          <ProductComponent :profile="profile" :product="product" />
         </v-col>
       </v-row>
     </v-card>
