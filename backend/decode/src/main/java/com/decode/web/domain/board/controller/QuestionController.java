@@ -8,7 +8,7 @@ import com.decode.web.domain.board.dto.ResponseQuestionListDto;
 import com.decode.web.domain.board.dto.UpdateQuestionDto;
 import com.decode.web.domain.board.repository.QuestionELKRepository;
 import com.decode.web.domain.board.service.QuestionService;
-import com.decode.web.domain.user.Point;
+import com.decode.web.domain.user.enums.Point;
 import com.decode.web.domain.user.service.PointService;
 import com.decode.web.global.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;

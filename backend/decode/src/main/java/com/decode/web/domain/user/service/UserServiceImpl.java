@@ -1,5 +1,6 @@
 package com.decode.web.domain.user.service;
 
+import com.decode.web.domain.user.enums.Tier;
 import com.decode.web.domain.common.redis.RedisService;
 import com.decode.web.domain.tag.repository.UserTagRepository;
 import com.decode.web.domain.user.dto.FindPasswordDto;
@@ -42,6 +43,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserInfoEntity getUserById(Long id) {
         UserInfoEntity user = userInfoRepository.getReferenceById(id);
+        user.getUserProfileEntity().setTier(Tier.expToTier(user.getUserProfileEntity().getExp()));
         return user;
     }
 
@@ -51,7 +53,9 @@ public class UserServiceImpl implements UserService {
         log.info("id: {}", id);
         if (profile.isPresent()) {
             log.info("profile: {}", profile.get());
-            return profile.get();
+            UserProfileEntity userProfile = profile.get();
+            userProfile.setTier(Tier.expToTier(profile.get().getExp()));
+            return userProfile;
         }
         return null;
     }
@@ -88,7 +92,7 @@ public class UserServiceImpl implements UserService {
         UserProfileEntity profile = UserProfileEntity.builder()
                 .nickname(nickname)
                 .exp(0)
-                .tier("bronze")
+                .tier(Tier.BRONZE.getTier())
                 .profileImg("default")
                 .point(5000)
                 .coin(0)
@@ -230,6 +234,7 @@ public class UserServiceImpl implements UserService {
         UserProfileEntity userProfileEntity = userProfileRepository.findById(userId).orElseThrow(
                 () -> new EntityNotFoundException(
                         "user not found with id: " + userId));
+        userProfileEntity.setTier(Tier.expToTier(userProfileEntity.getExp()));
         ResponseUserProfileDto userProfileDto = responseUserProfileMapper.toDto(userProfileEntity);
         List<UserTagEntity> userTagEntities = userProfileEntity.getUserTags();
         List<Long> userTagIdList = userTagEntities.stream()
@@ -268,7 +273,7 @@ public class UserServiceImpl implements UserService {
         return UserRankInfoDto.builder()
                 .userId(userProfile.getId())
                 .nickname(userProfile.getNickname())
-                .tier(userProfile.getTier())
+                .tier(Tier.expToTier(userProfile.getExp()))
                 .profileImg(userProfile.getProfileImg())
                 .exp(userProfile.getExp())
                 .myRank(myRank)
@@ -305,7 +310,7 @@ public class UserServiceImpl implements UserService {
         return RankResponseDto.builder()
                 .userId(userProfile.getId())
                 .nickname(userProfile.getNickname())
-                .tier(userProfile.getTier())
+                .tier(Tier.expToTier(userProfile.getExp()))
                 .profileImg(userProfile.getProfileImg())
                 .exp(userProfile.getExp())
                 .answerCount(userProfile.getAnswers().size()) // 답변 수 계산

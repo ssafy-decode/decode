@@ -8,7 +8,7 @@ import com.decode.web.domain.board.dto.RecommendDto;
 import com.decode.web.domain.board.dto.UpdateAnswerDto;
 import com.decode.web.domain.board.repository.AnswerRepository;
 import com.decode.web.domain.board.service.AnswerService;
-import com.decode.web.domain.user.Point;
+import com.decode.web.domain.user.enums.Point;
 import com.decode.web.domain.user.service.PointService;
 import com.decode.web.entity.AnswerEntity;
 import com.decode.web.global.ResponseDto;

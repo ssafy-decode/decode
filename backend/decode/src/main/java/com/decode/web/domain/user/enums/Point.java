@@ -1,4 +1,4 @@
-package com.decode.web.domain.user;
+package com.decode.web.domain.user.enums;
 
 public enum Point {
     LOGIN("로그인", 10),
