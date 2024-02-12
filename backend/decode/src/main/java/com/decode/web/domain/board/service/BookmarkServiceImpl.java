@@ -82,7 +82,8 @@ public class BookmarkServiceImpl implements BookmarkService {
                 questionEntity.getCreatedTime(),
                 questionEntity.getUpdatedTime(),
                 questionEntity.getAnswers().size(),
-                questionEntity.getMetoos().size()
+                questionEntity.getMetoos().size(),
+                questionEntity.getBookmarks().size()
         );
     }
 }

@@ -26,4 +26,5 @@ public class ResponseQuestionDto {
     private int meTooCnt;
     private LocalDateTime createdTime;
     private LocalDateTime updatedTime;
+    private int bookmarkCnt;
 }
