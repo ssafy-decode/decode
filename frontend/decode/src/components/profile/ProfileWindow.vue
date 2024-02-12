@@ -32,7 +32,13 @@
               <v-card
                 class="mx-auto px-4 py-8"
                 max-width="518"
-                style="text-align: center; background-color: #f3f3f3; border-radius: 31px; border: 15px solid #d9d9d9"
+                style="
+                  box-shadow: none;
+                  text-align: center;
+                  background-color: #f3f3f3;
+                  border-radius: 31px;
+                  border: 15px solid #d9d9d9;
+                "
               >
                 질문 &nbsp;&nbsp;{{ qList.length }}개 <br /><br />
                 <div v-for="(question, questionIndex) in qList" :key="questionIndex">
@@ -48,7 +54,13 @@
               <v-card
                 class="mx-auto px-4 py-8"
                 max-width="518"
-                style="text-align: center; background-color: #f3f3f3; border-radius: 31px; border: 15px solid #d9d9d9"
+                style="
+                  box-shadow: none;
+                  text-align: center;
+                  background-color: #f3f3f3;
+                  border-radius: 31px;
+                  border: 15px solid #d9d9d9;
+                "
               >
                 답변 &nbsp;&nbsp;{{ aList.length }}개 <br /><br />
                 <div v-for="(answer, answerIndex) in aList" :key="answerIndex">
@@ -65,7 +77,13 @@
             <v-card
               class="mx-auto px-4 py-8 text-left"
               max-width="1036"
-              style="text-align: center; background-color: #f3f3f3; border-radius: 31px; border: 15px solid #d9d9d9"
+              style="
+                box-shadow: none;
+                text-align: center;
+                background-color: #f3f3f3;
+                border-radius: 31px;
+                border: 15px solid #d9d9d9;
+              "
             >
               <div v-if="followerList.length > 0">
                 <v-row>
@@ -95,7 +113,13 @@
             <v-card
               class="mx-auto px-4 py-8 text-left"
               max-width="1036"
-              style="text-align: center; background-color: #f3f3f3; border-radius: 31px; border: 15px solid #d9d9d9"
+              style="
+                box-shadow: none;
+                text-align: center;
+                background-color: #f3f3f3;
+                border-radius: 31px;
+                border: 15px solid #d9d9d9;
+              "
             >
               <div v-if="followingList.length > 0">
                 <v-row>
@@ -105,11 +129,11 @@
                 </v-row>
                 <v-row v-for="(following, followingIdx) in followingList" :key="followingIdx">
                   <span hidden>{{ following.id }}</span>
+                  <v-col cols="1"> {{ following.tier }}</v-col>
                   <v-col cols="1">
                     <img style="width: 30px" src="../default.png" />
                     {{ following.profileImg }}
                   </v-col>
-                  <v-col cols="1"> {{ following.tier }}</v-col>
                   <v-col cols="4">
                     <profileRouter :uid="following.id" :nickName="following.nickname" />
                   </v-col>

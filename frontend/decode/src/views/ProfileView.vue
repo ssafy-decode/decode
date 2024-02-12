@@ -1,5 +1,11 @@
 <template>
-  <Profile :profile="profile" :isMyProfile="isMyProfile" :isFollowing="isFollowing" />
+  <Profile
+    :profile="profile"
+    :isMyProfile="isMyProfile"
+    :isFollowing="isFollowing"
+    :selectedTags="selectedTags"
+    :tagIdList="tagIdList"
+  />
   <ProfileWindow
     :followerList="followerList"
     :followingList="followingList"
@@ -14,6 +20,7 @@ import { useRoute } from 'vue-router';
 import { useUserStore } from '@/stores/userStore';
 import { useProfileStore } from '@/stores/profileStore';
 import { useFollowStore } from '@/stores/followStore';
+import { useTagStore } from '@/stores/tagStore';
 import ProfileWindow from '@/components/profile/ProfileWindow.vue';
 import Profile from '@/components/profile/Profile.vue';
 import { storeToRefs } from 'pinia';
@@ -24,17 +31,20 @@ const uid = route.params.id;
 const userStore = useUserStore();
 const followStore = useFollowStore();
 const profileStore = useProfileStore();
+const tagStore = useTagStore();
 
 const { setFollowerList, setFollowingList, getFollowState } = followStore;
 const { setUserProfile, setAList, setQList } = profileStore;
+const { setTagNumList } = tagStore;
 
 const {
   handleFollowerList: followerList,
   handleFollowingList: followingList,
   handleFollowState: isFollowing,
 } = storeToRefs(followStore);
-const { handleUserProfile: profile } = storeToRefs(profileStore);
+const { handleUserProfile: profile, handleSelectedTags: selectedTags } = storeToRefs(profileStore);
 const { handleLoginUserId: loginUserId, handleAccessToken: accessToken } = storeToRefs(userStore);
+const { handleTags: tagIdList } = storeToRefs(tagStore);
 
 const isMyProfile = ref(false);
 
@@ -47,6 +57,8 @@ watch(
     setUserProfile(newUid);
     setAList(newUid);
     setQList(newUid);
+    setTagNumList(newUid);
+    selectedTags.value = tagIdList.value;
 
     if (newUid == loginUserId.value) {
       isMyProfile.value = true;

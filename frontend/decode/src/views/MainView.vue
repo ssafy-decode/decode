@@ -3,6 +3,7 @@
     <FirstCut/>
     <SecondCut/>
     <ThirtCut/>
+    <FourthCut/>
   </div>
 </template>
 
@@ -10,20 +11,19 @@
 import FirstCut from '@/components/main/FirstCut.vue';
 import SecondCut from '@/components/main/SecondCut.vue';
 import ThirtCut from '@/components/main/ThirdCut.vue';
+import FourthCut from '@/components/main/FourthCut.vue';
 
 
 </script>
 
 <style scoped>
 .container {
-  border: solid red;
   padding: 0;
   margin: 0;
   width: 100vw;
 }
 .container > * {
-  border: solid blue;
-  height: calc(100vh - 64px); /* Nav바의 높이가 64px라고 가정함 */
+  height: 90vh; /* Nav바의 높이가 64px라고 가정함 */
   width: 100vw;
 }
 .box {

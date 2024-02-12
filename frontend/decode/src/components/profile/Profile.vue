@@ -3,34 +3,72 @@
     <v-card
       class="mx-auto px-4 py-8"
       max-width="1036"
-      style="text-align: center; background-color: #f3f3f3; border-radius: 31px; border: 15px solid #d9d9d9"
+      style="
+        box-shadow: none;
+        text-align: center;
+        background-color: #f3f3f3;
+        border-radius: 31px;
+        border: 15px solid #d9d9d9;
+      "
     >
       <v-row>
-        <v-col :cols="2">
-          {{ profile.nickname }}
+        <v-col :cols="1">
           <br />
+          <div>{{ profile.nickname }}</div>
           <br />
-          <br />
-          {{ profile.tier }}
+          <div>{{ profile.tier }}</div>
           <br />
         </v-col>
 
-        <v-col :cols="1"
-          ><div v-if="tagStore.tagIdList.length > 0">
-            <v-chip v-for="tag in tagStore.tagIdList" :key="tag" label color="primary" class="mr-2 mb-2">
-              {{ tagName[tag] }}</v-chip
+        <v-col :cols="2"
+          ><div>
+            <div>
+              <template v-if="editing">
+                <v-combobox
+                  v-if="editing"
+                  variant="solo"
+                  class="combo"
+                  bg-color="#d9d9d9"
+                  v-model="selectedTags"
+                  :items="items"
+                  placeholder="ex) java, spring boot, sql"
+                  label="기술 스택"
+                  multiple
+                  chips
+                  clearable
+                ></v-combobox>
+              </template>
+              <template v-else-if="tagIdList.length > 0">
+                <div v-for="tag in tagIdList" :key="tag" style="display: block">
+                  <v-chip :clearable="editing" :key="tag" label color="primary" class="mr-2 mb-2 chips">
+                    {{ tagName[tag] }}</v-chip
+                  >
+                </div>
+              </template>
+              <template v-else>
+                <div>선택한 기술 스택이 없습니다.</div>
+              </template>
+            </div>
+            <br />
+            <v-btn
+              v-if="isMyProfile"
+              @click="toggleEdit"
+              class="tagbtn"
+              color="#62C0A6"
+              type="submit"
+              variant="elevated"
+              >{{ editing ? '기술 스택 변경 저장' : '기술 스택 변경' }}</v-btn
             >
-          </div>
-          <div v-else><br /><br />기술<br />스택<br />없음</div></v-col
+          </div></v-col
         >
 
         <v-col :cols="6">
           출석 스트릭
-          <!-- <AttendanceLog :uid="profile.id" /> -->
+          <AttendanceLog />
         </v-col>
 
         <v-col :cols="3">
-          <!-- <ExpLog :uid="profile.id" /> -->
+          <ExpLog />
         </v-col>
       </v-row>
 
@@ -76,24 +114,34 @@
 <script setup>
 import AttendanceLog from '@/components/profile/AttendanceLog.vue';
 import ExpLog from '@/components/profile/ExpLog.vue';
+import { ref, defineProps, onBeforeMount } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/stores/userStore';
 import { useProfileStore } from '@/stores/profileStore';
 import { useTagStore } from '@/stores/tagStore';
 import { useFollowStore } from '@/stores/followStore';
+
 const userStore = useUserStore();
 const profileStore = useProfileStore();
-const followStore = useFollowStore();
 const tagStore = useTagStore();
-const { handleAccessToken: accessToken } = storeToRefs(userStore);
+const followStore = useFollowStore();
 
+const { updateTechStack } = profileStore;
 const { unFollow, follow } = followStore;
+const { handleTags: tagIdList } = storeToRefs(tagStore);
+// const { handleSelectedTags: selectedTags } = storeToRefs(profileStore);
+const { handleAccessToken: accessToken } = storeToRefs(userStore);
+const { setTagNumList } = tagStore;
 
 const props = defineProps({
   profile: Object,
   isMyProfile: Boolean,
   isFollowing: Boolean,
+  tagIdList: Array,
+  selectedTags: Array,
 });
+
+const selectedTags = ref([]);
 
 // DB에 수정된 번호를 다시 태그명으로 전환
 const tagName = {
@@ -111,6 +159,41 @@ const tagName = {
   12: 'C#',
 };
 
+const editing = ref(false);
+const items = ref([
+  'python',
+  'java',
+  'C++',
+  'javascript',
+  'django',
+  'spring',
+  'spring boot',
+  'kotlin',
+  'sql',
+  'react',
+  'vue',
+  'C#',
+]);
+
+// 기술 스택 목록 변경
+const toggleEdit = () => {
+  if (editing.value) {
+    const user = {
+      userId: userStore.loginUserId,
+      tagIdList: selectedTags.value,
+    };
+    updateTechStack(user, accessToken.value);
+  }
+  editing.value = !editing.value;
+  setTagNumList(userStore.loginUserId);
+  selectedTags.value = tagIdList.value.map((tag) => tagName[tag]);
+};
+
+onBeforeMount(() => {
+  setTagNumList(userStore.loginUserId);
+  selectedTags.value = tagIdList.value.map((tag) => tagName[tag]);
+});
+
 const followById = (id) => {
   follow(id, accessToken.value);
 };
@@ -120,6 +203,12 @@ const unfollowById = (id) => {
 </script>
 
 <style scoped>
+.chips {
+  border-radius: 31px;
+  background-color: #9dd0ff;
+  color: #447cb0;
+  font-weight: bold;
+}
 .buttons {
   text-align: end;
 }
