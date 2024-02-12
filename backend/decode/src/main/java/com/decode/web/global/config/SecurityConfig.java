@@ -55,7 +55,7 @@ public class SecurityConfig {
                                 new AntPathRequestMatcher("/regist")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/email")
                                 , new AntPathRequestMatcher("/password")
-                                , new AntPathRequestMatcher("/addTag")
+                                , new AntPathRequestMatcher("/addUserTag")
                                 , new AntPathRequestMatcher("/image")
                                 , new AntPathRequestMatcher("/oauth2/authorization/**")
                                 , new AntPathRequestMatcher("/oauth2/callback/**")
