@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar color="transparent">
+  <v-toolbar>
     <router-link to="/">
       <v-btn>
         <span style="display: flex; justify-content: space-between">
