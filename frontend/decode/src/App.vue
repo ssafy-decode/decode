@@ -1,7 +1,6 @@
 <template>
   <div class="app">
-    <NavBar />
-    <br />
+    <NavBar :class="$route.name === 'mainview'? 'static-header':'' " />
     <div style="min-height: 1100px">
       <router-view></router-view>
       <br />
@@ -18,6 +17,13 @@ import Chat from '@/components/chat/Chat.vue';
 </script>
 
 <style>
+.static-header{
+  position:fixed;
+  top:0;
+
+  width: 100vw;
+  z-index: 9999;
+}
 .app {
   width: 100%;
   height: 100%;
