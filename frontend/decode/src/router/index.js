@@ -159,28 +159,27 @@ router.beforeEach((to, from, next) => {
     alert('먼저 회원 가입 1단계를 완료해주세요.');
     next({ name: 'userregist' }); // 1단계로 리다이렉트
   } else {
-    next(); // 2단계로 이동
-  }
-  const accessRoutes = [
-    // 로그인 없이도 접근 가능한 URL
-    'mainview',
-    'login',
-    'authenticationloading',
-    'findemail',
-    'foundemail',
-    'findpwd',
-    'foundpwd',
-    'userregist',
-    'techstack',
-    'questionview',
-    'oauth2redirect',
-  ];
-  if (accessRoutes.includes(to.name) || userStore.isLoggedIn) {
-    // 로그인 없이 직접 URL 작성으로 접근할 때를 방지
-    next();
-  } else {
-    alert('로그인이 필요합니다.');
-    next('/login'); // 로그인 창으로 리다이렉트
+    const accessRoutes = [
+      // 로그인 없이도 접근 가능한 URL
+      'mainview',
+      'login',
+      'authenticationloading',
+      'findemail',
+      'foundemail',
+      'findpwd',
+      'foundpwd',
+      'userregist',
+      'techstack',
+      'questionview',
+      'oauth2redirect',
+    ];
+    if (accessRoutes.includes(to.name) || userStore.isLoggedIn) {
+      // 로그인 없이 직접 URL 작성으로 접근할 때를 방지
+      next();
+    } else {
+      alert('로그인이 필요합니다.');
+      next('/login'); // 로그인 창으로 리다이렉트
+    }
   }
 });
 
