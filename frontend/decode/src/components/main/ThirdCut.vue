@@ -4,7 +4,8 @@
     <v-col cols="4" style="padding: 0; margin: 0">
       <div class="img-box">
         <p class="text">
-          전문가를 팔로우하고<br />
+          전문가를 팔로우하고<br/>
+          화면공유와 채팅을 통해<br/>
           1:1 답변을 받아보세요.
         </p>
       </div>

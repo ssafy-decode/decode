@@ -9,8 +9,8 @@
     <v-col cols="4" style="padding: 0; margin: 0">
       <div class="img-box">
         <p class="text">
-          ChatGPT 4.0 과 <br />
-          ~~~ 사용자로부터 <br />
+          ChatGPT 4.0 와 <br />
+          모든 사용자로부터 <br />
           에러에 대한 다양한 <br />
           솔루션을 얻을 수 있습니다.
         </p>
