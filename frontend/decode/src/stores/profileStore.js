@@ -4,7 +4,6 @@ import router from '@/router';
 import axios from '@/utils/common-axios';
 import { useUserStore } from './userStore';
 import { useTagStore } from './tagStore';
-import { storeToRefs } from 'pinia';
 
 const useProfileStore = defineStore(
   'useProfileStore',
@@ -12,7 +11,6 @@ const useProfileStore = defineStore(
     // 스토어
     const userStore = useUserStore();
     const tagStore = useTagStore();
-    // const { handleAccessToken: accessToken } = storeToRefs(userStore);
 
     // 배열
     const profile = ref([]); // 로그인 유저가 아닌 다른 유저 프로필 data 저장 목록
@@ -33,23 +31,6 @@ const useProfileStore = defineStore(
     const userProfileImgURL = ref(''); // 유저 프로필 사진 url
 
     // 함수
-    // 로그인 사용자 프로필 조회 (아마 사용 안 하게 될 예정: id 넘겨서 setUserProfile로 통합해서 사용할 예정)
-    // (exp, point, coin, nickname, tier, profileImg)
-    // const myProfile = async () => {
-    //   await axios
-    //     .get(`/info`, {
-    //       headers: {
-    //         Authorization: `Bearer ${userStore.accessToken}`,
-    //       },
-    //     })
-    //     .then((res) => {
-    //       userStore.accessToken = userStore.parseToken(res);
-    //       if (res.data.status === 'OK') {
-    //         loginUserProfile.value = res.data.data;
-    //       }
-    //     });
-    // };
-
     // 사용자 프로필 조회
     // (exp, point, coin, nickname, tier, profileImg)
     const setUserProfile = async (userid) => {
@@ -125,7 +106,6 @@ const useProfileStore = defineStore(
     // 로그인 유저 선택한 기술 스택 변경
     const updateTechStack = async (user, token) => {
       const updatedTagNums = user.tagIdList.map((item) => tagStore.tagNum[item]);
-      console.log('db보내기전확인', updatedTagNums);
       await axios
         .patch(
           `/updateUserTag`,
@@ -173,7 +153,6 @@ const useProfileStore = defineStore(
     };
 
     // computed
-    // const handleMyProfile = computed(() => loginUserProfile.value);
     const handleUserProfile = computed(() => profile.value);
     const handleQuestions = computed(() => qList.value);
     const handleAnswers = computed(() => aList.value);
@@ -185,8 +164,6 @@ const useProfileStore = defineStore(
 
     // 반환
     return {
-      // loginUserProfile,
-      // userProfile,
       qList,
       aList,
       rankList,
@@ -204,7 +181,6 @@ const useProfileStore = defineStore(
       updateTechStack,
       updatePwd,
       getSelectCnt,
-      // handleMyProfile,
       handleUserProfile,
       handleQuestions,
       handleAnswers,

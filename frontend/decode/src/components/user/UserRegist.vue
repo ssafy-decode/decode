@@ -150,26 +150,24 @@
             /> </template
         ></v-text-field>
         <span style="display: flex; justify-content: end; margin-right: 20px">
-          <router-link to="/regist/2"
-            ><v-btn
-              @click.prevent="regist"
-              color="#62C0A6"
-              size="x-large"
-              type="submit"
-              variant="elevated"
-              style="
-                width: 95px;
-                font-size: 15px;
-                font-weight: bold;
-                border-radius: 34px;
-                margin-top: 10px;
-                margin-right: 20px;
-                color: #000000;
-              "
-            >
-              확인
-            </v-btn></router-link
+          <v-btn
+            @click.prevent="regist"
+            color="#62C0A6"
+            size="x-large"
+            type="submit"
+            variant="elevated"
+            style="
+              width: 95px;
+              font-size: 15px;
+              font-weight: bold;
+              border-radius: 34px;
+              margin-top: 10px;
+              margin-right: 20px;
+              color: #000000;
+            "
           >
+            확인
+          </v-btn>
         </span>
       </v-form>
     </v-card>

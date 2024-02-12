@@ -80,8 +80,6 @@
 
 <script setup>
 import { ref } from 'vue';
-// import { ref, onMounted } from 'vue';
-// import router from '@/router';
 import { useUserStore } from '@/stores/userStore';
 
 const userStore = useUserStore();
@@ -117,10 +115,8 @@ const checkboxIcon = (item) => {
 const complete = async () => {
   try {
     await userStore.saveTechStack(select.value);
-    alert('회원가입이 완료되었습니다.\nde;code에 오신 것을 환영합니다!');
   } catch (error) {
     console.error('Error saving tech stack:', error);
-    alert('회원가입이 완료되었지만, 기술 스택 저장에 문제가 발생했습니다.');
   }
 };
 
@@ -132,15 +128,6 @@ const toggleSelection = (item) => {
     select.value.push(item);
   }
 };
-
-// 잠시 보류 (전부 차단해버려서 일단 주석 처리)
-// onMounted(() => {
-//   if (!userStore.isRegisting.value) {
-//     // 1단계를 진행하지 않았을 시 === false
-//     alert('회원 가입 1단계를 먼저 완료해주세요.');
-//     router.push({ name: `userregist` }); // 1단계 페이지로 튕기게
-//   }
-// });
 </script>
 
 <style scoped>
