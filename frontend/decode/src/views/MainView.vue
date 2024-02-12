@@ -1,38 +1,31 @@
 <template>
-  <div class="flex-container">
-    <div class="box wrapper text-h3 font-weight-black">
-      <p id="hate">이 에러를<br /><br />당신이 싫어합니다</p>
-      <p id="like">이 코드를<br /><br />당신이 좋아합니다</p>
-    </div>
-
-    <div class="box wrapper">
-      <img id="hate" src="./error.png" alt="에러이미지" />
-      <img id="like" src="./code.png" alt="코드이미지" />
-    </div>
+  <div class="container">
+    <FirstCut/>
+    <SecondCut/>
+    <ThirtCut/>
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import FirstCut from '@/components/main/FirstCut.vue';
+import SecondCut from '@/components/main/SecondCut.vue';
+import ThirtCut from '@/components/main/ThirdCut.vue';
+
+
+</script>
 
 <style scoped>
-@keyframes changeAnimation {
-  0% {
-    opacity: 0;
-  }
-  7% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 1;
-  }
-  65% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 0;
-  }
+.container {
+  border: solid red;
+  padding: 0;
+  margin: 0;
+  width: 100vw;
 }
-
+.container > * {
+  border: solid blue;
+  height: calc(100vh - 64px); /* Nav바의 높이가 64px라고 가정함 */
+  width: 100vw;
+}
 .box {
   height: 500px;
   width: 50%;
@@ -41,32 +34,5 @@
 .wrapper {
   position: relative;
   color: #34a080;
-}
-
-#hate {
-  position: absolute;
-  animation: changeAnimation 6s infinite;
-}
-
-#like {
-  position: absolute;
-  opacity: 0;
-  animation: changeAnimation 6s infinite;
-  animation-delay: 3s;
-}
-.flex-container {
-  display: flex;
-  justify-content: space-between;
-  height: 800px;
-}
-
-p {
-  top: 250px;
-  right: 200px;
-  text-align: right;
-}
-
-img {
-  width: 90%;
 }
 </style>
