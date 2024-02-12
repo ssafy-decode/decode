@@ -78,7 +78,7 @@ public class QuestionController {
         ResponseQuestionDto question = questionService.questionDetail(questionId);
         return ResponseDto.builder()
                 .status(HttpStatus.OK)
-                .message((questionId + "조회"))
+                .message("질문번호 " + questionId + " 조회")
                 .data(question)
                 .build();
     }

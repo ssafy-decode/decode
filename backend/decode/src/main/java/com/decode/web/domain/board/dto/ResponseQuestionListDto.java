@@ -25,5 +25,6 @@ public class ResponseQuestionListDto {
     private LocalDateTime updatedTime;
     private int answerCnt;
     private int meTooCnt;
+    private int bookmarkCnt;
 
 }
