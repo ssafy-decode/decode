@@ -88,6 +88,8 @@ const createComment = function () {
   })
     .then((res) => {
       console.log('댓글 생성됨');
+      // 새로 고침 없이 바로 반영되도록 해보자
+      location.reload();
     })
     .catch((err) => {
       console.log(err);

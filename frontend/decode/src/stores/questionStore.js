@@ -9,6 +9,7 @@ export const useQuestionStore = defineStore(
     const questions = ref([]);
     const gptTitles = ref(['']);
     const gptTagIds = ref(['']);
+
     const items = {
       python: 1,
       java: 2,
