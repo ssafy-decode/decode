@@ -1,7 +1,7 @@
 package com.decode.web.domain.user.service;
 
 
-import com.decode.web.domain.user.Point;
+import com.decode.web.domain.user.enums.Point;
 import com.decode.web.domain.user.repository.UserProfileRepository;
 import com.decode.web.entity.UserProfileEntity;
 import jakarta.transaction.Transactional;

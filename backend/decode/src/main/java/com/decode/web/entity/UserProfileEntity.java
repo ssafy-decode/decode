@@ -1,11 +1,10 @@
 package com.decode.web.entity;
 
 
-import com.decode.web.domain.user.Point;
+import com.decode.web.domain.user.enums.Point;
 import com.decode.web.exception.NotEnoughCoinException;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.Column;
