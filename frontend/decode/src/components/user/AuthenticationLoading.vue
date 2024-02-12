@@ -21,11 +21,11 @@ const { isLoggedIn: isLoggedIn } = storeToRefs(userStore);
 const router = useRouter();
 
 window.addEventListener('message', (event) => {
+  const token = event.data;
   if (!token) {
     alert('로그인에 실패했습니다.');
     router.push('/login');
   }
-  const token = event.data;
   isLoggedIn.value = true;
   setToken(token);
   setLoginUserId(parseJwt(token)['userId']);
