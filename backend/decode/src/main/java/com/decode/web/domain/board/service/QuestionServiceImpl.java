@@ -8,7 +8,6 @@ import com.decode.web.domain.board.dto.ResponseAnswerDto;
 import com.decode.web.domain.board.dto.ResponseQuestionDto;
 import com.decode.web.domain.board.dto.ResponseQuestionListDto;
 import com.decode.web.domain.board.dto.UpdateQuestionDto;
-import com.decode.web.domain.board.mapper.QuestionMapper;
 import com.decode.web.domain.board.repository.QuestionELKRepository;
 import com.decode.web.domain.board.repository.QuestionRepository;
 import com.decode.web.domain.tag.dto.QuestionTagDto;
@@ -74,7 +73,8 @@ public class QuestionServiceImpl implements QuestionService {
                 questionEntity.getCreatedTime(),
                 questionEntity.getUpdatedTime(),
                 questionEntity.getAnswers().size(),
-                questionEntity.getMetoos().size());
+                questionEntity.getMetoos().size(),
+                questionEntity.getBookmarks().size());
     }
 
     @Override
@@ -109,7 +109,7 @@ public class QuestionServiceImpl implements QuestionService {
         LocalDateTime updateTime = questionEntity.getUpdatedTime();
 
         return new ResponseQuestionDto(questionId, title, content, writerDto, questionTagDtoList,
-                answerList, meTooCnt, createdTime, updateTime);
+                answerList, meTooCnt, createdTime, updateTime, questionEntity.getBookmarks().size());
     }
 
     @Override
