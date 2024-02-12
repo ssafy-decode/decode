@@ -44,7 +44,7 @@ const useUserStore = defineStore(
         .post(`/addUserTag`, { userId: registId.value, tagIdList: tagNums })
         .then((res) => {
           if (res.data.status === 'OK') {
-            tagStore.tagIdList.value.push(...tagNums);
+            tagStore.tagIdList.value = tagNums;
             registId.value = null; // 초기화
             alert('회원가입이 완료되었습니다.\nde;code에 오신 것을 환영합니다!');
           }
