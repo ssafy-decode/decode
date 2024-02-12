@@ -43,8 +43,6 @@
         </div>
         <div>
           <v-btn>나도 궁금해요</v-btn>
-          <!-- <v-btn @click="deleteBookmark(questionId)">북마크 취소</v-btn>
-          <v-btn @click="addBookmark(userStore.loginUserId, questionId)">북마크</v-btn> -->
           <v-btn v-if="isBookmarked" @click="deleteBookmark(questionId)">북마크 취소</v-btn>
           <v-btn v-else @click="addBookmark(userStore.loginUserId, questionId)">북마크</v-btn>
           <v-btn @click="goCreateAnswer()">답변달기</v-btn>
