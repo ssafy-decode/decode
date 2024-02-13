@@ -107,11 +107,10 @@ const useProfileStore = defineStore(
 
     // 로그인 유저 선택한 기술 스택 변경
     const updateTechStack = async (user, token) => {
-      const updatedTagNums = user.tagIdList.map((item) => tagStore.tagNum[item]);
       await axios
         .patch(
           `/updateUserTag`,
-          { userId: user.userId, tagIdList: updatedTagNums },
+          { userId: user.userId, tagIdList: user.tagIdList },
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -119,11 +118,8 @@ const useProfileStore = defineStore(
           },
         )
         .then((res) => {
+          tagStore.setTagNumList(user.userId);
           userStore.accessToken = userStore.parseToken(res);
-          if (res.data.status === 'OK') {
-            tagStore.setTagNumList(user.userId);
-            selectedTags.value = tagStore.tagIdList.value;
-          }
         });
     };
 
