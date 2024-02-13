@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -62,9 +61,9 @@ public class ChatRoomController {
     /*
         유저가 속해 있는 모든 방 출력
      */
-    @GetMapping("/rooms/user")
-    public ResponseDto findAllByUserId() {
-        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    @GetMapping("/rooms/sub")
+    public ResponseDto findAllByUserId(Authentication authentication) {
+        Long userId = (Long) authentication.getPrincipal();
         List<ChatRoomEntity> roomList = chatRoomService.findAllRoomByUser(userId);
         return ResponseDto.builder().data(roomList).status(HttpStatus.OK).message("유저 방 리스트 불러오기")
                 .build();
@@ -81,9 +80,13 @@ public class ChatRoomController {
     }
 
     @DeleteMapping("/room/{roomId}")
-    public ResponseDto deleteByRoomId(@PathVariable Long roomId) {
-//        chatRoomService.deleteRoom();
-        return ResponseDto.builder().build();
+    public ResponseDto deleteByRoomId(@PathVariable Long roomId, Authentication authentication) {
+        authentication.getPrincipal();
+        chatRoomService.deleteRoom(roomId);
+        return ResponseDto.builder()
+                .message("채팅방 삭제 완료")
+                .data("")
+                .build();
     }
 
 }

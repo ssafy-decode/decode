@@ -147,4 +147,9 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         chatSubRoom.setChatRoomEntity(chatRoom.get());
         chatSubRoomRepository.save(chatSubRoom);
     }
+
+    @Override
+    public void deleteRoom(Long roomId) {
+        chatRoomRepository.deleteById(roomId);
+    }
 }

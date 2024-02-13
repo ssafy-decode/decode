@@ -20,4 +20,6 @@ public interface ChatRoomService {
     List<ChatRoomResponseDto> findAll();
 
     void subRoom(Long userId, Long roomId) throws BadRequestException;
+
+    void deleteRoom(Long roomId);
 }
