@@ -3,6 +3,7 @@ package com.decode.web.exception;
 import com.decode.web.global.ResponseDto;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.NoSuchElementException;
 import javax.security.auth.login.CredentialException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
@@ -135,6 +136,16 @@ public class GlobalControllerAdvice {
                 .build(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(NoSuchElementException.class)
+    private ResponseEntity<ResponseDto> noSuchElementException(NoSuchElementException e) {
+        log.error("{}", e.getMessage());
+        return new ResponseEntity<>(ResponseDto.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .message("DB 조회 불가")
+                .data("")
+                .build(), HttpStatus.BAD_REQUEST);
+    }
+    
     @ExceptionHandler(Exception.class)
     private ResponseEntity<ResponseDto> handleException(Exception e) {
         log.error("{}", e.getMessage());
