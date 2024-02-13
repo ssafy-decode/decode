@@ -1,6 +1,6 @@
 <template>
-  <div class="back-button" @click="goBack">
-    <v-icon small color="primary">mdi-close</v-icon>
+  <div class="back-button">
+    <v-icon small color="primary" @click="goBack">mdi-close</v-icon>
   </div>
 
   <div class="chat-container">
@@ -45,7 +45,7 @@
   </div>
 </template>
 <script>
-import { ref, onMounted, nextTick, watchEffect, onUnmounted } from 'vue';
+import { ref, onMounted, nextTick, watchEffect, onUnmounted, onUpdated } from 'vue';
 import OpenviduDialog from './OpenviduDialog.vue';
 import OpenviduModal from '@/components/chat/OpenviduModal.vue';
 import { useChatStore } from '@/stores/chatStore.js';
@@ -66,7 +66,7 @@ export default {
     room: Object,
   },
   setup(props, { emit }) {
-const APPLICATION_SERVER_URL = 'https://i10a507.p.ssafy.io/decode/openvidu';
+    const APPLICATION_SERVER_URL = 'https://i10a507.p.ssafy.io/decode/openvidu';
     // const APPLICATION_SERVER_URL = 'http://localhost:7777/decode/openvidu';
     const OV = ref(undefined);
     const session = ref(undefined);
@@ -88,7 +88,8 @@ const APPLICATION_SERVER_URL = 'https://i10a507.p.ssafy.io/decode/openvidu';
     watchEffect(() => {
       if (stompStore.messages[props.room.id]) {
         const newMessage = stompStore.messages[props.room.id][stompStore.messages[props.room.id].length - 1];
-        if (newMessage) {
+        const lastMessage = messages.value[messages.value.length - 1];
+        if (newMessage && (!lastMessage || newMessage.id !== lastMessage.id)) {
           messages.value.push(newMessage);
           nextTick(() => {
             chatContainer.value.scrollTop = chatContainer.value.scrollHeight;
@@ -113,6 +114,23 @@ const APPLICATION_SERVER_URL = 'https://i10a507.p.ssafy.io/decode/openvidu';
           });
         }
       }
+    });
+    onUpdated(() => {
+      const messageContainers = document.querySelectorAll('.message-content');
+      messageContainers.forEach((messageContainer) => {
+        const button = messageContainer.querySelector('.join-session');
+        if (button) {
+          button.addEventListener('click', () => {
+            const sessionElement = messageContainer.querySelector('.session-id');
+            if (sessionElement) {
+              const sessionId = String(sessionElement.textContent);
+              if (sessionId) {
+                joinSession(sessionId);
+              }
+            }
+          });
+        }
+      });
     });
     const joinSession = async (sessionId) => {
       OV.value = new OpenVidu();
@@ -201,7 +219,8 @@ const APPLICATION_SERVER_URL = 'https://i10a507.p.ssafy.io/decode/openvidu';
     });
     onUnmounted(() => {
       // 구독 취소
-      if (stompStore[props.room.id]) {
+      if (stompStore.subscriptions[props.room.id]) {
+        console.log(stompStore.subscriptions[props.room.id]);
         stompStore.subscriptions[props.room.id].unsubscribe();
         sessionStore.exitSession(rsId.value);
       }
@@ -238,7 +257,9 @@ const APPLICATION_SERVER_URL = 'https://i10a507.p.ssafy.io/decode/openvidu';
       // 여기에 나머지 처리를 추가 가능
     };
     const goBack = () => {
+      console.log(props.room.id);
       if (stompStore[props.room.id]) {
+        console.log('pass here?');
         stompStore.subscriptions[props.room.id].unsubscribe();
       }
       emit('goBack');
@@ -247,8 +268,8 @@ const APPLICATION_SERVER_URL = 'https://i10a507.p.ssafy.io/decode/openvidu';
     const sendMessage = () => {
       if (newMessage.value !== '') {
         // messages.value.push({ nickName: '나', text: newMessage.value });
-        console.log(loginUserId.value)
-        console.log(myProfile.value)
+        console.log(loginUserId.value);
+        console.log(myProfile.value);
         stompStore.sendMessage(loginUserId.value, myProfile.value.nickname, newMessage.value, props.room.id);
         newMessage.value = '';
         nextTick(() => {
