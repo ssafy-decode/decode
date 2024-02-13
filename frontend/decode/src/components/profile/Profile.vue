@@ -73,7 +73,13 @@
               </template>
               <template v-else-if="tagIdList.length > 0">
                 <div v-for="tag in tagIdList" :key="tag" style="display: block">
-                  <v-chip :clearable="editing" :key="tag" label color="primary" class="mr-2 mb-2 chips">
+                  <v-chip
+                    :clearable="editing"
+                    :key="tag"
+                    label
+                    :style="{ backgroundColor: tagBackGroundColor(tag), color: tagTextColor(tag) }"
+                    class="mr-2 mb-2 chips"
+                  >
                     {{ tagName[tag] }}</v-chip
                   >
                 </div>
@@ -154,6 +160,72 @@ const tagName = {
   10: 'react',
   11: 'vue',
   12: 'C#',
+};
+
+// 기술 태그 배경색
+const tagBackGroundColor = (tag) => {
+  switch (tag) {
+    case 1:
+      return '#9DD0FF';
+    case 2:
+      return '#FF9D9D';
+    case 3:
+      return '#FFDE9D';
+    case 4:
+      return '#D49DFF';
+    case 5:
+      return '#FFCC9F';
+    case 6:
+      return '#CEFAD0';
+    case 7:
+      return '#1FD655';
+    case 8:
+      return '#FF6865';
+    case 9:
+      return '#73A5C6';
+    case 10:
+      return '#FFB7CE';
+    case 11:
+      return '#E8D3C9';
+    case 12:
+      return '#B65FCF';
+
+    default:
+      return 'primary'; // Default color
+  }
+};
+
+// 기술 태그 글자색
+const tagTextColor = (tag) => {
+  switch (tag) {
+    case 1:
+      return '#447CB0';
+    case 2:
+      return '#B54F4F';
+    case 3:
+      return '#BC8533';
+    case 4:
+      return '#9330B5';
+    case 5:
+      return '#FF6600';
+    case 6:
+      return '#008631';
+    case 7:
+      return '#073B3A';
+    case 8:
+      return '#450003';
+    case 9:
+      return '#051650';
+    case 10:
+      return '#9E4244';
+    case 11:
+      return '#CC5404';
+    case 12:
+      return '#66023C';
+
+    default:
+      return 'primary'; // Default color
+  }
 };
 
 const editing = ref(false);
