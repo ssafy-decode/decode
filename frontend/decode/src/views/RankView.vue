@@ -57,14 +57,6 @@ onBeforeMount(() => {
   display: flex;
   margin-top: 20px;
 }
-
-.ranking-list {
-  margin-top: 20px;
-  border: 1px solid #ccc;
-  background-color: white;
-  border-radius: 15px;
-}
-
 .rounded-border {
   border-radius: 15px;
   border: 1px solid #ccc;
