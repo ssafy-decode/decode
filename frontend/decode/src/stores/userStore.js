@@ -16,6 +16,8 @@ const useUserStore = defineStore(
     // 배열
     const users = ref([]); // 전체 회원 목록
     const user = ref([]); // 해당 유저의 id, email, password, phoneNumber, birth, name, createdTime, updatedTime 저장한 목록
+    const loginUser = ref([]); // 로그인 유저의 id, email, password, phoneNumber, birth, name, createdTime, updatedTime 저장한 목록
+    const myProfile = ref({});
 
     // 값
     const registId = ref(null); // 회원 가입 시 회원 번호
@@ -35,7 +37,7 @@ const useUserStore = defineStore(
       });
     };
 
-    // 회원 가입 2단계: 선택한 기술 스택 저장 (401 에러)
+    // 회원 가입 2단계: 선택한 기술 스택 저장
     const saveTechStack = async (selectedTechStack) => {
       const tagNums = selectedTechStack.map((item) => tagStore.tagNum[item]);
       console.log('테스트중', registId.value); // 41로 잘 뜸
@@ -62,9 +64,11 @@ const useUserStore = defineStore(
         const res = await axios.post(`/login`, loginuser);
 
         if (res.data.status === 'OK') {
-          setToken(parseToken(res));
           isLoggedIn.value = true;
+          setToken(parseToken(res));
           setLoginUserId(res.data.data);
+          setMyProfile();
+
           router.push({ name: 'mainview' });
         } else {
           alert('로그인에 실패했습니다.');
@@ -74,6 +78,11 @@ const useUserStore = defineStore(
         alert('로그인에 실패했습니다.');
         return;
       }
+    };
+    const setMyProfile = async () => {
+      await axios.get(`/profile/${loginUserId.value}`).then((res) => {
+        myProfile.value = res.data.data;
+      });
     };
 
     // responseBody에서 토큰 값 추출
@@ -113,24 +122,11 @@ const useUserStore = defineStore(
       await axios.get(`/user/${userid}`).then((res) => {
         accessToken.value = parseToken(res);
         if (res.data.status === 'OK') {
-          user.value = res.data.data;
-          // if (userid === loginUserId.value) {
-          //   // 로그인 유저와 일치할 경우
-          //   // loginUserName.value = res.data.data.name;
-          //   // loginUserBirthday.value = res.data.data.birth;
-          //   // loginUserEmail.value = res.data.data.email;
-          //   // loginUserPhone.value = res.data.data.phoneNumber;
-          //   // loginUser.value = { ...res.data };
-          //   loginUser.value = res.data.data;
-          // } else {
-          //   // 그 외일 경우
-          //   // userName.value = res.data.data.name;
-          //   // userBirthday.value = res.data.data.birth;
-          //   // userEmail.value = res.data.data.email;
-          //   // userPhone.value = res.data.data.phoneNumber;
-          //   // user.value = { ...res.data };
-          //   user.value = res.data.data;
-          // }
+          if (userid === loginUserId.value) {
+            loginUser.value = res.data.data;
+          } else {
+            user.value = res.data.data;
+          }
         }
       });
     };
@@ -169,6 +165,7 @@ const useUserStore = defineStore(
     const handleUser = computed(() => user.value);
     const handleLoginUserId = computed(() => loginUserId.value);
     const handleAccessToken = computed(() => accessToken.value);
+    const handleMyprofile = computed(() => myProfile.value);
 
     // 반환
     return {
@@ -185,6 +182,7 @@ const useUserStore = defineStore(
       setLoginUser,
       parseToken,
       setLogout,
+      setMyProfile,
       setUser,
       setToken,
       findUserEmail,
@@ -193,6 +191,7 @@ const useUserStore = defineStore(
       handleUser,
       handleLoginUserId,
       handleAccessToken,
+      handleMyprofile,
     };
   },
   {

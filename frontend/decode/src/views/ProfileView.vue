@@ -72,12 +72,6 @@ watch(
     immediate: true,
   },
 );
-
-// setFollowerList(uid);
-// setFollowingList(uid);
-// setUserProfile(uid);
-// setAList(uid);
-// setQList(uid);
 </script>
 
 <style scoped></style>

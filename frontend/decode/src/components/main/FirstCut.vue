@@ -1,46 +1,68 @@
 <template>
-  <v-row class="flex-container">
-    <v-col cols="2"></v-col>
-    <v-col cols="4" style="padding: 0; margin: 0">
-      <div class="img-box">
-        <p class="title-text">
-          코드를 공유하고 
-          <br/> 
-          에러를 해결해보세요!
-        </p>
-        <!-- <img class="success people" src="./success_man.png" alt="성공사람" /> -->
-      </div>
-    </v-col>
-    <v-col cols="4" style="padding: 0; margin: 0">
-      <div class="img-box">
-        <img class="success page" src="./success_page.png" alt="성공페이지" />
-      </div>
-    </v-col>
-    <v-col cols="2"></v-col>
-  </v-row>
+  <div class="flex-container">
+    <v-row>
+      <v-col cols="2"></v-col>
+      <v-col cols="4" style="padding: 0; margin: 0">
+        <div class="text-box">
+          <p class="explain-text">
+            자유롭게 
+            질문하고 답변하는 <br />
+            IT 개발자 커뮤니티
+          </p>
+          <br />
+          <p class="sub-text">
+            코드를 공유하고 에러를 해결해보세요!
+          </p>
+        </div>
+      </v-col>
+      <v-col cols="4" style="padding: 0; margin: 0">
+        <div class="img-box">
+          <img class="page-img" src="./success_page.png" alt="성공페이지" />
+        </div>
+      </v-col>
+      <v-col cols="2"></v-col>
+    </v-row>
+  </div>
 </template>
 
 <script setup></script>
 
 <style>
 .test {
-    border: solid;
-    padding: 0;
-    margin: 0;
+  border: solid;
+  padding: 0;
+  margin: 0;
 }
-.title-text {
-    font-size: 3.5em; /* 텍스트 크기를 크게 설정 */
-    font-weight: 900; /* 텍스트를 굵게 설정 */
-    color: #23968B; /* 텍스트 색상을 초록색으로 설정 */
-}
-
 .flex-container {
-    display: flex;
-    margin: 0;
-    padding: 0;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+.explain-text {
+  font-size: 40px;
+  font-weight: bold;
+  color: #23968B;
+  text-align: left;
+  width: 100%;
+}
+.sub-text {
+  font-size: 20px;
+  font-weight: 400;
+  color: #7c7c7c;
+  text-align: left;
+  width: 100%;
+}
+.text-box {
+  flex-direction: column;
+  height: 100%;
+  display: flex;
+
+  justify-content: center;
+
+  margin: 0;
+  padding: 0;
 }
 .img-box {
-    flex-direction: column;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -49,20 +71,7 @@
   padding: 0;
 }
 
-.fail {
-  position: absolute;
-  animation: changeAnimation 10s infinite;
-  animation-delay: 5s;
-}
-
-.success {
-  display: flex;
-}
-
-.page {
-  width: 80%;
-}
-.people {
-  width: 40%;
+.page-img {
+  width: 100%;
 }
 </style>

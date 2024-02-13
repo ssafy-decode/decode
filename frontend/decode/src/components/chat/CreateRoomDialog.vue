@@ -19,8 +19,8 @@
               </v-card-text>
             </v-card>
           </v-theme-provider>
-          <v-text-field filled dense v-model="newRoom.title" label="제목" required></v-text-field>
-          <v-textarea filled dense v-model="newRoom.description" label="설명" required></v-textarea>
+          <v-text-field filled dense v-model="newRoom.roomName" label="제목" required></v-text-field>
+          <v-textarea filled dense v-model="newRoom.roomDescription" label="설명" required></v-textarea>
         </v-card-text>
         <v-card-actions class="justify-end">
           <v-btn text color="#34A080" dark @click="createRoom">만들기</v-btn>
@@ -28,43 +28,63 @@
       </v-card>
     </v-dialog>
   </template>
+  <script>
+  import { ref, watch, toRefs } from 'vue';
+import {useStompStore} from '@/utils/StompUtil';
+  import {useChatStore} from'@/stores/chatStore.js';
+  import { storeToRefs } from 'pinia';
+import { useUserStore } from '@/stores/userStore';
+  export default {
+    name: 'CreateRoomDialog',
+    props: {
+      dialog: Boolean,
+    },
+    setup(props, { emit }) {
+      const stompStore = useStompStore();
+      const { dialog } = toRefs(props);
+      const localDialog = ref(false);
+      const chatStore = useChatStore();
+      const userStore = useUserStore();
+    const { handleMyprofile: myProfile, handleLoginUserId: loginUserId } = storeToRefs(userStore);
+      const newRoom = ref({
+        roomId: 0,
+        roomName: '',
+        roomDescription: '',
+        creator: 0,
+      });
   
-<script>
-export default {
-  name: 'CreateRoomDialog',
-  props: {
-    dialog: Boolean,
-  },
-  data() {
-    return {
-      localDialog: false,
-      newRoom: {
-        title: '',
-        description: '',
-      },
-    };
-  },
-  watch: {
-    dialog(val) {
-      this.localDialog = val;
-    },
-    localDialog(val) {
-      if (!val) {
-        this.$emit('close');
-      }
-    },
-  },
-  methods: {
-    createRoom() {
-      this.$emit('create-room', this.newRoom);
-      this.newRoom.title = '';
-      this.newRoom.description = '';
-      this.localDialog = false;
-    },
-  },
-};
-</script>
+      watch(dialog, (val) => {
+        localDialog.value = val;
+      });
+  
+      watch(localDialog, (val) => {
+        if (!val) {
+          emit('close');
+        }
+      });
+  
+      const createRoom = async() => {
+        // stompUtil.subscribeRoom()
+        emit('create-room', newRoom.value);
+        const roomId = await chatStore.createChatRoom(newRoom.value.roomName, newRoom.value.roomDescription, loginUserId.value);
+        console.log(roomId, "번방 생성 성공")
+        newRoom.value.roomId = roomId;
+        stompStore.subscribeRoom(roomId);
 
+        newRoom.value.roomId = 0;
+        newRoom.value.roomName = '';
+        newRoom.value.roomDescription = '';
+        localDialog.value = false;
+      };
+  
+      return {
+        localDialog,
+        newRoom,
+        createRoom,
+      };
+    },
+  };
+  </script>
 <style scoped>
 .guide-card {
   background-color: rgba(52, 160, 128, 0.1);

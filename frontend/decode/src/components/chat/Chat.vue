@@ -2,21 +2,16 @@
   <v-card v-show="isAppOpen" :class="{ 'hide-background': !isAppOpen }" :style="dialogStyle">
     <v-tabs v-model="tab" bg-color="#34A080">
       <v-tab value="chat">채팅</v-tab>
-      <v-tab value="video">화면 공유</v-tab>
       <v-tab value="my-chat">내 채팅</v-tab>
     </v-tabs>
     <v-container class="tab-body">
       <v-window v-model="tab">
         <v-window-item value="chat">
-          <ChatComponent />
-        </v-window-item>
-
-        <v-window-item value="video">
-          <ScreenShareComponent />
+          <ChatComponent  />
         </v-window-item>
 
         <v-window-item value="my-chat">
-          <ScreenShareComponent />
+          <MyChatComponent />
         </v-window-item>
       </v-window>
     </v-container>
@@ -29,43 +24,45 @@
 </template>
 
 <!-- The rest of the script and style -->
-
 <script>
+import { ref, computed } from 'vue';
 import ChatComponent from './ChatComponent.vue';
-import ScreenShareComponent from './ScreenShareComponent.vue';
+import MyChatComponent from './MyChatComponent.vue';
+import { storeToRefs } from 'pinia';
+
 
 export default {
   components: {
     ChatComponent,
-    ScreenShareComponent,
+    MyChatComponent,
   },
-  data() {
-    return {
-      tab: 'chat',
-      isAppOpen: false,
+  setup() {
+    const tab = ref('chat');
+    const isAppOpen = ref(false);
+    const dialogStyle = computed(() => ({
+      position: 'fixed',
+      bottom: '55px',
+      right: '16px',
+      width: '300px',
+      height: '500px',
+      backgroundColor: 'white',
+      border: '1px solid #ccc',
+      zIndex: '9999',
+    }));
+
+    const appIcon = computed(() => (isAppOpen.value ? 'mdi-close' : 'mdi-message-outline'));
+
+    const toggleApp = () => {
+      isAppOpen.value = !isAppOpen.value;
     };
-  },
-  computed: {
-    dialogStyle() {
-      return {
-        position: 'fixed',
-        bottom: '55px',
-        right: '16px',
-        width: '300px', // 너비를 300px로 조정
-        height: '500px', // 높이를 500px로 조정
-        backgroundColor: 'white',
-        border: '1px solid #ccc',
-        zIndex: '9999',
-      };
-    },
-    appIcon() {
-      return this.isAppOpen ? 'mdi-close' : 'mdi-message-outline';
-    },
-  },
-  methods: {
-    toggleApp(event) {
-      this.isAppOpen = !this.isAppOpen;
-    },
+
+    return {
+      tab,
+      isAppOpen,
+      dialogStyle,
+      appIcon,
+      toggleApp,
+    };
   },
 };
 </script>

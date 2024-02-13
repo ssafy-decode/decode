@@ -30,9 +30,6 @@ const useProfileStore = defineStore(
     // 개별 요소
     const userProfileImgURL = ref(''); // 유저 프로필 사진 url
 
-    // 함수
-    // 사용자 프로필 조회
-    // (exp, point, coin, nickname, tier, profileImg)
     const setUserProfile = async (userid) => {
       await axios.get(`/profile/${userid}`).then((res) => {
         userStore.accessToken = userStore.parseToken(res);
