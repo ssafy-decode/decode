@@ -31,7 +31,8 @@
         <v-col :cols="12">
           <QuestionViewer :initialValue="question.content" />
           <div class="tagList">
-            {{ question.tagList }}
+            <span>&lt;질문 태그&gt;</span>
+            <div v-for="(tag, index) in numToStr" :key="index"># {{ tag }} - {{ versions[index] }}</div>
           </div>
         </v-col>
       </v-row>
@@ -60,6 +61,7 @@
 <script setup>
 import axios from '@/utils/common-axios';
 import { ref, onMounted, watch } from 'vue';
+import { useQuestionStore } from '@/stores/questionStore';
 import { useAnswerStore } from '@/stores/answerStore';
 import { useUserStore } from '@/stores/userStore';
 import { useBookmarkStore } from '@/stores/bookmarkStore';
@@ -69,6 +71,7 @@ import QuestionViewer from '@/components/common/QuestionViewer.vue';
 import profileRouter from '@/components/common/profileRouter.vue';
 import { storeToRefs } from 'pinia';
 
+const questionStore = useQuestionStore();
 const answerStore = useAnswerStore();
 const userStore = useUserStore();
 
@@ -82,6 +85,9 @@ const questionWriterId = ref(null);
 const isAnswerExist = ref(false);
 const questionCreatedTime = ref('');
 
+const numToStr = ref([]);
+const versions = ref([]);
+
 const getDetailQuestion = function () {
   axios({
     method: 'get',
@@ -94,6 +100,10 @@ const getDetailQuestion = function () {
       writerNickname.value = question.value.questionWriter.nickname;
       questionWriterId.value = question.value.questionWriter.id;
       questionCreatedTime.value = question.value.createdTime;
+      question.value.tagList.forEach((item) => {
+        numToStr.value.push(questionStore.reverseItems[item.tagId]);
+        versions.value.push(item.version);
+      });
     })
     .catch((err) => {
       console.log(err);
@@ -214,5 +224,8 @@ button {
 
 .tagList {
   margin-top: 40px;
+  color: #575757;
+  font-size: small;
+  font-weight: 600;
 }
 </style>
