@@ -5,10 +5,10 @@
 
   <div class="chat-container">
     <div class="chat-messages" ref="chatContainer">
-      <div v-for="(message, index) in messages" :key="index" :class="messageClass(message)">
+      <div v-for="(message, id) in messages" :key="id" :class="messageClass(message)">
         <div class="message-content">
-          <div class="nickname">{{ message.user }}</div>
-          <p>{{ message.text }}</p>
+          <div class="nickname">{{ message.nickName }}</div>
+          <p v-html="message.text"></p>
         </div>
       </div>
     </div>
@@ -35,13 +35,28 @@
       @yesClicked="handleYes"
       @noClicked="handleNo"
     />
-    <OpenviduModal v-if="showOpenviduModal" :publisher="publisher" :roomSessionId="roomSessionId"></OpenviduModal>
+    <OpenviduModal
+      v-if="showOpenviduModal"
+      :publisher="publisher"
+      :roomSessionId="rsId"
+      :subscribers="subscribers"
+      @exit="handleExit"
+    ></OpenviduModal>
   </div>
 </template>
 <script>
+import { ref, onMounted, nextTick, watchEffect, onUnmounted } from 'vue';
 import OpenviduDialog from './OpenviduDialog.vue';
 import OpenviduModal from '@/components/chat/OpenviduModal.vue';
+import { useChatStore } from '@/stores/chatStore.js';
+import { useStompStore } from '@/utils/StompUtil';
+import { useUserStore } from '@/stores/userStore';
+import { useSessionStore } from '@/stores/sessionStore';
+import { useMessageStore } from '@/stores/messageStore';
+import { OpenVidu } from 'openvidu-browser';
+import axios from 'axios';
 export default {
+  name: 'App',
   components: {
     OpenviduDialog,
     OpenviduModal,
@@ -49,58 +64,215 @@ export default {
   props: {
     room: Object,
   },
-  data() {
-    return {
-      rommSessionId: '',
-      showOpenviduModal: false,
-      newMessage: '',
-      publisher: null, // screenSharingPublisher를 저장할 데이터
-      dialog: false, // 모달 보이고/안 보이고를 제어하는 데이터
-      messages: [
-        { user: '나', text: '안녕하세요!' },
-        { user: 'bot', text: '안녕하세요, 어떻게 도와드릴까요?' },
-        { user: '132', text: '안녕하세요, 어떻게 도와드릴까요?' },
-      ],
-    };
-  },
-  mounted() {
-    this.$nextTick(() => {
-      this.$refs.chatContainer.scrollTop = this.$refs.chatContainer.scrollHeight;
+  setup(props, { emit }) {
+    const APPLICATION_SERVER_URL = 'http://localhost:7777/decode/openvidu';
+    const OV = ref(undefined);
+    const session = ref(undefined);
+    const publisher = ref(undefined);
+    const subscribers = ref([]);
+    const myUserName = 'Participant' + Math.floor(Math.random() * 100);
+    const userStore = useUserStore();
+    const chatStore = useChatStore();
+    const rsId = ref('');
+    const showOpenviduModal = ref(false);
+    const newMessage = ref('');
+    const dialog = ref(false);
+    const messages = ref([]);
+    const chatContainer = ref(null);
+    const stompStore = useStompStore();
+    const sessionStore = useSessionStore();
+    const messageStore = useMessageStore();
+    watchEffect(() => {
+      if (stompStore.messages[props.room.id]) {
+        const newMessage = stompStore.messages[props.room.id][stompStore.messages[props.room.id].length - 1];
+        if (newMessage) {
+          messages.value.push(newMessage);
+          nextTick(() => {
+            chatContainer.value.scrollTop = chatContainer.value.scrollHeight;
+
+            // 새로운 메시지에 이벤트 리스너 추가
+            const messageContainers = chatContainer.value.querySelectorAll('.message-content');
+            const lastMessageContainer = messageContainers[messageContainers.length - 1];
+            const button = lastMessageContainer.querySelector('.join-session');
+            if (button) {
+              button.addEventListener('click', () => {
+                const sessionElement = lastMessageContainer.querySelector('.session-id');
+                if (sessionElement) {
+                  const sessionId = String(sessionElement.textContent);
+                  console.log(sessionId);
+
+                  if (sessionId) {
+                    joinSession(sessionId);
+                  }
+                }
+              });
+            }
+          });
+        }
+      }
     });
-  },
-  methods: {
-    // OpenviduDialog 사용할 메소드들
-    openDialog() {
+    const joinSession = async (sessionId) => {
+      OV.value = new OpenVidu();
+      session.value = OV.value.initSession();
+      sessionStore.setOv(sessionId, OV.value);
+
+      session.value.on('streamCreated', ({ stream }) => {
+        const subscriber = session.value.subscribe(stream);
+        sessionStore.setSubscriber(sessionId, subscriber);
+        subscribers.value.push(subscriber);
+      });
+
+      session.value.on('streamDestroyed', ({ stream }) => {
+        const index = subscribers.value.indexOf(stream.streamManager, 0);
+        if (index >= 0) {
+          subscribers.value.splice(index, 1);
+        }
+      });
+      session.value.on('signal:chat', (event) => {
+        const messageData = JSON.parse(event.data);
+        if (event.from.connectionId === session.value.connection.connectionId) {
+          messageData['username'] = '나';
+        }
+        messageStore.addMessage(sessionId, messageData);
+      });
+
+      session.value.on('exception', ({ exception }) => {
+        console.warn(exception);
+      });
+
+      try {
+        const token = await getToken(sessionId);
+        await session.value.connect(token, { clientData: myUserName });
+
+        // 세션 정보와 유저 이름을 store에 저장
+        sessionStore.setSession(sessionId, session.value);
+        sessionStore.setMyUserName(sessionId, myUserName);
+        rsId.value = sessionId;
+
+        console.log(sessionId);
+        showOpenviduModal.value = true;
+      } catch (error) {
+        console.log('There was an error connecting to the session:', error.code, error.message);
+      }
+    };
+    const getToken = async (sessionId) => {
+      return await createToken(sessionId);
+    };
+
+    const createToken = async (sessionId) => {
+      try {
+        console.log(userStore.accessToken);
+        const response = await axios.post(
+          APPLICATION_SERVER_URL + `/api/sessions/${sessionId}/connections`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${userStore.accessToken}`,
+            },
+          },
+        );
+        return response.data;
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    };
+
+    onMounted(async () => {
+      try {
+        const roomId = props.room.id;
+        const chatHistory = await chatStore.fetchChatHistory(roomId);
+        console.log(chatHistory, ' 반환됨.');
+        if (!Array.isArray(chatHistory)) {
+          console.error('빈 배열 반환:', chatHistory);
+        } else {
+          messages.value = chatHistory;
+        }
+      } catch (error) {
+        console.error('fetchChatHistory API 호출 중 오류', error);
+      }
+
+      nextTick(() => {
+        chatContainer.value.scrollTop = chatContainer.value.scrollHeight;
+      });
+    });
+    onUnmounted(() => {
+      // 구독 취소
+      if (stompStore[props.room.id]) {
+        stompStore.subscriptions[props.room.id].unsubscribe();
+        sessionStore.exitSession(rsId.value);
+      }
+    });
+    const openDialog = () => {
       console.log('click');
-      this.dialog = true;
-    },
-    handleYes(screenSharingPublisher, roomSessionId) {
+      dialog.value = true;
+    };
+
+    const handleYes = (screenSharingPublisher, roomSessionId) => {
       console.log('Yes 버튼 클릭');
-      this.publisher = screenSharingPublisher; // screenSharingPublisher 저장
-      this.roomSessionId = roomSessionId;
-      console.log('chat room ', this.publisher);
-      this.showOpenviduModal = true;
-      this.dialog = false;
-    },
-    handleNo() {
+      publisher.value = screenSharingPublisher;
+      rsId.value = roomSessionId;
+      showOpenviduModal.value = true;
+      dialog.value = false;
+      // 여기서 버튼을 보내면 될 듯
+      stompStore.sendMessage(
+        userStore.loginUserId,
+        userStore.loginUser.name,
+        `화면 공유방에 참여하시겠습니까? <span class="session-id" hidden>${String(roomSessionId.value)}</span> <button class="join-session">참가하기</button>`,
+        props.room.id,
+      );
+
+      nextTick(() => {
+        chatContainer.value.scrollTop = chatContainer.value.scrollHeight;
+      });
+    };
+    const handleNo = () => {
       console.log('No 버튼 클릭');
-      this.dialog = false;
-    },
-    goBack() {
-      this.$emit('goBack');
-    },
-    sendMessage() {
-      if (this.newMessage !== '') {
-        this.messages.push({ user: '나', text: this.newMessage });
-        this.newMessage = '';
-        this.$nextTick(() => {
-          this.$refs.chatContainer.scrollTop = this.$refs.chatContainer.scrollHeight;
+      dialog.value = false;
+    };
+    const handleExit = () => {
+      showOpenviduModal.value = false;
+      // 여기에 나머지 처리를 추가 가능
+    };
+    const goBack = () => {
+      if (stompStore[props.room.id]) {
+        stompStore.subscriptions[props.room.id].unsubscribe();
+      }
+      emit('goBack');
+    };
+
+    const sendMessage = () => {
+      if (newMessage.value !== '') {
+        // messages.value.push({ nickName: '나', text: newMessage.value });
+        stompStore.sendMessage(userStore.loginUserId, userStore.loginUser.name, newMessage.value, props.room.id);
+        newMessage.value = '';
+        nextTick(() => {
+          chatContainer.value.scrollTop = chatContainer.value.scrollHeight;
         });
       }
-    },
-    messageClass(message) {
-      return message.user === '나' ? 'my-message' : 'other-message';
-    },
+    };
+
+    const messageClass = (message) => {
+      return message.nickName === userStore.loginUser.name ? 'my-message' : 'other-message';
+    };
+
+    return {
+      rsId,
+      showOpenviduModal,
+      newMessage,
+      publisher,
+      dialog,
+      messages,
+      openDialog,
+      handleYes,
+      handleNo,
+      handleExit,
+      goBack,
+      sendMessage,
+      messageClass,
+      joinSession,
+      chatContainer,
+    };
   },
 };
 </script>
