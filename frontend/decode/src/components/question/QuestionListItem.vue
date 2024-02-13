@@ -107,5 +107,7 @@ defineProps({
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: #575757;
+  font-weight: 600;
 }
 </style>

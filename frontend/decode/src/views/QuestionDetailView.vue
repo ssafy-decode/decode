@@ -42,10 +42,17 @@
           <v-btn v-if="questionWriterId === userStore.loginUserId" @click="goUpdate()">질문수정</v-btn>
           <v-btn v-if="questionWriterId === userStore.loginUserId" @click="deleteQuestion()">질문삭제</v-btn>
         </div>
-        <div>
-          <v-btn>나도 궁금해요</v-btn>
-          <v-btn v-if="isBookmarked" @click="deleteBookmark(questionId)">북마크 취소</v-btn>
-          <v-btn v-else @click="addBookmark(userStore.loginUserId, questionId)">북마크</v-btn>
+        <div class="cntBox">
+          <div class="cnt">
+            <v-btn v-if="isMeTooed" @click="deleteMeToo(questionId)">나도궁금해요 취소</v-btn>
+            <v-btn v-else @click="addMeToo(userStore.loginUserId, questionId)">나도궁금해요</v-btn>
+            <!-- {{ meTooCnt }} -->
+          </div>
+          <div class="cnt">
+            <v-btn v-if="isBookmarked" @click="deleteBookmark(questionId)">북마크 취소</v-btn>
+            <v-btn v-else @click="addBookmark(userStore.loginUserId, questionId)">북마크</v-btn>
+            <!-- {{ bookmarkCnt }} -->
+          </div>
           <v-btn @click="goCreateAnswer()">답변달기</v-btn>
         </div>
       </div>
@@ -61,19 +68,23 @@
 <script setup>
 import axios from '@/utils/common-axios';
 import { ref, onMounted, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { storeToRefs } from 'pinia';
+import AnswerList from '@/components/answer/AnswerList.vue';
+import QuestionViewer from '@/components/common/QuestionViewer.vue';
+import profileRouter from '@/components/common/profileRouter.vue';
+
 import { useQuestionStore } from '@/stores/questionStore';
 import { useAnswerStore } from '@/stores/answerStore';
 import { useUserStore } from '@/stores/userStore';
 import { useBookmarkStore } from '@/stores/bookmarkStore';
-import { useRoute, useRouter } from 'vue-router';
-import AnswerList from '@/components/answer/AnswerList.vue';
-import QuestionViewer from '@/components/common/QuestionViewer.vue';
-import profileRouter from '@/components/common/profileRouter.vue';
-import { storeToRefs } from 'pinia';
+import { useMeTooStore } from '@/stores/meTooStore';
 
 const questionStore = useQuestionStore();
 const answerStore = useAnswerStore();
 const userStore = useUserStore();
+const bookmarkStore = useBookmarkStore();
+const meTooStore = useMeTooStore();
 
 const router = useRouter();
 const route = useRoute();
@@ -84,6 +95,9 @@ const writerNickname = ref('');
 const questionWriterId = ref(null);
 const isAnswerExist = ref(false);
 const questionCreatedTime = ref('');
+
+// const bookmarkCnt = ref(0);
+// const meTooCnt = ref(0);
 
 const numToStr = ref([]);
 const versions = ref([]);
@@ -100,6 +114,8 @@ const getDetailQuestion = function () {
       writerNickname.value = question.value.questionWriter.nickname;
       questionWriterId.value = question.value.questionWriter.id;
       questionCreatedTime.value = question.value.createdTime;
+      bookmarkCnt.value = question.value.bookmarkCnt;
+      meTooCnt.value = question.value.meTooCnt;
       question.value.tagList.forEach((item) => {
         numToStr.value.push(questionStore.reverseItems[item.tagId]);
         versions.value.push(item.version);
@@ -111,14 +127,37 @@ const getDetailQuestion = function () {
     });
 };
 
-const bookmarkStore = useBookmarkStore();
 const { setBookmarkList, addBookmark, deleteBookmark } = bookmarkStore;
 const { handleBookmarkList: bookmarkList, handleBookmarkState: isBookmarked } = storeToRefs(bookmarkStore);
+
+const { setMeTooList, addMeToo, deleteMeToo } = meTooStore;
+const { handleMeTooList: meTooList, handleMeTooState: isMeTooed } = storeToRefs(meTooStore);
 
 onMounted(() => {
   getDetailQuestion();
   setBookmarkList(route.params.id, userStore.loginUserId);
+  setMeTooList(route.params.id, userStore.loginUserId);
 });
+
+// const meToo = function () {
+//   meTooStore.addMeToo(userStore.loginUserId, questionId);
+//   meTooCnt.value++;
+// };
+
+// const bookmark = function () {
+//   bookmarkStore.addBookmark(userStore.loginUserId, questionId);
+//   bookmarkCnt.value++;
+// };
+
+// const cancelMeToo = function () {
+//   meTooStore.deleteMeToo(questionId);
+//   meTooCnt.value--;
+// };
+
+// const cancelBookmark = function () {
+//   bookmarkStore.deleteBookmark(questionId);
+//   bookmarkCnt.value--;
+// };
 
 const deleteQuestion = function () {
   if (confirm('질문을 삭제하시겠습니까?')) {
@@ -227,5 +266,16 @@ button {
   color: #575757;
   font-size: small;
   font-weight: 600;
+}
+
+.cntBox {
+  display: flex;
+  justify-content: center;
+}
+
+.cnt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 </style>
