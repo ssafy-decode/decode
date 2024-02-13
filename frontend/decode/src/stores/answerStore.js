@@ -56,30 +56,29 @@ export const useAnswerStore = defineStore('answer', () => {
   };
 
   const getGptAnswer = function (questionId, questionContent) {
-    if (confirm('포인트를 사용하여 GPT 4.0의 답변을 받을까요?')) {
-      let data = {
-        content: questionContent,
-      };
-      axios({
-        method: 'post',
-        url: `/gpt/answer`,
-        data: data,
-        headers: {
-          Authorization: `Bearer ${userStore.accessToken}`,
-        },
+    // if (confirm('포인트를 사용하여 GPT 4.0의 답변을 받을까요?')) {
+    let data = {
+      content: questionContent,
+    };
+    axios({
+      method: 'post',
+      url: `/gpt/answer`,
+      data: data,
+      headers: {
+        Authorization: `Bearer ${userStore.accessToken}`,
+      },
+    })
+      .then((res) => {
+        gptAnswer.value = '이 답변은 gpt 4.0에 의해 생성된 답변입니다.\n\n' + res.data.data.answer;
+        createGptAnswer(questionId);
+        alert('답변 목록에 GPT 답변이 추가되었습니다.\n새로고침으로 GPT가 생성한 답변을 확인해보세요!');
       })
-        .then((res) => {
-          gptAnswer.value = '이 답변은 gpt 4.0에 의해 생성된 답변입니다.\n\n' + res.data.data.answer;
-          createGptAnswer(questionId);
-          alert('답변 목록에 GPT 답변이 추가되었습니다.');
-          router.go(0);
-        })
-        .catch((err) => {
-          console.log('GPT 답변 생성 실패');
-          console.log(err);
-        });
-    } else {
-    }
+      .catch((err) => {
+        console.log('GPT 답변 생성 실패');
+        console.log(err);
+      });
+    // } else {
+    // }
   };
 
   return {

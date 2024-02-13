@@ -57,18 +57,21 @@
 import MyEditor from '@/components/common/MyEditor.vue';
 import { useQuestionStore } from '@/stores/questionStore';
 import { useUserStore } from '@/stores/userStore';
+import { useAnswerStore } from '@/stores/answerStore';
 import { useRouter } from 'vue-router';
 import { ref, onMounted } from 'vue';
 import axios from '@/utils/common-axios';
 
 const questionStore = useQuestionStore();
 const userStore = useUserStore();
+const answerStore = useAnswerStore();
 const router = useRouter();
 
 const questionTitle = ref('');
 const questionContent = ref('');
 const tagIds = ref([]);
 const versions = ref([]);
+const questionId = ref(null);
 
 const items = questionStore.items;
 
@@ -90,7 +93,7 @@ const createQuestion = function () {
     questionWriterId: userStore.loginUserId,
     tags: tags,
   };
-
+  console.log('data의 내용', data);
   axios({
     method: 'post',
     url: `/question`,
@@ -101,9 +104,17 @@ const createQuestion = function () {
   })
     .then((res) => {
       console.log('질문 생성 완료');
-      router.push({ name: 'questionview' });
+      console.log('res.data.id', res.data.data.id);
+      questionId.value = res.data.data.id;
       questionStore.gptTitles = [''];
       questionStore.gptTagIds = [''];
+    })
+    .then((res) => {
+      // GPT 답변 자동 생성
+      console.log('GPT답변 자동생성 함수 실행');
+      answerStore.getGptAnswer(questionId.value, questionContent.value);
+      router.push({ name: 'question-detail', params: { id: questionId.value } });
+      alert('잠시 후 GPT의 답변이 생성됩니다.');
     })
     .catch((err) => {
       console.log(err);

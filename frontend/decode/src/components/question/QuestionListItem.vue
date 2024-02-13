@@ -15,7 +15,7 @@
               </span>
             </p>
             <p class="title">
-              {{ question.title && question.title.length > 80 ? question.title.slice(0, 80) + '...' : question.title }}
+              {{ question.title && question.title.length > 60 ? question.title.slice(0, 60) + '...' : question.title }}
             </p>
           </div>
         </div>

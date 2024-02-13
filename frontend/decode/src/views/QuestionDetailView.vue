@@ -41,12 +41,12 @@
         <div>
           <v-btn v-if="questionWriterId === userStore.loginUserId" @click="goUpdate()">질문수정</v-btn>
           <v-btn v-if="questionWriterId === userStore.loginUserId" @click="deleteQuestion()">질문삭제</v-btn>
-          <v-btn
+          <!-- <v-btn
             v-if="questionWriterId === userStore.loginUserId"
             :loading="loading"
             @click="handleGptAnswer(questionId, question.content)"
             >GPT답변받기</v-btn
-          >
+          > -->
         </div>
         <div class="btnBox">
           <div>
@@ -106,20 +106,20 @@ const questionCreatedTime = ref('');
 const numToStr = ref([]);
 const versions = ref([]);
 
-const loading = ref(false);
+// const loading = ref(false);
 
-const handleGptAnswer = async (questionId, questionContent) => {
-  // 로딩 시작
-  loading.value = true;
-  setTimeout(() => (loading.value = false), 16000);
+// const handleGptAnswer = async (questionId, questionContent) => {
+//   // 로딩 시작
+//   loading.value = true;
+//   setTimeout(() => (loading.value = false), 16000);
 
-  try {
-    // GPT 답변 요청
-    await answerStore.getGptAnswer(questionId, questionContent);
-  } catch (error) {
-    console.error('GPT 답변 요청 에러:', error);
-  }
-};
+//   try {
+//     // GPT 답변 요청
+//     await answerStore.getGptAnswer(questionId, questionContent);
+//   } catch (error) {
+//     console.error('GPT 답변 요청 에러:', error);
+//   }
+// };
 
 const getDetailQuestion = function () {
   axios({
