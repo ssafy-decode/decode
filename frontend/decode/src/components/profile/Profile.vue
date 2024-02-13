@@ -53,53 +53,50 @@
           </div>
         </v-col>
 
-        <v-col :cols="2"
-          ><div>
-            <div>
-              <template v-if="editing">
-                <v-combobox
-                  v-if="editing"
-                  variant="solo"
-                  class="combo"
-                  bg-color="#d9d9d9"
-                  v-model="selectedTags"
-                  :items="items"
-                  placeholder="ex) java, spring boot, sql"
-                  label="기술 스택"
-                  multiple
-                  chips
-                  clearable
-                ></v-combobox>
-              </template>
-              <template v-else-if="tagIdList.length > 0">
-                <div v-for="tag in tagIdList" :key="tag" style="display: block">
-                  <v-chip
-                    :clearable="editing"
-                    :key="tag"
-                    label
-                    :style="{ backgroundColor: tagBackGroundColor(tag), color: tagTextColor(tag) }"
-                    class="mr-2 mb-2 chips"
-                  >
-                    {{ tagName[tag] }}</v-chip
-                  >
-                </div>
-              </template>
-              <template v-else>
-                <div>선택한 기술 스택이 없습니다.</div>
-              </template>
-            </div>
-            <br />
-            <v-btn
-              v-if="isMyProfile"
-              @click="toggleEdit"
-              class="tagbtn"
-              color="#62C0A6"
-              type="submit"
-              variant="elevated"
-              >{{ editing ? '기술 스택 변경 저장' : '기술 스택 변경' }}</v-btn
+        <v-col :cols="2" style="margin: auto 0">
+          <div v-if="editing">
+            <v-combobox
+              v-if="editing"
+              variant="solo"
+              class="combo"
+              bg-color="#d9d9d9"
+              v-model="selectedTags"
+              :items="items"
+              placeholder="ex) java, spring boot, sql"
+              label="기술 스택"
+              multiple
+              chips
+              clearable
+            ></v-combobox>
+          </div>
+          <div v-else-if="tagIdList.length > 0">
+            <div
+              v-for="(tag, index) in showAllTags ? tagIdList : tagIdList.slice(0, 3)"
+              :key="index"
+              style="display: block"
             >
-          </div></v-col
-        >
+              <v-chip
+                :clearable="editing"
+                :key="tag"
+                label
+                :style="{ backgroundColor: tagBackGroundColor(tag), color: tagTextColor(tag) }"
+                class="mr-2 mb-2 chips"
+              >
+                {{ tagName[tag] }}
+              </v-chip>
+            </div>
+            <button v-if="tagIdList.length > 3" @click="showAllTags = !showAllTags">
+              <img src="../plus.png" width="30px" />
+            </button>
+          </div>
+          <div v-else>
+            <div>선택한 기술 스택이 없습니다.</div>
+          </div>
+          <button v-if="isMyProfile" @click="toggleEdit" style="float: right">
+            <img v-if="!editing" src="../gear.png" width="40px" />
+            <img v-else src="../save.png" width="30px" />
+          </button>
+        </v-col>
 
         <v-col :cols="5">
           출석 스트릭
@@ -228,6 +225,7 @@ const tagTextColor = (tag) => {
   }
 };
 
+const showAllTags = ref(false);
 const editing = ref(false);
 const items = ref([
   'python',
