@@ -7,8 +7,8 @@ export const useQuestionStore = defineStore(
   () => {
     const accessToken = ref(null);
     const questions = ref([]);
-    const gptTitles = ref(['']);
-    const gptTagIds = ref(['']);
+    const gptTitles = ref('');
+    const gptTagIds = ref([]);
 
     const items = {
       python: 1,

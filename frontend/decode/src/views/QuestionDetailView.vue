@@ -114,8 +114,8 @@ const getDetailQuestion = function () {
       writerNickname.value = question.value.questionWriter.nickname;
       questionWriterId.value = question.value.questionWriter.id;
       questionCreatedTime.value = question.value.createdTime;
-      bookmarkCnt.value = question.value.bookmarkCnt;
-      meTooCnt.value = question.value.meTooCnt;
+      // bookmarkCnt.value = question.value.bookmarkCnt;
+      // meTooCnt.value = question.value.meTooCnt;
       question.value.tagList.forEach((item) => {
         numToStr.value.push(questionStore.reverseItems[item.tagId]);
         versions.value.push(item.version);
