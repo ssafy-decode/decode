@@ -1,6 +1,6 @@
 <template>
   <v-row justify="center">
-    <v-card width="1036" style="box-shadow: none; margin-top: 10px; background-color: transparent">
+    <v-card width="1250" style="box-shadow: none; margin-top: 10px; background-color: transparent">
       <v-tabs v-model="tab" background-color="transparent" grow>
         <v-tab
           v-for="(item, index) in 3"

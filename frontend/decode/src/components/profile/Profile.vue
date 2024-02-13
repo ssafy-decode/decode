@@ -2,7 +2,7 @@
   <div class="pa-5" rounded style="color: #575757; font-weight: bold">
     <v-card
       class="mx-auto px-4 py-8"
-      max-width="1036"
+      max-width="1250"
       style="
         box-shadow: none;
         text-align: center;
@@ -12,12 +12,45 @@
       "
     >
       <v-row>
-        <v-col :cols="1">
-          <br />
+        <v-col :cols="2">
+          <v-avatar image="../../default.png" size="100px" />
           <div>{{ profile.nickname }}</div>
-          <br />
-          <div>{{ profile.tier }}</div>
-          <br />
+          <div style="display: flex; margin-left: 60px">
+            <p :style="{ fontWeight: 'bold', color: getTierColor(profile.tier) }">{{ capitalize(profile.tier) }}</p>
+            <img :src="`../../${profile.tier}.png`" width="30px" />
+          </div>
+          <div v-if="isMyProfile">
+            <router-link to="/inventory">
+              <v-btn class="btn" color="#62C0A6" size="x-large" type="submit" variant="elevated"> 내 아이템 </v-btn>
+            </router-link>
+            <router-link to="/checkpwd">
+              <v-btn class="btn" color="#62C0A6" size="x-large" type="submit" variant="elevated"> 회원정보 수정 </v-btn>
+            </router-link>
+          </div>
+          <div v-else>
+            <v-btn
+              v-if="isFollowing"
+              class="btn"
+              color="#62C0A6"
+              size="x-large"
+              type="submit"
+              variant="elevated"
+              @click="unfollowById(profile.id)"
+            >
+              팔로우 취소
+            </v-btn>
+            <v-btn
+              v-else
+              class="btn"
+              color="#62C0A6"
+              size="x-large"
+              type="submit"
+              variant="elevated"
+              @click="followById(profile.id)"
+            >
+              팔로우
+            </v-btn>
+          </div>
         </v-col>
 
         <v-col :cols="2"
@@ -62,7 +95,7 @@
           </div></v-col
         >
 
-        <v-col :cols="6">
+        <v-col :cols="5">
           출석 스트릭
           <AttendanceLog />
         </v-col>
@@ -71,42 +104,6 @@
           <ExpLog />
         </v-col>
       </v-row>
-
-      <div v-if="isMyProfile" class="buttons">
-        <span>
-          <router-link to="/inventory">
-            <v-btn class="btn" color="#62C0A6" size="x-large" type="submit" variant="elevated"> 내 아이템 </v-btn>
-          </router-link>
-          &nbsp;
-          <router-link to="/checkpwd">
-            <v-btn class="btn" color="#62C0A6" size="x-large" type="submit" variant="elevated"> 회원정보 수정 </v-btn>
-          </router-link>
-        </span>
-      </div>
-      <div v-else class="buttons">
-        <v-btn
-          v-if="isFollowing"
-          class="btn"
-          color="#62C0A6"
-          size="x-large"
-          type="submit"
-          variant="elevated"
-          @click="unfollowById(profile.id)"
-        >
-          팔로우 취소
-        </v-btn>
-        <v-btn
-          v-else
-          class="btn"
-          color="#62C0A6"
-          size="x-large"
-          type="submit"
-          variant="elevated"
-          @click="followById(profile.id)"
-        >
-          팔로우
-        </v-btn>
-      </div>
     </v-card>
   </div>
 </template>
@@ -200,6 +197,28 @@ const followById = (id) => {
 const unfollowById = (id) => {
   unFollow(id, accessToken.value);
 };
+
+function getTierColor(tier) {
+  if (tier === 'bronze') {
+    return '#D7C3BC';
+  } else if (tier === 'silver') {
+    return '#DCDCDC';
+  } else if (tier === 'gold') {
+    return '#EDE481';
+  } else if (tier === 'platinum') {
+    return '#C8EBB9';
+  } else if (tier === 'diamond') {
+    return '#97D2FF';
+  } else if (tier === 'ruby') {
+    return '#F4A5C5';
+  } else {
+    return 'black';
+  }
+}
+const capitalize = (value) => {
+  if (!value) return '';
+  return value.charAt(0).toUpperCase() + value.slice(1);
+};
 </script>
 
 <style scoped>
@@ -208,9 +227,6 @@ const unfollowById = (id) => {
   background-color: #9dd0ff;
   color: #447cb0;
   font-weight: bold;
-}
-.buttons {
-  text-align: end;
 }
 .btn {
   color: #000000;
