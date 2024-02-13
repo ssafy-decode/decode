@@ -42,7 +42,7 @@ const initChart = () => {
         y: {
           beginAtZero: true,
           ticks: {
-            stepSize: 50,
+            stepSize: 100,
           },
         },
       },
@@ -93,10 +93,13 @@ const fetchExpData = async () => {
   }
 };
 
-// 컴포넌트가 마운트되면 경험치 데이터를 가져와 차트를 초기화
 onMounted(fetchExpData);
 </script>
 
 <style scoped>
-/* 추가적인 스타일링을 원하는 경우 여기에 작성합니다. */
+#expChart {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
 </style>
