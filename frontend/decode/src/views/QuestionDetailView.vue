@@ -71,7 +71,7 @@
 
 <script setup>
 import axios from '@/utils/common-axios';
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import AnswerList from '@/components/answer/AnswerList.vue';
@@ -129,6 +129,7 @@ const getDetailQuestion = function () {
     .then((res) => {
       questionId.value = route.params.id;
       question.value = res.data.data;
+      questionStore.originalContent = question.value.content;
       isAnswerExist.value = question.value.answerList.length > 0;
       writerNickname.value = question.value.questionWriter.nickname;
       questionWriterId.value = question.value.questionWriter.id;
@@ -238,6 +239,10 @@ button {
   width: 75px;
   height: 75px;
   margin: 5px 10px 5px 5px;
+  position: relative;
+  top: 0px;
+  left: 0px;
+  /* object-fit: cover; 이미지가 부모 요소에 맞게 조절되면서 원래 비율을 유지합니다. */
 }
 
 .myListItem {
@@ -272,8 +277,8 @@ button {
 }
 
 .title {
-  font-size: large;
-  font-weight: 800;
+  font-size: medium;
+  font-weight: 700;
 }
 
 .time {
