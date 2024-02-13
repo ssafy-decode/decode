@@ -15,6 +15,8 @@ public interface QuestionELKRepository extends ElasticsearchRepository<QuestionD
     @Query("{\"match_all\": {}}")
     List<QuestionDocument> findAllQuestion();
 
+    List<QuestionDocument> findAllByOrderByIdDesc();
+
     @Query("{\"bool\": {\"should\": ["
             + "{\"match\": {"
             + "\"title.nori\": \"?0\"}},"
