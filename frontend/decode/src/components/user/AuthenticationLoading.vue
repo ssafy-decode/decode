@@ -16,7 +16,8 @@ import { storeToRefs } from 'pinia';
 import { parseJwt } from '@/utils/jwtParser';
 
 const userStore = useUserStore();
-const { setLoginUserId, setToken } = userStore;
+
+const { setLoginUserId, setToken, setMyProfile } = userStore;
 const { isLoggedIn: isLoggedIn } = storeToRefs(userStore);
 const router = useRouter();
 
@@ -28,7 +29,10 @@ window.addEventListener('message', (event) => {
   }
   isLoggedIn.value = true;
   setToken(token);
-  setLoginUserId(parseJwt(token)['userId']);
+  const uid = parseJwt(token)['userId'];
+  setLoginUserId(uid);
+  setMyProfile();
+
   router.push('/');
 });
 </script>

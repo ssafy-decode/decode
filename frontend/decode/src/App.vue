@@ -1,7 +1,6 @@
 <template>
   <div class="app">
-
-    <NavBar :class="$route.name === 'mainview'? 'static-header':'non-static-header' " />
+    <NavBar :class="$route.name === 'mainview' ? 'static-header' : 'non-static-header'" />
     <div style="min-height: 1100px">
       <router-view></router-view>
       <br />
@@ -26,36 +25,35 @@ import { useUserStore } from './stores/userStore';
 const stompStore = useStompStore();
 const userStore = useUserStore();
 const isLoggedIn = ref(userStore.isLoggedIn); // 초기 값 설정
-watch(
-  () => userStore.isLoggedIn,
-  async (newVal) => {
-    // userStore.isLoggedIn 변경을 감지하여 isLoggedIn 업데이트
-    isLoggedIn.value = newVal;
-    if (isLoggedIn.value) {
-      await userStore.setUser(userStore.loginUserId);
-      console.log(userStore.loginUser.name)
-      console.log(userStore.loginUser.id)
-    }
-  },
-);
-onMounted(() => {
-  stompStore.connect();
-});
+// watch(
+//   () => userStore.isLoggedIn,
+//   async (newVal) => {
+//     // userStore.isLoggedIn 변경을 감지하여 isLoggedIn 업데이트
+//     isLoggedIn.value = newVal;
+//     if (isLoggedIn.value) {
+//       await userStore.setUser(userStore.loginUserId);
+//       console.log(userStore.loginUser.name)
+//       console.log(userStore.loginUser.id)
+//     }
+//   },
+// );
+// onMounted(() => {
+//   stompStore.connect();
+// });
 
-onUnmounted(() => {
-  stompStore.disconnect();
-});
+// onUnmounted(() => {
+//   stompStore.disconnect();
+// });
 </script>
 
 <style>
-
-.non-static-header{
+.non-static-header {
   background-color: white;
   width: 100vw;
 }
-.static-header{
-  position:fixed;
-  top:0;
+.static-header {
+  position: fixed;
+  top: 0;
   background-color: white;
   width: 100vw;
   z-index: 9999;
