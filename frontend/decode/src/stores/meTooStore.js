@@ -13,7 +13,7 @@ const useMeTooStore = defineStore(
 
     // 로그인 유저의 "나도궁금해요!" 중인 질문 번호의 목록을 불러옴
     const setMeTooList = async (questionId, userId) => {
-      await axios.get(`/meToo/${userId}`).then((res) => {
+      await axios.get(`/metoo/${userId}`).then((res) => {
         meTooList.value = [];
         isMeTooed.value = false;
         res.data.data.forEach((question) => {
@@ -31,7 +31,7 @@ const useMeTooStore = defineStore(
         questionId,
       };
       await axios
-        .post(`/meToo`, data, {
+        .post(`/metoo`, data, {
           headers: {
             Authorization: `Bearer ${userStore.accessToken}`,
           },
@@ -48,7 +48,7 @@ const useMeTooStore = defineStore(
 
     const deleteMeToo = async (questionId) => {
       await axios
-        .delete(`/meToo/${questionId}`, {
+        .delete(`/metoo/${questionId}`, {
           headers: {
             Authorization: `Bearer ${userStore.accessToken}`,
           },
