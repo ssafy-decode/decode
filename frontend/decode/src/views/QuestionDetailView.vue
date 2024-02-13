@@ -41,19 +41,23 @@
         <div>
           <v-btn v-if="questionWriterId === userStore.loginUserId" @click="goUpdate()">질문수정</v-btn>
           <v-btn v-if="questionWriterId === userStore.loginUserId" @click="deleteQuestion()">질문삭제</v-btn>
+          <v-btn
+            v-if="questionWriterId === userStore.loginUserId"
+            :loading="loading"
+            @click="handleGptAnswer(questionId, question.content)"
+            >GPT답변받기</v-btn
+          >
         </div>
-        <div class="cntBox">
-          <div class="cnt">
+        <div class="btnBox">
+          <div>
             <v-btn v-if="isMeTooed" @click="deleteMeToo(questionId)">나도궁금해요 취소</v-btn>
             <v-btn v-else @click="addMeToo(userStore.loginUserId, questionId)">나도궁금해요</v-btn>
             <!-- {{ meTooCnt }} -->
-          </div>
-          <div class="cnt">
             <v-btn v-if="isBookmarked" @click="deleteBookmark(questionId)">북마크 취소</v-btn>
             <v-btn v-else @click="addBookmark(userStore.loginUserId, questionId)">북마크</v-btn>
             <!-- {{ bookmarkCnt }} -->
+            <v-btn @click="goCreateAnswer()">답변달기</v-btn>
           </div>
-          <v-btn @click="goCreateAnswer()">답변달기</v-btn>
         </div>
       </div>
     </div>
@@ -101,6 +105,21 @@ const questionCreatedTime = ref('');
 
 const numToStr = ref([]);
 const versions = ref([]);
+
+const loading = ref(false);
+
+const handleGptAnswer = async (questionId, questionContent) => {
+  // 로딩 시작
+  loading.value = true;
+  setTimeout(() => (loading.value = false), 16000);
+
+  try {
+    // GPT 답변 요청
+    await answerStore.getGptAnswer(questionId, questionContent);
+  } catch (error) {
+    console.error('GPT 답변 요청 에러:', error);
+  }
+};
 
 const getDetailQuestion = function () {
   axios({
@@ -266,16 +285,5 @@ button {
   color: #575757;
   font-size: small;
   font-weight: 600;
-}
-
-.cntBox {
-  display: flex;
-  justify-content: center;
-}
-
-.cnt {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 </style>
