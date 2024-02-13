@@ -82,6 +82,9 @@ public class UserProfileEntity {
     @OneToMany(mappedBy = "answerWriter", fetch = FetchType.LAZY)
     private List<AnswerEntity> answers = new ArrayList<>();
 
+    @OneToMany(mappedBy = "userProfile", fetch = FetchType.LAZY)
+    private List<MetooEntity> metoos = new ArrayList<>();
+
 
     @Builder
     public UserProfileEntity(String nickname, int exp, String tier, String profileImg, int point,
