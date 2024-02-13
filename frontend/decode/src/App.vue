@@ -34,7 +34,6 @@ watch(
     if (isLoggedIn.value) {
       await userStore.setUser(userStore.loginUserId);
       await userStore.setMyProfile(userStore.loginUserId);
-
     }
   },
 );

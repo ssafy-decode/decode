@@ -235,5 +235,6 @@ const capitalize = (value) => {
   border-radius: 34px;
   font-size: smaller;
   font-weight: bold;
+  margin: 10px;
 }
 </style>
