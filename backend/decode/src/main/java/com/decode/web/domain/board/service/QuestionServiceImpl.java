@@ -150,6 +150,11 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     public BoardProfileDto convertDocumentToBoardProfileDto(QuestionDocument document) {
-        return new BoardProfileDto(document.getTitle(), document.getId());
+        return BoardProfileDto.builder()
+                .title(document.getTitle())
+                .content(document.getContent())
+                .questionId(document.getId())
+                .build();
     }
+
 }
