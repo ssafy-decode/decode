@@ -11,8 +11,8 @@
         <ErrorEditor @editor-content-updated="updateEditorContent" />
         <br />
         <div id="btnBox">
-          <v-btn id="submitBtn" @click="goCreate()">제목 직접 생성</v-btn>
-          <v-btn id="submitBtn" type="submit" :loading="loading" @click="load">제목 생성</v-btn>
+          <v-btn class="submitBtn" @click="goCreate()">제목 직접 생성</v-btn>
+          <v-btn class="submitBtn" type="submit" :loading="loading" @click="load">제목 자동 생성</v-btn>
         </div>
       </v-form>
     </v-sheet>
@@ -61,9 +61,8 @@ const createQuestionTitle = function () {
     },
   })
     .then((res) => {
-      console.log('질문 제목 생성 완료');
-      questionStore.gptTitles.value = res.data.data.titles;
-      questionStore.gptTagIds.value = res.data.data.tagIds;
+      questionStore.gptTitles = res.data.data.titles;
+      questionStore.gptTagIds = res.data.data.tagIds;
       router.push({ name: 'question-create' });
     })
     .catch((err) => {
@@ -79,12 +78,13 @@ const createQuestionTitle = function () {
   justify-content: flex-end;
 }
 
-#submitBtn {
+.submitBtn {
   margin-left: 20px;
   margin-top: 20px;
   border-radius: 40px;
   background-color: #62c0a6;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
+  font-weight: 600;
 }
 
 .createBox {

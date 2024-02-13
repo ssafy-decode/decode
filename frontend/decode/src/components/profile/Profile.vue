@@ -2,7 +2,7 @@
   <div class="pa-5" rounded style="color: #575757; font-weight: bold">
     <v-card
       class="mx-auto px-4 py-8"
-      max-width="1036"
+      max-width="1250"
       style="
         box-shadow: none;
         text-align: center;
@@ -12,57 +12,93 @@
       "
     >
       <v-row>
-        <v-col :cols="1">
-          <br />
+        <v-col :cols="2">
+          <v-avatar image="../../default.png" size="100px" />
           <div>{{ profile.nickname }}</div>
-          <br />
-          <div>{{ profile.tier }}</div>
-          <br />
-        </v-col>
-
-        <v-col :cols="2"
-          ><div>
-            <div>
-              <template v-if="editing">
-                <v-combobox
-                  v-if="editing"
-                  variant="solo"
-                  class="combo"
-                  bg-color="#d9d9d9"
-                  v-model="selectedTags"
-                  :items="items"
-                  placeholder="ex) java, spring boot, sql"
-                  label="기술 스택"
-                  multiple
-                  chips
-                  clearable
-                ></v-combobox>
-              </template>
-              <template v-else-if="tagIdList.length > 0">
-                <div v-for="tag in tagIdList" :key="tag" style="display: block">
-                  <v-chip :clearable="editing" :key="tag" label color="primary" class="mr-2 mb-2 chips">
-                    {{ tagName[tag] }}</v-chip
-                  >
-                </div>
-              </template>
-              <template v-else>
-                <div>선택한 기술 스택이 없습니다.</div>
-              </template>
-            </div>
-            <br />
+          <div style="display: flex; margin-left: 60px">
+            <p :style="{ fontWeight: 'bold', color: getTierColor(profile.tier) }">{{ capitalize(profile.tier) }}</p>
+            <img :src="`../../${profile.tier}.png`" width="30px" />
+          </div>
+          <div v-if="isMyProfile">
+            <router-link to="/inventory">
+              <v-btn class="btn" color="#62C0A6" size="x-large" type="submit" variant="elevated"> 내 아이템 </v-btn>
+            </router-link>
+            <router-link to="/checkpwd">
+              <v-btn class="btn" color="#62C0A6" size="x-large" type="submit" variant="elevated"> 회원정보 수정 </v-btn>
+            </router-link>
+          </div>
+          <div v-else>
             <v-btn
-              v-if="isMyProfile"
-              @click="toggleEdit"
-              class="tagbtn"
+              v-if="isFollowing"
+              class="btn"
               color="#62C0A6"
+              size="x-large"
               type="submit"
               variant="elevated"
-              >{{ editing ? '기술 스택 변경 저장' : '기술 스택 변경' }}</v-btn
+              @click="unfollowById(profile.id)"
             >
-          </div></v-col
-        >
+              팔로우 취소
+            </v-btn>
+            <v-btn
+              v-else
+              class="btn"
+              color="#62C0A6"
+              size="x-large"
+              type="submit"
+              variant="elevated"
+              @click="followById(profile.id)"
+            >
+              팔로우
+            </v-btn>
+          </div>
+        </v-col>
 
-        <v-col :cols="6">
+        <v-col :cols="2" style="margin: auto 0">
+          <div v-if="editing">
+            <v-combobox
+              v-if="editing"
+              variant="solo"
+              class="combo"
+              bg-color="#d9d9d9"
+              v-model="selectedTags"
+              :items="items"
+              placeholder="ex) java, spring boot, sql"
+              label="기술 스택"
+              multiple
+              chips
+              clearable
+            ></v-combobox>
+          </div>
+          <div v-else-if="tagIdList.length > 0">
+            <div
+              v-for="(tag, index) in showAllTags ? tagIdList : tagIdList.slice(0, 3)"
+              :key="index"
+              style="display: block"
+            >
+              <v-chip
+                :clearable="editing"
+                :key="tag"
+                label
+                :style="{ backgroundColor: tagBackGroundColor(tag), color: tagTextColor(tag) }"
+                class="mr-2 mb-2 chips"
+              >
+                {{ tagName[tag] }}
+              </v-chip>
+            </div>
+            <button v-if="tagIdList.length > 3" @click="showAllTags = !showAllTags">
+              <img src="../plus.png" width="30px" />
+            </button>
+          </div>
+          <div v-else>
+            <div>선택한 기술 스택이 없습니다.</div>
+          </div>
+          <button v-if="isMyProfile" @click="toggleEdit" style="float: right">
+            <img v-if="!editing" src="../gear.png" width="40px" />
+            <img v-else src="../save.png" width="30px" />
+          </button>
+        </v-col>
+
+        <v-col :cols="5">
           출석 스트릭
           <AttendanceLog />
         </v-col>
@@ -71,42 +107,6 @@
           <ExpLog />
         </v-col>
       </v-row>
-
-      <div v-if="isMyProfile" class="buttons">
-        <span>
-          <router-link to="/inventory">
-            <v-btn class="btn" color="#62C0A6" size="x-large" type="submit" variant="elevated"> 내 아이템 </v-btn>
-          </router-link>
-          &nbsp;
-          <router-link to="/checkpwd">
-            <v-btn class="btn" color="#62C0A6" size="x-large" type="submit" variant="elevated"> 회원정보 수정 </v-btn>
-          </router-link>
-        </span>
-      </div>
-      <div v-else class="buttons">
-        <v-btn
-          v-if="isFollowing"
-          class="btn"
-          color="#62C0A6"
-          size="x-large"
-          type="submit"
-          variant="elevated"
-          @click="unfollowById(profile.id)"
-        >
-          팔로우 취소
-        </v-btn>
-        <v-btn
-          v-else
-          class="btn"
-          color="#62C0A6"
-          size="x-large"
-          type="submit"
-          variant="elevated"
-          @click="followById(profile.id)"
-        >
-          팔로우
-        </v-btn>
-      </div>
     </v-card>
   </div>
 </template>
@@ -159,6 +159,73 @@ const tagName = {
   12: 'C#',
 };
 
+// 기술 태그 배경색
+const tagBackGroundColor = (tag) => {
+  switch (tag) {
+    case 1:
+      return '#9DD0FF';
+    case 2:
+      return '#FF9D9D';
+    case 3:
+      return '#FFDE9D';
+    case 4:
+      return '#D49DFF';
+    case 5:
+      return '#FFCC9F';
+    case 6:
+      return '#CEFAD0';
+    case 7:
+      return '#1FD655';
+    case 8:
+      return '#FF6865';
+    case 9:
+      return '#73A5C6';
+    case 10:
+      return '#FFB7CE';
+    case 11:
+      return '#E8D3C9';
+    case 12:
+      return '#B65FCF';
+
+    default:
+      return 'primary'; // Default color
+  }
+};
+
+// 기술 태그 글자색
+const tagTextColor = (tag) => {
+  switch (tag) {
+    case 1:
+      return '#447CB0';
+    case 2:
+      return '#B54F4F';
+    case 3:
+      return '#BC8533';
+    case 4:
+      return '#9330B5';
+    case 5:
+      return '#FF6600';
+    case 6:
+      return '#008631';
+    case 7:
+      return '#073B3A';
+    case 8:
+      return '#450003';
+    case 9:
+      return '#051650';
+    case 10:
+      return '#9E4244';
+    case 11:
+      return '#CC5404';
+    case 12:
+      return '#66023C';
+
+    default:
+      return 'primary'; // Default color
+  }
+};
+
+const showAllTags = ref(false);
 const editing = ref(false);
 const items = ref([
   'python',
@@ -200,6 +267,28 @@ const followById = (id) => {
 const unfollowById = (id) => {
   unFollow(id, accessToken.value);
 };
+
+function getTierColor(tier) {
+  if (tier === 'bronze') {
+    return '#D7C3BC';
+  } else if (tier === 'silver') {
+    return '#DCDCDC';
+  } else if (tier === 'gold') {
+    return '#EDE481';
+  } else if (tier === 'platinum') {
+    return '#C8EBB9';
+  } else if (tier === 'diamond') {
+    return '#97D2FF';
+  } else if (tier === 'ruby') {
+    return '#F4A5C5';
+  } else {
+    return 'black';
+  }
+}
+const capitalize = (value) => {
+  if (!value) return '';
+  return value.charAt(0).toUpperCase() + value.slice(1);
+};
 </script>
 
 <style scoped>
@@ -209,9 +298,6 @@ const unfollowById = (id) => {
   color: #447cb0;
   font-weight: bold;
 }
-.buttons {
-  text-align: end;
-}
 .btn {
   color: #000000;
   width: 110px;
@@ -219,5 +305,6 @@ const unfollowById = (id) => {
   border-radius: 34px;
   font-size: smaller;
   font-weight: bold;
+  margin: 10px;
 }
 </style>

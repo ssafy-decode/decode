@@ -30,6 +30,7 @@ const useProfileStore = defineStore(
     // 개별 요소
     const userProfileImgURL = ref(''); // 유저 프로필 사진 url
 
+    // 해당 유저 프로필 조회 (id, exp, point, coin, nickname, tier, profileImg)
     const setUserProfile = async (userid) => {
       await axios.get(`/profile/${userid}`).then((res) => {
         userStore.accessToken = userStore.parseToken(res);
@@ -63,7 +64,6 @@ const useProfileStore = defineStore(
 
     // 회원 수정 전 비밀번호 확인
     const checkPwd = async (password, token) => {
-      console.log(token);
       await axios
         .post(`/confirm`, password, {
           headers: {
@@ -74,8 +74,13 @@ const useProfileStore = defineStore(
           userStore.accessToken = userStore.parseToken(res);
           if (res.data.status === 'OK') {
             mypwd.value = res.data.data;
+            console.log(mypwd.value);
             if (mypwd.value) {
+              userStore.setUser(userStore.loginUserId);
               router.push({ name: 'myprofileupdate' });
+            } else {
+              alert('비밀번호가 일치하지 않습니다.');
+              return;
             }
           }
         })

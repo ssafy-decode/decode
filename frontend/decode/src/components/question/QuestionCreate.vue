@@ -65,9 +65,9 @@ const questionStore = useQuestionStore();
 const userStore = useUserStore();
 const router = useRouter();
 
-const questionTitle = ref(['']);
+const questionTitle = ref('');
 const questionContent = ref('');
-const tagIds = ref(['']);
+const tagIds = ref([]);
 const versions = ref([]);
 
 const items = questionStore.items;

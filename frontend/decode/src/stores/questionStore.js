@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { defineStore } from 'pinia';
 import axios from '@/utils/common-axios';
 
@@ -7,8 +7,8 @@ export const useQuestionStore = defineStore(
   () => {
     const accessToken = ref(null);
     const questions = ref([]);
-    const gptTitles = ref(['']);
-    const gptTagIds = ref(['']);
+    const gptTitles = ref('');
+    const gptTagIds = ref([]);
 
     const items = {
       python: 1,
