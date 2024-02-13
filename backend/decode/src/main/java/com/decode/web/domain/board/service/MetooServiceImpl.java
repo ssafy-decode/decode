@@ -8,6 +8,7 @@ import com.decode.web.entity.MetooEntity;
 import com.decode.web.entity.QuestionEntity;
 import com.decode.web.entity.UserProfileEntity;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
@@ -36,13 +37,11 @@ public class MetooServiceImpl implements MetooService {
     }
 
     @Override
-    public void delete(Long meTooId) {
-        MetooEntity metooEntity = metooRepository.findById(meTooId).orElseThrow(
-                () -> new BadCredentialsException(
-                        "meToo not found with id: " + meTooId));
-
+    public void delete(Long questionId, Long userId) throws BadRequestException {
+        MetooEntity metooEntity = metooRepository.findByQuestionIdAndUserProfileId(questionId, userId);
+        if (metooEntity == null) {
+            throw new BadRequestException("나도 궁금해요 취소 실패");
+        }
         metooRepository.delete(metooEntity);
     }
-
-
 }

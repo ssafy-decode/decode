@@ -5,4 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MetooRepository extends JpaRepository<MetooEntity, Long> {
 
+    MetooEntity findByUserProfileIdAndId(Long userProfileId, Long meTooId);
+
+    MetooEntity findByQuestionIdAndUserProfileId(Long questionId, Long userProfileId);
 }
