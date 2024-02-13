@@ -60,7 +60,7 @@
               variant="solo"
               class="combo"
               bg-color="#d9d9d9"
-              v-model="selectedTags"
+              v-model="selectedTagNames"
               :items="items"
               placeholder="ex) java, spring boot, sql"
               label="기술 스택"
@@ -69,9 +69,9 @@
               clearable
             ></v-combobox>
           </div>
-          <div v-else-if="tagIdList.length > 0">
+          <div v-else-if="selectedTags.length > 0">
             <div
-              v-for="(tag, index) in showAllTags ? tagIdList : tagIdList.slice(0, 3)"
+              v-for="(tag, index) in showAllTags ? selectedTags : selectedTags.slice(0, 3)"
               :key="index"
               style="display: block"
             >
@@ -85,7 +85,7 @@
                 {{ tagName[tag] }}
               </v-chip>
             </div>
-            <button v-if="tagIdList.length > 3" @click="showAllTags = !showAllTags">
+            <button v-if="selectedTags.length > 3" @click="showAllTags = !showAllTags">
               <img src="../plus.png" width="30px" />
             </button>
           </div>
@@ -114,7 +114,7 @@
 <script setup>
 import AttendanceLog from '@/components/profile/AttendanceLog.vue';
 import ExpLog from '@/components/profile/ExpLog.vue';
-import { ref, defineProps, onBeforeMount } from 'vue';
+import { ref, defineProps, onMounted, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/stores/userStore';
 import { useProfileStore } from '@/stores/profileStore';
@@ -128,22 +128,21 @@ const followStore = useFollowStore();
 
 const { updateTechStack } = profileStore;
 const { unFollow, follow } = followStore;
-const { handleTags: tagIdList } = storeToRefs(tagStore);
-// const { handleSelectedTags: selectedTags } = storeToRefs(profileStore);
 const { handleAccessToken: accessToken } = storeToRefs(userStore);
 const { setTagNumList } = tagStore;
+const { handleTags: StoreTagIdList } = storeToRefs(tagStore);
 
 const props = defineProps({
   profile: Object,
   isMyProfile: Boolean,
   isFollowing: Boolean,
   tagIdList: Array,
-  selectedTags: Array,
 });
 
+const showAllTags = ref(false);
+const editing = ref(false);
 const selectedTags = ref([]);
-
-// DB에 수정된 번호를 다시 태그명으로 전환
+const selectedTagNames = ref([]);
 const tagName = {
   1: 'python',
   2: 'java',
@@ -159,7 +158,6 @@ const tagName = {
   12: 'C#',
 };
 
-// 기술 태그 배경색
 const tagBackGroundColor = (tag) => {
   switch (tag) {
     case 1:
@@ -192,7 +190,6 @@ const tagBackGroundColor = (tag) => {
   }
 };
 
-// 기술 태그 글자색
 const tagTextColor = (tag) => {
   switch (tag) {
     case 1:
@@ -225,8 +222,6 @@ const tagTextColor = (tag) => {
   }
 };
 
-const showAllTags = ref(false);
-const editing = ref(false);
 const items = ref([
   'python',
   'java',
@@ -242,9 +237,31 @@ const items = ref([
   'C#',
 ]);
 
-// 기술 스택 목록 변경
+watch(
+  StoreTagIdList,
+  () => {
+    selectedTags.value = [];
+    selectedTagNames.value = [];
+    StoreTagIdList.value.forEach((tag) => {
+      selectedTags.value.push(tag);
+      selectedTagNames.value.push(tagName[tag]);
+    });
+  },
+  {
+    immediate: true,
+    deep: true,
+  },
+);
+
 const toggleEdit = () => {
   if (editing.value) {
+    selectedTags.value = [];
+    items.value.forEach((item, index) => {
+      if (selectedTagNames.value.includes(item)) {
+        selectedTags.value.push(index + 1);
+      }
+    });
+    console.log(selectedTags.value);
     const user = {
       userId: userStore.loginUserId,
       tagIdList: selectedTags.value,
@@ -252,14 +269,7 @@ const toggleEdit = () => {
     updateTechStack(user, accessToken.value);
   }
   editing.value = !editing.value;
-  setTagNumList(userStore.loginUserId);
-  selectedTags.value = tagIdList.value.map((tag) => tagName[tag]);
 };
-
-onBeforeMount(() => {
-  setTagNumList(userStore.loginUserId);
-  selectedTags.value = tagIdList.value.map((tag) => tagName[tag]);
-});
 
 const followById = (id) => {
   follow(id, accessToken.value);

@@ -1,11 +1,5 @@
 <template>
-  <Profile
-    :profile="profile"
-    :isMyProfile="isMyProfile"
-    :isFollowing="isFollowing"
-    :selectedTags="selectedTags"
-    :tagIdList="tagIdList"
-  />
+  <Profile :profile="profile" :isMyProfile="isMyProfile" :isFollowing="isFollowing" :tagIdList="tagIdList" />
   <ProfileWindow
     :followerList="followerList"
     :followingList="followingList"
@@ -58,7 +52,6 @@ watch(
     setAList(newUid);
     setQList(newUid);
     setTagNumList(newUid);
-    selectedTags.value = tagIdList.value;
 
     if (newUid == loginUserId.value) {
       isMyProfile.value = true;
