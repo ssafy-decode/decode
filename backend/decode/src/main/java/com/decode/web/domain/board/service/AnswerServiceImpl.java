@@ -175,7 +175,12 @@ public class AnswerServiceImpl implements AnswerService {
         QuestionDocument questionDocument = questionELKRepository.findById(questionId).orElseThrow(
                 () -> new EntityNotFoundException(
                         "Question not found with id: " + questionId));
-        return new BoardProfileDto(questionDocument.getTitle(), questionDocument.getId());
+//        return new BoardProfileDto(questionDocument.getTitle(), questionDocument.getId());
+        return BoardProfileDto.builder()
+                .title(questionDocument.getTitle())
+                .content(questionDocument.getContent())
+                .questionId(questionDocument.getId())
+                .build();
     }
 
     @Override
