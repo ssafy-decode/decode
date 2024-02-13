@@ -61,9 +61,8 @@ const createQuestionTitle = function () {
     },
   })
     .then((res) => {
-      console.log('질문 제목 생성 완료');
-      questionStore.gptTitles.value = res.data.data.titles;
-      questionStore.gptTagIds.value = res.data.data.tagIds;
+      questionStore.gptTitles = res.data.data.titles;
+      questionStore.gptTagIds = res.data.data.tagIds;
       router.push({ name: 'question-create' });
     })
     .catch((err) => {
