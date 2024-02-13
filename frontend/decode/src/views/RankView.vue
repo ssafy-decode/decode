@@ -14,7 +14,6 @@ import { ref, onMounted, onBeforeMount } from 'vue';
 import { useProfileStore } from '@/stores/profileStore';
 import { useUserStore } from '@/stores/userStore';
 import { useRankStore } from '@/stores/rankStore';
-import Search from '@/components/rank/Search.vue';
 import UserInfo from '@/components/rank/UserInfo.vue';
 import RankingTable from '@/components/rank/RankingTable.vue';
 
