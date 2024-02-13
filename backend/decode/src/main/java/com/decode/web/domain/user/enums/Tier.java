@@ -12,10 +12,6 @@ public enum Tier {
         this.exp = exp;
     }
 
-    public String getTier() {
-        return tier;
-    }
-
     public static String expToTier(int exp) {
         if (exp < BRONZE.exp) {
             return BRONZE.tier;
@@ -33,5 +29,9 @@ public enum Tier {
             return DIAMOND.tier;
         }
         return RUBY.tier;
+    }
+
+    public String getTier() {
+        return tier;
     }
 }

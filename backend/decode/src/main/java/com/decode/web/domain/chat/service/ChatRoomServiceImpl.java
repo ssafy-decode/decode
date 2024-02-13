@@ -13,12 +13,15 @@ import com.decode.web.entity.ChatRoomEntity;
 import com.decode.web.entity.ChatSubRoomEntity;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.HashOperations;
@@ -32,10 +35,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ChatRoomServiceImpl implements ChatRoomService {
 
-    // redis topic 정보. 서버별로 채팅방에 매치되는 topic info -> Map 넣어 roomId로 찾을수 있도록 한다.
-    private Map<String, ChannelTopic> topics;
-    private HashOperations<String, String, ChatRoomEntity> opsHashChatRoom;
-
     // Topic 발행되는 메시지를 처리할 Listener
     private final RedisMessageListenerContainer redisMessageListener;
     // 구독 처리 서비스
@@ -48,6 +47,9 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     @Qualifier(value = "chatRedisTemplate")
     private final RedisTemplate<String, Object> redisTemplate;
     private final ChatRoomMapper chatRoomMapper;
+    // redis topic 정보. 서버별로 채팅방에 매치되는 topic info -> Map 넣어 roomId로 찾을수 있도록 한다.
+    private Map<String, ChannelTopic> topics;
+    private HashOperations<String, String, ChatRoomEntity> opsHashChatRoom;
 
     // redis HASH 데이터 다루기
     @PostConstruct
@@ -125,11 +127,29 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     public List<ChatRoomResponseDto> findAll() {
         List<ChatRoomEntity> chatRoomList = chatRoomRepository.findAll();
         List<ChatRoomResponseDto> chatRoomResponseDtoList = new ArrayList<>();
-        for (ChatRoomEntity cr : chatRoomList){
-            chatRoomResponseDtoList.add(ChatRoomResponseDto.builder().id(cr.getId()).roomDescription(cr.getRoomDescription()).roomName(cr.getRoomName()).creator(cr.getCreator()).build());
+        for (ChatRoomEntity cr : chatRoomList) {
+            chatRoomResponseDtoList.add(ChatRoomResponseDto.builder().id(cr.getId())
+                    .roomDescription(cr.getRoomDescription()).roomName(cr.getRoomName())
+                    .creator(cr.getCreator()).build());
         }
         return chatRoomResponseDtoList;
     }
 
+    @Override
+    @Transactional
+    public void subRoom(Long userId, Long roomId) throws BadRequestException {
+        Optional<ChatRoomEntity> chatRoom = chatRoomRepository.findById(roomId);
+        if (chatRoom.isEmpty()) {
+            throw new BadRequestException("채팅방이 존재하지 않습니다.");
+        }
+        ChatSubRoomEntity chatSubRoom = new ChatSubRoomEntity();
+        chatSubRoom.setUserId(userId);
+        chatSubRoom.setChatRoomEntity(chatRoom.get());
+        chatSubRoomRepository.save(chatSubRoom);
+    }
 
+    @Override
+    public void deleteRoom(Long roomId) {
+        chatRoomRepository.deleteById(roomId);
+    }
 }

@@ -145,7 +145,7 @@ public class GlobalControllerAdvice {
                 .data("")
                 .build(), HttpStatus.BAD_REQUEST);
     }
-    
+
     @ExceptionHandler(Exception.class)
     private ResponseEntity<ResponseDto> handleException(Exception e) {
         log.error("{}", e.getMessage());
