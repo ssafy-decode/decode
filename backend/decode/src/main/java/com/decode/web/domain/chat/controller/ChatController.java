@@ -1,6 +1,7 @@
 package com.decode.web.domain.chat.controller;
 
 import com.decode.web.domain.chat.dto.ChatRequestDto;
+import com.decode.web.domain.chat.dto.ChatResponseDto;
 import com.decode.web.domain.chat.service.ChatRoomService;
 import com.decode.web.domain.chat.service.ChatService;
 import com.decode.web.domain.common.redis.RedisPublisher;
@@ -28,11 +29,20 @@ public class ChatController {
         // 방에 입장
         chatRoomService.enterChatRoom(roomId);
 
-        // 들어온 메세지를 해당 토픽으로 뿌려준다.
-        redisPublisher.publish(chatRoomService.getTopic(roomId), message);
-
         // DB & Redis 저장
-        chatService.saveChat(message);
+        Long chatId = chatService.saveChat(message);
+
+        // 들어온 메세지를 해당 토픽으로 뿌려준다.
+        ChatResponseDto chatResponseDto = ChatResponseDto.builder()
+                .id(chatId)
+                .createAt(null)
+                .nickName(message.getNickName())
+                .text(message.getText())
+                .userId(message.getUserId())
+                .roomId(message.getRoomId())
+                .build();
+
+        redisPublisher.publish(chatRoomService.getTopic(roomId), chatResponseDto);
     }
 
 }
