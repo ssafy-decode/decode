@@ -92,6 +92,7 @@ const getOriginalQuestion = function () {
   })
     .then((res) => {
       question.value = res.data.data;
+      console.log(res.data.data);
       questionWriterId.value = question.value.questionWriter.id;
       questionTitle.value = question.value.title;
       tagList.value = question.value.tagList;
