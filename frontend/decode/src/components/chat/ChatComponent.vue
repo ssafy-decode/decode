@@ -72,11 +72,12 @@ export default {
 
     const addRoom = (room) => {
       console.log(room)
-      roomList.value.push({ roomId: room.roomId, roomName: room.roomName, roomDescription: room.roomDescription });
+      roomList.value.push({ id: room.id, roomName: room.roomName, roomDescription: room.roomDescription });
       console.log(roomList)
     };
 
     const selectRoom = async (room) => {
+      console.log(room)
       console.log('selected room', room.id);
       selectedRoom.value = room;
     };
