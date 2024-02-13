@@ -127,6 +127,7 @@ public class AnswerController {
             throw new CredentialException("사용자 불일치");
         }
         answerService.doAdopt(answerDoAdoptDto.getUserId(), answerDoAdoptDto.getAnswerId());
+        answerService.sendEmailToSubscriber(answerDoAdoptDto.getAnswerId());
         return ResponseDto.builder()
                 .status(HttpStatus.OK)
                 .message("답변 채택 완료")

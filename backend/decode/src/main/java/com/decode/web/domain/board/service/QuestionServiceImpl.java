@@ -42,7 +42,7 @@ public class QuestionServiceImpl implements QuestionService {
         List<QuestionDocument> questionDocumentList;
         if (keyword.isEmpty()) {
             if (tagIds.isEmpty()) {
-                questionDocumentList = questionELKRepository.findAllQuestion();
+                questionDocumentList = questionELKRepository.findAllByOrderByIdDesc();
             } else {
                 questionDocumentList = questionELKRepository.findByQuestionTags(tagIds);
             }
