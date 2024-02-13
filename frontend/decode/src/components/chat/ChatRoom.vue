@@ -72,7 +72,6 @@ const APPLICATION_SERVER_URL = 'https://i10a507.p.ssafy.io/decode/openvidu';
     const session = ref(undefined);
     const publisher = ref(undefined);
     const subscribers = ref([]);
-    const myUserName = 'Participant' + Math.floor(Math.random() * 100);
     const userStore = useUserStore();
     const chatStore = useChatStore();
     const rsId = ref('');
@@ -85,6 +84,7 @@ const APPLICATION_SERVER_URL = 'https://i10a507.p.ssafy.io/decode/openvidu';
     const sessionStore = useSessionStore();
     const messageStore = useMessageStore();
     const { handleMyprofile: myProfile, handleLoginUserId: loginUserId } = storeToRefs(userStore);
+    const myUserName = myProfile.value.nickname;
     watchEffect(() => {
       if (stompStore.messages[props.room.id]) {
         const newMessage = stompStore.messages[props.room.id][stompStore.messages[props.room.id].length - 1];

@@ -39,6 +39,10 @@ watch(
   },
 );
 onMounted(() => {
+  if (userStore.isLoggedIn) {
+    console.log("새로고침 그만~")
+    userStore.setMyProfile(userStore.loginUserId);
+  }
   stompStore.connect();
 });
 
