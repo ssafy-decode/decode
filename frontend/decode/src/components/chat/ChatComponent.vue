@@ -39,10 +39,7 @@ import ChatRoom from './ChatRoom.vue';
 import { useChatStore } from '@/stores/chatStore.js';
 export default {
   name: 'App',
-  // props: {
-  //   nickname: String,
-  //   userId: Number,  
-  // },
+
   components: {
     CreateRoomDialog,
     RoomList,
