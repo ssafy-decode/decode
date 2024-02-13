@@ -49,9 +49,6 @@ public class JwtTokenProvider {
     public void init() {
         byte[] secretKeyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
         signingKey = Keys.hmacShaKeyFor(secretKeyBytes);
-        log.info("signingKey: {}", signingKey);
-        log.info("secretKey: {}", secretKey);
-
 
     }
 
