@@ -5,7 +5,7 @@
     <div style="min-height: 1100px">
       <router-view></router-view>
       <br />
-      <Chat v-if="isLoggedIn" :nickname="userStore.loginUser.name" :userId="userStore.loginUser.id"></Chat>
+      <Chat v-if="isLoggedIn"></Chat>
     </div>
     <FooterBar />
   </div>
@@ -33,8 +33,8 @@ watch(
     isLoggedIn.value = newVal;
     if (isLoggedIn.value) {
       await userStore.setUser(userStore.loginUserId);
-      console.log(userStore.loginUser.name)
-      console.log(userStore.loginUser.id)
+      await userStore.setMyProfile(userStore.loginUserId);
+
     }
   },
 );

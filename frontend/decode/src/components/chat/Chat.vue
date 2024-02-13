@@ -28,13 +28,10 @@
 import { ref, computed } from 'vue';
 import ChatComponent from './ChatComponent.vue';
 import MyChatComponent from './MyChatComponent.vue';
+import { storeToRefs } from 'pinia';
 
 
 export default {
-  // props: {
-  //   nickname: String,
-  //   userId: Number,  
-  // },
   components: {
     ChatComponent,
     MyChatComponent,

@@ -38,6 +38,7 @@ import { OpenVidu } from 'openvidu-browser';
 import { useSessionStore } from '@/stores/sessionStore';
 import { useMessageStore } from '@/stores/messageStore';
 import { useUserStore } from '@/stores/userStore';
+  import { storeToRefs } from 'pinia';
 // const APPLICATION_SERVER_URL = 'https://i10a507.p.ssafy.io/decode/openvidu';
 const APPLICATION_SERVER_URL = 'http://localhost:7777/decode/openvidu';
 export default {
@@ -65,7 +66,6 @@ export default {
     const mainStreamManager = ref(undefined);
     const publisher = ref(undefined);
     const subscribers = ref([]);
-    const myUserName = 'Participant' + Math.floor(Math.random() * 100);
     const inputMessage = ref('');
     const messages = ref([]);
     const muted = ref(false);
@@ -73,6 +73,8 @@ export default {
     const selectedCamera = ref('');
     const selectedAudio = ref('');
     const userStore = useUserStore();
+    const { handleMyprofile: myProfile, handleLoginUserId: loginUserId } = storeToRefs(userStore);
+    const myUserName = myProfile.value.nickname;
     const isValid = computed(() => {
       return roomDuration.value >= 1 && roomDuration.value <= 30 && roomCapacity.value >= 1 && roomCapacity.value <= 10;
     });

@@ -50,6 +50,7 @@ import OpenviduDialog from './OpenviduDialog.vue';
 import OpenviduModal from '@/components/chat/OpenviduModal.vue';
 import { useChatStore } from '@/stores/chatStore.js';
 import { useStompStore } from '@/utils/StompUtil';
+import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/stores/userStore';
 import { useSessionStore } from '@/stores/sessionStore';
 import { useMessageStore } from '@/stores/messageStore';
@@ -82,6 +83,7 @@ export default {
     const stompStore = useStompStore();
     const sessionStore = useSessionStore();
     const messageStore = useMessageStore();
+    const { handleMyprofile: myProfile, handleLoginUserId: loginUserId } = storeToRefs(userStore);
     watchEffect(() => {
       if (stompStore.messages[props.room.id]) {
         const newMessage = stompStore.messages[props.room.id][stompStore.messages[props.room.id].length - 1];
@@ -216,8 +218,8 @@ export default {
       dialog.value = false;
       // 여기서 버튼을 보내면 될 듯
       stompStore.sendMessage(
-        userStore.loginUserId,
-        userStore.loginUser.name,
+        loginUserId.value,
+        myProfile.value.nickname,
         `화면 공유방에 참여하시겠습니까? <span class="session-id" hidden>${String(roomSessionId.value)}</span> <button class="join-session">참가하기</button>`,
         props.room.id,
       );
@@ -244,7 +246,9 @@ export default {
     const sendMessage = () => {
       if (newMessage.value !== '') {
         // messages.value.push({ nickName: '나', text: newMessage.value });
-        stompStore.sendMessage(userStore.loginUserId, userStore.loginUser.name, newMessage.value, props.room.id);
+        console.log(loginUserId.value)
+        console.log(myProfile.value)
+        stompStore.sendMessage(loginUserId.value, myProfile.value.nickname, newMessage.value, props.room.id);
         newMessage.value = '';
         nextTick(() => {
           chatContainer.value.scrollTop = chatContainer.value.scrollHeight;
@@ -253,7 +257,7 @@ export default {
     };
 
     const messageClass = (message) => {
-      return message.nickName === userStore.loginUser.name ? 'my-message' : 'other-message';
+      return message.nickName === myProfile.value.nickname ? 'my-message' : 'other-message';
     };
 
     return {

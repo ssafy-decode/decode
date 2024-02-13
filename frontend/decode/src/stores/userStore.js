@@ -80,7 +80,7 @@ const useUserStore = defineStore(
       }
     };
     const setMyProfile = async () => {
-      axios.get(`/profile/${loginUserId.value}`).then((res) => {
+      await axios.get(`/profile/${loginUserId.value}`).then((res) => {
         myProfile.value = res.data.data;
       });
     };

@@ -19,8 +19,6 @@ export default {
   name: 'RoomList',
   props: {
     rooms: Array,
-    // nickname: String,
-    // userId: Number,  
   },
   setup(props, context) {
     const stompStore =  useStompStore();
