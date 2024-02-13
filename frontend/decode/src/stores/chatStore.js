@@ -25,6 +25,36 @@ const useChatStore = defineStore('useChatStore', () => {
       console.log(err);
     }
   };
+  const subChatRoom = async (roomId) => {
+    try {
+      const res = await axios.post(
+        `/chat/room/${roomId}/sub`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${userStore.accessToken}`,
+          },
+        },
+      );
+      console.log(res.data.data);
+      return res.data.data;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const getSubRoomList = async () => {
+    try {
+      const res = await axios.get('/chat/rooms/sub', {
+        headers: {
+          Authorization: `Bearer ${userStore.accessToken}`,
+        },
+      });
+      console.log(res.data.data);
+      return res.data.data;
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const getRoomList = async () => {
     try {
@@ -61,7 +91,7 @@ const useChatStore = defineStore('useChatStore', () => {
     }
   };
 
-  return { createChatRoom, fetchRoomList, fetchChatHistory };
+  return { createChatRoom, fetchRoomList, fetchChatHistory, subChatRoom, getSubRoomList };
 });
 
 export { useChatStore };

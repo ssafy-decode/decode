@@ -1,10 +1,28 @@
 <template>
-  <div class="back-button">
-    <v-icon small color="primary" @click="goBack">mdi-close</v-icon>
+
+  <div class="header-container">
+    <v-row style="padding: 0; margin: 0; height: 100%;">
+      <v-col cols="8" style="padding: 0; margin: 0; height: 100%;">
+        <div class="room-title">
+          {{ room.roomName }}
+        </div>
+      </v-col>
+      <v-col cols="2" style="padding: 0; margin: 0; height: 100%;">
+        <div class="etc-button"  @click="openDialog">
+          <v-icon color="#34A080">mdi-video-vintage</v-icon>
+        </div>
+      </v-col>
+      <v-col cols="2" style="padding: 0; margin: 0; height: 100%;">
+        <div class="etc-button" @click="goBack">
+          <v-icon small color="#ccc">mdi-close</v-icon>
+        </div>
+      </v-col>
+    </v-row>
+
   </div>
 
   <div class="chat-container">
-    <div class="chat-messages" ref="chatContainer">
+    <div class="chat-messages" ref="chatContainer" >
       <div v-for="(message, id) in messages" :key="id" :class="messageClass(message)">
         <div class="message-content">
           <div class="nickname">{{ message.nickName }}</div>
@@ -12,7 +30,8 @@
         </div>
       </div>
     </div>
-    <v-text-field
+    <div>
+      <v-text-field
       class="input-field"
       filled
       variant="underlined"
@@ -20,13 +39,14 @@
       placeholder="메시지를 입력하세요"
       @keyup.enter="sendMessage"
       append-icon=""
-    >
-      <template v-slot:append>
+      >
+      <!-- <template v-slot:append>
         <v-btn density="compact" flat :round="false" @click="openDialog" style="min-width: 24px">
           <v-icon color="#34A080">mdi-video-vintage</v-icon>
         </v-btn>
-      </template>
+      </template> -->
     </v-text-field>
+  </div>
 
     <OpenviduDialog
       v-model="dialog"
@@ -222,6 +242,9 @@ export default {
       if (stompStore.subscriptions[props.room.id]) {
         console.log(stompStore.subscriptions[props.room.id]);
         stompStore.subscriptions[props.room.id].unsubscribe();
+      }
+      console.log(session.value)
+      if (session.value) {
         sessionStore.exitSession(rsId.value);
       }
     });
@@ -304,27 +327,42 @@ export default {
 </script>
 
 <style scoped>
-.back-button {
-  position: absolute;
-  top: 0;
-  right: 25px;
+.header-container {
+  border: solid 0.5px #ccc;
+  width: 100%;
+  height: 40px;
+  padding: 0;
+  margin: 0;
+}
+.room-title{
+  height: 100%;
+  margin: 0;
+  margin-left: 5px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+.etc-button {
+  height: 100%;
+  border: solid 0.5px #ccc;
   cursor: pointer;
-  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .chat-container {
+  background-color: #dee9d2;
   max-width: 100%;
   margin: 0;
   padding: 0;
-  height: 400px;
-  position: relative;
+  height: 330px;  
 }
 
 .chat-messages {
   max-width: 100%;
-  height: calc(400px - 40px); /* 입력 영역 높이를 제외한 높이 */
+  height: 330px; /* 입력 영역 높이를 제외한 높이 */
   overflow-y: auto;
   padding: 1px;
-  position: relative;
 }
 .input-area {
   width: 100%;
@@ -334,8 +372,10 @@ export default {
 }
 
 .input-field {
-  margin-top: 10px; /* 입력 필드 위로 마진을 추가했습니다 */
-  padding-top: 0;
+  margin: 0; /* 입력 필드 위로 마진을 추가했습니다 */
+  padding: 0;
+  padding-left: 5px;
+  width: 80%;
   height: 30px; /* 높이를 조금 더 늘립니다 */
   font-size: 14px; /* 폰트 크기를 조금 더 늘립니다 */
 }
@@ -356,8 +396,7 @@ export default {
 /* 메시지 디자인 */
 .my-message .message-content,
 .other-message .message-content {
-  margin-top: 10px;
-  margin-bottom: 0;
+  margin: 5px;
 }
 
 .my-message .message-content {

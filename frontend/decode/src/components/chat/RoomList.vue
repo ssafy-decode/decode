@@ -24,6 +24,7 @@ export default {
     const stompStore =  useStompStore();
     const selectRoom = (room) => {
       stompStore.subscribeRoom(room.id);
+      console.log(room)
       context.emit('selectRoom', room);
     }
 
@@ -34,29 +35,34 @@ export default {
 
 <style scoped>
 .room-list {
-  display: flex;
   flex-direction: column;
-  max-height: 300px;
+  height: 89%;
   overflow-y: auto;
   background-color: #f5f5f5;  /* 방 리스트 전체 배경색 추가 */
+  border-top: 0.5px solid #b1d8cd;
+  border-bottom: 1px solid #34A080;
 }
 
 .room-item {
-  width: 90%;
-  min-height: 60px;
-  box-sizing: border-box;
-  border: 1px solid #34A080;
-  margin: 10px;
+  width: 100%;
+  height: 50px;
+  /* box-sizing: border-box; */
+  border-top: 0.5px solid #b1d8cd;
   position: relative;
-  padding: 10px;
   background-color: #ffffff; /* 방 항목 배경색 추가 */
   transition: background-color 0.3s ease; /* 배경색 변경 효과 추가 */
 }
 
 .room-title {
+  width: 100%;
+  min-height: 100%;  /* 높이를 100%로 설정 */
+  display: flex; /* 내부 텍스트를 중앙에 배치하기 위한 flex 설정 */
+  align-items: center;
+  padding-left: 5px;
   z-index: 1;
-  font-size: 1.2em;
+  font-size: 15px;
   font-weight: bold;
+  text-align: center;
 }
 
 .room-description {
