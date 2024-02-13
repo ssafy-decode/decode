@@ -31,52 +31,60 @@
             <v-col cols="6">
               <v-card
                 class="mx-auto px-4 py-8"
-                max-width="518"
+                max-width="625"
                 style="
                   box-shadow: none;
                   text-align: center;
-                  background-color: #f3f3f3;
                   border-radius: 31px;
                   border: 15px solid #d9d9d9;
+                  min-height: 450px;
                 "
               >
-                질문 &nbsp;&nbsp;{{ qList.length }}개 <br /><br />
-                <div v-for="(question, questionIndex) in qList" :key="questionIndex">
-                  {{ questionIndex + 1 }} &nbsp; {{ question.questionId }} &nbsp;
-                  {{ question.title }}
-                </div>
-                <br /><br />
-                이 사람이 올린 질문
+                <div class="list-title">작성한 질문</div>
+                <v-list>
+                  <v-list-item v-for="(question, questionIndex) in qList" :key="questionIndex">
+                    <router-link
+                      :to="{ name: 'question-detail', params: { id: question.questionId } }"
+                      class="article-link"
+                    >
+                      <v-list-item-title class="article-title">{{ question.title }}</v-list-item-title>
+                    </router-link>
+                  </v-list-item>
+                </v-list>
               </v-card>
             </v-col>
 
             <v-col cols="6">
               <v-card
                 class="mx-auto px-4 py-8"
-                max-width="518"
+                max-width="625"
                 style="
                   box-shadow: none;
                   text-align: center;
-                  background-color: #f3f3f3;
                   border-radius: 31px;
                   border: 15px solid #d9d9d9;
+                  min-height: 450px;
                 "
               >
-                답변 &nbsp;&nbsp;{{ aList.length }}개 <br /><br />
-                <div v-for="(answer, answerIndex) in aList" :key="answerIndex">
-                  {{ answerIndex + 1 }} &nbsp; {{ answer.questionId }} &nbsp;
-                  {{ answer.title }}
-                </div>
-                <br /><br />
-                이 사람이 답변 작성한 질문
-              </v-card></v-col
-            ></v-row
-          >
+                <div class="list-title">작성한 답변</div>
+                <v-list>
+                  <v-list-item v-for="(answer, answerIndex) in aList" :key="answerIndex">
+                    <router-link
+                      :to="{ name: 'question-detail', params: { id: answer.questionId } }"
+                      class="article-link"
+                    >
+                      <v-list-item-title class="article-title">{{ answer.title }}</v-list-item-title>
+                    </router-link>
+                  </v-list-item>
+                </v-list>
+              </v-card>
+            </v-col>
+          </v-row>
 
           <ul v-else-if="index === 1">
             <v-card
               class="mx-auto px-4 py-8 text-left"
-              max-width="1036"
+              max-width="1250"
               style="
                 box-shadow: none;
                 text-align: center;
@@ -126,7 +134,7 @@
           <ul v-else-if="index === 2">
             <v-card
               class="mx-auto px-4 py-8 text-left"
-              max-width="1036"
+              max-width="1250"
               style="
                 box-shadow: none;
                 text-align: center;
@@ -337,5 +345,30 @@ const getFollowingTechStacks = async (followingId) => {
 
 .v-window-item-active {
   display: block;
+}
+.article-container {
+  margin-bottom: 20px;
+}
+
+.article-link {
+  text-decoration: none;
+}
+.article-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+  text-align: left;
+}
+
+.article-title:hover {
+  color: #62c0a6; /* hover 시 색상 변경 */
+}
+
+.list-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #62c0a6; /* 리스트 제목 색상 변경 */
+  margin-bottom: 20px;
 }
 </style>
