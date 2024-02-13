@@ -5,11 +5,10 @@
         class="mx-auto px-4 py-8"
         max-width="481"
         style="
-          box-shadow: none;
-          text-align: center;
           background-color: #f3f3f3;
           border-radius: 68px;
-          border: 15px solid #d9d9d9;
+          box-shadow: 0 0px 36px rgba(0, 0, 0, 0.2);
+          text-align: center;
         "
       >
         <div style="display: flex; justify-content: flex-start">
@@ -19,9 +18,19 @@
         </div>
         <v-row style="margin-left: 5px">
           <v-col cols="5">
-            <img style="width: 70%" src="../default.png" />
-            <br />
-            <v-btn class="photobtn" color="#62C0A6" type="submit" variant="elevated">사진 변경</v-btn>
+            <div
+              style="
+                background-color: #d9d9d9;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                border-radius: 30px;
+                width: 143px;
+                height: 165px;
+              "
+            >
+              <img style="width: 70%; height: auto; border-radius: 50%" src="../default.png" />
+              <v-btn class="photobtn" color="#62C0A6" type="submit" variant="elevated">사진 변경</v-btn>
+            </div>
             <!-- 추후 API 연결 -->
           </v-col>
           <v-col cols="7">
@@ -116,7 +125,7 @@
             hint="영문, 숫자, 특수문자 조합 8자리 이상"
             append-inner
             :type="showPassword ? 'text' : 'password'"
-            style="margin-left: 20px; margin-right: 20px"
+            style="margin-left: 20px; margin-right: 20px; border-radius: 27px"
           >
             <template #append-inner>
               <v-icon @click="toggleEye" style="margin-right: 10px">{{
@@ -134,7 +143,7 @@
             label="비밀번호 확인"
             append-inner
             :type="showPassword2 ? 'text' : 'password'"
-            style="margin-left: 20px; margin-right: 20px"
+            style="margin-left: 20px; margin-right: 20px; border-radius: 27px"
           >
             <template #append-inner>
               <v-icon @click="toggleEye2" style="margin-right: 10px">{{
@@ -360,8 +369,8 @@ const updatepwd = () => {
 
 .photobtn {
   height: 34px;
-  width: 95px;
-  font-size: 15px;
+  width: 85px;
+  font-size: 12px;
   font-weight: bold;
   border-radius: 34px;
   margin-top: 10px;
