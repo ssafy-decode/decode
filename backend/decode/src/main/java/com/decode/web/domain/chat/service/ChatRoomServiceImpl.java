@@ -142,10 +142,16 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         if (chatRoom.isEmpty()) {
             throw new BadRequestException("채팅방이 존재하지 않습니다.");
         }
-        ChatSubRoomEntity chatSubRoom = new ChatSubRoomEntity();
-        chatSubRoom.setUserId(userId);
-        chatSubRoom.setChatRoomEntity(chatRoom.get());
-        chatSubRoomRepository.save(chatSubRoom);
+        Optional<ChatSubRoomEntity> chatSubRoom = chatSubRoomRepository.findByIdAndUserId(roomId,
+                userId);
+        if (chatSubRoom.isEmpty()) {
+            ChatSubRoomEntity chatSubRoomEntity = new ChatSubRoomEntity();
+            chatSubRoomEntity.setUserId(userId);
+            chatSubRoomEntity.setChatRoomEntity(chatRoom.get());
+            chatSubRoomRepository.save(chatSubRoomEntity);
+            return;
+        }
+        chatSubRoom.get().setChatRoomEntity(chatRoom.get());
     }
 
     @Override

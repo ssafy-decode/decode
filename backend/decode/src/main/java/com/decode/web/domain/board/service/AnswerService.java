@@ -32,4 +32,6 @@ public interface AnswerService {
     void doAdopt(Long userId, Long answerId) throws InvalidWriterException;
 
     AnswerCountResponseDto getAnswerCountByUserId(Long userId);
+
+    void sendEmailToSubscriber(Long answerId);
 }
