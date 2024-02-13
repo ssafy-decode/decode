@@ -37,7 +37,9 @@ import { ref, onMounted, computed, watch } from 'vue';
 import { OpenVidu } from 'openvidu-browser';
 import { useSessionStore } from '@/stores/sessionStore';
 import { useMessageStore } from '@/stores/messageStore';
-const APPLICATION_SERVER_URL = 'http://70.12.247.49/openvidu';
+import { useUserStore } from '@/stores/userStore';
+// const APPLICATION_SERVER_URL = 'https://i10a507.p.ssafy.io/decode/openvidu';
+const APPLICATION_SERVER_URL = 'http://localhost:7777/decode/openvidu';
 export default {
   props: {
     dialog: Boolean,
@@ -70,6 +72,7 @@ export default {
     const camerOff = ref(false);
     const selectedCamera = ref('');
     const selectedAudio = ref('');
+    const userStore = useUserStore();
     const isValid = computed(() => {
       return roomDuration.value >= 1 && roomDuration.value <= 30 && roomCapacity.value >= 1 && roomCapacity.value <= 10;
     });
@@ -129,12 +132,7 @@ export default {
       });
 
       try {
-        console.log(randomSessionId.value);
         const token = await getToken(randomSessionId.value);
-        console.log('sid : ', randomSessionId.value);
-        console.log('token : ', token);
-        console.log('myUserName : ', myUserName);
-
         await session.value.connect(token, { clientData: myUserName });
 
         // const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
@@ -171,12 +169,21 @@ export default {
 
     const getToken = async (sessionId) => {
       const sId = await createSession(sessionId);
+      console.log(sId)
       return await createToken(sId);
     };
 
     const createSession = async (sessionId) => {
       try {
-        const response = await axios.post(APPLICATION_SERVER_URL + '/api/sessions', { customSessionId: sessionId }, {});
+        const response = await axios.post(
+          APPLICATION_SERVER_URL + '/api/sessions',
+          { customSessionId: sessionId },
+          {
+            headers: {
+              Authorization: `Bearer ${userStore.accessToken}`,
+            },
+          },
+        );
         return response.data;
       } catch (error) {
         console.error(error);
@@ -185,11 +192,14 @@ export default {
 
     const createToken = async (sessionId) => {
       try {
+        console.log(userStore.accessToken)
         const response = await axios.post(
           APPLICATION_SERVER_URL + `/api/sessions/${sessionId}/connections`,
           {},
           {
-            headers: {},
+            headers: {
+              Authorization: `Bearer ${userStore.accessToken}`,
+            },
           },
         );
         return response.data;

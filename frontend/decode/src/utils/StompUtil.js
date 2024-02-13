@@ -12,7 +12,8 @@ export const useStompStore = defineStore({
   actions: {
     connect() {
       const stompClient = new Client({
-        brokerURL: 'ws://localhost/decode/chattings',
+        brokerURL: 'wss://i10a507.p.ssafy.io/decode/chattings',
+        // brokerURL: 'ws://localhost:7777/decode/chattings',
         connectHeaders: {},
         onConnect: (frame) => {
           this.connected = true;
@@ -33,6 +34,7 @@ export const useStompStore = defineStore({
           if (!this.messages[roomId]) {
             this.messages[roomId] = [];
           }
+          console.log(JSON.parse(res.body))
           this.messages[roomId].push(JSON.parse(res.body));
         });
       }
@@ -46,6 +48,7 @@ export const useStompStore = defineStore({
             text: text,
             roomId: roomId,
           };
+          console.log(msg)
           this.stompClient.publish({ destination: '/app/chat/message', body: JSON.stringify(msg) });
         }
       }

@@ -19,8 +19,8 @@
               </v-card-text>
             </v-card>
           </v-theme-provider>
-          <v-text-field filled dense v-model="newRoom.title" label="제목" required></v-text-field>
-          <v-textarea filled dense v-model="newRoom.description" label="설명" required></v-textarea>
+          <v-text-field filled dense v-model="newRoom.roomName" label="제목" required></v-text-field>
+          <v-textarea filled dense v-model="newRoom.roomDescription" label="설명" required></v-textarea>
         </v-card-text>
         <v-card-actions class="justify-end">
           <v-btn text color="#34A080" dark @click="createRoom">만들기</v-btn>
@@ -32,6 +32,7 @@
   import { ref, watch, toRefs } from 'vue';
 import {useStompStore} from '@/utils/StompUtil';
   import {useChatStore} from'@/stores/chatStore.js';
+  import { useUserStore } from '@/stores/userStore';
   export default {
     name: 'CreateRoomDialog',
     props: {
@@ -42,9 +43,12 @@ import {useStompStore} from '@/utils/StompUtil';
       const { dialog } = toRefs(props);
       const localDialog = ref(false);
       const chatStore = useChatStore();
+      const userStore = useUserStore();
       const newRoom = ref({
-        title: '',
-        description: '',
+        roomId: 0,
+        roomName: '',
+        roomDescription: '',
+        creator: 0,
       });
   
       watch(dialog, (val) => {
@@ -60,12 +64,14 @@ import {useStompStore} from '@/utils/StompUtil';
       const createRoom = async() => {
         // stompUtil.subscribeRoom()
         emit('create-room', newRoom.value);
-        const roomId = await chatStore.createChatRoom(newRoom.value.title, newRoom.value.description, 1);
+        const roomId = await chatStore.createChatRoom(newRoom.value.roomName, newRoom.value.roomDescription, userStore.loginUserId);
         console.log(roomId, "번방 생성 성공")
+        newRoom.value.roomId = roomId;
         stompStore.subscribeRoom(roomId);
 
-        newRoom.value.title = '';
-        newRoom.value.description = '';
+        newRoom.value.roomId = 0;
+        newRoom.value.roomName = '';
+        newRoom.value.roomDescription = '';
         localDialog.value = false;
       };
   

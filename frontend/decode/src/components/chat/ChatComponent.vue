@@ -7,7 +7,7 @@
     <div id="app">
       <v-text-field
         v-if="!selectedRoom"
-        v-model="nickname"
+        v-model="roomname"
         placeholder="채팅방을 검색하세요."
         append-inner-icon="mdi-magnify"
         @click:append="nickNameSearch"
@@ -25,7 +25,7 @@
         </template>
       </v-text-field>
 
-      <room-list v-if="!selectedRoom" :rooms="roomList" @selectRoom="selectRoom"></room-list>
+      <room-list v-if="!selectedRoom" :rooms="roomList" @selectRoom="selectRoom" ></room-list>
       <chat-room v-else :room="selectedRoom" :messages="messages" @goBack="goBack"></chat-room>
     </div>
   </div>
@@ -39,12 +39,16 @@ import ChatRoom from './ChatRoom.vue';
 import { useChatStore } from '@/stores/chatStore.js';
 export default {
   name: 'App',
+  // props: {
+  //   nickname: String,
+  //   userId: Number,  
+  // },
   components: {
     CreateRoomDialog,
     RoomList,
     ChatRoom,
   },
-  setup() {
+  setup(props) {
     const dialog = ref(false);
     const roomList = ref([]);
     const selectedRoom = ref(null);
@@ -69,7 +73,9 @@ export default {
     };
 
     const addRoom = (room) => {
-      roomList.value.push({ id: room.title, name: room.description });
+      console.log(room)
+      roomList.value.push({ roomId: room.roomId, roomName: room.roomName, roomDescription: room.roomDescription });
+      console.log(roomList)
     };
 
     const selectRoom = async (room) => {
@@ -96,7 +102,6 @@ export default {
   margin-left: -5px; /* 원하는 만큼 왼쪽으로 이동 */
   font-size: 18px; /* 아이콘 크기 조정 */
   color: #34a080; /* 아이콘 버튼의 색상 */
-  /* 다른 스타일 속성들... */
 }
 
 .chat-component {

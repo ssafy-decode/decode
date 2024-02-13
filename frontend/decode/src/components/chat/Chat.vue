@@ -7,11 +7,11 @@
     <v-container class="tab-body">
       <v-window v-model="tab">
         <v-window-item value="chat">
-          <ChatComponent />
+          <ChatComponent  />
         </v-window-item>
 
         <v-window-item value="my-chat">
-          <ScreenShareComponent />
+          <MyChatComponent />
         </v-window-item>
       </v-window>
     </v-container>
@@ -27,13 +27,17 @@
 <script>
 import { ref, computed } from 'vue';
 import ChatComponent from './ChatComponent.vue';
-import ScreenShareComponent from './ScreenShareComponent.vue';
+import MyChatComponent from './MyChatComponent.vue';
 
 
 export default {
+  // props: {
+  //   nickname: String,
+  //   userId: Number,  
+  // },
   components: {
     ChatComponent,
-    ScreenShareComponent,
+    MyChatComponent,
   },
   setup() {
     const tab = ref('chat');

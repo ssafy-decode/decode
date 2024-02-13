@@ -2,17 +2,12 @@
   <div class="app">
     <NavBar />
     <br />
-<<<<<<< HEAD
-    <router-view></router-view>
-    <br />
-    <Chat v-if="isLoggedIn"></Chat>
-=======
+
     <div style="min-height: 1100px">
       <router-view></router-view>
       <br />
-      <Chat></Chat>
+      <Chat v-if="isLoggedIn" :nickname="userStore.loginUser.name" :userId="userStore.loginUser.id"></Chat>
     </div>
->>>>>>> 84644f8cf2593b512bfee8b03404d03bccc62f76
     <FooterBar />
   </div>
 </template>
@@ -34,9 +29,14 @@ const userStore = useUserStore();
 const isLoggedIn = ref(userStore.isLoggedIn); // 초기 값 설정
 watch(
   () => userStore.isLoggedIn,
-  (newVal) => {
+  async (newVal) => {
     // userStore.isLoggedIn 변경을 감지하여 isLoggedIn 업데이트
     isLoggedIn.value = newVal;
+    if (isLoggedIn.value) {
+      await userStore.setUser(userStore.loginUserId);
+      console.log(userStore.loginUser.name)
+      console.log(userStore.loginUser.id)
+    }
   },
 );
 onMounted(() => {

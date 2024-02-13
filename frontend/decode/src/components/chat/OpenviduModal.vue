@@ -15,6 +15,7 @@
       <div class="screen-container">
         <!-- 여기에 화면공유 관련 코드를 넣으세요 -->
         <video ref="videoElement" class="video-element" autoplay playsinline></video>
+
         <!-- 비디오 아래에 버튼 3개 추가 -->
         <div class="button-container">
           <v-btn color="#34A080" @click="toggleAudio" title="음소거/해제">
@@ -24,7 +25,7 @@
             <!-- 음소거일 때 -->
           </v-btn>
           <v-btn color="#34A080" @click="toggleScreenSharing" title="화면 공유">
-            <font-awesome-icon :icon="['fas', 'desktop']" />
+            <font-awesome-icon v-if="publisher.value" :icon="['fas', 'desktop']" />
           </v-btn>
           <v-btn color="#34A080" @click="toggleFullScreen" title="전체 화면">
             <font-awesome-icon :icon="['fas', 'expand']" />
@@ -67,7 +68,7 @@
 import VueDraggableResizable from 'vue-draggable-resizable';
 import 'vue-draggable-resizable/style.css';
 import OpenviduTest from '@/components/openvidu/OpenviduTest.vue';
-import { ref, computed, watch, nextTick } from 'vue';
+import { ref, onMounted, onBeforeUnmount, computed, watchEffect, nextTick, watch } from 'vue';
 import { useSessionStore } from '@/stores/sessionStore';
 import { useMessageStore } from '@/stores/messageStore';
 export default {
@@ -75,8 +76,9 @@ export default {
     VueDraggableResizable,
     OpenviduTest,
   },
-  props: ['roomSessionId'],
-  setup(props) {
+  props: ['roomSessionId', 'subscribers'],
+
+  setup(props, context) {
     const inputMessage = ref('');
     const isComponentVisible = ref(true);
     const sessionStore = useSessionStore();
@@ -86,7 +88,115 @@ export default {
     const username = ref(null);
     const OV = ref(null);
     const publisher = ref(null);
+    const subscriber = ref(null);
     const chatContainer = ref(null);
+    const isMuted = ref(false);
+    const isScreenSharing = ref(true);
+    const videoElement = ref(null); // videoElement를 선언합니다.
+
+    const sendMessage = (event) => {
+      event.preventDefault();
+      if (inputMessage.value.trim()) {
+        session.value.signal({
+          data: JSON.stringify({
+            username: username.value,
+            message: inputMessage.value,
+          }),
+          type: 'chat',
+        });
+        inputMessage.value = '';
+        nextTick(() => {
+          setTimeout(() => {
+            const container = chatContainer.value;
+            container.scrollTop = container.scrollHeight;
+          }, 100);
+        });
+      }
+    };
+
+    const toggleAudio = () => {
+      if (publisher.value) {
+        isMuted.value = !isMuted.value; // 음소거 상태를 반전시킵니다.
+        const isAudioActive = publisher.value.stream.audioActive;
+        publisher.value.publishAudio(!isAudioActive); // 오디오 상태를 반전시킵니다.
+      }
+    };
+    // 비디오 엘리먼트를 업데이트하는 함수를 정의합니다.
+    const updateVideoElement = () => {
+      if (subscriber.value && subscriber.value.stream) {
+        videoElement.value.srcObject = subscriber.value.stream.mediaStream;
+      } else if (publisher.value && publisher.value.stream) {
+        videoElement.value.srcObject = publisher.value.stream.mediaStream;
+      } else {
+        console.log('Neither publisher nor subscriber stream is defined yet');
+      }
+    };
+    onMounted(async () => {
+      const rsId = props.roomSessionId;
+      session.value = await sessionStore.getSessionById(rsId)['session'];
+      subscriber.value = await sessionStore.getSubscriberById(rsId);
+      console.log(subscriber.value);
+
+      username.value = await sessionStore.getMyUserNameById(rsId);
+      OV.value = await sessionStore.getOvById(rsId);
+      publisher.value = await sessionStore.getPublisherById(rsId);
+      // 2초 뒤에 비디오 엘리먼트를 업데이트합니다.
+      setTimeout(updateVideoElement, 2000);
+    });
+    // publisher와 subscriber의 변화를 감지하고, 변화가 감지되면 비디오 엘리먼트를 업데이트합니다.
+
+    onBeforeUnmount(() => {
+      if (videoElement.value) {
+        videoElement.value.srcObject = null;
+      }
+    });
+    const toggleFullScreen = () => {
+      if (!document.fullscreenElement) {
+        if (videoElement.value.requestFullscreen) {
+          videoElement.value.requestFullscreen();
+        } else if (videoElement.value.mozRequestFullScreen) {
+          /* Firefox */
+          videoElement.value.mozRequestFullScreen();
+        } else if (videoElement.value.webkitRequestFullscreen) {
+          /* Chrome, Safari & Opera */
+          videoElement.value.webkitRequestFullscreen();
+        } else if (videoElement.value.msRequestFullscreen) {
+          /* IE/Edge */
+          videoElement.value.msRequestFullscreen();
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+          /* Firefox */
+          document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+          /* Chrome, Safari & Opera */
+          document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+          /* IE/Edge */
+          document.msExitFullscreen();
+        }
+      }
+    };
+    const toggleScreenSharing = () => {
+      if (isScreenSharing.value) {
+        navigator.mediaDevices.getDisplayMedia({ video: true }).then((stream) => {
+          const videoTrack = stream.getVideoTracks()[0];
+          publisher.value.replaceTrack(videoTrack);
+        });
+      } else {
+        publisher.value.replaceTrack(publisher.value.stream.videoStream);
+      }
+      isScreenSharing.value = !isScreenSharing.value;
+    };
+
+    const exitPage = () => {
+      // 세션을 종료하고 상태를 업데이트합니다.
+      sessionStore.exitSession(props.roomSessionId);
+      // 나가기 이벤트를 발생시킵니다.
+      context.emit('exit');
+    };
 
     return {
       inputMessage,
@@ -98,118 +208,16 @@ export default {
       username,
       chatContainer,
       OV,
+      isMuted,
+      isScreenSharing,
+      videoElement,
+      exitPage,
+      toggleScreenSharing,
+      toggleFullScreen,
+      sendMessage,
+      toggleAudio,
+      // 나머지 메서드도 반환 객체에 포함시켜 주세요
     };
-  },
-
-  data() {
-    return {
-      isMuted: false, // 음소거 상태를 저장하는 속성
-      isScreenSharing: true,
-    };
-  },
-  async mounted() {
-    console.log(123);
-    this.session = await this.sessionStore.getSessionById(this.roomSessionId)['session'];
-    this.username = await this.sessionStore.getMyUserNameById(this.roomSessionId)['myUserName'];
-    this.OV = await this.sessionStore.getOvById(this.roomSessionId);
-    this.publisher = await this.sessionStore.getPublisherById(this.roomSessionId);
-    console.log(this.session);
-    console.log(this.username);
-    console.log(this.publisher);
-    console.log(this.OV);
-
-    if (this.publisher && this.publisher.stream) {
-      this.$refs.videoElement.srcObject = this.publisher.stream.mediaStream;
-    } else {
-      console.log('publisher or publisher.stream is not defined yet');
-    }
-  },
-  beforeDestroy() {
-    if (this.$refs.videoElement) {
-      this.$refs.videoElement.srcObject = null;
-    }
-  },
-  methods: {
-    sendMessage(event) {
-      event.preventDefault();
-      if (this.inputMessage.trim()) {
-        this.session.signal({
-          data: JSON.stringify({
-            username: this.username,
-            message: this.inputMessage,
-          }),
-          type: 'chat',
-        });
-        this.inputMessage = '';
-        this.$nextTick(() => {
-          setTimeout(() => {
-            const container = this.$refs.chatContainer;
-            container.scrollTop = container.scrollHeight;
-          }, 100); // 0초 후에 실행, 즉 가능한 한 빠르게 실행되지만 렌더링은 기다림
-        });
-      }
-    },
-    showComponent() {
-      this.isComponentVisible.value = !this.isComponentVisible.value;
-    },
-    toggleComponent() {
-      this.isComponentVisible.value = !this.isComponentVisible.value;
-    },
-
-    toggleAudio() {
-      if (this.publisher) {
-        this.isMuted = !this.isMuted; // 음소거 상태를 반전시킵니다.
-        const isAudioActive = this.publisher.stream.audioActive;
-        this.publisher.publishAudio(!isAudioActive); // 오디오 상태를 반전시킵니다.
-      }
-    },
-    async toggleScreenSharing() {
-      // publisher가 존재하지 않는 경우, 화면 공유를 시작합니다.
-      if (!this.publisher) {
-        this.publisher = await this.OV.initPublisherAsync('publisher', {
-          videoSource: 'screen',
-          publishAudio: true,
-          publishVideo: true,
-          mirror: false,
-        });
-        await this.session.publish(this.publisher);
-      } else {
-        // publisher가 존재하는 경우, 기존 화면 공유를 종료하고 새 화면을 공유합니다.
-        this.session.unpublish(this.publisher);
-        this.publisher = await this.OV.initPublisherAsync('publisher', {
-          videoSource: 'screen',
-          publishAudio: true,
-          publishVideo: true,
-          mirror: false,
-        });
-        await this.session.publish(this.publisher);
-      }
-      this.$refs.videoElement.srcObject = this.publisher.stream.mediaStream;
-    },
-    toggleFullScreen() {
-      const videoElement = this.$refs.videoElement;
-      if (!document.fullscreenElement) {
-        if (videoElement.requestFullscreen) {
-          videoElement.requestFullscreen();
-        } else if (videoElement.mozRequestFullScreen) {
-          videoElement.mozRequestFullScreen();
-        } else if (videoElement.webkitRequestFullscreen) {
-          videoElement.webkitRequestFullscreen();
-        } else if (videoElement.msRequestFullscreen) {
-          videoElement.msRequestFullscreen();
-        }
-      } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        } else if (document.mozCancelFullScreen) {
-          document.mozCancelFullScreen();
-        } else if (document.webkitExitFullscreen) {
-          document.webkitExitFullscreen();
-        } else if (document.msExitFullscreen) {
-          document.msExitFullscreen();
-        }
-      }
-    },
   },
 };
 </script>
