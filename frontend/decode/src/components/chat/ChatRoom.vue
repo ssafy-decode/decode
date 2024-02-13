@@ -40,11 +40,6 @@
       @keyup.enter="sendMessage"
       append-icon=""
       >
-      <!-- <template v-slot:append>
-        <v-btn density="compact" flat :round="false" @click="openDialog" style="min-width: 24px">
-          <v-icon color="#34A080">mdi-video-vintage</v-icon>
-        </v-btn>
-      </template> -->
     </v-text-field>
   </div>
 
@@ -263,7 +258,8 @@ export default {
       stompStore.sendMessage(
         loginUserId.value,
         myProfile.value.nickname,
-        `화면 공유방에 참여하시겠습니까? <span class="session-id" hidden>${String(roomSessionId.value)}</span> <button class="join-session">참가하기</button>`,
+        `화면 공유방에 참여하시겠습니까? <span class="session-id" hidden>${String(roomSessionId.value)}</span>
+        <button class="join-session" style="color: blue">참가하기</button>`,
         props.room.id,
       );
 
@@ -351,7 +347,7 @@ export default {
   justify-content: center;
 }
 .chat-container {
-  background-color: #dee9d2;
+  background-color: #f5f5f5;
   max-width: 100%;
   margin: 0;
   padding: 0;
@@ -407,9 +403,10 @@ export default {
 .other-message p {
   font-size: 12px;
   display: inline-block;
-  background-color: #aed581;
-  padding: 10px;
-  border-radius: 10px;
+  background-color: #93D5D1;
+  padding: 5px;
+  border-radius: 5px;
+  max-width: 65%;
   word-break: break-word; /* 줄바꿈을 추가합니다 */
 }
 
@@ -419,12 +416,12 @@ export default {
 
 .other-message p {
   display: inline-block;
-  background-color: #cfd8dc;
-  padding: 10px;
-  border-radius: 10px;
+  background-color: #D3EEEC;
+  padding: 5px;
+  border-radius: 5px;
 }
 
 .nickname {
-  font-weight: bold;
+  font-size: 13px;
 }
 </style>

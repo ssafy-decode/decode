@@ -6,60 +6,68 @@
     :x="0"
     :y="0"
     :z="10000"
-    :w="1000"
-    :h="500"
+    :w="1080"
+    :h="640"
     :parent="false"
     :resizable="false"
   >
     <div class="custom-openvidu-modal">
-      <div class="screen-container">
-        <!-- 여기에 화면공유 관련 코드를 넣으세요 -->
-        <video ref="videoElement" class="video-element" autoplay playsinline></video>
-
-        <!-- 비디오 아래에 버튼 3개 추가 -->
-        <div class="button-container">
-          <v-btn color="#34A080" @click="toggleAudio" title="음소거/해제">
-            <font-awesome-icon v-if="isMuted" :icon="['fas', 'microphone']" />
-            <!-- 음소거가 아닐 때 -->
-            <font-awesome-icon v-else :icon="['fas', 'microphone-slash']" />
-            <!-- 음소거일 때 -->
-          </v-btn>
-          <v-btn color="#34A080" @click="toggleScreenSharing" title="화면 공유">
-            <font-awesome-icon :icon="['fas', 'desktop']" />
-          </v-btn>
-          <v-btn color="#34A080" @click="toggleFullScreen" title="전체 화면">
-            <font-awesome-icon :icon="['fas', 'expand']" />
-          </v-btn>
-          <v-btn color="#34A080" @click="exitPage" title="나가기">
-            <font-awesome-icon :icon="['fas', 'door-open']" />
-          </v-btn>
+      <div class="upper-container">
+        <div class="screen-container">
+          <!-- 여기에 화면공유 관련 코드를 넣으세요 -->
+          <video ref="videoElement" class="video-element" autoplay playsinline></video>
         </div>
-      </div>
-      <div class="chat-container">
-        <div class="chat-messages" ref="chatContainer">
-          <div v-for="(message, index) in messages" :key="index">
-            <div class="message-content">
-              <div class="nickname">{{ message.username }}</div>
-              <p>{{ message.message }}</p>
+
+        <div class="chat-container">
+          <div class="chat-messages" ref="chatContainer">
+            <div v-for="(message, index) in messages" :key="index">
+              <div class="message-content">
+                <div class="nickname">{{ message.username }}</div>
+                <p>{{ message.message }}</p>
+              </div>
             </div>
           </div>
+          <v-text-field
+            class="input-field"
+            filled
+            hide-details
+            density="compact"
+            variant="outlined"
+            v-model="inputMessage"
+            placeholder="전달할 내용을 입력하세요."
+            @keyup.enter="sendMessage"
+            append-icon=""
+          >
+            <!-- <template v-slot:append>
+              <v-btn density="compact" flat :round="false" style="min-width: 24px" @click="sendMessage">
+                <v-icon color="#34A080">mdi-send</v-icon>
+              </v-btn>
+            </template> -->
+          </v-text-field>
         </div>
-        <v-text-field
-          class="input-field"
-          filled
-          variant="underlined"
-          v-model="inputMessage"
-          placeholder="전달할 내용을 입력하세요."
-          @keyup.enter="sendMessage"
-          append-icon=""
-        >
-          <template v-slot:append>
-            <v-btn density="compact" flat :round="false" style="min-width: 24px" @click="sendMessage">
-              <v-icon color="#34A080">mdi-send</v-icon>
-            </v-btn>
-          </template>
-        </v-text-field>
+
       </div>
+
+      <!-- 비디오 아래에 버튼 3개 추가 -->
+      <div class="button-container">
+        <v-btn color="#34A080" @click="toggleAudio" title="음소거/해제">
+          <font-awesome-icon v-if="isMuted" :icon="['fas', 'microphone']" />
+          <!-- 음소거가 아닐 때 -->
+          <font-awesome-icon v-else :icon="['fas', 'microphone-slash']" />
+          <!-- 음소거일 때 -->
+        </v-btn>
+        <v-btn color="#34A080" @click="toggleScreenSharing" title="화면 공유">
+          <font-awesome-icon :icon="['fas', 'desktop']" />
+        </v-btn>
+        <v-btn color="#34A080" @click="toggleFullScreen" title="전체 화면">
+          <font-awesome-icon :icon="['fas', 'expand']" />
+        </v-btn>
+        <v-btn color="#34A080" @click="exitPage" title="나가기">
+          <font-awesome-icon :icon="['fas', 'door-open']" />
+        </v-btn>
+      </div>
+
+
     </div>
   </vue-draggable-resizable>
 </template>
@@ -224,9 +232,9 @@ export default {
 
 <style scoped>
 .custom-component {
-  border-radius: 3%;
+  border-radius: 5px;
   margin: 0;
-  padding: 0;
+  padding: 5px;
   background-color: #34a080;
   position: fixed;
   left: 10px;
@@ -240,15 +248,29 @@ export default {
   display: none; /* Chrome, Safari and Opera */
 }
 .custom-openvidu-modal {
-  border-radius: 3%;
+  padding: 5px;
+  border-radius: 3px;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   width: 100%;
   height: 100%;
-  background-color: white;
+  background-color: #f1f1f1;
+}
+.upper-container{
+  width: 100%;
+  height: 90%;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
 }
 .button-container {
   display: flex;
+  width: 100%;
+  height: 10%;
+  margin: 0;
+  padding: 0;
+  align-items: center;
   justify-content: center; /* 버튼들을 가운데 정렬 */
   gap: 20px; /* 버튼 사이의 간격을 20px로 설정 */
 }
@@ -259,34 +281,44 @@ export default {
   color: black; /* 아이콘 색상을 검정색으로 설정 */
 }
 .video-element {
-  max-width: 790px;
-  max-height: 450px;
+  padding: 1px;
+  width: 100%;
   height: auto;
+  border: solid 0.5px #ccc;
 }
 
 .screen-container {
-  width: 800px;
-  max-height: 500px;
+  width: 80%;
+  height: 100%;
 }
 
 .chat-container {
-  width: 200px;
+  padding: 0;
+  margin: 0;
+  width: 20%;
   height: 100%; /* 채팅창 컨테이너의 높이를 100%로 조정 */
+  background-color: white;
   display: flex;
   flex-direction: column;
   justify-content: flex-end; /* 입력 구간을 아래로 */
+  border-radius: 5px;
 }
 
 .chat-messages {
   flex: 1;
+  padding: 1px;
   overflow-y: auto;
-  max-height: calc(100% - 70px); /* 입력 구간의 높이를 고려하여 채팅창 리스트의 최대 높이를 조정 */
+  height: 90%; /* 입력 구간의 높이를 고려하여 채팅창 리스트의 최대 높이를 조정 */
+  border: solid 0.5px #ccc;
+  background-color: #f1f1f1;
+  border-radius: 5px;
   /* margin-bottom: 20px; 입력 구간과의 간격을 주기 위해 margin-bottom 추가 */
 }
 
 .input-field {
   flex: none;
-  height: 60px; /* 입력 구간의 높이를 증가 */
+  margin: 5px;
+  height: 10%; /* 입력 구간의 높이를 증가 */
 }
 .chat-list {
   width: 100%;
