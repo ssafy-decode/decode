@@ -4,7 +4,7 @@
       <v-row no-gutters>
         <v-col cols="2" class="table-title">Top100</v-col>
         <v-col cols="6"></v-col>
-        <v-col cols="4">
+        <v-col cols="4" style="align-items: center;">
           <div class="search-input">
             <v-text-field
               v-model="search"
@@ -13,6 +13,7 @@
               label="닉네임 검색"
               single-line
               hide-details
+              density="compact"
             ></v-text-field>
           </div>
         </v-col>
@@ -112,8 +113,13 @@ onMounted(() => {
 .search-input {
   height: 50px;
   max-width: 400px;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
 }
 .ranking-list {
+  margin-top: 5px;
   border: 1px solid #ccc;
   background-color: white;
   border-radius: 15px;

@@ -4,27 +4,36 @@
 
     <CreateRoomButton @open="dialog = true" />
 
-    <div id="app">
-      <v-text-field
-        v-if="!selectedRoom"
-        v-model="roomname"
-        placeholder="채팅방을 검색하세요."
-        append-inner-icon="mdi-magnify"
-        @click:append="nickNameSearch"
-        variant="underlined"
-      >
-        <template v-slot:append>
-          <!-- 텍스트 필드 내에 버튼 추가 -->
-          <v-btn
+    <div id="app" style=" margin: 0; padding: 0; height: 430px;">
+      <div style="display: flex; align-items: center; background-color: #edebeb; padding: 0; margin: 0;">
+        <v-text-field
+          v-if="!selectedRoom"
+          v-model="roomname"
+          variant="outlined"
+          rounded
+          density="compact"
+          placeholder="채팅방을 검색하세요."
+          append-inner-icon="mdi-magnify"
+          @click:append="nickNameSearch"
+          hide-details
+          style="border: none; padding:3px;"
+          bg-color="white"
+          >
+          <template v-slot:append>
+            <!-- 텍스트 필드 내에 버튼 추가 -->
+            <v-btn
             v-if="!selectedRoom"
             density="compact"
             icon="mdi-plus"
             @click="dialog = true"
             class="custom-icon-btn"
-          ></v-btn>
-        </template>
-      </v-text-field>
-
+            style="padding: 0; margin: 0;"
+            ></v-btn>
+          </template>
+        </v-text-field>
+      </div>
+      
+        
       <room-list v-if="!selectedRoom" :rooms="roomList" @selectRoom="selectRoom" ></room-list>
       <chat-room v-else :room="selectedRoom" :messages="messages" @goBack="goBack"></chat-room>
     </div>
@@ -96,6 +105,7 @@ export default {
 </script>
 
 <style scoped>
+
 .custom-icon-btn {
   margin-top: -5px;
   margin-left: -5px; /* 원하는 만큼 왼쪽으로 이동 */
@@ -108,4 +118,5 @@ export default {
   flex-direction: column;
   height: 430px;
 }
+
 </style>

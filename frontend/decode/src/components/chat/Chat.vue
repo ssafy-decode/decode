@@ -4,7 +4,7 @@
       <v-tab value="chat">채팅</v-tab>
       <v-tab value="my-chat">내 채팅</v-tab>
     </v-tabs>
-    <v-container class="tab-body">
+    <v-container class="tab-body" bg-color="#34A080">
       <v-window v-model="tab">
         <v-window-item value="chat">
           <ChatComponent  />
@@ -47,6 +47,7 @@ export default {
       height: '500px',
       backgroundColor: 'white',
       border: '1px solid #ccc',
+      borderRadius: '15px',
       zIndex: '9999',
     }));
 
@@ -79,6 +80,7 @@ export default {
   z-index: 10000;
 }
 .tab-body {
-  padding-right: 0;
+  padding: 0;
+  margin: 0;
 }
 </style>
