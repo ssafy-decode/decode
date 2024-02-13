@@ -18,7 +18,8 @@ export default {
       el: document.querySelector('#editor'),
       height: '500px',
       initialEditType: 'wysiwyg',
-      initialValue: '이 문장을 지우고 에러를 붙여넣어주세요!',
+      initialValue:
+        '코딩하다 마주친 에러를 입력하고 질문 제목을 자동 생성해보세요!\n질문 제목을 직접 생성할 수도 있습니다. :)',
       previewStyle: 'vertical',
     });
     // 에디터의 내용이 변경될 때마다 change 이벤트 발생
