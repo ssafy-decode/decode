@@ -114,19 +114,14 @@ const useUserStore = defineStore(
         });
     };
 
-    // 특정 회원 정보 조회
-    // (id, email, 암호화된password, phoneNumber, birth, name, createdTime, updatedTime)
+    // 특정 회원 정보 조회 (id, email, 암호화된password, phoneNumber, birth, name, createdTime, updatedTime)
     const setUser = async (userid) => {
       console.log('userid.value:', userid.value);
       console.log('userid:', userid);
       await axios.get(`/user/${userid}`).then((res) => {
         accessToken.value = parseToken(res);
         if (res.data.status === 'OK') {
-          if (userid === loginUserId.value) {
-            loginUser.value = res.data.data;
-          } else {
-            user.value = res.data.data;
-          }
+          user.value = res.data.data;
         }
       });
     };
