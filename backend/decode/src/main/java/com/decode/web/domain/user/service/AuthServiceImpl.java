@@ -36,7 +36,6 @@ public class AuthServiceImpl implements AuthService {
 
             TokenDto tokenDto = generateToken(SERVER, authentication.getName());
             userService.setAttendance(loginDto.getEmail());
-            userService.setExp(jwtTokenProvider.getAuthUserId(tokenDto.getAccessToken()), 1);
             return tokenDto;
         } catch (BadCredentialsException e) {
             throw new CustomLoginException("아이디/비밀번호가 일치하지 않아요.");
