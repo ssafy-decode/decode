@@ -4,7 +4,7 @@
     <div style="min-height: 1100px">
       <router-view></router-view>
       <br />
-      <Chat v-if="isLoggedIn" :nickname="userStore.loginUser.name" :userId="userStore.loginUser.id"></Chat>
+      <Chat v-if="isLoggedIn"></Chat>
     </div>
     <FooterBar />
   </div>
@@ -25,25 +25,26 @@ import { useUserStore } from './stores/userStore';
 const stompStore = useStompStore();
 const userStore = useUserStore();
 const isLoggedIn = ref(userStore.isLoggedIn); // 초기 값 설정
-// watch(
-//   () => userStore.isLoggedIn,
-//   async (newVal) => {
-//     // userStore.isLoggedIn 변경을 감지하여 isLoggedIn 업데이트
-//     isLoggedIn.value = newVal;
-//     if (isLoggedIn.value) {
-//       await userStore.setUser(userStore.loginUserId);
-//       console.log(userStore.loginUser.name)
-//       console.log(userStore.loginUser.id)
-//     }
-//   },
-// );
-// onMounted(() => {
-//   stompStore.connect();
-// });
 
-// onUnmounted(() => {
-//   stompStore.disconnect();
-// });
+watch(
+  () => userStore.isLoggedIn,
+  async (newVal) => {
+    // userStore.isLoggedIn 변경을 감지하여 isLoggedIn 업데이트
+    isLoggedIn.value = newVal;
+    if (isLoggedIn.value) {
+      await userStore.setUser(userStore.loginUserId);
+      await userStore.setMyProfile(userStore.loginUserId);
+
+    }
+  },
+);
+onMounted(() => {
+  stompStore.connect();
+});
+
+onUnmounted(() => {
+  stompStore.disconnect();
+});
 </script>
 
 <style>

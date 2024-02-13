@@ -32,7 +32,8 @@
   import { ref, watch, toRefs } from 'vue';
 import {useStompStore} from '@/utils/StompUtil';
   import {useChatStore} from'@/stores/chatStore.js';
-  import { useUserStore } from '@/stores/userStore';
+  import { storeToRefs } from 'pinia';
+import { useUserStore } from '@/stores/userStore';
   export default {
     name: 'CreateRoomDialog',
     props: {
@@ -44,6 +45,7 @@ import {useStompStore} from '@/utils/StompUtil';
       const localDialog = ref(false);
       const chatStore = useChatStore();
       const userStore = useUserStore();
+    const { handleMyprofile: myProfile, handleLoginUserId: loginUserId } = storeToRefs(userStore);
       const newRoom = ref({
         roomId: 0,
         roomName: '',
@@ -64,7 +66,7 @@ import {useStompStore} from '@/utils/StompUtil';
       const createRoom = async() => {
         // stompUtil.subscribeRoom()
         emit('create-room', newRoom.value);
-        const roomId = await chatStore.createChatRoom(newRoom.value.roomName, newRoom.value.roomDescription, userStore.loginUserId);
+        const roomId = await chatStore.createChatRoom(newRoom.value.roomName, newRoom.value.roomDescription, loginUserId.value);
         console.log(roomId, "번방 생성 성공")
         newRoom.value.roomId = roomId;
         stompStore.subscribeRoom(roomId);
