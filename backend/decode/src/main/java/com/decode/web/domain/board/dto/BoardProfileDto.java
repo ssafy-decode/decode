@@ -14,5 +14,6 @@ import lombok.NoArgsConstructor;
 public class BoardProfileDto {
 
     private String title;
+    private String content;
     private Long questionId;
 }
