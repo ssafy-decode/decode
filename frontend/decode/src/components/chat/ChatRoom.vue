@@ -66,7 +66,8 @@ export default {
     room: Object,
   },
   setup(props, { emit }) {
-    const APPLICATION_SERVER_URL = 'http://localhost:7777/decode/openvidu';
+const APPLICATION_SERVER_URL = 'https://i10a507.p.ssafy.io/decode/openvidu';
+    // const APPLICATION_SERVER_URL = 'http://localhost:7777/decode/openvidu';
     const OV = ref(undefined);
     const session = ref(undefined);
     const publisher = ref(undefined);

@@ -39,8 +39,8 @@ import { useSessionStore } from '@/stores/sessionStore';
 import { useMessageStore } from '@/stores/messageStore';
 import { useUserStore } from '@/stores/userStore';
   import { storeToRefs } from 'pinia';
-// const APPLICATION_SERVER_URL = 'https://i10a507.p.ssafy.io/decode/openvidu';
-const APPLICATION_SERVER_URL = 'http://localhost:7777/decode/openvidu';
+const APPLICATION_SERVER_URL = 'https://i10a507.p.ssafy.io/decode/openvidu';
+// const APPLICATION_SERVER_URL = 'http://localhost:7777/decode/openvidu';
 export default {
   props: {
     dialog: Boolean,
