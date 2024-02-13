@@ -9,6 +9,7 @@ export const useQuestionStore = defineStore(
     const questions = ref([]);
     const gptTitles = ref('');
     const gptTagIds = ref([]);
+    const originalContent = ref('');
 
     const items = {
       python: 1,
@@ -64,6 +65,7 @@ export const useQuestionStore = defineStore(
       questions,
       gptTitles,
       gptTagIds,
+      originalContent,
       items,
       reverseItems,
       getQuestions,
