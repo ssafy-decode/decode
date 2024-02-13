@@ -40,7 +40,7 @@ public class ChatRoomController {
         return ResponseDto.builder().data(roomId).build();
     }
 
-    @PutMapping("/room/{roomId}/sub")
+    @PostMapping("/room/{roomId}/sub")
     public ResponseDto subRoom(@PathVariable Long roomId, Authentication authentication)
             throws BadRequestException {
         Long userId = (Long) authentication.getPrincipal();
