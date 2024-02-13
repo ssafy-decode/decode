@@ -71,7 +71,12 @@ export const useAnswerStore = defineStore('answer', () => {
       .then((res) => {
         gptAnswer.value = '이 답변은 gpt 4.0에 의해 생성된 답변입니다.\n\n' + res.data.data.answer;
         createGptAnswer(questionId);
-        alert('답변 목록에 GPT 답변이 추가되었습니다.\n새로고침으로 GPT가 생성한 답변을 확인해보세요!');
+        // alert('답변 목록에 GPT 답변이 추가되었습니다.\n새로고침으로 GPT가 생성한 답변을 확인해보세요!');
+        if (confirm('답변 목록에 GPT 답변이 추가되었습니다.\n지금 바로 답변을 확인해보세요!')) {
+          router.push({ name: 'question-detail', params: { id: questionId } });
+        } else {
+          router.push({ name: 'question-detail', params: { id: questionId } });
+        }
       })
       .catch((err) => {
         console.log('GPT 답변 생성 실패');
