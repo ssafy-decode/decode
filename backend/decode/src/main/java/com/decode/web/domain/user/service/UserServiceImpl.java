@@ -1,6 +1,5 @@
 package com.decode.web.domain.user.service;
 
-import com.decode.web.domain.user.enums.Tier;
 import com.decode.web.domain.common.redis.RedisService;
 import com.decode.web.domain.tag.repository.UserTagRepository;
 import com.decode.web.domain.user.dto.FindPasswordDto;
@@ -8,6 +7,7 @@ import com.decode.web.domain.user.dto.RankResponseDto;
 import com.decode.web.domain.user.dto.RequestUserTagDto;
 import com.decode.web.domain.user.dto.ResponseUserProfileDto;
 import com.decode.web.domain.user.dto.UserRankInfoDto;
+import com.decode.web.domain.user.enums.Tier;
 import com.decode.web.domain.user.mapper.ResponseUserProfileMapper;
 import com.decode.web.domain.user.repository.UserInfoRepository;
 import com.decode.web.domain.user.repository.UserProfileRepository;

@@ -2,8 +2,6 @@ package com.decode.web.domain.board.controller;
 
 import com.decode.web.domain.board.dto.BookmarkDto;
 import com.decode.web.domain.board.dto.ResponseQuestionListDto;
-import com.decode.web.domain.board.repository.QuestionELKRepository;
-import com.decode.web.domain.board.repository.QuestionRepository;
 import com.decode.web.domain.board.service.BookmarkService;
 import com.decode.web.global.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;

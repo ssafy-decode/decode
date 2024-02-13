@@ -24,9 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class SessionController {
 
-    OpenVidu openVidu;
     private final String OPENVIDU_URL;
     private final String SECRET;
+    OpenVidu openVidu;
 
     @Autowired
     public SessionController(@Value("${openvidu.secret}") String secret,

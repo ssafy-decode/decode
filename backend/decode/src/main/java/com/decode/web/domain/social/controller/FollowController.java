@@ -1,7 +1,6 @@
 package com.decode.web.domain.social.controller;
 
 import com.decode.web.domain.social.service.SocialService;
-import com.decode.web.domain.user.mapper.UserProfileMapper;
 import com.decode.web.global.ResponseDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

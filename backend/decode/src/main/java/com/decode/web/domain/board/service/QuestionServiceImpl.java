@@ -109,7 +109,8 @@ public class QuestionServiceImpl implements QuestionService {
         LocalDateTime updateTime = questionEntity.getUpdatedTime();
 
         return new ResponseQuestionDto(questionId, title, content, writerDto, questionTagDtoList,
-                answerList, meTooCnt, createdTime, updateTime, questionEntity.getBookmarks().size());
+                answerList, meTooCnt, createdTime, updateTime,
+                questionEntity.getBookmarks().size());
     }
 
     @Override

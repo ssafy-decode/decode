@@ -1,9 +1,5 @@
 package com.decode.web.domain.chat.dto;
 
-import com.decode.web.entity.ChatRoomEntity;
-import com.decode.web.entity.UserProfileEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,6 +15,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class ChatResponseDto {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
