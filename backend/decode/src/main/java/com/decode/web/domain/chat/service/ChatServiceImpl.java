@@ -69,10 +69,10 @@ public class ChatServiceImpl implements ChatService {
                 throw new RuntimeException(e);
             }
             redisTemplate.opsForList()
-                    .rightPush(String.valueOf(message.getRoomId()), chatResponseDtoJson);
+                    .rightPush("CR:" + String.valueOf(message.getRoomId()), chatResponseDtoJson);
 
             // 3. expire 을 이용해서, Key 를 만료시킬 수 있음
-            redisTemplate.expire(String.valueOf(message.getRoomId()), 5, TimeUnit.MINUTES);
+            redisTemplate.expire("CR:" + String.valueOf(message.getRoomId()), 5, TimeUnit.MINUTES);
         } else {
             log.error("UserProfileEntity or ChatRoomEntity not found");
         }
@@ -85,7 +85,7 @@ public class ChatServiceImpl implements ChatService {
         List<ChatResponseDto> messageList = new ArrayList<>();
 
         // RedisTemplate을 통해 리스트의 전체 범위를 조회
-        List<Object> rawMessages = redisTemplate.opsForList().range(String.valueOf(roomId), 0, 99);
+        List<Object> rawMessages = redisTemplate.opsForList().range("CR:"+String.valueOf(roomId), 0, 99);
         log.debug("apic rawMessage : {}", rawMessages);
 
         // 4. Redis 에서 가져온 메시지가 없다면, DB 에서 메시지 100개 가져오기
@@ -106,11 +106,12 @@ public class ChatServiceImpl implements ChatService {
                 } catch (JsonProcessingException e) {
                     throw new RuntimeException(e);
                 }
-                redisTemplate.opsForList().rightPush(String.valueOf(ce.getChatRoomEntity().getId()),
-                        chatResponseDtoJson);
+                redisTemplate.opsForList()
+                        .rightPush("CR:" + String.valueOf(ce.getChatRoomEntity().getId()),
+                                chatResponseDtoJson);
 
                 // 3. expire 을 이용해서, Key 를 만료시킬 수 있음
-                redisTemplate.expire(String.valueOf(ce.getId()), 5, TimeUnit.MINUTES);
+                redisTemplate.expire("CR:" + String.valueOf(ce.getId()), 5, TimeUnit.MINUTES);
                 // messageList에 데이터 추가
                 // ChatResponseDto 리스트에 추가
                 messageList.add(chatResponseDto);
