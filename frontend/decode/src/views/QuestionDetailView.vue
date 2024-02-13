@@ -30,9 +30,10 @@
       <v-row>
         <v-col :cols="12">
           <QuestionViewer :initialValue="question.content" />
-          <!-- <div class="tagList">
-            {{ question.tagList }}
-          </div> -->
+          <div class="tagList">
+            <span>&lt;질문 태그&gt;</span>
+            <div v-for="(tag, index) in numToStr" :key="index"># {{ tag }} - {{ versions[index] }}</div>
+          </div>
         </v-col>
       </v-row>
       <br /><br />
@@ -42,6 +43,9 @@
           <v-btn v-if="questionWriterId === userStore.loginUserId" @click="deleteQuestion()">질문삭제</v-btn>
         </div>
         <div>
+          <v-btn>나도 궁금해요</v-btn>
+          <v-btn v-if="isBookmarked" @click="deleteBookmark(questionId)">북마크 취소</v-btn>
+          <v-btn v-else @click="addBookmark(userStore.loginUserId, questionId)">북마크</v-btn>
           <v-btn @click="goCreateAnswer()">답변달기</v-btn>
         </div>
       </div>
@@ -56,16 +60,21 @@
 
 <script setup>
 import axios from '@/utils/common-axios';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
+import { useQuestionStore } from '@/stores/questionStore';
 import { useAnswerStore } from '@/stores/answerStore';
 import { useUserStore } from '@/stores/userStore';
+import { useBookmarkStore } from '@/stores/bookmarkStore';
 import { useRoute, useRouter } from 'vue-router';
 import AnswerList from '@/components/answer/AnswerList.vue';
 import QuestionViewer from '@/components/common/QuestionViewer.vue';
 import profileRouter from '@/components/common/profileRouter.vue';
+import { storeToRefs } from 'pinia';
 
+const questionStore = useQuestionStore();
 const answerStore = useAnswerStore();
 const userStore = useUserStore();
+
 const router = useRouter();
 const route = useRoute();
 
@@ -75,6 +84,9 @@ const writerNickname = ref('');
 const questionWriterId = ref(null);
 const isAnswerExist = ref(false);
 const questionCreatedTime = ref('');
+
+const numToStr = ref([]);
+const versions = ref([]);
 
 const getDetailQuestion = function () {
   axios({
@@ -88,12 +100,25 @@ const getDetailQuestion = function () {
       writerNickname.value = question.value.questionWriter.nickname;
       questionWriterId.value = question.value.questionWriter.id;
       questionCreatedTime.value = question.value.createdTime;
+      question.value.tagList.forEach((item) => {
+        numToStr.value.push(questionStore.reverseItems[item.tagId]);
+        versions.value.push(item.version);
+      });
     })
     .catch((err) => {
       console.log(err);
       console.log('상세 질문 조회 오류');
     });
 };
+
+const bookmarkStore = useBookmarkStore();
+const { setBookmarkList, addBookmark, deleteBookmark } = bookmarkStore;
+const { handleBookmarkList: bookmarkList, handleBookmarkState: isBookmarked } = storeToRefs(bookmarkStore);
+
+onMounted(() => {
+  getDetailQuestion();
+  setBookmarkList(route.params.id, userStore.loginUserId);
+});
 
 const deleteQuestion = function () {
   if (confirm('질문을 삭제하시겠습니까?')) {
@@ -126,10 +151,6 @@ const goCreateAnswer = function () {
   answerStore.questionId = questionId.value;
   router.push({ path: `/answer-create` });
 };
-
-onMounted(() => {
-  getDetailQuestion();
-});
 </script>
 
 <style scoped>
@@ -203,5 +224,8 @@ button {
 
 .tagList {
   margin-top: 40px;
+  color: #575757;
+  font-size: small;
+  font-weight: 600;
 }
 </style>

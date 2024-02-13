@@ -23,9 +23,19 @@
     </v-col>
     <v-col :cols="3">
       <div class="myListItem2">
-        <img class="img" src="./answerIcon.png" aslt="답변 아이콘" />
-        <p>답변: {{ question.answerCnt }}</p>
-        <p>나도궁금: {{ question.meTooCnt }}</p>
+        <!-- <img class="img" src="./answerIcon.png" alt="답변 아이콘" /> -->
+        <div class="cntBox">
+          <div>답변</div>
+          <div>{{ question.answerCnt }}</div>
+        </div>
+        <div class="cntBox">
+          <div>북마크</div>
+          <div>{{ question.bookmarkCnt }}</div>
+        </div>
+        <div class="cntBox">
+          <div>나도궁금</div>
+          <div>{{ question.meTooCnt }}</div>
+        </div>
       </div>
     </v-col>
   </v-row>
@@ -59,7 +69,7 @@ defineProps({
   background-color: white;
   border-radius: 35px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
 }
 
@@ -91,5 +101,11 @@ defineProps({
 
 .time {
   color: #d9d9d9;
+}
+
+.cntBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 </style>
