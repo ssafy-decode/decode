@@ -15,6 +15,8 @@ import com.decode.web.domain.board.repository.AnswerRepository;
 import com.decode.web.domain.board.repository.QuestionELKRepository;
 import com.decode.web.domain.board.repository.QuestionRepository;
 import com.decode.web.domain.board.repository.RecommendRepository;
+import com.decode.web.domain.mail.dto.MailDto;
+import com.decode.web.domain.mail.service.MailService;
 import com.decode.web.domain.user.dto.ResponseUserProfileDto;
 import com.decode.web.domain.user.enums.Point;
 import com.decode.web.domain.user.mapper.ResponseUserProfileMapper;
@@ -49,6 +51,7 @@ public class AnswerServiceImpl implements AnswerService {
     private final AnswerJpaRepository answerJpaRepository;
     private final QuestionELKRepository questionELKRepository;
     private final PointService pointService;
+    private final MailService mailService;
 
     @Override
     public Long save(CreateAnswerDto createAnswerDto) {
@@ -204,5 +207,21 @@ public class AnswerServiceImpl implements AnswerService {
         return AnswerCountResponseDto.builder()
                 .selectedCnt(selectedCnt)
                 .build();
+    }
+
+    @Override
+    public void sendEmailToSubscriber(Long answerId) {
+        answerRepository.findById(answerId)
+                .get()
+                .getQuestion()
+                .getMetoos()
+                .stream()
+                .map(e -> MailDto.builder()
+                        .message("나도 궁금해요! 답변이 등록되었습니다.")
+                        .to(e.getUserProfile().getUserInfoEntity().getEmail())
+                        .title("답변이 등록되었습니다.")
+                        .build())
+                .collect(Collectors.toList())
+                .forEach(mailService::sendMail);
     }
 }
