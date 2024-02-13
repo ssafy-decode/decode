@@ -222,6 +222,9 @@ export default {
       if (stompStore.subscriptions[props.room.id]) {
         console.log(stompStore.subscriptions[props.room.id]);
         stompStore.subscriptions[props.room.id].unsubscribe();
+      }
+      console.log(session.value)
+      if (session.value) {
         sessionStore.exitSession(rsId.value);
       }
     });

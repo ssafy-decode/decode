@@ -24,6 +24,7 @@ export default {
     const stompStore =  useStompStore();
     const selectRoom = (room) => {
       stompStore.subscribeRoom(room.id);
+      console.log(room)
       context.emit('selectRoom', room);
     }
 
