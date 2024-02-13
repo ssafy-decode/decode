@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar color="transparent">
+  <v-toolbar>
     <router-link to="/">
       <v-btn>
         <span style="display: flex; justify-content: space-between">
@@ -18,11 +18,11 @@
       </v-btn>
     </router-link>
 
-    <router-link to="/shop">
+    <!-- <router-link to="/shop">
       <v-btn v-show="userStore.isLoggedIn">
         <v-toolbar-items class="font-weight-bold">상점</v-toolbar-items>
       </v-btn>
-    </router-link>
+    </router-link> -->
 
     <router-link to="/rank">
       <v-btn v-show="userStore.isLoggedIn">

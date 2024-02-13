@@ -25,7 +25,6 @@ import FoundEmail from '@/components/user/FoundEmail.vue';
 import FoundPwd from '@/components/user/FoundPwd.vue';
 import MyProfileUpdateCheckPwd from '@/components/profile/MyProfileUpdateCheckPwd.vue';
 import MyProfileUpdate from '@/components/profile/MyProfileUpdate.vue';
-import MyTagUpdate from '@/components/profile/MyTagUpdate.vue';
 import QuestionUpdate from '@/components/question/QuestionUpdate.vue';
 
 // stores
@@ -140,12 +139,7 @@ const router = createRouter({
       component: MyProfileUpdateCheckPwd,
     },
     {
-      path: '/updatetechstack',
-      name: 'mytagupdate',
-      component: MyTagUpdate,
-    },
-    {
-      path: '/updatepwd',
+      path: '/updateprofile',
       name: 'myprofileupdate',
       component: MyProfileUpdate,
     },
@@ -157,25 +151,35 @@ const router = createRouter({
   ],
 });
 
-// 로그인 없이 직접 URL 작성으로 접근할 때를 방지
-// (메인페이지, 로그인페이지, 깃허브인증페이지, 아이디찾기페이지, 비번찾기페이지, 회원가입페이지, 질문게시판목록페이지는 허용)
+// 라우터 가드 설정
 router.beforeEach((to, from, next) => {
   const userStore = useUserStore();
-  const accessRoutes = [
-    'mainview',
-    'login',
-    'authenticationloading',
-    'findemail',
-    'findpwd',
-    'userregist',
-    'questionview',
-    'oauth2redirect',
-  ];
-  if (accessRoutes.includes(to.name) || userStore.isLoggedIn) {
-    next();
+  // 회원가입 1단계 완료 여부 확인
+  if (to.name === 'techstack' && !userStore.registId) {
+    alert('먼저 회원 가입 1단계를 완료해주세요.');
+    next({ name: 'userregist' }); // 1단계로 리다이렉트
   } else {
-    alert('로그인이 필요합니다.');
-    next('/login'); // 리다이렉트
+    const accessRoutes = [
+      // 로그인 없이도 접근 가능한 URL
+      'mainview',
+      'login',
+      'authenticationloading',
+      'findemail',
+      'foundemail',
+      'findpwd',
+      'foundpwd',
+      'userregist',
+      'techstack',
+      'questionview',
+      'oauth2redirect',
+    ];
+    if (accessRoutes.includes(to.name) || userStore.isLoggedIn) {
+      // 로그인 없이 직접 URL 작성으로 접근할 때를 방지
+      next();
+    } else {
+      alert('로그인이 필요합니다.');
+      next('/login'); // 로그인 창으로 리다이렉트
+    }
   }
 });
 

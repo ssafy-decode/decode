@@ -1,31 +1,7 @@
 <template>
   <div class="chat-component">
-    <CreateRoomDialog :dialog="dialog" @close="dialog = false" @create-room="addRoom" />
-
-    <CreateRoomButton @open="dialog = true" />
-
     <div id="app">
-      <v-text-field
-        v-if="!selectedRoom"
-        v-model="roomname"
-        placeholder="채팅방을 검색하세요."
-        append-inner-icon="mdi-magnify"
-        @click:append="nickNameSearch"
-        variant="underlined"
-      >
-        <template v-slot:append>
-          <!-- 텍스트 필드 내에 버튼 추가 -->
-          <v-btn
-            v-if="!selectedRoom"
-            density="compact"
-            icon="mdi-plus"
-            @click="dialog = true"
-            class="custom-icon-btn"
-          ></v-btn>
-        </template>
-      </v-text-field>
-
-      <room-list v-if="!selectedRoom" :rooms="roomList" @selectRoom="selectRoom" ></room-list>
+      <my-room-list v-if="!selectedRoom" :rooms="roomList" @selectRoom="selectRoom" ></my-room-list>
       <chat-room v-else :room="selectedRoom" :messages="messages" @goBack="goBack"></chat-room>
     </div>
   </div>
@@ -34,7 +10,7 @@
 <script>
 import { ref, onMounted } from 'vue';
 import CreateRoomDialog from './CreateRoomDialog.vue';
-import RoomList from './RoomList.vue';
+import MyRoomList from './MyRoomList.vue';
 import ChatRoom from './ChatRoom.vue';
 import { useChatStore } from '@/stores/chatStore.js';
 export default {
@@ -45,7 +21,7 @@ export default {
   // },
   components: {
     CreateRoomDialog,
-    RoomList,
+    MyRoomList,
     ChatRoom,
   },
   setup(props) {
@@ -72,12 +48,6 @@ export default {
       selectedRoom.value = null;
     };
 
-    const addRoom = (room) => {
-      console.log(room)
-      roomList.value.push({ roomId: room.roomId, roomName: room.roomName, roomDescription: room.roomDescription });
-      console.log(roomList)
-    };
-
     const selectRoom = async (room) => {
       console.log('selected room', room.id);
       selectedRoom.value = room;
@@ -89,7 +59,6 @@ export default {
       selectedRoom,
       messages,
       goBack,
-      addRoom,
       selectRoom,
     };
   },
@@ -97,12 +66,7 @@ export default {
 </script>
 
 <style scoped>
-.custom-icon-btn {
-  margin-top: -5px;
-  margin-left: -5px; /* 원하는 만큼 왼쪽으로 이동 */
-  font-size: 18px; /* 아이콘 크기 조정 */
-  color: #34a080; /* 아이콘 버튼의 색상 */
-}
+
 
 .chat-component {
   display: flex;

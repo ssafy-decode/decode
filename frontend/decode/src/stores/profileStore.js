@@ -4,7 +4,6 @@ import router from '@/router';
 import axios from '@/utils/common-axios';
 import { useUserStore } from './userStore';
 import { useTagStore } from './tagStore';
-import { storeToRefs } from 'pinia';
 
 const useProfileStore = defineStore(
   'useProfileStore',
@@ -12,11 +11,10 @@ const useProfileStore = defineStore(
     // 스토어
     const userStore = useUserStore();
     const tagStore = useTagStore();
-    const { handleAccessToken } = storeToRefs(userStore);
 
     // 배열
-
-    const profile = ref({}); // 로그인 유저가 아닌 다른 유저 프로필 data 저장 목록
+    const profile = ref([]); // 로그인 유저가 아닌 다른 유저 프로필 data 저장 목록
+    const selectedTags = ref([]); // 수정한 기술 태그 목록
     const qList = ref([]); // 질문 목록
     const aList = ref([]); // 답변이 작성된 질문 목록
     const rankList = ref([]); // 경험치순 모든 유저 목록 조회
@@ -24,6 +22,7 @@ const useProfileStore = defineStore(
     // 개수
     const qListLength = ref(0); // 질문 목록 총 개수
     const aListLength = ref(0); // 답변 목록 총 개수
+    const selectedCount = ref(0); // 답변 채택 총 개수
 
     // T/F
     const mypwd = ref(false); // 회원 정보 수정 전 비번 확인 일치 여부 T/F
@@ -53,7 +52,7 @@ const useProfileStore = defineStore(
 
     // 해당 유저 프로필에서 그 사람이 작성한 답변이 들어 있는 질문 목록 조회
     const setAList = async (userid) => {
-      await axios.get(`/question/list/${userid}`).then((res) => {
+      await axios.get(`/answer/list/${userid}`).then((res) => {
         userStore.accessToken = userStore.parseToken(res);
         if (res.data.status === 'OK') {
           aList.value = res.data.data.list;
@@ -63,11 +62,12 @@ const useProfileStore = defineStore(
     };
 
     // 회원 수정 전 비밀번호 확인
-    const checkPwd = async (password) => {
+    const checkPwd = async (password, token) => {
+      console.log(token);
       await axios
         .post(`/confirm`, password, {
           headers: {
-            Authorization: `Bearer ${handleAccessToken.value}`,
+            Authorization: `Bearer ${token}`,
           },
         })
         .then((res) => {
@@ -76,11 +76,13 @@ const useProfileStore = defineStore(
             mypwd.value = res.data.data;
             if (mypwd.value) {
               router.push({ name: 'myprofileupdate' });
-            } else {
-              alert('비밀번호가 일치하지 않습니다.');
-              return;
             }
           }
+        })
+        .catch((error) => {
+          alert('비밀번호가 일치하지 않습니다.');
+          console.error(error);
+          return;
         });
     };
 
@@ -99,51 +101,66 @@ const useProfileStore = defineStore(
     };
 
     // 로그인 유저 선택한 기술 스택 변경
-    const updateTechStack = async (user) => {
+    const updateTechStack = async (user, token) => {
       const updatedTagNums = user.tagIdList.map((item) => tagStore.tagNum[item]);
       await axios
-        .patch(`/updateUserTag`, user, {
-          headers: {
-            Authorization: `Bearer ${userStore.accessToken}`,
+        .patch(
+          `/updateUserTag`,
+          { userId: user.userId, tagIdList: updatedTagNums },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        })
+        )
         .then((res) => {
           userStore.accessToken = userStore.parseToken(res);
           if (res.data.status === 'OK') {
-            tagStore.tagIdList = updatedTagNums;
+            tagStore.setTagNumList(user.userId);
+            selectedTags.value = tagStore.tagIdList.value;
           }
         });
     };
 
     // 로그인 유저 비밀번호 변경
-    const updatePwd = async (user) => {
+    const updatePwd = async (user, token) => {
       await axios
         .post(`/user`, user, {
           headers: {
-            Authorization: `Bearer ${userStore.accessToken}`,
+            Authorization: `Bearer ${token}`,
           },
         })
         .then((res) => {
           userStore.accessToken = userStore.parseToken(res);
           if (res.data.status === 'OK') {
-            router.push({ name: 'myprofile' });
+            alert('비밀번호가 변경되었습니다.');
+            return;
           }
         });
     };
 
+    // 해당 유저 답변 채택 수 가져오기
+    const getSelectCnt = async (userid) => {
+      await axios.get(`/answer/count/${userid}`).then((res) => {
+        userStore.accessToken = userStore.parseToken(res);
+        if (res.data.status === 'OK') {
+          selectedCount.value = res.data.data.selectedCnt;
+        }
+      });
+    };
+
     // computed
-    // const handleMyProfile = computed(() => loginUserProfile.value);
     const handleUserProfile = computed(() => profile.value);
     const handleQuestions = computed(() => qList.value);
     const handleAnswers = computed(() => aList.value);
+    const handleSelectCnt = computed(() => selectedCount.value);
     const handleQuestionsNumber = computed(() => qListLength.value);
     const handleAnswersNumber = computed(() => aListLength.value);
     const handleProfileImg = computed(() => userProfileImgURL.value);
+    const handleSelectedTags = computed(() => selectedTags.value);
 
     // 반환
     return {
-      // loginUserProfile,
-      // userProfile,
       qList,
       aList,
       rankList,
@@ -151,6 +168,8 @@ const useProfileStore = defineStore(
       aListLength,
       mypwd,
       userProfileImgURL,
+      selectedCount,
+      selectedTags,
       setUserProfile,
       setQList,
       setAList,
@@ -158,13 +177,15 @@ const useProfileStore = defineStore(
       updateProfileImg,
       updateTechStack,
       updatePwd,
-      // handleMyProfile,
+      getSelectCnt,
       handleUserProfile,
       handleQuestions,
       handleAnswers,
       handleQuestionsNumber,
       handleAnswersNumber,
       handleProfileImg,
+      handleSelectCnt,
+      handleSelectedTags,
     };
   },
   {

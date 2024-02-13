@@ -8,7 +8,7 @@
       <v-card
         class="mx-auto px-4 py-8"
         max-width="418"
-        style="background-color: #f3f3f3; border-radius: 31px; border: 15px solid #d9d9d9"
+        style="box-shadow: none; background-color: #f3f3f3; border-radius: 31px; border: 15px solid #d9d9d9"
       >
         <h3 style="color: #575757; font-size: 25px">비밀번호를 입력해주세요</h3>
         <br />
@@ -22,7 +22,9 @@
             :type="showPassword ? 'text' : 'password'"
             label="비밀번호 확인"
             append-inner
+            @keyup.enter="confirmpwd"
           >
+            <!-- 마우스 클릭 말고도 엔터키를 누르는 것으로도 비번 확인이 작동되도록 수정 -->
             <template #append-inner>
               <v-icon @click="toggleEye" style="margin-right: 5px">{{
                 showPassword ? 'mdi-eye' : 'mdi-eye-off'
@@ -54,8 +56,14 @@
 <script setup>
 import { ref } from 'vue';
 import { useUserStore } from '@/stores/userStore';
+import { useProfileStore } from '@/stores/profileStore';
+import { storeToRefs } from 'pinia';
 
 const userStore = useUserStore();
+const profileStore = useProfileStore();
+
+const { checkPwd } = profileStore;
+const { handleAccessToken: accessToken } = storeToRefs(userStore);
 
 const password = ref('');
 const showPassword = ref(false);
@@ -73,7 +81,7 @@ const confirmpwd = () => {
   const confirmuserpwd = {
     password: password.value,
   };
-  userStore.checkPwd(confirmuserpwd);
+  checkPwd(confirmuserpwd, accessToken.value);
 };
 </script>
 

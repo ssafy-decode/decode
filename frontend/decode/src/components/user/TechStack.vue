@@ -115,10 +115,8 @@ const checkboxIcon = (item) => {
 const complete = async () => {
   try {
     await userStore.saveTechStack(select.value);
-    alert('회원가입이 완료되었습니다.\nde;code에 오신 것을 환영합니다!');
   } catch (error) {
     console.error('Error saving tech stack:', error);
-    alert('회원가입이 완료되었지만, 기술 스택 저장에 문제가 발생했습니다.');
   }
 };
 
