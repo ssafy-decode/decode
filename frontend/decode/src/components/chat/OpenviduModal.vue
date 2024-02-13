@@ -25,7 +25,7 @@
             <!-- 음소거일 때 -->
           </v-btn>
           <v-btn color="#34A080" @click="toggleScreenSharing" title="화면 공유">
-            <font-awesome-icon v-if="publisher.value" :icon="['fas', 'desktop']" />
+            <font-awesome-icon :icon="['fas', 'desktop']" />
           </v-btn>
           <v-btn color="#34A080" @click="toggleFullScreen" title="전체 화면">
             <font-awesome-icon :icon="['fas', 'expand']" />

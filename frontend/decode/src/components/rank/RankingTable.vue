@@ -19,16 +19,17 @@
       </v-row>
       <div class="ranking-list">
         <v-data-table
+          class="ranking-table"
           :headers="headers"
           :items="rank"
           :items-per-page="10"
           :server-items-length="100"
           :sort-by.sync="sortBy"
           :sort-desc.sync="sortDesc"
-          class="ranking-table"
           :page.sync="page"
           :search="search"
           :custom-key-filter="nicknameFilter"
+          @update:page="pageUpdate"
         >
           <template v-slot:[`item.ranking`]="{ index }">
             <p style="font-weight: bold">{{ index + 1 + (page - 1) * 10 }}</p>
@@ -86,7 +87,9 @@ const search = ref('');
 function nicknameFilter(value, search, item) {
   return item.nickname.toLowerCase().includes(search.toLowerCase());
 }
-
+const pageUpdate = function (newPage) {
+  page.value = newPage;
+};
 const router = useRouter();
 
 const userDetail = function (userId) {
