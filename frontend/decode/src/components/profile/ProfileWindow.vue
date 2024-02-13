@@ -225,7 +225,6 @@ const unfollowById = (id, index) => {
 const followerTechStacks = ref({});
 const followingTechStacks = ref({});
 
-// DB에 수정된 번호를 다시 태그명으로 전환
 const tagName = {
   1: 'python',
   2: 'java',
@@ -241,7 +240,6 @@ const tagName = {
   12: 'C#',
 };
 
-// 기술 태그 배경색
 const tagBackGroundColor = (tag) => {
   switch (tag) {
     case 1:
@@ -274,7 +272,6 @@ const tagBackGroundColor = (tag) => {
   }
 };
 
-// 기술 태그 글자색
 const tagTextColor = (tag) => {
   switch (tag) {
     case 1:
@@ -307,28 +304,28 @@ const tagTextColor = (tag) => {
   }
 };
 
-onBeforeMount(() => {
-  props.followerList.forEach((follower) => {
-    getFollowerTechStacks(follower.id);
-  });
-  props.followingList.forEach((following) => {
-    getFollowingTechStacks(following.id);
-  });
-});
+// onBeforeMount(() => {
+//   props.followerList.forEach((follower) => {
+//     getFollowerTechStacks(follower.id);
+//   });
+//   props.followingList.forEach((following) => {
+//     getFollowingTechStacks(following.id);
+//   });
+// });
 
-// 팔로워/팔로잉 목록 기술 스택 목록 조회
-const getFollowerTechStacks = async (followerId) => {
-  await setTagNumList(followerId);
-  const tagIds = tagStore.tagIdList?.value || [];
-  const tagNames = tagIds.map((tagId) => tagName[tagId]);
-  followerTechStacks.value[followerId] = tagNames;
-};
-const getFollowingTechStacks = async (followingId) => {
-  await setTagNumList(followingId);
-  const tagIds = tagStore.tagIdList?.value || [];
-  const tagNames = tagIds.map((tagId) => tagName[tagId]);
-  followingTechStacks.value[followingId] = tagNames;
-};
+// // 팔로워/팔로잉 목록 기술 스택 목록 조회
+// const getFollowerTechStacks = async (followerId) => {
+//   await setTagNumList(followerId);
+//   const tagIds = tagStore.tagIdList?.value || [];
+//   const tagNames = tagIds.map((tagId) => tagName[tagId]);
+//   followerTechStacks.value[followerId] = tagNames;
+// };
+// const getFollowingTechStacks = async (followingId) => {
+//   await setTagNumList(followingId);
+//   const tagIds = tagStore.tagIdList?.value || [];
+//   const tagNames = tagIds.map((tagId) => tagName[tagId]);
+//   followingTechStacks.value[followingId] = tagNames;
+// };
 </script>
 
 <style scoped>

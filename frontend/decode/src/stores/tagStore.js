@@ -34,7 +34,6 @@ const useTagStore = defineStore(
         userStore.accessToken = userStore.parseToken(res);
         if (res.data.status === 'OK') {
           tagIdList.value = res.data.data.tagIdList;
-          console.log('변화테스트', tagIdList.value);
         }
       });
     };
