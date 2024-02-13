@@ -201,19 +201,19 @@ public class UserServiceImpl implements UserService {
         return redisService.getValuesForSet(key);
     }
 
-    @Override
-    @Transactional
-    public void setExp(Long id, int exp) {
-        LocalDate date = LocalDate.now();
-        String email = userInfoRepository.getReferenceById(id).getEmail();
-        String key = "EXP:" + email;
-        String hashKey = date.toString();
-        redisService.incrementValueForHash(key, hashKey, exp);
-        // 지금까지 경험치 총합에 += exp 해야함
-        UserProfileEntity profile = userProfileRepository.findById(id)
-                .orElseThrow(() -> new UserException("유저 정보가 없습니다."));
-        profile.setExp(profile.getExp() + exp);
-    }
+//    @Override
+//    @Transactional
+//    public void setExp(Long id, int exp) {
+//        LocalDate date = LocalDate.now();
+//        String email = userInfoRepository.getReferenceById(id).getEmail();
+//        String key = "EXP:" + email;
+//        String hashKey = date.toString();
+//        redisService.incrementValueForHash(key, hashKey, exp);
+//        // 지금까지 경험치 총합에 += exp 해야함
+//        UserProfileEntity profile = userProfileRepository.findById(id)
+//                .orElseThrow(() -> new UserException("유저 정보가 없습니다."));
+//        profile.setExp(profile.getExp() + exp);
+//    }
 
     @Override
     public Map<String, Integer> getExp(Long id) {

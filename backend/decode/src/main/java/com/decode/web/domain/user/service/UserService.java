@@ -57,7 +57,7 @@ public interface UserService {
 
     Set<String> getAttendance(Long id);
 
-    void setExp(Long id, int exp);
+//    void setExp(Long id, int exp);
 
     Map<String, Integer> getExp(Long id);
 
