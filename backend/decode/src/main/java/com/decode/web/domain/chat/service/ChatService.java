@@ -7,7 +7,7 @@ import java.util.List;
 public interface ChatService {
 
 
-    void saveChat(ChatRequestDto message);
+    Long saveChat(ChatRequestDto message);
 
     List<ChatResponseDto> loadMessage(Long roomId);
 

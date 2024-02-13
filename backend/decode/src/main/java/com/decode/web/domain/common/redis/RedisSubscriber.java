@@ -1,6 +1,6 @@
 package com.decode.web.domain.common.redis;
 
-import com.decode.web.domain.chat.dto.ChatRequestDto;
+import com.decode.web.domain.chat.dto.ChatResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,8 +34,8 @@ public class RedisSubscriber implements MessageListener {
             String publishMessage = redisTemplate.getStringSerializer()
                     .deserialize(message.getBody());
             // ChatMessage 객체로 매핑
-            ChatRequestDto roomMessage = objectMapper.readValue(publishMessage,
-                    ChatRequestDto.class);
+            ChatResponseDto roomMessage = objectMapper.readValue(publishMessage,
+                    ChatResponseDto.class);
             log.debug("roomMessage : {}", roomMessage);
 
             // WebSocket 구독자에게 채팅 메세지 Send

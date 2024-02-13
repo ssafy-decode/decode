@@ -37,13 +37,13 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     @Transactional
-    public void saveChat(ChatRequestDto message) {
+    public Long saveChat(ChatRequestDto message) {
         // DB 저장
         Optional<UserProfileEntity> userProfileOptional = userProfileRepository.findById(
                 message.getUserId());
         Optional<ChatRoomEntity> chatRoomOptional = chatRoomRepository.findById(
                 message.getRoomId());
-
+        ChatEntity ce = null;
         if (userProfileOptional.isPresent() && chatRoomOptional.isPresent()) {
             UserProfileEntity userProfile = userProfileOptional.get();
             ChatRoomEntity chatRoom = chatRoomOptional.get();
@@ -56,7 +56,7 @@ public class ChatServiceImpl implements ChatService {
             log.debug("apic ChatEntity room {}, message {}, user {}",
                     chat.getChatRoomEntity().getId(), chat.getMessage(), chat.getSender().getId());
 
-            ChatEntity ce = chatRepository.save(chat);
+            ce = chatRepository.save(chat);
 
             // 2. redis 저장
             ChatResponseDto chatResponseDto = ChatResponseDto.builder().id(ce.getId())
@@ -76,7 +76,10 @@ public class ChatServiceImpl implements ChatService {
         } else {
             log.error("UserProfileEntity or ChatRoomEntity not found");
         }
-
+        if (ce == null) {
+            return null;
+        }
+        return ce.getId();
     }
 
     // 6. 대화 조회 - Redis & DB
