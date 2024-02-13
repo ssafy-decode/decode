@@ -283,8 +283,8 @@ public class UserServiceImpl implements UserService {
                         .stream()
                         .filter(AnswerEntity::isAdopted)
                         .count())
-                .followerCount(userProfile.getFollowers().size())
-                .followCount(userProfile.getFollowings().size())
+                .followerCount(userProfile.getFollowings().size())
+                .followCount(userProfile.getFollowers().size())
                 .build();
     }
 
@@ -316,7 +316,7 @@ public class UserServiceImpl implements UserService {
                 .answerCount(userProfile.getAnswers().size()) // 답변 수 계산
                 .adoptCount((int) userProfile.getAnswers().stream().filter(AnswerEntity::isAdopted)
                         .count()) // 채택된 답변 수 계산
-                .followerCount(userProfile.getFollowers().size()) // 팔로워 수 계산
+                .followerCount(userProfile.getFollowings().size()) // 팔로워 수 계산
                 .tagIds(userProfile.getUserTags().stream().map(UserTagEntity::getTagId)
                         .collect(Collectors.toList())) // 태그 ID 리스트 가져오기
                 .build();
