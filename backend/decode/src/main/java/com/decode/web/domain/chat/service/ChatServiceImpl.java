@@ -59,14 +59,17 @@ public class ChatServiceImpl implements ChatService {
             ChatEntity ce = chatRepository.save(chat);
 
             // 2. redis 저장
-            ChatResponseDto chatResponseDto = ChatResponseDto.builder().id(ce.getId()).createAt(ce.getCreatedTime().toString()).nickName(ce.getSender().getNickname()).text(ce.getMessage()).userId(ce.getSender().getId()).build();
+            ChatResponseDto chatResponseDto = ChatResponseDto.builder().id(ce.getId())
+                    .createAt(ce.getCreatedTime().toString()).nickName(ce.getSender().getNickname())
+                    .text(ce.getMessage()).userId(ce.getSender().getId()).build();
             String chatResponseDtoJson;
             try {
                 chatResponseDtoJson = objectMapper.writeValueAsString(chatResponseDto);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
-            redisTemplate.opsForList().rightPush(String.valueOf(message.getRoomId()), chatResponseDtoJson);
+            redisTemplate.opsForList()
+                    .rightPush(String.valueOf(message.getRoomId()), chatResponseDtoJson);
 
             // 3. expire 을 이용해서, Key 를 만료시킬 수 있음
             redisTemplate.expire(String.valueOf(message.getRoomId()), 5, TimeUnit.MINUTES);
@@ -93,14 +96,18 @@ public class ChatServiceImpl implements ChatService {
 
             for (ChatEntity ce : chatList) {
                 // 2. redis 저장
-                ChatResponseDto chatResponseDto = ChatResponseDto.builder().id(ce.getId()).createAt(ce.getCreatedTime().toString()).nickName(ce.getSender().getNickname()).text(ce.getMessage()).userId(ce.getSender().getId()).build();
+                ChatResponseDto chatResponseDto = ChatResponseDto.builder().id(ce.getId())
+                        .createAt(ce.getCreatedTime().toString())
+                        .nickName(ce.getSender().getNickname()).text(ce.getMessage())
+                        .userId(ce.getSender().getId()).build();
                 String chatResponseDtoJson;
                 try {
                     chatResponseDtoJson = objectMapper.writeValueAsString(chatResponseDto);
                 } catch (JsonProcessingException e) {
                     throw new RuntimeException(e);
                 }
-                redisTemplate.opsForList().rightPush(String.valueOf(ce.getChatRoomEntity().getId()), chatResponseDtoJson);
+                redisTemplate.opsForList().rightPush(String.valueOf(ce.getChatRoomEntity().getId()),
+                        chatResponseDtoJson);
 
                 // 3. expire 을 이용해서, Key 를 만료시킬 수 있음
                 redisTemplate.expire(String.valueOf(ce.getId()), 5, TimeUnit.MINUTES);

@@ -2,7 +2,6 @@ package com.decode.web.domain.board.service;
 
 import com.decode.web.domain.board.dto.MetooDto;
 import com.decode.web.domain.board.dto.MetooQuestionDto;
-import com.decode.web.domain.board.dto.QuestionDocument;
 import com.decode.web.domain.board.repository.MetooRepository;
 import com.decode.web.domain.board.repository.QuestionELKRepository;
 import com.decode.web.domain.board.repository.QuestionRepository;

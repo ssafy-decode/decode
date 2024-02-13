@@ -35,10 +35,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ChatRoomServiceImpl implements ChatRoomService {
 
-    // redis topic 정보. 서버별로 채팅방에 매치되는 topic info -> Map 넣어 roomId로 찾을수 있도록 한다.
-    private Map<String, ChannelTopic> topics;
-    private HashOperations<String, String, ChatRoomEntity> opsHashChatRoom;
-
     // Topic 발행되는 메시지를 처리할 Listener
     private final RedisMessageListenerContainer redisMessageListener;
     // 구독 처리 서비스
@@ -51,6 +47,9 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     @Qualifier(value = "chatRedisTemplate")
     private final RedisTemplate<String, Object> redisTemplate;
     private final ChatRoomMapper chatRoomMapper;
+    // redis topic 정보. 서버별로 채팅방에 매치되는 topic info -> Map 넣어 roomId로 찾을수 있도록 한다.
+    private Map<String, ChannelTopic> topics;
+    private HashOperations<String, String, ChatRoomEntity> opsHashChatRoom;
 
     // redis HASH 데이터 다루기
     @PostConstruct

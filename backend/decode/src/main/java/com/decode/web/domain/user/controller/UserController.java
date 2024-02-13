@@ -2,7 +2,6 @@ package com.decode.web.domain.user.controller;
 
 import com.decode.web.domain.mail.dto.MailDto;
 import com.decode.web.domain.mail.service.MailService;
-import com.decode.web.domain.user.enums.Point;
 import com.decode.web.domain.user.dto.AuthDto.LoginDto;
 import com.decode.web.domain.user.dto.AuthDto.TokenDto;
 import com.decode.web.domain.user.dto.FindEmailDto;
@@ -15,6 +14,7 @@ import com.decode.web.domain.user.dto.UserInfoDto;
 import com.decode.web.domain.user.dto.UserProfileDto;
 import com.decode.web.domain.user.dto.UserRankInfoDto;
 import com.decode.web.domain.user.dto.UserRegistDto;
+import com.decode.web.domain.user.enums.Point;
 import com.decode.web.domain.user.mapper.UserMapper;
 import com.decode.web.domain.user.mapper.UserProfileMapper;
 import com.decode.web.domain.user.service.AuthService;
