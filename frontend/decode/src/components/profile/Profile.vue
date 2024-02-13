@@ -261,7 +261,6 @@ const toggleEdit = () => {
         selectedTags.value.push(index + 1);
       }
     });
-    console.log(selectedTags.value);
     const user = {
       userId: userStore.loginUserId,
       tagIdList: selectedTags.value,
