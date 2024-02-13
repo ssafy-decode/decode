@@ -66,6 +66,7 @@ export default {
     });
 
     const goBack = () => {
+      console.log("123")
       selectedRoom.value = null;
     };
 
