@@ -13,12 +13,15 @@ import com.decode.web.entity.ChatRoomEntity;
 import com.decode.web.entity.ChatSubRoomEntity;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.HashOperations;
@@ -125,11 +128,24 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     public List<ChatRoomResponseDto> findAll() {
         List<ChatRoomEntity> chatRoomList = chatRoomRepository.findAll();
         List<ChatRoomResponseDto> chatRoomResponseDtoList = new ArrayList<>();
-        for (ChatRoomEntity cr : chatRoomList){
-            chatRoomResponseDtoList.add(ChatRoomResponseDto.builder().id(cr.getId()).roomDescription(cr.getRoomDescription()).roomName(cr.getRoomName()).creator(cr.getCreator()).build());
+        for (ChatRoomEntity cr : chatRoomList) {
+            chatRoomResponseDtoList.add(ChatRoomResponseDto.builder().id(cr.getId())
+                    .roomDescription(cr.getRoomDescription()).roomName(cr.getRoomName())
+                    .creator(cr.getCreator()).build());
         }
         return chatRoomResponseDtoList;
     }
 
-
+    @Override
+    @Transactional
+    public void subRoom(Long userId, Long roomId) throws BadRequestException {
+        Optional<ChatRoomEntity> chatRoom = chatRoomRepository.findById(roomId);
+        if (chatRoom.isEmpty()) {
+            throw new BadRequestException("채팅방이 존재하지 않습니다.");
+        }
+        ChatSubRoomEntity chatSubRoom = new ChatSubRoomEntity();
+        chatSubRoom.setUserId(userId);
+        chatSubRoom.setChatRoomEntity(chatRoom.get());
+        chatSubRoomRepository.save(chatSubRoom);
+    }
 }

@@ -5,14 +5,14 @@ import com.decode.web.domain.chat.dto.ChatRoomRequestDto;
 import com.decode.web.domain.chat.dto.ChatRoomResponseDto;
 import com.decode.web.domain.chat.service.ChatRoomService;
 import com.decode.web.domain.chat.service.ChatService;
-import com.decode.web.entity.ChatEntity;
 import com.decode.web.entity.ChatRoomEntity;
 import com.decode.web.global.ResponseDto;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +38,14 @@ public class ChatRoomController {
     public ResponseDto createRoom(@RequestBody ChatRoomRequestDto chatRoomRequestDto) {
         Long roomId = chatRoomService.createRoom(chatRoomRequestDto);
         return ResponseDto.builder().data(roomId).build();
+    }
+
+    @PostMapping("/room/{roomId}/sub")
+    public ResponseDto subRoom(@PathVariable Long roomId, Authentication authentication)
+            throws BadRequestException {
+        Long userId = (Long) authentication.getPrincipal();
+        chatRoomService.subRoom(userId, roomId);
+        return ResponseDto.builder().data("").build();
     }
 
     /*
