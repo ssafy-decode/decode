@@ -1,6 +1,5 @@
 <template>
   <div>
-    <br />
     <QuestionList />
   </div>
 </template>

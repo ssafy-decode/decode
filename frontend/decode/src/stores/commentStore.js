@@ -20,6 +20,7 @@ export const useCommentStore = defineStore('comment', () => {
       })
         .then((res) => {
           console.log('댓글 삭제됨');
+          // 새로 고침 없이 바로 반영되도록 해보자
           router.go(0);
         })
         .catch((err) => {

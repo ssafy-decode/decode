@@ -1,62 +1,108 @@
 <template>
-  <div v-if="!loading && isFetched">
+  <div>
     <div class="pa-5" rounded style="color: #575757; font-weight: bold">
       <v-card
         class="mx-auto px-4 py-8"
         max-width="481"
-        style="text-align: center; background-color: #f3f3f3; border-radius: 68px; border: 15px solid #d9d9d9"
+        style="
+          box-shadow: none;
+          text-align: center;
+          background-color: #f3f3f3;
+          border-radius: 68px;
+          border: 15px solid #d9d9d9;
+        "
       >
+        <div style="display: flex; justify-content: flex-start">
+          <!-- 뒤로가기 버튼--><router-link :to="`/profile/${userStore.loginUserId}`"
+            ><img style="margin-left: 5px" width="18px" src="../../leftarrowicon.png"
+          /></router-link>
+        </div>
         <v-row style="margin-left: 5px">
-          <v-col cols="4">
+          <v-col cols="5">
             <img style="width: 70%" src="../default.png" />
             <br />
             <v-btn class="photobtn" color="#62C0A6" type="submit" variant="elevated">사진 변경</v-btn>
             <!-- 추후 API 연결 -->
           </v-col>
-          <v-col cols="8">
+          <v-col cols="7">
             <div style="font-size: 16px">
-              <span> 이 &nbsp;&nbsp; 름: {{ userStore.loginUserName }}</span>
-              <br />
-              <br />
-              <span>닉 네 임: {{ userStore.loginUserProfile.nickname }}</span>
-              <br />
-              <br />
-              <span>생년월일: {{ userStore.loginUserBirthday }}</span>
-              <br />
+              <table class="profile-table">
+                <tr>
+                  <td>이름:</td>
+                  <td>{{ user.name }}</td>
+                </tr>
+                <tr>
+                  <td>닉네임:</td>
+                  <td>{{ profile.nickname }}</td>
+                </tr>
+                <tr>
+                  <td>생년월일:</td>
+                  <td>{{ user.birth }}</td>
+                </tr>
+              </table>
             </div>
           </v-col>
         </v-row>
         <br />
         <div style="text-align: left; margin-left: 20px">
-          <span
-            >이&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 메&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 일: {{ userStore.loginUserEmail }}</span
-          >
-          <br />
-          <br />
-          <span>휴대폰 뒷자리: {{ userStore.loginUserPhone }}</span>
-          <br />
+          <table class="profile-table">
+            <tr>
+              <td>이메일:</td>
+              <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+              <td>휴대폰 뒷자리:</td>
+              <td>{{ user.phoneNumber }}</td>
+            </tr>
+          </table>
           <br />
         </div>
         <br />
         <div>
-          기술 스택 변경
+          <span style="margin-bottom: 20px; color: #34a080; font-weight: bold">기술 스택 변경</span>
           <br />
           <br />
-          <div v-if="userStore.tagIdList.length > 0">
-            <v-chip v-for="tag in userStore.tagIdList" :key="tag" label color="primary" class="mr-2 mb-2">
-              {{ tagName[tag] }}</v-chip
-            >
+          <div>
+            <template v-if="editing">
+              <v-combobox
+                v-if="editing"
+                variant="solo"
+                class="combo"
+                bg-color="#d9d9d9"
+                v-model="selectedTags"
+                :items="items"
+                placeholder="ex) java, spring boot, sql"
+                label="기술 스택"
+                multiple
+                chips
+                clearable
+              ></v-combobox>
+            </template>
+            <template v-else-if="tagIdList.length > 0">
+              <v-chip
+                v-for="tag in tagIdList"
+                :clearable="editing"
+                :key="tag"
+                label
+                color="primary"
+                class="mr-2 mb-2 chips"
+              >
+                {{ tagName[tag] }}</v-chip
+              >
+            </template>
+            <template v-else>
+              <div>선택한 기술 스택이 없습니다.</div>
+            </template>
           </div>
-          <div v-else>선택한 기술 스택이 없습니다.</div>
           <br />
-          <router-link to="/updatetechstack"
-            ><v-btn class="tagbtn" color="#62C0A6" type="submit" variant="elevated">기술 스택 변경</v-btn></router-link
-          >
+          <v-btn @click="toggleEdit" class="tagbtn" color="#62C0A6" type="submit" variant="elevated">{{
+            editing ? '기술 스택 변경 저장' : '기술 스택 변경'
+          }}</v-btn>
         </div>
         <br />
         <br />
         <div>
-          비밀번호 변경
+          <span style="color: #34a080; font-weight: bold">비밀번호 변경</span>
           <br />
           <br />
           <v-text-field
@@ -98,7 +144,7 @@
           >
         </div>
         <v-btn class="updatebtn" @click="updatepwd" color="#62C0A6" type="submit" variant="elevated"
-          >변경 내용 저장</v-btn
+          >비밀번호 변경 저장</v-btn
         >
       </v-card>
     </div>
@@ -106,10 +152,50 @@
 </template>
 
 <script setup>
-import { onBeforeMount, ref, computed } from 'vue';
+import { onBeforeMount, ref } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/stores/userStore';
+import { useTagStore } from '@/stores/tagStore';
+import { useProfileStore } from '@/stores/profileStore';
 
 const userStore = useUserStore();
+const tagStore = useTagStore();
+const profileStore = useProfileStore();
+
+const { setUser } = userStore;
+const { setTagNumList } = tagStore;
+const { setUserProfile, updateTechStack, updatePwd } = profileStore;
+const { handleAccessToken: accessToken } = storeToRefs(userStore);
+// const { handleLoginUserId: uid } = storeToRefs(userStore);
+// const { loginUserId: uid } = storeToRefs(userStore);
+// const { loginUser: user } = storeToRefs(userStore);
+const { handleUser: user } = storeToRefs(userStore);
+const { handleUserProfile: profile } = storeToRefs(profileStore);
+const { handleTags: tagIdList } = storeToRefs(tagStore);
+
+onBeforeMount(() => {
+  setUser(userStore.loginUserId);
+  setTagNumList(userStore.loginUserId);
+  setUserProfile(userStore.loginUserId);
+  selectedTags.value = tagIdList.value.map((tag) => tagName[tag]);
+});
+
+const editing = ref(false);
+const selectedTags = ref([]);
+const items = ref([
+  'python',
+  'java',
+  'C++',
+  'javascript',
+  'django',
+  'spring',
+  'spring boot',
+  'kotlin',
+  'sql',
+  'react',
+  'vue',
+  'C#',
+]);
 
 // DB에 수정된 번호를 다시 태그명으로 전환
 const tagName = {
@@ -125,6 +211,19 @@ const tagName = {
   10: 'react',
   11: 'vue',
   12: 'C#',
+};
+
+// 기술 스택 목록 변경
+const toggleEdit = () => {
+  if (editing.value) {
+    const user = {
+      userId: userStore.loginUserId,
+      tagIdList: selectedTags.value,
+    };
+    updateTechStack(user, accessToken.value);
+  }
+  editing.value = !editing.value;
+  setTagNumList(userStore.loginUserId);
 };
 
 const password = ref('');
@@ -153,16 +252,7 @@ const isPasswordValid = (pwd) => {
   return pwd.length >= 8 && /[!@#$%^&*(),.?":{}|<>]/g.test(pwd);
 };
 
-const isFetched = ref(false); // data를 가져오고 나서 렌더링하도록
-const loading = computed(() => !isFetched.value); // 가져오기 전까지는 로딩 상태로
-onBeforeMount(async () => {
-  await userStore.setUser(userStore.loginUserId);
-  setTimeout(() => {
-    userStore.getTagNumList(userStore.loginUserId);
-    isFetched.value = true;
-  }, 1000); // 1초 후에
-});
-
+// 비밀번호 변경
 const updatepwd = () => {
   if (!isPasswordValid(password.value)) {
     alert('비밀번호는 8자리 이상이며, 특수문자를 포함해야 합니다.');
@@ -179,11 +269,29 @@ const updatepwd = () => {
     password: password.value,
   };
 
-  userStore.updatePwd(user);
+  updatePwd(user, accessToken.value);
 };
 </script>
 
 <style scoped>
+.profile-table {
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 100%;
+}
+
+.profile-table td {
+  padding: 5px;
+  text-align: left;
+}
+
+.chips {
+  border-radius: 31px;
+  background-color: #9dd0ff;
+  color: #447cb0;
+  font-weight: bold;
+}
+
 .photobtn {
   height: 34px;
   width: 95px;

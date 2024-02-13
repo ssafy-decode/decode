@@ -3,12 +3,13 @@ import { defineStore } from 'pinia';
 import axios from '@/utils/common-axios';
 
 export const useQuestionStore = defineStore(
-  'question',
+  'useQuestionStore',
   () => {
     const accessToken = ref(null);
     const questions = ref([]);
     const gptTitles = ref(['']);
     const gptTagIds = ref(['']);
+
     const items = {
       python: 1,
       java: 2,
