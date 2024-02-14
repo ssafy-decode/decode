@@ -159,10 +159,10 @@ public class AnswerController {
                 .build();
     }
 
-    @GetMapping("/adopt/{userId}")
-    public ResponseDto getAdoptAnswersByUserId(@PathVariable Long userId)
+    @GetMapping("/adopt/{questionId}")
+    public ResponseDto getAdoptAnswersByUserId(@PathVariable Long questionId)
             throws BadRequestException {
-        List<AnswerSomethingDto> data = answerService.getAdoptAnswersByUserId(userId);
+        List<Long> data = answerService.getAdoptAnswersByUserId(questionId);
         return ResponseDto.builder()
                 .status(HttpStatus.OK)
                 .message("유저가 채택한 답변 목록 조회")

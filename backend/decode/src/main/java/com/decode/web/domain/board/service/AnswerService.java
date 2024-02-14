@@ -40,5 +40,5 @@ public interface AnswerService {
     List<AnswerSomethingDto> getRecommendAnswersByUserId(Long userId)
             throws BadRequestException;
 
-    List<AnswerSomethingDto> getAdoptAnswersByUserId(Long userId) throws BadRequestException;
+    List<Long> getAdoptAnswersByUserId(Long userId) throws BadRequestException;
 }

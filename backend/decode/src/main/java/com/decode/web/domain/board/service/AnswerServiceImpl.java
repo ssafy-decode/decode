@@ -247,23 +247,11 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
-    public List<AnswerSomethingDto> getAdoptAnswersByUserId(Long userId)
+    public List<Long> getAdoptAnswersByUserId(Long questionId)
             throws BadRequestException {
-        Optional<UserProfileEntity> userProfile = userProfileRepository.findById(userId);
-        if (userProfile.isEmpty()) {
-            throw new BadRequestException("유저 아이디를 찾을 수 없습니다.");
-        }
-        List<Long> questionIdList = questionELKRepository.findAllByWriterId(userId)
-                .stream()
-                .map(QuestionDocument::getId)
-                .collect(Collectors.toList());
-        List<AnswerEntity> answers = answerRepository.findByQuestionId(questionIdList);
-        return answers.stream()
-                .map(e -> AnswerSomethingDto.builder()
-                        .id(e.getId())
-                        .content(e.getContent())
-                        .recommendCnt(e.getRecommends().size())
-                        .build())
+        List<AnswerEntity> adpotedList = answerRepository.findByIsAdoptedTrueAndQuestionId(questionId);
+        return adpotedList.stream()
+                .map(AnswerEntity::getId)
                 .collect(Collectors.toList());
     }
 }
