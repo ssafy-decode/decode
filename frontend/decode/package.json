@@ -34,6 +34,7 @@
     "vue-draggable-resizable": "^3.0.0",
     "vue-loader": "^17.4.2",
     "vue-router": "^4.2.5",
+    "vue-toastification": "^1.7.14",
     "vuedraggable": "^2.24.3",
     "vuetify": "^3.4.10",
     "webfontloader": "^1.0.0",

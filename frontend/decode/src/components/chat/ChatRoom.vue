@@ -1,28 +1,26 @@
 <template>
-
   <div class="header-container">
-    <v-row style="padding: 0; margin: 0; height: 100%;">
-      <v-col cols="8" style="padding: 0; margin: 0; height: 100%;">
+    <v-row style="padding: 0; margin: 0; height: 100%">
+      <v-col cols="8" style="padding: 0; margin: 0; height: 100%">
         <div class="room-title">
           {{ room.roomName }}
         </div>
       </v-col>
-      <v-col cols="2" style="padding: 0; margin: 0; height: 100%;">
-        <div class="etc-button"  @click="openDialog">
+      <v-col cols="2" style="padding: 0; margin: 0; height: 100%">
+        <div class="etc-button" @click="openDialog">
           <v-icon color="#34A080">mdi-video-vintage</v-icon>
         </div>
       </v-col>
-      <v-col cols="2" style="padding: 0; margin: 0; height: 100%;">
+      <v-col cols="2" style="padding: 0; margin: 0; height: 100%">
         <div class="etc-button" @click="goBack">
           <v-icon small color="#ccc">mdi-close</v-icon>
         </div>
       </v-col>
     </v-row>
-
   </div>
 
   <div class="chat-container">
-    <div class="chat-messages" ref="chatContainer" >
+    <div class="chat-messages" ref="chatContainer">
       <div v-for="(message, id) in messages" :key="id" :class="messageClass(message)">
         <div class="message-content">
           <div class="nickname">{{ message.nickName }}</div>
@@ -32,16 +30,16 @@
     </div>
     <div>
       <v-text-field
-      class="input-field"
-      filled
-      variant="underlined"
-      v-model="newMessage"
-      placeholder="메시지를 입력하세요"
-      @keyup.enter="sendMessage"
-      append-icon=""
+        class="input-field"
+        filled
+        variant="underlined"
+        v-model="newMessage"
+        placeholder="메시지를 입력하세요"
+        @keyup.enter="sendMessage"
+        append-icon=""
       >
-    </v-text-field>
-  </div>
+      </v-text-field>
+    </div>
 
     <OpenviduDialog
       v-model="dialog"
@@ -58,6 +56,16 @@
       @exit="handleExit"
     ></OpenviduModal>
   </div>
+  <v-dialog v-model="errorDialog" max-width="400">
+  <v-card>
+    <v-card-title style="color: #34A080;">Error</v-card-title>
+    <v-card-text>세션이 만료됐어요. 다음번엔 빨리 오세요 :></v-card-text>
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn color="primary" text @click="errorDialog = false">Okay</v-btn>
+    </v-card-actions>
+  </v-card>
+</v-dialog>
 </template>
 <script>
 import { ref, onMounted, nextTick, watchEffect, onUnmounted, onUpdated } from 'vue';
@@ -83,6 +91,8 @@ export default {
   setup(props, { emit }) {
     const APPLICATION_SERVER_URL = 'https://i10a507.p.ssafy.io/decode/openvidu';
     // const APPLICATION_SERVER_URL = 'http://localhost:7777/decode/openvidu';
+    const errorDialog = ref(false);
+    const errorMessage = ref('세션이 만료됐어요. 다음번엔 빨리 오세요 :>');
     const OV = ref(undefined);
     const session = ref(undefined);
     const publisher = ref(undefined);
@@ -197,7 +207,6 @@ export default {
 
     const createToken = async (sessionId) => {
       try {
-        console.log(userStore.accessToken);
         const response = await axios.post(
           APPLICATION_SERVER_URL + `/api/sessions/${sessionId}/connections`,
           {},
@@ -210,6 +219,12 @@ export default {
         return response.data;
       } catch (error) {
         console.error(error);
+        // HTTP 상태 코드가 500인 경우 alert 띄우기
+        if (error.response && error.response.status === 500) {
+          console.log(123);
+          errorMessage.value = '세션이 만료되었습니다. 다음번엔 빨리오세요~';
+          errorDialog.value = true;
+        }
         throw error;
       }
     };
@@ -238,7 +253,7 @@ export default {
         console.log(stompStore.subscriptions[props.room.id]);
         stompStore.subscriptions[props.room.id].unsubscribe();
       }
-      console.log(session.value)
+      console.log(session.value);
       if (session.value) {
         sessionStore.exitSession(rsId.value);
       }
@@ -307,6 +322,8 @@ export default {
       newMessage,
       publisher,
       dialog,
+      errorDialog,
+      errorMessage,
       messages,
       openDialog,
       handleYes,
@@ -330,7 +347,7 @@ export default {
   padding: 0;
   margin: 0;
 }
-.room-title{
+.room-title {
   height: 100%;
   margin: 0;
   margin-left: 5px;
@@ -351,7 +368,7 @@ export default {
   max-width: 100%;
   margin: 0;
   padding: 0;
-  height: 330px;  
+  height: 330px;
 }
 
 .chat-messages {
@@ -403,7 +420,7 @@ export default {
 .other-message p {
   font-size: 12px;
   display: inline-block;
-  background-color: #93D5D1;
+  background-color: #93d5d1;
   padding: 5px;
   border-radius: 5px;
   max-width: 65%;
@@ -416,7 +433,7 @@ export default {
 
 .other-message p {
   display: inline-block;
-  background-color: #D3EEEC;
+  background-color: #d3eeec;
   padding: 5px;
   border-radius: 5px;
 }

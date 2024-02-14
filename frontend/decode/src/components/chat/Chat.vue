@@ -7,10 +7,10 @@
     <v-container class="tab-body" bg-color="#34A080">
       <v-window v-model="tab">
         <v-window-item value="chat">
-          <ChatComponent  />
+          <ChatComponent />
         </v-window-item>
 
-        <v-window-item value="my-chat">
+        <v-window-item value="my-chat" :key="myChatKey">
           <MyChatComponent />
         </v-window-item>
       </v-window>
@@ -25,11 +25,10 @@
 
 <!-- The rest of the script and style -->
 <script>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import ChatComponent from './ChatComponent.vue';
 import MyChatComponent from './MyChatComponent.vue';
 import { storeToRefs } from 'pinia';
-
 
 export default {
   components: {
@@ -56,12 +55,23 @@ export default {
     const toggleApp = () => {
       isAppOpen.value = !isAppOpen.value;
     };
+    // EventBus.$on('registerFetchRooms', (newFetchRooms) => {
+    //   fetchRooms = newFetchRooms;
+    // });
+    const myChatKey = ref(Date.now()); // 초기값 설정
 
+    watch(tab, (newTab) => {
+      if (newTab === 'my-chat') {
+        // 탭이 '내 채팅'으로 변경될 때마다 myChatKey 값을 변경하여 MyChatComponent를 새로 렌더링합니다.
+        myChatKey.value = Date.now();
+      }
+    });
     return {
       tab,
       isAppOpen,
       dialogStyle,
       appIcon,
+      myChatKey,
       toggleApp,
     };
   },
