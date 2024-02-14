@@ -1,44 +1,49 @@
 <template>
-  <v-row>
-    <v-col :cols="9">
-      <div class="myListItem" @click="goDetail(question.id)">
-        <div class="listItem">
-          <img class="img" src="./questionIcon.png" alt="질문아이콘" />
-          <div>
-            <p class="info">
-              <span class="nickname">
-                {{ question.writer.nickname }}
-              </span>
-              &nbsp;
-              <span class="time">
-                {{ question.createdTime[0] }}년 {{ question.createdTime[1] }}월 {{ question.createdTime[2] }}일
-              </span>
-            </p>
-            <p class="title">
-              {{ question.title && question.title.length > 50 ? question.title.slice(0, 50) + '...' : question.title }}
-            </p>
+  <div style="height: 70px; display: flex; align-items: center;">
+    <div class="item-container">
+    <v-row style="margin: 0; padding: 0; height: 100%;">
+        <v-col :cols="10" style="margin: 0; padding: 0; display: flex; align-items: center; width: 100%; height: 100%;">
+          <div class="myListItem" @click="goDetail(question.id)">
+            <div class="listItem">
+              <div class="img-container">
+                <img class="q-img" src="./questionIcon.png" alt="질문아이콘" />
+              </div>
+              <div>
+                <p class="info">
+                  <span class="nickname">
+                    {{ question.writer.nickname }}
+                  </span>
+                  &nbsp;
+                  <span class="time">
+                    {{ question.createdTime[0] }}년 {{ question.createdTime[1] }}월 {{ question.createdTime[2] }}일
+                  </span>
+                </p>
+                <p class="title">
+                  {{ question.title && question.title.length > 80 ? question.title.slice(0, 80) + '...' : question.title }}
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    </v-col>
-    <v-col :cols="3">
-      <div class="myListItem2">
-        <!-- <img class="img" src="./answerIcon.png" alt="답변 아이콘" /> -->
-        <div class="cntBox">
-          <div>답변</div>
-          <div>{{ question.answerCnt }}</div>
-        </div>
-        <div class="cntBox">
-          <div>북마크</div>
-          <div>{{ question.bookmarkCnt }}</div>
-        </div>
-        <div class="cntBox">
-          <div>나도궁금</div>
-          <div>{{ question.meTooCnt }}</div>
-        </div>
-      </div>
-    </v-col>
-  </v-row>
+        </v-col>
+        <v-col :cols="2" style="margin: 0; padding: 0; display: flex; align-items: center; width: 100%; height: 100%;">
+          <div class="myListItem2"> 
+            <div class="cntBox" style="position: relative; width: 50%%; display: flex; justify-content: center; align-items: center;">
+              <div style="width: 100%; display: flex; justify-content: center; align-items: center;">
+                <img style="width: 50%; height: auto transform: translateY(-30%);" src="./answerCountIcon.png" alt="답변 아이콘" />
+              </div>
+              <div style="position: absolute;  transform: translateY(-15%); color:#649591">+ {{ question.answerCnt }}<br/></div>
+            </div>
+            <div class="cntBox" style="position: relative; width: 50%; display: flex; justify-content: center; align-items: center;">
+              <div style="width: 100%; display: flex; align-items: center; justify-content: center;">
+                <img style="width: 70%; height: auto;" src="./metoopeople.png" alt="답변 아이콘" />
+              </div>
+              <div style="position: absolute; transform: translateX(-100%) translateY(-20%); color:#649591">{{ question.meTooCnt }}<br/></div>
+            </div>
+          </div>
+        </v-col>
+      </v-row>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -56,38 +61,55 @@ defineProps({
 </script>
 
 <style scoped>
-.img {
-  width: 75px;
-  height: 75px;
+.item-container{
+  width: 100%;
+  height: 90%;
+  background-color: white;
+  border-radius: 35px;
+}
+.img-container{
+  width: calc(height);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+.q-img {
+  height: 65px;
+  width: 65px;
 }
 
 .myListItem {
-  background-color: white;
-  border-radius: 35px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 .myListItem2 {
-  background-color: white;
-  border-radius: 35px;
   display: flex;
   justify-content: space-around;
   align-items: center;
+  width: 100%;
+  height: 100%;
 }
 
-.myListItem:hover {
+.item-container:hover {
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.4);
   transition: 0.3s;
 }
 .listItem {
   width: 100%;
-  height: auto;
-  font-size: large;
+  height: 80%;
+  font-size: 13px;
   color: #575757;
   display: flex;
   align-items: center;
+
 }
 
 .info {
-  font-size: small;
+  font-size: 13px;
 }
 
 .nickname {
@@ -95,7 +117,7 @@ defineProps({
 }
 
 .title {
-  font-size: large;
+  font-size: 15px;
   font-weight: 800;
 }
 
@@ -109,5 +131,9 @@ defineProps({
   align-items: center;
   color: #575757;
   font-weight: 600;
+  font-size: 13px;
+  width: 50%;
+  margin: 0;
+  padding: 0;
 }
 </style>
