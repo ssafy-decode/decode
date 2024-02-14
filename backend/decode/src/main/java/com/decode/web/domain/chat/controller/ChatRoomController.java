@@ -44,7 +44,11 @@ public class ChatRoomController {
             throws BadRequestException {
         Long userId = (Long) authentication.getPrincipal();
         chatRoomService.subRoom(userId, roomId);
-        return ResponseDto.builder().data("").build();
+        return ResponseDto.builder()
+                .status(HttpStatus.OK)
+                .message("방 구독 완료")
+                .data("")
+                .build();
     }
 
     /*

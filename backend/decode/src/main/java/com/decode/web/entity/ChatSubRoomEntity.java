@@ -27,7 +27,7 @@ public class ChatSubRoomEntity {
     private Long userId;
 
     @ManyToOne
-    @JoinColumn(name = "roomId", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "roomId", referencedColumnName = "id")
     private ChatRoomEntity chatRoomEntity;
 
 }
