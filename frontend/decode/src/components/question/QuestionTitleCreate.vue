@@ -49,24 +49,28 @@ const goCreate = function () {
 };
 
 const createQuestionTitle = function () {
-  let data = {
-    content: inputContent.value,
-  };
-  axios({
-    method: 'post',
-    url: `/gpt`,
-    data: data,
-    headers: {
-      Authorization: `Bearer ${userStore.accessToken}`,
-    },
-  })
-    .then((res) => {
-      questionStore.inputQuestionContent = inputContent.value;
-      questionStore.gptTitles = res.data.data.titles;
-      questionStore.gptTagIds = res.data.data.tagIds;
-      router.push({ name: 'question-create' });
+  if (inputContent.value) {
+    let data = {
+      content: inputContent.value,
+    };
+    axios({
+      method: 'post',
+      url: `/gpt`,
+      data: data,
+      headers: {
+        Authorization: `Bearer ${userStore.accessToken}`,
+      },
     })
-    .catch((err) => {});
+      .then((res) => {
+        questionStore.inputQuestionContent = inputContent.value;
+        questionStore.gptTitles = res.data.data.titles;
+        questionStore.gptTagIds = res.data.data.tagIds;
+        router.push({ name: 'question-create' });
+      })
+      .catch((err) => {});
+  } else {
+    alert('에러 내용을 입력하세요!');
+  }
 };
 </script>
 

@@ -65,7 +65,6 @@ import AnswerViewer from '@/components/common/AnswerViewer.vue';
 import { useRoute } from 'vue-router';
 import profileRouter from '@/components/common/profileRouter.vue';
 
-// const recommendStore = useRecommendStore();
 const answerStore = useAnswerStore();
 const userStore = useUserStore();
 const route = useRoute();
@@ -81,8 +80,14 @@ const recommendStore = useRecommendStore();
 const { setRecommendList, addRecommend, deleteRecommend } = recommendStore;
 const { handleRecommendList: recommendList } = storeToRefs(recommendStore);
 
+// import { useAdoptStore } from '@/stores/adoptStore';
+// const adoptStore = useAdoptStore();
+// const { setAdoptList, addAdopt } = adoptStore;
+// const { handleAdoptList: adoptList } = storeToRefs(adoptStore);
+
 onMounted(() => {
   setRecommendList(props.answer.answerId, userStore.loginUserId);
+  // setAdoptList(props.answer.answerId, userStore.loginUserId);
 });
 
 watchEffect(() => {

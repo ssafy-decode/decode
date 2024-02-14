@@ -22,6 +22,7 @@ const useAdoptStore = defineStore(
             isAdopted.value = true;
           }
         });
+        // console.log('adoptList 내용: ', adoptList.value);
       });
     };
 

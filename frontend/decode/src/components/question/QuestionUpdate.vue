@@ -8,16 +8,27 @@
       </v-text-field>
       <v-container class="tagContainer" v-if="numToStr.length > 0">
         <template v-for="(tag, index) in numToStr" :key="index">
-          <v-row align="center" class="d-flex justify-end">
+          <v-row class="d-flex justify-end">
             <v-col cols="12" sm="6" md="4" class="tagContainer">
-              <v-text-field
+              <!-- <v-text-field
                 variant="solo"
                 class="stackBox"
                 bg-color="fff"
                 v-model.trim="numToStr[index]"
                 placeholder="ex) java, spring boot, sql"
                 label="관련 태그"
-              ></v-text-field>
+              ></v-text-field> -->
+              <v-combobox
+                variant="solo"
+                class="stackBox"
+                bg-color="fff"
+                v-model="numToStr[index]"
+                :items="Object.keys(items)"
+                placeholder="ex) java, spring boot, sql"
+                label="관련 기술 태그"
+                clearable
+                hide-details="true"
+              ></v-combobox>
             </v-col>
             <v-col cols="12" sm="6" md="4" class="tagContainer">
               <v-text-field
@@ -120,6 +131,9 @@ const removeField = function (index) {
 };
 
 const updateQuestion = function () {
+  if (!questionContent.value.trim()) {
+    questionContent.value = questionStore.originalContent;
+  }
   const tags = numToStr.value.map((tag, index) => {
     return {
       tagId: items[tag],

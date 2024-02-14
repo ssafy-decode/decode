@@ -43,10 +43,20 @@
         </div>
         <div class="btnBox">
           <div>
-            <v-btn v-if="isMeTooed" @click="deleteMeToo(questionId)">나도궁금해요 취소</v-btn>
+            <v-btn
+              v-if="isMeTooed"
+              @click="deleteMeToo(questionId)"
+              style="background-color: #fff; color: #575757; border: 2px solid #62c0a6"
+              >나도궁금해요 취소</v-btn
+            >
             <v-btn v-else @click="addMeToo(userStore.loginUserId, questionId)">나도궁금해요</v-btn>
             <!-- {{ meTooCnt }} -->
-            <v-btn v-if="isBookmarked" @click="deleteBookmark(questionId)">북마크 취소</v-btn>
+            <v-btn
+              v-if="isBookmarked"
+              @click="deleteBookmark(questionId)"
+              style="background-color: #fff; color: #575757; border: 2px solid #62c0a6"
+              >북마크 취소</v-btn
+            >
             <v-btn v-else @click="addBookmark(userStore.loginUserId, questionId)">북마크</v-btn>
             <!-- {{ bookmarkCnt }} -->
             <v-btn @click="goCreateAnswer()">답변달기</v-btn>
@@ -64,7 +74,7 @@
 
 <script setup>
 import axios from '@/utils/common-axios';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import AnswerList from '@/components/answer/AnswerList.vue';
@@ -93,25 +103,8 @@ const questionWriterId = ref(null);
 const isAnswerExist = ref(false);
 const questionCreatedTime = ref('');
 
-// const bookmarkCnt = ref(0);
-// const meTooCnt = ref(0);
-
 const numToStr = ref([]);
 const versions = ref([]);
-
-// const loading = ref(false);
-
-// const handleGptAnswer = async (questionId, questionContent) => {
-//   // 로딩 시작
-//   loading.value = true;
-//   setTimeout(() => (loading.value = false), 16000);
-
-//   try {
-//     // GPT 답변 요청
-//     await answerStore.getGptAnswer(questionId, questionContent);
-//   } catch (error) {
-//   }
-// };
 
 const getDetailQuestion = function () {
   axios({
@@ -120,12 +113,8 @@ const getDetailQuestion = function () {
   })
     .then((res) => {
       questionId.value = route.params.id;
-      /////////////////////////수정중////////////////////////////
       questionStore.detailQuestion = res.data.data;
       question.value = questionStore.detailQuestion;
-      /////////////////////////수정중////////////////////////////
-      // question.value = res.data.data;
-      /////////////////////////수정중////////////////////////////
       questionStore.originalContent = question.value.content;
       isAnswerExist.value = question.value.answerList.length > 0;
       writerNickname.value = question.value.questionWriter.nickname;
@@ -135,8 +124,10 @@ const getDetailQuestion = function () {
         numToStr.value.push(questionStore.reverseItems[item.tagId]);
         versions.value.push(item.version);
       });
+      /////////////////////////수정중////////////////////////////
       // bookmarkCnt.value = question.value.bookmarkCnt;
       // meTooCnt.value = question.value.meTooCnt;
+      /////////////////////////수정중////////////////////////////
     })
     .catch((err) => {});
 };
@@ -200,6 +191,14 @@ const goCreateAnswer = function () {
   answerStore.questionId = questionId.value;
   router.push({ path: `/answer-create/${questionId.value}` });
 };
+
+// watchEffect(() => {
+// if (props.answer && props.recommendedAnswerList) {
+//   recommendList.value.forEach(function (a_id) {
+//     props.recommendedAnswerList[a_id] = true;
+//   });
+// }
+// });
 </script>
 
 <style scoped>

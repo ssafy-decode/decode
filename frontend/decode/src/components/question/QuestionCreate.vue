@@ -13,16 +13,19 @@
       </v-text-field>
       <v-container class="tagContainer" v-if="tagIds">
         <template v-for="(tag, index) in tagIds" :key="index">
-          <v-row align="center" class="d-flex justify-end">
+          <v-row class="d-flex justify-end">
             <v-col cols="12" sm="6" md="4" class="tagContainer">
-              <v-text-field
+              <v-combobox
                 variant="solo"
                 class="stackBox"
                 bg-color="fff"
-                v-model.trim="tagIds[index]"
+                v-model="tagIds[index]"
+                :items="Object.keys(items)"
                 placeholder="ex) java, spring boot, sql"
-                label="관련 태그"
-              ></v-text-field>
+                label="관련 기술 태그"
+                clearable
+                hide-details="true"
+              ></v-combobox>
             </v-col>
             <v-col cols="12" sm="6" md="4" class="tagContainer">
               <v-text-field
@@ -127,16 +130,8 @@ const createQuestion = function () {
           } else {
             router.push({ name: 'questionview' });
           }
-          // router.push({ name: 'question-detail', params: { id: questionId } });
         }, 1000);
       })
-      // .then((res) => {
-      //   if (confirm('답변 목록에 GPT 답변이 추가되었습니다.\n지금 바로 답변을 확인해보세요!')) {
-      //     router.push({ name: 'question-detail', params: { id: questionId } });
-      //   } else {
-      //     router.push({ name: 'question-detail', params: { id: questionId } });
-      //   }
-      // })
       .catch((err) => {
         alert('제목과 내용, 태그를 입력해주세요');
 
