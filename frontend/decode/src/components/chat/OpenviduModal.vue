@@ -45,18 +45,17 @@
             </template> -->
           </v-text-field>
         </div>
-
       </div>
 
       <!-- 비디오 아래에 버튼 3개 추가 -->
       <div class="button-container">
-        <v-btn color="#34A080" @click="toggleAudio" title="음소거/해제">
+        <v-btn color="#34A080" @click="toggleAudio" title="음소거/해제" v-if="isPublisher">
           <font-awesome-icon v-if="isMuted" :icon="['fas', 'microphone']" />
           <!-- 음소거가 아닐 때 -->
           <font-awesome-icon v-else :icon="['fas', 'microphone-slash']" />
           <!-- 음소거일 때 -->
         </v-btn>
-        <v-btn color="#34A080" @click="toggleScreenSharing" title="화면 공유">
+        <v-btn color="#34A080" @click="toggleScreenSharing" title="화면 공유" v-if="isPublisher">
           <font-awesome-icon :icon="['fas', 'desktop']" />
         </v-btn>
         <v-btn color="#34A080" @click="toggleFullScreen" title="전체 화면">
@@ -66,8 +65,6 @@
           <font-awesome-icon :icon="['fas', 'door-open']" />
         </v-btn>
       </div>
-
-
     </div>
   </vue-draggable-resizable>
 </template>
@@ -107,7 +104,15 @@ export default {
     const { handleMyprofile: myProfile } = storeToRefs(userStore);
 
     const videoElement = ref(null); // videoElement를 선언합니다.
+    const isPublisher = ref(false);
 
+    watch(
+      () => publisher.value,
+      (newPublisher) => {
+        isPublisher.value = newPublisher != null;
+        console.log(isPublisher.value);
+      },
+    );
     const sendMessage = (event) => {
       event.preventDefault();
       if (inputMessage.value.trim()) {
@@ -164,7 +169,7 @@ export default {
         videoElement.value.srcObject = null;
       }
       // 세션을 종료하고 상태를 업데이트합니다.
-      sessionStore.exitSession(props.roomSessionId);
+      exitPage();
     });
     const toggleFullScreen = () => {
       if (!document.fullscreenElement) {
@@ -208,16 +213,28 @@ export default {
     };
 
     const exitPage = () => {
-      // 세션을 종료하고 상태를 업데이트합니다.
+      // 유효성 체크
+      if (session.value && session.value.connection && publisher.value && publisher.value.stream) {
+        // 세션을 종료하고 상태를 업데이트합니다.
+        session.value.disconnect();
+        session.value = null;
+        publisher.value = null;
+        subscriber.value = null;
+      } else {
+        console.log('Invalid session or publisher');
+      }
+
       sessionStore.exitSession(props.roomSessionId);
       // 나가기 이벤트를 발생시킵니다.
       context.emit('exit');
     };
+
     const messageClass = (message) => {
       return message.username === '나' ? 'my-message' : 'other-message';
     };
 
     return {
+      isPublisher,
       inputMessage,
       messages,
       isComponentVisible,
@@ -268,7 +285,7 @@ export default {
   height: 100%;
   background-color: #f1f1f1;
 }
-.upper-container{
+.upper-container {
   width: 100%;
   height: 90%;
   padding: 0;
@@ -351,7 +368,6 @@ export default {
   bottom: 0;
 }
 
-
 /* 메시지 디자인 */
 .my-message .message-content,
 .other-message .message-content {
@@ -366,7 +382,7 @@ export default {
 .other-message p {
   font-size: 12px;
   display: inline-block;
-  background-color: #93D5D1;
+  background-color: #93d5d1;
   padding: 5px;
   border-radius: 5px;
   max-width: 65%;
@@ -379,7 +395,7 @@ export default {
 
 .other-message p {
   display: inline-block;
-  background-color: #D3EEEC;
+  background-color: #d3eeec;
   padding: 5px;
   border-radius: 5px;
 }
@@ -387,7 +403,6 @@ export default {
 .nickname {
   font-size: 13px;
 }
-
 
 /* 스크롤바 전체의 너비를 설정 */
 .chat-messages::-webkit-scrollbar {
