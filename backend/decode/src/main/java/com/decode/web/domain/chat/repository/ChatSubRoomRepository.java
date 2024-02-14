@@ -9,6 +9,6 @@ public interface ChatSubRoomRepository extends JpaRepository<ChatSubRoomEntity, 
 
     List<ChatSubRoomEntity> findByUserId(Long userId);
 
-    Optional<ChatSubRoomEntity> findByIdAndUserId(Long id, Long userId);
+    Optional<ChatSubRoomEntity> findByChatRoomEntityIdAndUserId(Long id, Long userId);
 
 }

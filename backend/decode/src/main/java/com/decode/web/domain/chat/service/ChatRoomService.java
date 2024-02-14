@@ -15,7 +15,7 @@ public interface ChatRoomService {
 
     void enterChatRoom(Long roomId);
 
-    List<ChatRoomEntity> findAllRoomByUser(Long userId);
+    List<ChatRoomResponseDto> findAllRoomByUser(Long userId);
 
     List<ChatRoomResponseDto> findAll();
 

@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
@@ -100,17 +101,17 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         유저별 채팅방 조회
      */
     @Override
-    public List<ChatRoomEntity> findAllRoomByUser(Long userId) {
+    public List<ChatRoomResponseDto> findAllRoomByUser(Long userId) {
 
         List<ChatSubRoomEntity> chatSubRoomList = chatSubRoomRepository.findByUserId(userId);
-        List<ChatRoomEntity> chatRoomList = new ArrayList<>();
-        // List 생성
-        for (ChatSubRoomEntity chatSubRoom : chatSubRoomList) {
-            ChatRoomEntity chatRoom = chatSubRoom.getChatRoomEntity();
-            chatRoomList.add(chatRoom);
-        }
-
-        return chatRoomList;
+        return chatSubRoomList.stream()
+                .map(e -> ChatRoomResponseDto.builder()
+                        .id(e.getChatRoomEntity().getId())
+                        .roomName(e.getChatRoomEntity().getRoomName())
+                        .roomDescription(e.getChatRoomEntity().getRoomDescription())
+                        .creator(e.getChatRoomEntity().getCreator())
+                        .build())
+                .collect(Collectors.toList());
     }
 
     /*
@@ -142,7 +143,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         if (chatRoom.isEmpty()) {
             throw new BadRequestException("채팅방이 존재하지 않습니다.");
         }
-        Optional<ChatSubRoomEntity> chatSubRoom = chatSubRoomRepository.findByIdAndUserId(roomId,
+        Optional<ChatSubRoomEntity> chatSubRoom = chatSubRoomRepository.findByChatRoomEntityIdAndUserId(roomId,
                 userId);
         if (chatSubRoom.isEmpty()) {
             ChatSubRoomEntity chatSubRoomEntity = new ChatSubRoomEntity();
