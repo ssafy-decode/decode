@@ -8,7 +8,7 @@
               <div class="img-container">
                 <img class="q-img" src="./questionIcon.png" alt="질문아이콘" />
               </div>
-              <div>
+              <div style="overflow: hidden;">
                 <p class="info">
                   <span class="nickname">
                     {{ question.writer.nickname }}
@@ -18,8 +18,9 @@
                     {{ question.createdTime[0] }}년 {{ question.createdTime[1] }}월 {{ question.createdTime[2] }}일
                   </span>
                 </p>
-                <p class="title">
-                  {{ question.title && question.title.length > 80 ? question.title.slice(0, 80) + '...' : question.title }}
+                <p class="title" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%">
+                  <!-- {{ question.title && question.title.length > 80 ? question.title.slice(0, 80) + '...' : question.title }} -->
+                  {{ question.title }}
                 </p>
               </div>
             </div>
@@ -33,11 +34,12 @@
               </div>
               <div style="position: absolute;  transform: translateY(-15%); color:#649591">+ {{ question.answerCnt }}<br/></div>
             </div>
-            <div class="cntBox" style="position: relative; width: 50%; display: flex; justify-content: center; align-items: center;">
-              <div style="width: 100%; display: flex; align-items: center; justify-content: center;">
-                <img style="width: 70%; height: auto;" src="./metoopeople.png" alt="답변 아이콘" />
+            <div class="cntBox" style="position: relative; width: 50%; display: flex; align-items: center; justify-content: center;">
+              <div style="width: 100%; display: flex; align-items: center; justify-content: start;">
+                <img style="width: 80%; height: auto;" src="./metoopeople.png" alt="답변 아이콘" />
               </div>
-              <div style="position: absolute; transform: translateX(-100%) translateY(-20%); color:#649591">{{ question.meTooCnt }}<br/></div>
+              <div style="display: flex; align-items: center; justify-content: start; position: absolute; height: 50%; width: 50%; color:#649591; padding-bottom: 9%;">
+                {{ question.meTooCnt }}<br/></div>
             </div>
           </div>
         </v-col>
