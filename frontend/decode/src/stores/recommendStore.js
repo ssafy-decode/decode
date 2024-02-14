@@ -7,28 +7,23 @@ const useRecommendStore = defineStore(
   'useRecommendStore',
   () => {
     const userStore = useUserStore();
-
     const recommendList = ref([]);
-    const isRecommended = ref(false);
 
     // 로그인 유저의 추천한 답변 번호의 목록을 불러옴
-    const setRecommendList = async (questionId, userId) => {
+    const setRecommendList = async (answerId, userId) => {
       await axios.get(`/answer/recommend/${userId}`).then((res) => {
         recommendList.value = [];
-        isRecommended.value = false;
-        res.data.data.forEach((question) => {
-          recommendList.value.push(question.id);
-          if (parseInt(questionId) === parseInt(question.id)) {
-            isRecommended.value = true;
-          }
+        res.data.data.forEach((answer) => {
+          recommendList.value.push(answer.id);
         });
       });
     };
 
-    const addRecommend = async (userId, questionId) => {
+    const addRecommend = async (userId, answerId) => {
+      console.log('개추 누름');
       let data = {
         userId,
-        questionId,
+        answerId,
       };
       await axios
         .post(`/answer/recommend`, data, {
@@ -37,22 +32,25 @@ const useRecommendStore = defineStore(
           },
         })
         .then((res) => {
-          isRecommended.value = true;
+          console.log('개추 눌림');
+          console.log('답변 추천');
         })
         .catch((error) => {
           console.error('Recommend error:', error);
         });
     };
 
-    const deleteRecommend = async (questionId) => {
+    const deleteRecommend = async (answerId) => {
+      console.log('추취 누름');
       await axios
-        .delete(`/answer/unrecommend/${questionId}`, {
+        .delete(`/answer/unrecommend/${answerId}`, {
           headers: {
             Authorization: `Bearer ${userStore.accessToken}`,
           },
         })
         .then((res) => {
-          isRecommended.value = false;
+          console.log('답변 추천 취소');
+          console.log('추취 눌림');
         })
         .catch((error) => {
           console.error('deleteRecommend error:', error);
@@ -66,7 +64,6 @@ const useRecommendStore = defineStore(
     // 반환
     return {
       recommendList,
-      isRecommended,
       setRecommendList,
       addRecommend,
       deleteRecommend,

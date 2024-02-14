@@ -10,10 +10,15 @@
           <span class="time info">
             {{ answer.createdTime[0] }}년 {{ answer.createdTime[1] }}월 {{ answer.createdTime[2] }}일
           </span>
-          <!-- 개추 토글 -->
-          <v-btn class="ma-2" variant="text" icon="mdi-thumb-up" color="#34a080"></v-btn>
-          <!-- <v-btn v-if="isMeTooed" @click="deleteMeToo(questionId)">나도궁금해요 취소</v-btn>
-            <v-btn v-else @click="addMeToo(userStore.loginUserId, questionId)">나도궁금해요</v-btn> -->
+          <v-btn
+            v-if="recommendedAnswerList[props.answer.answerId]"
+            @click="unRecommend()"
+            class="ma-2"
+            variant="text"
+            icon="mdi-thumb-up"
+            color="#34a080"
+          ></v-btn>
+          <v-btn v-else @click="recommend()" class="ma-2" variant="text" icon="mdi-thumb-up" color="#c2c2c2"></v-btn>
         </div>
       </div>
       <div class="answerBox listItem answerContent">
@@ -54,26 +59,48 @@
 import CommentList from '@/components/comment/CommentList.vue';
 import { useAnswerStore } from '@/stores/answerStore';
 import { useUserStore } from '@/stores/userStore';
-import { ref } from 'vue';
+import { ref, onMounted, watchEffect } from 'vue';
 import axios from '@/utils/common-axios';
 import AnswerViewer from '@/components/common/AnswerViewer.vue';
 import { useRoute } from 'vue-router';
 import profileRouter from '@/components/common/profileRouter.vue';
 
-const recommendStore = useRecommendStore();
 const answerStore = useAnswerStore();
 const userStore = useUserStore();
 const route = useRoute();
 
-// 답변 추천을 위한 코드
-// import { storeToRefs } from 'pinia';
-// import { useRecommendStore } from '@/stores/recommendStore';
-// const { setRecommendList, addRecommend, deleteRecommend } = recommendStore;
-// const { handleRecommendList: recommendList, handleRecommendState: isRecommended } = storeToRefs(recommendStore);
-
 const props = defineProps({
   answer: Object,
+  recommendedAnswerList: Object,
 });
+
+import { storeToRefs } from 'pinia';
+import { useRecommendStore } from '@/stores/recommendStore';
+const recommendStore = useRecommendStore();
+const { setRecommendList, addRecommend, deleteRecommend } = recommendStore;
+const { handleRecommendList: recommendList } = storeToRefs(recommendStore);
+
+onMounted(() => {
+  setRecommendList(props.answer.answerId, userStore.loginUserId);
+});
+
+watchEffect(() => {
+  if (props.answer && props.recommendedAnswerList) {
+    recommendList.value.forEach(function (a_id) {
+      props.recommendedAnswerList[a_id] = true;
+    });
+  }
+});
+
+const recommend = function () {
+  addRecommend(userStore.loginUserId, props.answer.answerId);
+  props.recommendedAnswerList[props.answer.answerId] = true;
+};
+
+const unRecommend = function () {
+  deleteRecommend(props.answer.answerId);
+  props.recommendedAnswerList[props.answer.answerId] = false;
+};
 
 const commentContent = ref('');
 
@@ -94,7 +121,6 @@ const createComment = function () {
   })
     .then((res) => {
       console.log('댓글 생성됨');
-      // 새로 고침 없이 바로 반영되도록 해보자
       location.reload();
     })
     .catch((err) => {
