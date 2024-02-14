@@ -2,6 +2,7 @@ package com.decode.web.domain.board.controller;
 
 import com.decode.web.domain.board.dto.AnswerCountResponseDto;
 import com.decode.web.domain.board.dto.AnswerDoAdoptDto;
+import com.decode.web.domain.board.dto.AnswerRecommendDto;
 import com.decode.web.domain.board.dto.BoardProfileResponseDto;
 import com.decode.web.domain.board.dto.CreateAnswerDto;
 import com.decode.web.domain.board.dto.RecommendDto;
@@ -12,9 +13,11 @@ import com.decode.web.domain.user.enums.Point;
 import com.decode.web.domain.user.service.PointService;
 import com.decode.web.entity.AnswerEntity;
 import com.decode.web.global.ResponseDto;
+import java.util.List;
 import javax.security.auth.login.CredentialException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -141,6 +144,17 @@ public class AnswerController {
         return ResponseDto.builder()
                 .status(HttpStatus.OK)
                 .message("총 답변 채택 수 가져오기 성공")
+                .data(data)
+                .build();
+    }
+
+    @GetMapping("/recommend/{userId}")
+    public ResponseDto getRecommendAnswersByUserId(@PathVariable Long userId)
+            throws BadRequestException {
+        List<AnswerRecommendDto> data = answerService.getRecommendAnswersByUserId(userId);
+        return ResponseDto.builder()
+                .status(HttpStatus.OK)
+                .message("유저가 추천한 답변 목록 조회")
                 .data(data)
                 .build();
     }

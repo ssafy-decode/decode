@@ -1,6 +1,7 @@
 package com.decode.web.domain.board.service;
 
 import com.decode.web.domain.board.dto.AnswerCountResponseDto;
+import com.decode.web.domain.board.dto.AnswerRecommendDto;
 import com.decode.web.domain.board.dto.BoardProfileResponseDto;
 import com.decode.web.domain.board.dto.CreateAnswerDto;
 import com.decode.web.domain.board.dto.RecommendDto;
@@ -10,6 +11,7 @@ import com.decode.web.entity.AnswerEntity;
 import com.decode.web.entity.QuestionEntity;
 import com.decode.web.exception.InvalidWriterException;
 import java.util.List;
+import org.apache.coyote.BadRequestException;
 
 public interface AnswerService {
 
@@ -34,4 +36,7 @@ public interface AnswerService {
     AnswerCountResponseDto getAnswerCountByUserId(Long userId);
 
     void sendEmailToSubscriber(Long answerId);
+
+    List<AnswerRecommendDto> getRecommendAnswersByUserId(Long userId)
+            throws BadRequestException;
 }
