@@ -1,5 +1,5 @@
 <template>
-  <div v-if="answer" class="answerContainer">
+  <div v-if="answer" class="answer-container">
     <div class="myListItem">
       <div class="listItem">
         <div>
@@ -44,7 +44,7 @@
             >
               <template #append-inner>
                 <v-btn type="submit" class="searchBtn" size="medium" @click="createComment">
-                  <img src="/searchicon.png" alt="검색아이콘" style="width: 40px; height: auto" />
+                  <img src="/searchicon.png" alt="등록아이콘" style="width: 40px; height: auto" />
                 </v-btn>
               </template>
             </v-textarea>
@@ -106,34 +106,40 @@ const unRecommend = function () {
 const commentContent = ref('');
 
 const createComment = function () {
-  let data = {
-    content: commentContent.value,
-    userId: userStore.loginUserId,
-    answerId: props.answer.answerId,
-  };
+  if (commentContent.value.trim()) {
+    let data = {
+      content: commentContent.value,
+      userId: userStore.loginUserId,
+      answerId: props.answer.answerId,
+    };
 
-  axios({
-    method: 'post',
-    url: `/comment`,
-    data: data,
-    headers: {
-      Authorization: `Bearer ${userStore.accessToken}`,
-    },
-  })
-    .then((res) => {
-      console.log('댓글 생성됨');
-      location.reload();
+    axios({
+      method: 'post',
+      url: `/comment`,
+      data: data,
+      headers: {
+        Authorization: `Bearer ${userStore.accessToken}`,
+      },
     })
-    .catch((err) => {
-      console.log(err);
-      console.log('댓글 생성 오류');
-    });
+      .then((res) => {
+        console.log('댓글 생성됨');
+        location.reload();
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log('댓글 생성 오류');
+      });
+  } else {
+    alert('댓글 내용을 입력해주세요.');
+  }
 };
 </script>
 
 <style scoped>
-div {
-  margin: 20px;
+
+.answer-container{
+  width: 90%;
+  border: solid red;
 }
 
 .answerBox {
@@ -156,7 +162,7 @@ div {
 .myListItem {
   background-color: white;
   border-radius: 35px;
-  padding-top: 20px;
+  padding-top: 10px;
 }
 
 .listItem {
@@ -184,23 +190,24 @@ div {
 
 .time {
   color: #d9d9d9;
+  font-weight: bold;
 }
 
 .answerContent {
   border: #62c0a6 solid 2px;
   border-radius: 24px;
-  padding: 40px;
+  padding: 20px;
 }
 
 .editDeleteBox {
   display: flex;
   justify-content: flex-end;
-  margin-top: 0;
+  margin-top: 15px;
 }
 
 .deleteText {
   color: #12a980;
-  font-size: small;
+  font-size: 15px;
   font-weight: 800;
 }
 
@@ -219,6 +226,9 @@ div {
 .searchInput {
   padding: 0px;
   margin: 0px;
+  margin-top: 20px;
+  margin-right: 20px;
+  margin-bottom: 20px;
 }
 
 .searchBtn {

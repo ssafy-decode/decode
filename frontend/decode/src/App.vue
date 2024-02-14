@@ -1,10 +1,13 @@
 <template>
   <div class="app">
-    <NavBar :class="$route.name === 'mainview' ? 'static-header' : 'non-static-header'" />
+    <NavBar
+      v-show="$route.name !== 'error'"
+      :class="$route.name === 'mainview' ? 'static-header' : 'non-static-header'"
+    />
     <div style="min-height: 1100px">
       <router-view></router-view>
       <br />
-      <Chat v-if="isLoggedIn"></Chat>
+      <Chat v-if="isLoggedIn && $route.name !== 'error'"></Chat>
     </div>
     <FooterBar />
   </div>
@@ -39,7 +42,7 @@ watch(
 );
 onMounted(() => {
   if (userStore.isLoggedIn) {
-    console.log("새로고침 그만~")
+    console.log('새로고침 그만~');
     userStore.setMyProfile(userStore.loginUserId);
   }
   stompStore.connect();

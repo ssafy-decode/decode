@@ -13,6 +13,7 @@ import ShopView from '@/views/ShopView.vue';
 import AuthenticationRedirectView from '@/views/AuthenticationRedirect.vue';
 import ProfileView from '@/views/ProfileView.vue';
 import InventoryView from '@/views/InventoryView.vue';
+import ErrorView from '@/ErrorView.vue';
 
 // Components
 import LoginForm from '@/components/LoginForm.vue';
@@ -147,6 +148,11 @@ const router = createRouter({
       path: '/inventory',
       name: 'inventory',
       component: InventoryView,
+    },
+    {
+      path: '/:catchAll(.*)',
+      name: 'error',
+      component: ErrorView,
     },
   ],
 });

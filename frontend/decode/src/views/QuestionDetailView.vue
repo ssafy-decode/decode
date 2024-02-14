@@ -1,63 +1,54 @@
 <template>
-  <v-card color="#f3f3f3" elevation="16" width="70%" class="card mx-auto px-5 py-5">
-    <v-row>
-      <v-col :cols="12">
-        <div class="myListItem">
-          <div class="listItem">
-            <img class="img" src="/questionIcon2.png" alt="질문아이콘" />
-            <div>
-              <p class="title">{{ question.title }}</p>
-            </div>
-          </div>
+  <v-card color="#f3f3f3" elevation="16" width="70%" class="card mx-auto py-5">
+    <div class="title-container">
+      <div class="title-img-container">
+        <img class="title-img" src="/questionIcon2.png" alt="질문아이콘" />
+      </div>
+      <div class="title-text-container">
+        <p class="title">{{ question.title }}</p>
+      </div>
+    </div>
+
+    <div class="question-container">
+      <div class="question-info-container">
+        <div class="listItem writerBox">
+          <span class="nickname title">
+            <profileRouter :uid="questionWriterId" :nickName="writerNickname" />
+          </span>
+          <span class="time info">
+            {{ questionCreatedTime[0] }}년 {{ questionCreatedTime[1] }}월 {{ questionCreatedTime[2] }}일
+          </span>
         </div>
-      </v-col>
-    </v-row>
-    <br />
-    <div class="myListItem contentBox">
-      <v-row>
-        <v-col :cols="12">
-          <div class="listItem writerBox">
-            <span class="nickname title">
-              <profileRouter :uid="questionWriterId" :nickName="writerNickname" />
-            </span>
-            &nbsp; &nbsp;
-            <span class="time info">
-              {{ questionCreatedTime[0] }}년 {{ questionCreatedTime[1] }}월 {{ questionCreatedTime[2] }}일
-            </span>
-          </div>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col :cols="12">
-          <QuestionViewer :initialValue="question.content" />
-          <div class="tagList">
-            <span>&lt;질문 태그&gt;</span>
-            <div v-for="(tag, index) in numToStr" :key="index"># {{ tag }} - {{ versions[index] }}</div>
-          </div>
-        </v-col>
-      </v-row>
-      <br /><br />
-      <div class="btnBox">
-        <div>
-          <v-btn v-if="questionWriterId === userStore.loginUserId" @click="goUpdate()">질문수정</v-btn>
-          <v-btn v-if="questionWriterId === userStore.loginUserId" @click="deleteQuestion()">질문삭제</v-btn>
+      </div>
+      <div class="question-content-container">
+        <QuestionViewer style="margin-left: 10px; margin-right: 10px" :initialValue="question.content" />
+        <div class="tagList">
+          <span>&lt;질문 태그&gt;</span>
+          <div v-for="(tag, index) in numToStr" :key="index"># {{ tag }} - {{ versions[index] }}</div>
         </div>
+      </div>
+      <div class="question-btn-container">
         <div class="btnBox">
           <div>
-            <v-btn v-if="isMeTooed" @click="deleteMeToo(questionId)">나도궁금해요 취소</v-btn>
-            <v-btn v-else @click="addMeToo(userStore.loginUserId, questionId)">나도궁금해요</v-btn>
-            <!-- {{ meTooCnt }} -->
-            <v-btn v-if="isBookmarked" @click="deleteBookmark(questionId)">북마크 취소</v-btn>
-            <v-btn v-else @click="addBookmark(userStore.loginUserId, questionId)">북마크</v-btn>
-            <!-- {{ bookmarkCnt }} -->
-            <v-btn @click="goCreateAnswer()">답변달기</v-btn>
+            <v-btn v-if="questionWriterId === userStore.loginUserId" @click="goUpdate()">질문수정</v-btn>
+            <v-btn v-if="questionWriterId === userStore.loginUserId" @click="deleteQuestion()">질문삭제</v-btn>
+          </div>
+          <div class="btnBox">
+            <div>
+              <v-btn v-if="isMeTooed" @click="deleteMeToo(questionId)">나도궁금해요 취소</v-btn>
+              <v-btn v-else @click="addMeToo(userStore.loginUserId, questionId)">나도궁금해요</v-btn>
+              <!-- {{ meTooCnt }} -->
+              <v-btn v-if="isBookmarked" @click="deleteBookmark(questionId)">북마크 취소</v-btn>
+              <v-btn v-else @click="addBookmark(userStore.loginUserId, questionId)">북마크</v-btn>
+              <!-- {{ bookmarkCnt }} -->
+              <v-btn @click="goCreateAnswer()">답변달기</v-btn>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <br />
-    <br />
-    <div v-if="isAnswerExist" class="myListItem">
+
+    <div v-if="isAnswerExist" class="answer-list-container">
       <AnswerList :answer-list="question.answerList" />
     </div>
   </v-card>
@@ -207,6 +198,60 @@ const goCreateAnswer = function () {
 </script>
 
 <style scoped>
+.title-container{
+  height: 70px;
+  width: 90%;
+  background-color: #fff;
+  border: solid black;
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+}
+.title-img-container{
+  height: 100%;
+  width: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.title-text-container{
+  height: 100%;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+}
+.title-img{
+  height: 60px;
+  width: 60px;
+}
+.question-container{
+  width: 90%;
+  margin-top: 10px;
+  border: solid red;
+  background-color: white;
+  border-radius: 35px;
+  display: flex;
+  flex-direction: column;
+}
+.question-info-container{
+  width: 100%;
+  border: solid blue;
+}
+.question-content-container{
+  width: 100%;
+}
+.question-btn-container{
+  width: 100%;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.btnBox {
+  display: flex;
+  justify-content: space-between;
+}
 button {
   background-color: #62c0a6;
   border-radius: 35px;
@@ -221,28 +266,20 @@ button {
   border-top-left-radius: 50px;
   border-bottom-left-radius: 50px;
   border-bottom-right-radius: 50px;
-  margin: 100px 40px;
-}
-
-.btnBox {
+  margin-top: 10px;
+  padding: 0;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
-.img {
-  width: 75px;
-  height: 75px;
-  margin: 5px 10px 5px 5px;
-  position: relative;
-  top: 0px;
-  left: 0px;
-  /* object-fit: cover; 이미지가 부모 요소에 맞게 조절되면서 원래 비율을 유지합니다. */
-}
-
-.myListItem {
+.answer-list-container {
   border-radius: 35px;
-  padding-bottom: 10px;
+  border: solid blue;
+  margin-top: 10px;
   background-color: white;
+  width: 90%;
 }
 
 .contentBox {
@@ -251,6 +288,7 @@ button {
 
 .writerBox {
   align-items: flex-end;
+  margin-top: 10px;
 }
 
 .listItem {
@@ -260,6 +298,7 @@ button {
   color: #575757;
   display: flex;
   align-items: center;
+  margin-left: 10px;
 }
 
 .info {
@@ -271,18 +310,22 @@ button {
 }
 
 .title {
-  font-size: medium;
-  font-weight: 700;
+  font-size: large;
+  font-weight: bolder;
+  margin-right: 20px;
 }
 
 .time {
   color: #d9d9d9;
+  font-weight: bold;
 }
 
 .tagList {
   margin-top: 40px;
+  margin-left: 10px;
+  margin-right: 10px;
   color: #575757;
   font-size: small;
-  font-weight: 600;
+  font-weight: bold;
 }
 </style>
