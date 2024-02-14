@@ -29,14 +29,19 @@
         </v-text-field>
       </div>
 
-      <my-room-list v-if="!selectedRoom" :rooms="roomList" @selectRoom="selectRoom"></my-room-list>
+      <my-room-list
+        v-if="!selectedRoom"
+        :rooms="roomList"
+        @selectRoom="selectRoom"
+        @deleteRoom="handleDeleteRoom"
+      ></my-room-list>
       <chat-room v-else :room="selectedRoom" :messages="messages" @goBack="goBack"></chat-room>
     </div>
   </div>
 </template>
 
 <script>
-import { ref, onMounted  } from 'vue';
+import { ref, onMounted } from 'vue';
 import CreateRoomDialog from './CreateRoomDialog.vue';
 import MyRoomList from './MyRoomList.vue';
 import ChatRoom from './ChatRoom.vue';
@@ -72,7 +77,12 @@ export default {
     const goBack = () => {
       selectedRoom.value = null;
     };
-
+    const handleDeleteRoom = (room) => {
+      const index = roomList.value.findIndex((r) => r.id === room.id);
+      if (index > -1) {
+        roomList.value.splice(index, 1);
+      }
+    };
     const selectRoom = async (room) => {
       console.log('selected room', room.id);
       selectedRoom.value = room;
@@ -85,6 +95,7 @@ export default {
       messages,
       goBack,
       selectRoom,
+      handleDeleteRoom
     };
   },
 };
