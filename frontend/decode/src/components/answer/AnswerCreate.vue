@@ -97,27 +97,31 @@ onMounted(() => {
 });
 
 const createAnswer = function () {
-  let data = {
-    questionId: parseInt(questionId),
-    userId: parseInt(userId),
-    content: answerContent.value,
-  };
-  axios({
-    method: 'post',
-    url: `/answer`,
-    data: data,
-    headers: {
-      Authorization: `Bearer ${userStore.accessToken}`,
-    },
-  })
-    .then((res) => {
-      console.log('답변 생성 완료');
-      router.push({ path: `/board/${questionId}` });
+  if (answerContent.value.trim()) {
+    let data = {
+      questionId: parseInt(questionId),
+      userId: parseInt(userId),
+      content: answerContent.value,
+    };
+    axios({
+      method: 'post',
+      url: `/answer`,
+      data: data,
+      headers: {
+        Authorization: `Bearer ${userStore.accessToken}`,
+      },
     })
-    .catch((err) => {
-      console.log(err);
-      console.log('답변 생성 오류');
-    });
+      .then((res) => {
+        console.log('답변 생성 완료');
+        router.push({ path: `/board/${questionId}` });
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log('답변 생성 오류');
+      });
+  } else {
+    alert('내용을 입력해주세요.');
+  }
 };
 </script>
 
