@@ -143,7 +143,8 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         if (chatRoom.isEmpty()) {
             throw new BadRequestException("채팅방이 존재하지 않습니다.");
         }
-        Optional<ChatSubRoomEntity> chatSubRoom = chatSubRoomRepository.findByChatRoomEntityIdAndUserId(roomId,
+        Optional<ChatSubRoomEntity> chatSubRoom = chatSubRoomRepository.findByChatRoomEntityIdAndUserId(
+                roomId,
                 userId);
         if (chatSubRoom.isEmpty()) {
             ChatSubRoomEntity chatSubRoomEntity = new ChatSubRoomEntity();
@@ -158,5 +159,17 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     @Override
     public void deleteRoom(Long roomId) {
         chatRoomRepository.deleteById(roomId);
+    }
+
+    @Override
+    public void deleteSubRoomByUserIdAndRoomId(Long userId, Long roomId)
+            throws BadRequestException {
+        Optional<ChatSubRoomEntity> chatSubRoom = chatSubRoomRepository.findByChatRoomEntityIdAndUserId(
+                roomId, userId);
+        if (chatSubRoom.isEmpty()) {
+            throw new BadRequestException("방 구독 삭제 실패");
+        }
+        chatSubRoomRepository.delete(chatSubRoom.get());
+
     }
 }

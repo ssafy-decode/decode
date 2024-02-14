@@ -8,6 +8,8 @@ import com.decode.web.domain.board.dto.ResponseAnswerDto;
 import com.decode.web.domain.board.dto.ResponseQuestionDto;
 import com.decode.web.domain.board.dto.ResponseQuestionListDto;
 import com.decode.web.domain.board.dto.UpdateQuestionDto;
+import com.decode.web.domain.board.repository.BookmarkRepository;
+import com.decode.web.domain.board.repository.MetooRepository;
 import com.decode.web.domain.board.repository.QuestionELKRepository;
 import com.decode.web.domain.board.repository.QuestionRepository;
 import com.decode.web.domain.tag.dto.QuestionTagDto;
@@ -35,6 +37,8 @@ public class QuestionServiceImpl implements QuestionService {
     private final AnswerService answerService;
     private final ResponseUserProfileMapper responseUserProfileMapper;
     private final QuestionELKRepository questionELKRepository;
+    private final MetooRepository metooRepository;
+    private final BookmarkRepository bookmarkRepository;
 
     @Override
     public List<ResponseQuestionListDto> searchQuestionByKeyword(String keyword,
@@ -55,12 +59,13 @@ public class QuestionServiceImpl implements QuestionService {
             }
         }
 
-        return questionDocumentList.stream().map(this::convertDocumentToQuestionListDto).collect(
-                Collectors.toList());
+        return questionDocumentList.stream()
+                .map(this::convertDocumentToQuestionListDto)
+                .collect(Collectors.toList());
 
     }
 
-    public ResponseQuestionListDto convertDocumentToQuestionListDto(
+    private ResponseQuestionListDto convertDocumentToQuestionListDto(
             QuestionDocument questionDocument) {
         QuestionEntity questionEntity = questionRepository.getReferenceById(
                 questionDocument.getId());
