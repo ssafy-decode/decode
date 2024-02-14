@@ -1,6 +1,34 @@
 <template>
   <div class="chat-component">
-    <div id="app">
+    <div id="app" style=" margin: 0; padding: 0; height: 476px;">
+      <div style="display: flex; align-items: center; background-color: #edebeb; padding: 0; margin: 0;">
+        <v-text-field
+          v-if="!selectedRoom"
+          v-model="roomname"
+          variant="outlined"
+          rounded
+          density="compact"
+          placeholder="채팅방을 검색하세요."
+          append-inner-icon="mdi-magnify"
+          @click:append="nickNameSearch"
+          hide-details
+          style="border: none; padding:3px;"
+          bg-color="white"
+          >
+          <template v-slot:append>
+            <!-- 텍스트 필드 내에 버튼 추가 -->
+            <v-btn
+            v-if="!selectedRoom"
+            density="compact"
+            icon="mdi-plus"
+            @click="dialog = true"
+            class="custom-icon-btn"
+            style="padding: 0; margin: 0;"
+            ></v-btn>
+          </template>
+        </v-text-field>
+      </div>
+      
       <my-room-list v-if="!selectedRoom" :rooms="roomList" @selectRoom="selectRoom" ></my-room-list>
       <chat-room v-else :room="selectedRoom" :messages="messages" @goBack="goBack"></chat-room>
     </div>
@@ -33,7 +61,7 @@ export default {
 
     onMounted(async () => {
       try {
-        const rooms = await chatStore.fetchRoomList();
+        const rooms = await chatStore.fetchMyRoomList();
         if (!Array.isArray(rooms)) {
           console.error('fetchRooms API가 배열을 반환하지 않았습니다:', rooms);
         } else {

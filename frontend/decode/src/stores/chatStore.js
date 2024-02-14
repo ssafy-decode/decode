@@ -25,7 +25,17 @@ const useChatStore = defineStore('useChatStore', () => {
       console.log(err);
     }
   };
+  const deleteChatRoom = async (roomId) => {
+    try {
+      const res = await axios.delete(`/chat/room/${roomId}`, {});
+      console.log(res);
+      return res.data;
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const subChatRoom = async (roomId) => {
+    console.log(roomId)
     try {
       const res = await axios.post(
         `/chat/room/${roomId}/sub`,
@@ -36,8 +46,8 @@ const useChatStore = defineStore('useChatStore', () => {
           },
         },
       );
-      console.log(res.data.data);
-      return res.data.data;
+      console.log(res.data);
+      return res.data;
     } catch (err) {
       console.log(err);
     }
@@ -49,8 +59,8 @@ const useChatStore = defineStore('useChatStore', () => {
           Authorization: `Bearer ${userStore.accessToken}`,
         },
       });
-      console.log(res.data.data);
-      return res.data.data;
+      console.log(res.data);
+      return res.data;
     } catch (err) {
       console.log(err);
     }
@@ -90,8 +100,29 @@ const useChatStore = defineStore('useChatStore', () => {
       console.error('방 정보를 가져오는 중 오류가 발생했습니다:', error);
     }
   };
-
-  return { createChatRoom, fetchRoomList, fetchChatHistory, subChatRoom, getSubRoomList };
+  const fetchMyRoomList = async () => {
+    try {
+      const roomList = await getSubRoomList(); // getRoom은 chatStore에서 방 정보를 가져오는 메소드로 가정합니다.
+      console.log(roomList);
+      if (roomList) {
+        console.log('내 방 리스트를 성공적으로 가져왔습니다:', roomList);
+      } else {
+        console.log('내가 참여한 방들이 없습니다.');
+      }
+      return roomList;
+    } catch (error) {
+      console.error('방 정보를 가져오는 중 오류가 발생했습니다:', error);
+    }
+  };
+  return {
+    deleteChatRoom,
+    createChatRoom,
+    fetchRoomList,
+    fetchChatHistory,
+    subChatRoom,
+    getSubRoomList,
+    fetchMyRoomList,
+  };
 });
 
 export { useChatStore };

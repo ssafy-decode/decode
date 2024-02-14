@@ -18,7 +18,7 @@
     </v-col>
     <v-col cols="4" style="padding: 0; margin: 0">
       <div class="img-box">
-        <img class="third-img"src="./expector.png" alt="전문가" />
+        <img class="third-img" src="./expector.png" alt="전문가" />
       </div>
     </v-col>
     <v-col cols="2"></v-col>

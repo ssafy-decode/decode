@@ -17,7 +17,7 @@ import { parseJwt } from '@/utils/jwtParser';
 
 const userStore = useUserStore();
 
-const { setLoginUserId, setToken, setMyProfile } = userStore;
+const { setLoginUserId, setToken, setMyProfile, setOAuth } = userStore;
 const { isLoggedIn: isLoggedIn } = storeToRefs(userStore);
 const router = useRouter();
 
@@ -32,6 +32,7 @@ window.addEventListener('message', (event) => {
   const uid = parseJwt(token)['userId'];
   setLoginUserId(uid);
   setMyProfile();
+  setOAuth();
 
   router.push('/');
 });
