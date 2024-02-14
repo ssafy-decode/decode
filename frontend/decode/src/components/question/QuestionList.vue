@@ -1,67 +1,63 @@
 <template>
   <div class="searchContainer">
     <v-form class="searchBox" @submit.prevent="searchParams(keyword, tagIds)">
-      <v-row>
-        <v-col cols="4" sm="2" md="2"></v-col>
-        <v-col cols="6" sm="5" md="6" class="leftBox">
-          <v-text-field
-            variant="plain"
-            label="검색 키워드를 입력하세요"
-            class="searchInput"
-            v-model="keyword"
-            bg-color="fff"
-            clearable
-          >
-          </v-text-field>
-          <input class="searchBtn" type="submit" value=" " />
-        </v-col>
-
-        <v-col cols="1" sm="5" md="2" class="rightBox">
-          <v-combobox
-            variant="solo"
-            class="stackBox"
-            bg-color="fff"
-            v-model="tagIds"
-            :items="Object.keys(items)"
-            placeholder="ex) java, spring boot, sql"
-            label="기술 스택"
-            multiple
-            chips
-            clearable
-          ></v-combobox>
-        </v-col>
-        <v-col cols="1" sm="0" md="2"></v-col>
-      </v-row>
+      <div style="display: flex; justify-content: center; align-items: center; width: 70%;">
+        <v-row>
+          <v-col cols="9" class="leftBox">
+            <span class="text-field-container">
+              <div class="search-text-container">
+                <v-text-field variant="plain" label="검색 키워드를 입력하세요" class="searchInput" v-model="keyword" bg-color="fff"
+                  rounded hide-details="true">
+                </v-text-field>
+              </div>
+              <div class="searchBtn-container">
+                <input class="searchBtn" type="submit" value=" " />
+              </div>
+            </span>
+          </v-col>
+          <v-col cols="3" class="rightBox">
+            <v-combobox variant="solo" class="stackBox" bg-color="fff" v-model="tagIds" :items="Object.keys(items)"
+              placeholder="ex) java, spring boot, sql" label="기술 스택" multiple chips clearable hide-details="true"
+              rounded=""></v-combobox>
+          </v-col>
+        </v-row>
+      </div>
     </v-form>
   </div>
-
   <div>
     <v-card color="#f3f3f3" elevation="16" width="70%" class="card mx-auto px-5">
-      <div class="btnContainer d-flex justify-end">
-        <v-btn class="createBtn" @click="goCreateQuestion()">질문등록</v-btn>
-      </div>
       <v-row>
-        <v-checkbox v-model="filters.bookmarked" label="북마크"></v-checkbox>
-  <v-checkbox v-model="filters.curious" label="나도 궁금해요"></v-checkbox>
+        <v-col :cols="9">
+
+        </v-col>
+
+        <v-col :cols="3">
+          <div class="btnContainer d-flex justify-end">
+            <v-btn class="createBtn" @click="goCreateQuestion()">질문생성</v-btn>
+          </div>
+        </v-col>
+
       </v-row>
-      <QuestionListItem v-for="question in questionStore.questions" :key="question.id" :question="question" />
+      <div>
+        <QuestionListItem v-for="question in questionStore.questions" :key="question.id" :question="question" />
+      </div>
     </v-card>
   </div>
 </template>
 
 <script setup>
 import { useQuestionStore } from '@/stores/questionStore';
-import { ref,onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import QuestionListItem from './QuestionListItem.vue';
 import { useRouter } from 'vue-router';
 
-onMounted (async() => {
+onMounted(async () => {
   console.log(questionStore.questions)
 })
 const filters = ref({
-    bookmarked: false,
-    curious: false,
-  });
+  bookmarked: false,
+  curious: false,
+});
 const router = useRouter();
 
 const goCreateQuestion = function () {
@@ -82,11 +78,25 @@ const items = questionStore.items;
 
 <style scoped>
 .card {
+  margin-top: 1%;
   border-top-left-radius: 50px;
   border-bottom-left-radius: 50px;
   border-bottom-right-radius: 50px;
   padding-bottom: 20px;
 }
+
+.text-field-container {
+  display: flex;
+  width: 100%;
+  height: 85%;
+  max-height: 60px;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  border-radius: 30px;
+}
+
 
 input {
   border-left: 1px solid black;
@@ -126,38 +136,52 @@ span {
 }
 
 .leftBox {
-  padding-top: 17px;
-  margin: 0px;
-  position: relative;
+  padding-left: 2%;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .rightBox {
-  padding-top: 19px;
-  margin: 0px;
+  padding-right: 2%;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .searchInput {
   border-radius: 30px;
-  padding-left: 20px;
+  padding-left: 5%;
   width: 100%;
   height: 60px;
-  background-color: white;
+  /* background-color: white; */
+}
+
+.searchInput input {
+  text-align: left;
+  /* 커서를 왼쪽으로 이동 */
+}
+
+.search-text-container {
+  /* width: calc(100%-70px); */
+  width: 100%;
+}
+
+.searchBtn-container {
+  width: 70px;
+  display: flex;
+  justify-content: center;
 }
 
 .searchBtn {
-  position: absolute;
-  top: 23px;
-  right: 1.5%;
   background-image: url('/public/searchicon.png');
   background-size: contain;
   background-repeat: no-repeat;
   width: 50px;
   height: 50px;
   border: none;
-}
-
-.stackBox ::v-deep(.v-field) {
-  border-radius: 30px;
 }
 
 .btnContainer {
