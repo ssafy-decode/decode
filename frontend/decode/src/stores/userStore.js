@@ -22,6 +22,7 @@ const useUserStore = defineStore(
     // 값
     const registId = ref(null); // 회원 가입 시 회원 번호
     const isLoggedIn = ref(false); // 로그인 여부 T/F
+    const isOAuth = ref(false); // 소셜 로그인 여부 T/F
     const loginUserId = ref(0); // 로그인 유저 회원 번호
     const foundEmail = ref(''); // 이메일 찾기에서의 이메일
 
@@ -154,6 +155,9 @@ const useUserStore = defineStore(
     const setToken = (token) => {
       accessToken.value = token;
     };
+    const setOAuth = () => {
+      isOAuth.value = true;
+    };
 
     // computed
     const handleUsers = computed(() => users.value);
@@ -161,6 +165,7 @@ const useUserStore = defineStore(
     const handleLoginUserId = computed(() => loginUserId.value);
     const handleAccessToken = computed(() => accessToken.value);
     const handleMyprofile = computed(() => myProfile.value);
+    const handleIsOAuth = computed(() => isOAuth.value);
 
     // 반환
     return {
@@ -182,11 +187,13 @@ const useUserStore = defineStore(
       setToken,
       findUserEmail,
       findUserPwd,
+      setOAuth,
       handleUsers,
       handleUser,
       handleLoginUserId,
       handleAccessToken,
       handleMyprofile,
+      handleIsOAuth,
     };
   },
   {
