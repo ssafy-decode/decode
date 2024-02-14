@@ -205,9 +205,6 @@ const { setUser } = userStore;
 const { setTagNumList } = tagStore;
 const { setUserProfile, updateTechStack, updatePwd } = profileStore;
 const { handleAccessToken: accessToken } = storeToRefs(userStore);
-// const { handleLoginUserId: uid } = storeToRefs(userStore);
-// const { loginUserId: uid } = storeToRefs(userStore);
-// const { loginUser: user } = storeToRefs(userStore);
 const { handleUser: user } = storeToRefs(userStore);
 const { handleUserProfile: profile } = storeToRefs(profileStore);
 const { handleTags: tagIdList } = storeToRefs(tagStore);
@@ -375,23 +372,6 @@ const updatepwd = () => {
   };
 
   updatePwd(user, accessToken.value);
-};
-
-// 마우스 호버에 대한 툴팁 표시 관련 로직
-const tooltip = ref({
-  visible: false,
-  x: 0,
-  y: 0,
-  text: '',
-});
-
-const showTooltip = (text) => {
-  tooltip.value.visible = true;
-  tooltip.value.text = text;
-};
-
-const hideTooltip = () => {
-  tooltip.value.visible = false;
 };
 </script>
 
