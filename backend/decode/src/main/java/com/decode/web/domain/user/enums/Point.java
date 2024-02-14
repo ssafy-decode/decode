@@ -6,7 +6,7 @@ public enum Point {
     ANSWER("답변 등록", 70),
     ADOPT("답변 채택", 100);
 
-    private static final int EXP_RATIO = 10;
+    private static final int EXP_RATIO = 3;
 
     private final String type;
     private final int point;
