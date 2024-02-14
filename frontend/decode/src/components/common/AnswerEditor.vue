@@ -23,11 +23,7 @@ export default {
       el: document.querySelector('#editor'),
       height: '570px',
       initialEditType: 'markdown',
-      initialValue:
-        '```\n' +
-        questionStore.inputQuestionContent +
-        '\n```' +
-        '\n\n내용을 마크다운 형식으로 입력해주세요!\n질문을 등록하면 GPT의 답변을 자동으로 받아볼 수 있습니다. :)',
+      initialValue: '내용을 마크다운 형식으로 입력해주세요!',
       previewStyle: 'vertical',
       hooks: {
         addImageBlobHook: addImageBlobHook,

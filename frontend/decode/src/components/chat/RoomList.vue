@@ -1,11 +1,6 @@
 <template>
   <div class="room-list">
-    <div 
-      v-for="room in rooms" 
-      :key="room.id" 
-      class="room-item" 
-      @click="selectRoom(room)"
-    >
+    <div v-for="room in rooms" :key="room.id" class="room-item" @click="selectRoom(room)">
       <div class="room-title">{{ room.roomName }}</div>
       <div class="room-description">{{ room.roomDescription }}</div>
     </div>
@@ -14,7 +9,7 @@
 
 <script>
 import { ref } from 'vue';
-import {useStompStore} from '@/utils/StompUtil';
+import { useStompStore } from '@/utils/StompUtil';
 import { useChatStore } from '@/stores/chatStore';
 
 export default {
@@ -23,17 +18,16 @@ export default {
     rooms: Array,
   },
   setup(props, context) {
-    const stompStore =  useStompStore();
+    const stompStore = useStompStore();
     const chatStore = useChatStore();
     const selectRoom = (room) => {
       stompStore.subscribeRoom(room.id);
       chatStore.subChatRoom(room.id);
-      console.log(room)
       context.emit('selectRoom', room);
-    }
+    };
 
-    return { selectRoom, };
-  }
+    return { selectRoom };
+  },
 };
 </script>
 
@@ -42,9 +36,9 @@ export default {
   flex-direction: column;
   height: 89%;
   overflow-y: auto;
-  background-color: #f5f5f5;  /* 방 리스트 전체 배경색 추가 */
+  background-color: #f5f5f5; /* 방 리스트 전체 배경색 추가 */
   border-top: 0.5px solid #b1d8cd;
-  border-bottom: 1px solid #34A080;
+  border-bottom: 1px solid #34a080;
 }
 
 .room-item {
@@ -59,7 +53,7 @@ export default {
 
 .room-title {
   width: 100%;
-  min-height: 100%;  /* 높이를 100%로 설정 */
+  min-height: 100%; /* 높이를 100%로 설정 */
   display: flex; /* 내부 텍스트를 중앙에 배치하기 위한 flex 설정 */
   align-items: center;
   padding-left: 5px;
@@ -71,16 +65,16 @@ export default {
 
 .room-description {
   width: 100%;
-  height: 100%;  /* 높이를 100%로 설정 */
+  height: 100%; /* 높이를 100%로 설정 */
   position: absolute;
-  top: 0;        /* 상단으로부터의 위치를 0으로 설정 */
+  top: 0; /* 상단으로부터의 위치를 0으로 설정 */
   left: 0;
-  background-color: #34A080;
+  background-color: #34a080;
   color: white;
-  opacity: 0;  
+  opacity: 0;
   transition: opacity 0.3s ease;
   display: flex; /* 내부 텍스트를 중앙에 배치하기 위한 flex 설정 */
-  justify-content: center; 
+  justify-content: center;
   align-items: center;
   padding: 10px; /* 텍스트와 테두리 사이에 간격을 주기 위한 패딩 설정 */
 }

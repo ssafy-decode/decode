@@ -27,7 +27,7 @@
       <div class="answerTitle">답변 작성 중...</div>
       <form @submit.prevent="createAnswer">
         <div style="background-color: white">
-          <MyEditor @editor-content-updated="updateEditorContent" />
+          <AnswerEditor @editor-content-updated="updateEditorContent" />
         </div>
         <div id="btnBox">
           <v-btn class="submitBtn" type="submit">답변등록</v-btn>
@@ -38,17 +38,20 @@
 </template>
 
 <script setup>
-import MyEditor from '@/components/common/MyEditor.vue';
+import AnswerEditor from '@/components/common/AnswerEditor.vue';
 import { useUserStore } from '@/stores/userStore';
+import { useQuestionStore } from '@/stores/questionStore';
 import { useAnswerStore } from '@/stores/answerStore';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { ref, onMounted } from 'vue';
 import axios from '@/utils/common-axios';
 import QuestionViewer from '@/components/common/QuestionViewer.vue';
 
 const userStore = useUserStore();
+const questionStore = useQuestionStore();
 const answserStore = useAnswerStore();
 const router = useRouter();
+const route = useRoute();
 
 const questionInfo = ref({});
 const questionTitle = ref('');
@@ -71,13 +74,14 @@ const updateEditorContent = function (content) {
 const getDetailQuestion = function () {
   axios({
     method: 'get',
-    url: `/question/${questionId}`,
+    url: `/question/${route.params.id}`,
     headers: {
       Authorization: `${userStore.accessToken}`,
     },
   })
     .then((res) => {
-      questionInfo.value = res.data.data;
+      questionStore.detailQuestion = res.data.data;
+      questionInfo.value = questionStore.detailQuestion;
       questionTitle.value = questionInfo.value.title;
       questionContent.value = questionInfo.value.content;
       questionWriter.value = questionInfo.value.questionWriter;
@@ -86,10 +90,7 @@ const getDetailQuestion = function () {
       questionUpdatedTime.value = questionInfo.value.updatedTime;
       questionMeTooCnt.value = questionInfo.value.meTooCnt;
     })
-    .catch((err) => {
-      console.log(err);
-      console.log('상세 질문 조회 오류');
-    });
+    .catch((err) => {});
 };
 
 onMounted(() => {
@@ -112,13 +113,9 @@ const createAnswer = function () {
       },
     })
       .then((res) => {
-        console.log('답변 생성 완료');
         router.push({ path: `/board/${questionId}` });
       })
-      .catch((err) => {
-        console.log(err);
-        console.log('답변 생성 오류');
-      });
+      .catch((err) => {});
   } else {
     alert('내용을 입력해주세요.');
   }

@@ -13,7 +13,6 @@ const { myInventory: inventory } = storeToRefs(shopStore);
 const changeDetail = (item) => {
   selected.value = true;
   detail.value = item;
-  console.log(detail.value);
 };
 </script>
 <template>

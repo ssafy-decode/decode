@@ -1,13 +1,20 @@
 <template>
   <div class="searchContainer">
     <v-form class="searchBox" @submit.prevent="searchParams(keyword, tagIds)">
-      <div style="display: flex; justify-content: center; align-items: center; width: 70%;">
+      <div style="display: flex; justify-content: center; align-items: center; width: 70%">
         <v-row>
           <v-col cols="9" class="leftBox">
             <span class="text-field-container">
               <div class="search-text-container">
-                <v-text-field variant="plain" label="검색 키워드를 입력하세요" class="searchInput" v-model="keyword" bg-color="fff"
-                  rounded hide-details="true">
+                <v-text-field
+                  variant="plain"
+                  label="검색 키워드를 입력하세요"
+                  class="searchInput"
+                  v-model="keyword"
+                  bg-color="fff"
+                  rounded
+                  hide-details="true"
+                >
                 </v-text-field>
               </div>
               <div class="searchBtn-container">
@@ -16,9 +23,20 @@
             </span>
           </v-col>
           <v-col cols="3" class="rightBox">
-            <v-combobox variant="solo" class="stackBox" bg-color="fff" v-model="tagIds" :items="Object.keys(items)"
-              placeholder="ex) java, spring boot, sql" label="기술 스택" multiple chips clearable hide-details="true"
-              rounded=""></v-combobox>
+            <v-combobox
+              variant="solo"
+              class="stackBox"
+              bg-color="fff"
+              v-model="tagIds"
+              :items="Object.keys(items)"
+              placeholder="ex) java, spring boot, sql"
+              label="기술 스택"
+              multiple
+              chips
+              clearable
+              hide-details="true"
+              rounded=""
+            ></v-combobox>
           </v-col>
         </v-row>
       </div>
@@ -27,16 +45,13 @@
   <div>
     <v-card color="#f3f3f3" elevation="16" width="70%" class="card mx-auto px-5">
       <v-row>
-        <v-col :cols="9">
-
-        </v-col>
+        <v-col :cols="9"> </v-col>
 
         <v-col :cols="3">
           <div class="btnContainer d-flex justify-end">
             <v-btn class="createBtn" @click="goCreateQuestion()">질문생성</v-btn>
           </div>
         </v-col>
-
       </v-row>
       <div>
         <QuestionListItem v-for="question in questionStore.questions" :key="question.id" :question="question" />
@@ -51,9 +66,6 @@ import { ref, onMounted } from 'vue';
 import QuestionListItem from './QuestionListItem.vue';
 import { useRouter } from 'vue-router';
 
-onMounted(async () => {
-  console.log(questionStore.questions)
-})
 const filters = ref({
   bookmarked: false,
   curious: false,
@@ -96,7 +108,6 @@ const items = questionStore.items;
   background-color: white;
   border-radius: 30px;
 }
-
 
 input {
   border-left: 1px solid black;

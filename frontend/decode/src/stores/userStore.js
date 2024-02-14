@@ -41,8 +41,6 @@ const useUserStore = defineStore(
     // 회원 가입 2단계: 선택한 기술 스택 저장
     const saveTechStack = async (selectedTechStack) => {
       const tagNums = selectedTechStack.map((item) => tagStore.tagNum[item]);
-      console.log('테스트중', registId.value); // 41로 잘 뜸
-      console.log('테스트중2', tagNums); // [2]로 잘 뜸
       await axios
         .post(`/addUserTag`, { userId: registId.value, tagIdList: tagNums })
         .then((res) => {
@@ -53,7 +51,6 @@ const useUserStore = defineStore(
           }
         })
         .catch((error) => {
-          console.error('Error saving tech stack:', error);
           registId.value = null; // 초기화
           alert('회원가입이 완료되었지만, 기술 스택 저장에 문제가 발생했습니다.');
         });
@@ -75,7 +72,6 @@ const useUserStore = defineStore(
           alert('로그인에 실패했습니다.');
         }
       } catch (error) {
-        console.error('Login error:', error);
         alert('로그인에 실패했습니다.');
         return;
       }
@@ -117,8 +113,6 @@ const useUserStore = defineStore(
 
     // 특정 회원 정보 조회 (id, email, 암호화된password, phoneNumber, birth, name, createdTime, updatedTime)
     const setUser = async (userid) => {
-      console.log('userid.value:', userid.value);
-      console.log('userid:', userid);
       await axios.get(`/user/${userid}`).then((res) => {
         accessToken.value = parseToken(res);
         if (res.data.status === 'OK') {

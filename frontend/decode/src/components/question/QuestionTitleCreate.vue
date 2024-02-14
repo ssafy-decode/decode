@@ -66,10 +66,7 @@ const createQuestionTitle = function () {
       questionStore.gptTagIds = res.data.data.tagIds;
       router.push({ name: 'question-create' });
     })
-    .catch((err) => {
-      console.log('질문 생성 오류');
-      console.log(err);
-    });
+    .catch((err) => {});
 };
 </script>
 

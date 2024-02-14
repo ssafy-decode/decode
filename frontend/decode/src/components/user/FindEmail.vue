@@ -153,9 +153,7 @@ const findemail = () => {
     };
 
     userStore.findUserEmail(user);
-  } catch (error) {
-    console.error('Error:', error);
-  }
+  } catch (error) {}
 };
 </script>
 

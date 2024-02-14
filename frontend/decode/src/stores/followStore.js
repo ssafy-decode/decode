@@ -46,7 +46,6 @@ const useFollowStore = defineStore(
           isFollow.value = true;
         })
         .catch((error) => {
-          console.error('follow error:', error);
           alert('팔로우에 실패했습니다.');
         });
     };
@@ -78,7 +77,6 @@ const useFollowStore = defineStore(
           isFollow.value = false;
         })
         .catch((error) => {
-          console.error('unFollow error:', error);
           alert('팔로우 취소에 실패했습니다.');
         });
     };

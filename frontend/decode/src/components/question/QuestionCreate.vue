@@ -80,72 +80,71 @@ const questionId = ref(null);
 
 const items = questionStore.items;
 
-////////////////////////////////////////////////////////////
-// 로딩 오버레이를 제어할 변수
 const showLoadingOverlay = ref(false);
-////////////////////////////////////////////////////////////
 
 const updateEditorContent = function (content) {
   questionContent.value = content;
 };
 
 const createQuestion = function () {
-  ////////////////////////////////////////////////////////////
-  // createQuestion 함수 진입 시 로딩 오버레이 표시
-  showLoadingOverlay.value = true;
-  ////////////////////////////////////////////////////////////
-
   const tags = tagIds.value.map((tagId, index) => {
     return {
       tagId: items[tagId],
       version: versions.value[index],
     };
   });
-
-  let data = {
-    title: questionTitle.value,
-    content: questionContent.value,
-    questionWriterId: userStore.loginUserId,
-    tags: tags,
-  };
-  console.log('data의 내용', data);
-  axios({
-    method: 'post',
-    url: `/question`,
-    data: data,
-    headers: {
-      Authorization: `Bearer ${userStore.accessToken}`,
-    },
-  })
-    .then((res) => {
-      console.log('질문 생성 완료');
-      console.log('res.data.id', res.data.data.id);
-      questionId.value = res.data.data.id;
-      questionStore.gptTitles = [''];
-      questionStore.gptTagIds = [''];
+  // 유효성 검사
+  if (tags[0].tagId && tags[0].version && questionContent.value.trim() && questionTitle.value.trim()) {
+    showLoadingOverlay.value = true;
+    let data = {
+      title: questionTitle.value,
+      content: questionContent.value,
+      questionWriterId: userStore.loginUserId,
+      tags: tags,
+    };
+    axios({
+      method: 'post',
+      url: `/question`,
+      data: data,
+      headers: {
+        Authorization: `Bearer ${userStore.accessToken}`,
+      },
     })
-    .then((res) => {
-      // GPT 답변 자동 생성
-      console.log('GPT답변 자동생성 함수 실행');
-      answerStore.getGptAnswer(questionId.value, questionContent.value);
-      alert('잠시 후 GPT의 답변이 생성됩니다.');
+      .then((res) => {
+        questionId.value = res.data.data.id;
+        questionStore.gptTitles = [''];
+        questionStore.gptTagIds = [''];
+      })
+      .then((res) => {
+        // GPT 답변 자동 생성
+        answerStore.getGptAnswer(questionId.value, questionContent.value);
+        alert('잠시 후 GPT의 답변이 생성됩니다.');
 
-      ////////////////////////////////////////////////////////////
-      setTimeout(() => {
+        setTimeout(() => {
+          showLoadingOverlay.value = false;
+          if (confirm('GPT 답변이 생성되면 알려드릴게요!')) {
+            router.push({ name: 'questionview' });
+          } else {
+            router.push({ name: 'questionview' });
+          }
+          // router.push({ name: 'question-detail', params: { id: questionId } });
+        }, 1000);
+      })
+      // .then((res) => {
+      //   if (confirm('답변 목록에 GPT 답변이 추가되었습니다.\n지금 바로 답변을 확인해보세요!')) {
+      //     router.push({ name: 'question-detail', params: { id: questionId } });
+      //   } else {
+      //     router.push({ name: 'question-detail', params: { id: questionId } });
+      //   }
+      // })
+      .catch((err) => {
+        alert('제목과 내용, 태그를 입력해주세요');
+
         showLoadingOverlay.value = false;
-      }, 8000);
-      ////////////////////////////////////////////////////////////
-    })
-    .catch((err) => {
-      console.log(err);
-      console.log('질문 생성 오류');
-      alert('제목과 내용, 태그를 입력해주세요');
-
-      ////////////////////////////////////////////////////////////
-      // createQuestion 함수 오류 발생 시 로딩 오버레이 숨김
-      showLoadingOverlay.value = false;
-      ////////////////////////////////////////////////////////////
-    });
+      });
+  } else {
+    alert('제목, 내용, 태그, 버전을 빠짐 없이 입력해주세요');
+  }
 };
 
 onMounted(() => {

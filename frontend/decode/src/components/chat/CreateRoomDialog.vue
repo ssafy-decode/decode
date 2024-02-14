@@ -97,7 +97,6 @@ export default {
         newRoom.value.roomDescription,
         loginUserId.value,
       );
-      console.log(roomId, '번방 생성 성공');
       newRoom.value.id = roomId;
       stompStore.subscribeRoom(roomId);
 

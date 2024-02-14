@@ -4,8 +4,8 @@
 
     <CreateRoomButton @open="dialog = true" />
 
-    <div id="app" style=" margin: 0; padding: 0; height: 430px;">
-      <div style="display: flex; align-items: center; background-color: #edebeb; padding: 0; margin: 0;">
+    <div id="app" style="margin: 0; padding: 0; height: 430px">
+      <div style="display: flex; align-items: center; background-color: #edebeb; padding: 0; margin: 0">
         <v-text-field
           v-if="!selectedRoom"
           v-model="roomname"
@@ -16,25 +16,24 @@
           append-inner-icon="mdi-magnify"
           @click:append="nickNameSearch"
           hide-details
-          style="border: none; padding:3px;"
+          style="border: none; padding: 3px"
           bg-color="white"
-          >
+        >
           <template v-slot:append>
             <!-- 텍스트 필드 내에 버튼 추가 -->
             <v-btn
-            v-if="!selectedRoom"
-            density="compact"
-            icon="mdi-plus"
-            @click="dialog = true"
-            class="custom-icon-btn"
-            style="padding: 0; margin: 0;"
+              v-if="!selectedRoom"
+              density="compact"
+              icon="mdi-plus"
+              @click="dialog = true"
+              class="custom-icon-btn"
+              style="padding: 0; margin: 0"
             ></v-btn>
           </template>
         </v-text-field>
       </div>
-      
-        
-      <room-list v-if="!selectedRoom" :rooms="roomList" @selectRoom="selectRoom" ></room-list>
+
+      <room-list v-if="!selectedRoom" :rooms="roomList" @selectRoom="selectRoom"></room-list>
       <chat-room v-else :room="selectedRoom" :messages="messages" @goBack="goBack"></chat-room>
     </div>
   </div>
@@ -65,29 +64,21 @@ export default {
       try {
         const rooms = await chatStore.fetchRoomList();
         if (!Array.isArray(rooms)) {
-          console.error('fetchRooms API가 배열을 반환하지 않았습니다:', rooms);
         } else {
           roomList.value = rooms;
         }
-      } catch (error) {
-        console.error('fetchRooms API 호출 중 오류가 발생했습니다:', error);
-      }
+      } catch (error) {}
     });
 
     const goBack = () => {
-      console.log("123")
       selectedRoom.value = null;
     };
 
     const addRoom = (room) => {
-      console.log(room)
       roomList.value.push({ id: room.id, roomName: room.roomName, roomDescription: room.roomDescription });
-      console.log(roomList)
     };
 
     const selectRoom = async (room) => {
-      console.log(room)
-      console.log('selected room', room.id);
       selectedRoom.value = room;
     };
 
@@ -105,7 +96,6 @@ export default {
 </script>
 
 <style scoped>
-
 .custom-icon-btn {
   margin-top: -5px;
   margin-left: -5px; /* 원하는 만큼 왼쪽으로 이동 */
@@ -118,5 +108,4 @@ export default {
   flex-direction: column;
   height: 430px;
 }
-
 </style>
