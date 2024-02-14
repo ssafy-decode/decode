@@ -10,15 +10,31 @@
           <span class="time info">
             {{ answer.createdTime[0] }}년 {{ answer.createdTime[1] }}월 {{ answer.createdTime[2] }}일
           </span>
+          <!-- 답변 채택 버튼 -->
+          <v-btn
+            v-if="adoptedAnswerList[props.answer.answerId]"
+            icon="mdi-check-decagram"
+            :ripple="false"
+            variant="text"
+            color="#34a080"
+          ></v-btn>
+          <v-btn
+            v-else-if="userStore.loginUserId == questionStore.detailQuestion.questionWriter.id"
+            @click="adopt()"
+            icon="mdi-check-decagram-outline"
+            variant="text"
+            color="#c2c2c2"
+          ></v-btn>
+
+          <!-- 답변 추천 버튼 -->
           <v-btn
             v-if="recommendedAnswerList[props.answer.answerId]"
             @click="unRecommend()"
-            class="ma-2"
             variant="text"
             icon="mdi-thumb-up"
             color="#34a080"
           ></v-btn>
-          <v-btn v-else @click="recommend()" class="ma-2" variant="text" icon="mdi-thumb-up" color="#c2c2c2"></v-btn>
+          <v-btn v-else @click="recommend()" variant="text" icon="mdi-thumb-up" color="#c2c2c2"></v-btn>
         </div>
       </div>
       <div class="answerBox listItem answerContent">
@@ -58,6 +74,7 @@
 <script setup>
 import CommentList from '@/components/comment/CommentList.vue';
 import { useAnswerStore } from '@/stores/answerStore';
+import { useQuestionStore } from '@/stores/questionStore';
 import { useUserStore } from '@/stores/userStore';
 import { ref, onMounted, watchEffect } from 'vue';
 import axios from '@/utils/common-axios';
@@ -66,12 +83,14 @@ import { useRoute } from 'vue-router';
 import profileRouter from '@/components/common/profileRouter.vue';
 
 const answerStore = useAnswerStore();
+const questionStore = useQuestionStore();
 const userStore = useUserStore();
 const route = useRoute();
 
 const props = defineProps({
   answer: Object,
   recommendedAnswerList: Object,
+  adoptedAnswerList: Object,
 });
 
 import { storeToRefs } from 'pinia';
@@ -80,14 +99,18 @@ const recommendStore = useRecommendStore();
 const { setRecommendList, addRecommend, deleteRecommend } = recommendStore;
 const { handleRecommendList: recommendList } = storeToRefs(recommendStore);
 
-// import { useAdoptStore } from '@/stores/adoptStore';
-// const adoptStore = useAdoptStore();
-// const { setAdoptList, addAdopt } = adoptStore;
-// const { handleAdoptList: adoptList } = storeToRefs(adoptStore);
+import { useAdoptStore } from '@/stores/adoptStore';
+const adoptStore = useAdoptStore();
+const { setAdoptList, addAdopt } = adoptStore;
+const { handleAdoptList: adoptList } = storeToRefs(adoptStore);
+const isAdopted = ref(false);
 
 onMounted(() => {
   setRecommendList(props.answer.answerId, userStore.loginUserId);
-  // setAdoptList(props.answer.answerId, userStore.loginUserId);
+  setAdoptList(route.params.id);
+  // if (adoptList.value.includes(props.answer.answerId)) {
+  //   isAdopted.value = true;
+  // }
 });
 
 watchEffect(() => {
@@ -96,11 +119,30 @@ watchEffect(() => {
       props.recommendedAnswerList[a_id] = true;
     });
   }
+
+  if (props.answer && props.adoptedAnswerList) {
+    adoptList.value.forEach(function (a_id) {
+      props.adoptedAnswerList[a_id] = true;
+    });
+  }
+
+  // if (props.adoptList) {
+  //   if (props.adoptList.includes(props.answer.answerId)) {
+  //     isAdopted.value = true;
+  //   }
+  // }
 });
 
 const recommend = function () {
   addRecommend(userStore.loginUserId, props.answer.answerId);
   props.recommendedAnswerList[props.answer.answerId] = true;
+};
+
+const adopt = function () {
+  if (confirm('이 답변을 채택하시겠습니까?')) {
+    addAdopt(userStore.loginUserId, props.answer.answerId);
+    props.adoptedAnswerList[props.answer.answerId] = true;
+  }
 };
 
 const unRecommend = function () {

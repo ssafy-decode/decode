@@ -7,29 +7,20 @@ const useAdoptStore = defineStore(
   'useAdoptStore',
   () => {
     const userStore = useUserStore();
-
     const adoptList = ref([]);
-    const isAdopted = ref(false);
 
-    // 로그인 유저의 채택 중인 답변 번호의 목록을 불러옴
-    const setAdoptList = async (questionId, userId) => {
-      await axios.get(`/answer/adopt/${userId}`).then((res) => {
+    // 현재 질문의 채택 중인 답변 번호의 목록을 불러옴
+    const setAdoptList = async (questionId) => {
+      await axios.get(`/answer/adopt/${questionId}`).then((res) => {
         adoptList.value = [];
-        isAdopted.value = false;
-        res.data.data.forEach((question) => {
-          adoptList.value.push(question.id);
-          if (parseInt(questionId) === parseInt(question.id)) {
-            isAdopted.value = true;
-          }
-        });
-        // console.log('adoptList 내용: ', adoptList.value);
+        adoptList.value = res.data.data;
       });
     };
 
-    const addAdopt = async (userId, questionId) => {
+    const addAdopt = async (userId, answerId) => {
       let data = {
         userId,
-        questionId,
+        answerId,
       };
       await axios
         .post(`/answer/adopt`, data, {
@@ -38,7 +29,6 @@ const useAdoptStore = defineStore(
           },
         })
         .then((res) => {
-          isAdopted.value = true;
           alert('답변을 채택하였습니다!');
         })
         .catch((error) => {
@@ -53,7 +43,6 @@ const useAdoptStore = defineStore(
     // 반환
     return {
       adoptList,
-      isAdopted,
       setAdoptList,
       addAdopt,
       handleAdoptList,
