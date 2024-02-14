@@ -60,7 +60,7 @@ import AnswerViewer from '@/components/common/AnswerViewer.vue';
 import { useRoute } from 'vue-router';
 import profileRouter from '@/components/common/profileRouter.vue';
 
-const recommendStore = useRecommendStore();
+// const recommendStore = useRecommendStore();
 const answerStore = useAnswerStore();
 const userStore = useUserStore();
 const route = useRoute();
