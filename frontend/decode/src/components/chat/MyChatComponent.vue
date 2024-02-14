@@ -61,7 +61,7 @@ export default {
 
     onMounted(async () => {
       try {
-        const rooms = await chatStore.fetchRoomList();
+        const rooms = await chatStore.fetchMyRoomList();
         if (!Array.isArray(rooms)) {
           console.error('fetchRooms API가 배열을 반환하지 않았습니다:', rooms);
         } else {
