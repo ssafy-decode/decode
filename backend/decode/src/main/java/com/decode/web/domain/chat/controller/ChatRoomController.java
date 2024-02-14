@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -65,8 +64,11 @@ public class ChatRoomController {
     @GetMapping("/rooms/sub")
     public ResponseDto findAllByUserId(Authentication authentication) {
         Long userId = (Long) authentication.getPrincipal();
-        List<ChatRoomEntity> roomList = chatRoomService.findAllRoomByUser(userId);
-        return ResponseDto.builder().data(roomList).status(HttpStatus.OK).message("유저 방 리스트 불러오기")
+        List<ChatRoomResponseDto> roomList = chatRoomService.findAllRoomByUser(userId);
+        return ResponseDto.builder()
+                .data(roomList)
+                .status(HttpStatus.OK)
+                .message("유저 방 리스트 불러오기")
                 .build();
     }
 
