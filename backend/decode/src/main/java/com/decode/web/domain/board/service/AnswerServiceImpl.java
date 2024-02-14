@@ -1,6 +1,7 @@
 package com.decode.web.domain.board.service;
 
 import com.decode.web.domain.board.dto.AnswerCountResponseDto;
+import com.decode.web.domain.board.dto.AnswerSomethingDto;
 import com.decode.web.domain.board.dto.BoardProfileDto;
 import com.decode.web.domain.board.dto.BoardProfileResponseDto;
 import com.decode.web.domain.board.dto.CreateAnswerDto;
@@ -30,9 +31,11 @@ import com.decode.web.exception.InvalidWriterException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
@@ -223,5 +226,33 @@ public class AnswerServiceImpl implements AnswerService {
                         .build())
                 .collect(Collectors.toList())
                 .forEach(mailService::sendMail);
+    }
+
+    @Override
+    public List<AnswerSomethingDto> getRecommendAnswersByUserId(Long userId)
+            throws BadRequestException {
+        Optional<UserProfileEntity> userProfile = userProfileRepository.findById(userId);
+        if (userProfile.isEmpty()) {
+            throw new BadRequestException("유저 아이디를 찾을 수 없습니다.");
+        }
+        UserProfileEntity userProfileEntity = userProfile.get();
+        return userProfileEntity.getRecommends()
+                .stream()
+                .map(e -> AnswerSomethingDto.builder()
+                        .id(e.getAnswer().getId())
+                        .content(e.getAnswer().getContent())
+                        .recommendCnt(e.getAnswer().getRecommends().size())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AnswerSomethingDto> getAdoptAnswersByUserId(Long userId)
+            throws BadRequestException {
+        Optional<UserProfileEntity> userProfile = userProfileRepository.findById(userId);
+        if (userProfile.isEmpty()) {
+            throw new BadRequestException("유저 아이디를 찾을 수 없습니다.");
+        }
+        return null;
     }
 }
