@@ -9,6 +9,7 @@ import com.decode.web.domain.user.repository.UserProfileRepository;
 import com.decode.web.entity.MetooEntity;
 import com.decode.web.entity.QuestionEntity;
 import com.decode.web.entity.UserProfileEntity;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -71,5 +72,13 @@ public class MetooServiceImpl implements MetooService {
                                 .getTitle())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Long> getIds(Long userId) {
+        List<Long> list = new ArrayList<>();
+        metooRepository.findAllByUserProfileId(userId)
+                .forEach(e -> list.add(e.getQuestion().getId()));
+        return list;
     }
 }
