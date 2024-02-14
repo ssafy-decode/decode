@@ -1,6 +1,7 @@
 package com.decode.web.domain.board.service;
 
 import com.decode.web.domain.board.dto.BookmarkDto;
+import com.decode.web.domain.board.dto.BookmarkQuestionDto;
 import com.decode.web.domain.board.dto.QuestionDocument;
 import com.decode.web.domain.board.dto.ResponseQuestionListDto;
 import com.decode.web.domain.board.repository.BookmarkRepository;
@@ -12,7 +13,9 @@ import com.decode.web.entity.BookmarkEntity;
 import com.decode.web.entity.QuestionEntity;
 import com.decode.web.entity.UserProfileEntity;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
@@ -64,6 +67,14 @@ public class BookmarkServiceImpl implements BookmarkService {
         return bookmarks.stream()
                 .map(this::convertBookmarkToResponseQuestionListDto)
                 .toList();
+    }
+
+    @Override
+    public List<Long> get(Long userId) {
+        List<Long> list = new ArrayList<>();
+        bookmarkRepository.findAllByUserProfileId(userId)
+                .forEach(e -> list.add(e.getQuestion().getId()));
+        return list;
     }
 
     public ResponseQuestionListDto convertBookmarkToResponseQuestionListDto(

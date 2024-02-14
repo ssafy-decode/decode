@@ -10,4 +10,6 @@ public interface BookmarkRepository extends JpaRepository<BookmarkEntity, Long> 
     BookmarkEntity findByUserProfileIdAndQuestionId(Long userId, Long questionId);
 
     List<BookmarkEntity> findByUserProfile(UserProfileEntity userProfile);
+
+    List<BookmarkEntity> findAllByUserProfileId(Long userProfileId);
 }

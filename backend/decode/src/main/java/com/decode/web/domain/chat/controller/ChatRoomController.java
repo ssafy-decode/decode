@@ -3,9 +3,9 @@ package com.decode.web.domain.chat.controller;
 import com.decode.web.domain.chat.dto.ChatResponseDto;
 import com.decode.web.domain.chat.dto.ChatRoomRequestDto;
 import com.decode.web.domain.chat.dto.ChatRoomResponseDto;
+import com.decode.web.domain.chat.dto.DeleteSubRoomRequestDto;
 import com.decode.web.domain.chat.service.ChatRoomService;
 import com.decode.web.domain.chat.service.ChatService;
-import com.decode.web.entity.ChatRoomEntity;
 import com.decode.web.global.ResponseDto;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -96,4 +96,16 @@ public class ChatRoomController {
                 .build();
     }
 
+    @PostMapping("/room/sub/delete")
+    public ResponseDto deleteSubRoomByUserIdAndRoomId(
+            @RequestBody DeleteSubRoomRequestDto deleteSubRoomRequestDto,
+            Authentication authentication) throws BadRequestException {
+        authentication.getPrincipal();
+        chatRoomService.deleteSubRoomByUserIdAndRoomId(deleteSubRoomRequestDto.getUserId(),
+                deleteSubRoomRequestDto.getRoomId());
+        return ResponseDto.builder()
+                .message("방 구독 삭제 완료")
+                .data("")
+                .build();
+    }
 }

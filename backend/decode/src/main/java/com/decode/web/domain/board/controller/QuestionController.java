@@ -7,12 +7,16 @@ import com.decode.web.domain.board.dto.ResponseQuestionDto;
 import com.decode.web.domain.board.dto.ResponseQuestionListDto;
 import com.decode.web.domain.board.dto.UpdateQuestionDto;
 import com.decode.web.domain.board.repository.QuestionELKRepository;
+import com.decode.web.domain.board.service.BookmarkService;
+import com.decode.web.domain.board.service.MetooService;
 import com.decode.web.domain.board.service.QuestionService;
 import com.decode.web.domain.user.enums.Point;
 import com.decode.web.domain.user.service.PointService;
+import com.decode.web.global.QuestionResponseDto;
 import com.decode.web.global.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.security.auth.login.CredentialException;
 import lombok.RequiredArgsConstructor;
@@ -40,17 +44,28 @@ public class QuestionController {
     private final QuestionService questionService;
     private final QuestionELKRepository questionELKRepository;
     private final PointService pointService;
+    private final MetooService metooService;
+    private final BookmarkService bookmarkService;
 
     @GetMapping
     @Operation(summary = "질문 검색(질문 목록 조회)", description = "keyword를 통한 질문 리스트 호출")
-    public ResponseDto questionSearch(@RequestParam(name = "keyword") String keyword,
-            @RequestParam(name = "tagIds") List<Long> tagIds) {
+    public QuestionResponseDto questionSearch(@RequestParam(name = "keyword") String keyword,
+            @RequestParam(name = "tagIds") List<Long> tagIds, Authentication authentication) {
+        List<Long> meTooList = new ArrayList<>();
+        List<Long> bookmarkList = new ArrayList<>();
+        if (authentication != null) {
+            Long userId = (Long) authentication.getPrincipal();
+            meTooList = metooService.getIds(userId);
+            bookmarkList = bookmarkService.get(userId);
+        }
         List<ResponseQuestionListDto> questionList = questionService.searchQuestionByKeyword(
                 keyword, tagIds);
-        return ResponseDto.builder()
+        return QuestionResponseDto.builder()
                 .status(HttpStatus.OK)
                 .message("조회 완료")
                 .data(questionList)
+                .bookmarkList(bookmarkList)
+                .meTooList(meTooList)
                 .build();
     }
 

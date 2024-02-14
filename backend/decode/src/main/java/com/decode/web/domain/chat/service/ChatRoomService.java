@@ -22,4 +22,6 @@ public interface ChatRoomService {
     void subRoom(Long userId, Long roomId) throws BadRequestException;
 
     void deleteRoom(Long roomId);
+
+    void deleteSubRoomByUserIdAndRoomId(Long userId, Long roomId) throws BadRequestException;
 }
