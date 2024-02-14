@@ -88,7 +88,7 @@ public class ChatServiceImpl implements ChatService {
         List<ChatResponseDto> messageList = new ArrayList<>();
 
         // RedisTemplate을 통해 리스트의 전체 범위를 조회
-        List<Object> rawMessages = redisTemplate.opsForList().range("CR:"+String.valueOf(roomId), 0, 99);
+        List<Object> rawMessages = redisTemplate.opsForList().range("CR:"+String.valueOf(roomId), 0, 1500);
         log.debug("apic rawMessage : {}", rawMessages);
 
         // 4. Redis 에서 가져온 메시지가 없다면, DB 에서 메시지 100개 가져오기
