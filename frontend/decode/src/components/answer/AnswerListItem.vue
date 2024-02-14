@@ -65,10 +65,7 @@ import AnswerViewer from '@/components/common/AnswerViewer.vue';
 import { useRoute } from 'vue-router';
 import profileRouter from '@/components/common/profileRouter.vue';
 
-<<<<<<< HEAD
 // const recommendStore = useRecommendStore();
-=======
->>>>>>> fe-board
 const answerStore = useAnswerStore();
 const userStore = useUserStore();
 const route = useRoute();
