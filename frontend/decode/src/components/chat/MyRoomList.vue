@@ -1,17 +1,14 @@
 <template>
   <div class="room-list">
-    <div v-for="room in rooms" :key="room.id">
-      <v-row style="padding: 0; margin: 0;">
-        <v-col cols="11" style="margin: 0; padding: 0;">
-          <div class="room-item" @click="selectRoom(room)">
-            <div class="room-title"> {{ room.roomName }} </div>
-            <div class="room-description">{{ room.roomDescription }}</div>
-          </div>
-        </v-col>
-        <v-col cols="1" class="delete-container" >
-            <img class="delete-button" src="./delete_button.png" @click.stop="deleteRoom(room)"/>
-        </v-col>
-      </v-row>
+    <div v-for="room in rooms" :key="room.id" class="room-item" @click="selectRoom(room)">
+      <div class="room-content">
+        <div class="room-title">{{ room.roomName }}</div>
+        <div class="room-description">{{ room.roomDescription }}</div>
+      </div>
+
+      <div class="delete-container">
+        <img class="delete-button" src="./delete_button.png" @click.stop="deleteRoom(room)" />
+      </div>
     </div>
   </div>
 </template>
@@ -49,12 +46,14 @@ export default {
   background-color: #f5f5f5;
   /* 방 리스트 전체 배경색 추가 */
   border-top: 0.5px solid #b1d8cd;
-  border-bottom: 1px solid #34A080;
+  border-bottom: 1px solid #34a080;
 }
 
 .room-item {
   width: 100%;
   height: 50px;
+  display: flex;
+  justify-content: space-between;
   /* box-sizing: border-box; */
   border-top: 0.5px solid #b1d8cd;
   position: relative;
@@ -63,22 +62,20 @@ export default {
   transition: background-color 0.3s ease;
   /* 배경색 변경 효과 추가 */
 }
-.delete-container{
-  margin: 0; 
-  padding: 0; 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
+.delete-container {
+  width: 15%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  border-left: solid 0.5px #ccc;
+  justify-content: center;
   background-color: #ffffff;
-  border-top: 0.5px solid #b1d8cd;
-
 }
 .room-content {
-  width: 100%;
+  width: 85%;
   height: 100%;
   position: relative;
-  flex-grow: 1;
-  z-index: 1;
   margin: 0;
   padding: 0;
 }
@@ -106,26 +103,24 @@ export default {
 }
 .room-description {
   width: 100%;
-  height: 100%;  /* 높이를 100%로 설정 */
+  height: 100%; /* 높이를 100%로 설정 */
   position: absolute;
-  top: 0;        /* 상단으로부터의 위치를 0으로 설정 */
+  top: 0; /* 상단으로부터의 위치를 0으로 설정 */
   left: 0;
-  background-color: #34A080;
+  background-color: #34a080;
   color: white;
-  opacity: 0;  
+  opacity: 0;
   transition: opacity 0.3s ease;
   display: flex; /* 내부 텍스트를 중앙에 배치하기 위한 flex 설정 */
-  justify-content: center; 
+  justify-content: center;
   align-items: center;
   padding: 10px; /* 텍스트와 테두리 사이에 간격을 주기 위한 패딩 설정 */
 }
 .delete-button {
-  width: 100%;
+  width: 50%;
   padding: 0;
-  font-size: 10px;
   cursor: pointer;
   margin: 0;
-  padding: 0;
   /* 기존 스타일에 추가 */
 }
 
@@ -153,4 +148,5 @@ export default {
 
 .room-list::-webkit-scrollbar-thumb:hover {
   background: #555;
-}</style>
+}
+</style>
