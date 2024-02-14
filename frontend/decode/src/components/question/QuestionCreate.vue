@@ -1,4 +1,9 @@
 <template>
+  <!-- v-if 디렉티브를 사용하여 로딩 상태를 기반으로 오버레이를 조건부로 표시합니다. -->
+  <div v-if="showLoadingOverlay" class="loading-overlay">
+    <div class="loading-spinner"></div>
+  </div>
+
   <v-sheet class="mx-auto createBox card" width="1000">
     <v-form @submit.prevent="createQuestion">
       <v-text-field class="stackBox" variant="solo" label="질문 제목" v-model.trim="questionTitle">
@@ -75,11 +80,21 @@ const questionId = ref(null);
 
 const items = questionStore.items;
 
+////////////////////////////////////////////////////////////
+// 로딩 오버레이를 제어할 변수
+const showLoadingOverlay = ref(false);
+////////////////////////////////////////////////////////////
+
 const updateEditorContent = function (content) {
   questionContent.value = content;
 };
 
 const createQuestion = function () {
+  ////////////////////////////////////////////////////////////
+  // createQuestion 함수 진입 시 로딩 오버레이 표시
+  showLoadingOverlay.value = true;
+  ////////////////////////////////////////////////////////////
+
   const tags = tagIds.value.map((tagId, index) => {
     return {
       tagId: items[tagId],
@@ -113,13 +128,23 @@ const createQuestion = function () {
       // GPT 답변 자동 생성
       console.log('GPT답변 자동생성 함수 실행');
       answerStore.getGptAnswer(questionId.value, questionContent.value);
-      router.push({ name: 'question-detail', params: { id: questionId.value } });
       alert('잠시 후 GPT의 답변이 생성됩니다.');
+
+      ////////////////////////////////////////////////////////////
+      setTimeout(() => {
+        showLoadingOverlay.value = false;
+      }, 8000);
+      ////////////////////////////////////////////////////////////
     })
     .catch((err) => {
       console.log(err);
       console.log('질문 생성 오류');
       alert('제목과 내용, 태그를 입력해주세요');
+
+      ////////////////////////////////////////////////////////////
+      // createQuestion 함수 오류 발생 시 로딩 오버레이 숨김
+      showLoadingOverlay.value = false;
+      ////////////////////////////////////////////////////////////
     });
 };
 
@@ -227,5 +252,34 @@ span {
 .stackBox ::v-deep(.v-field) {
   border-radius: 45px;
   padding: 5px 10px;
+}
+
+/* 로딩 오버레이 화면 관련 CSS */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.5); /* 반투명한 흰 배경 */
+  z-index: 9999; /* 다른 요소들 위에 표시되도록 설정 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 3px solid #62c0a6; /* 로딩 스피너 색상 */
+  border-top-color: transparent; /* 투명한 상단 가장자리 */
+  animation: spin 1s linear infinite; /* 회전 애니메이션 적용 */
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg); /* 360도 회전 */
+  }
 }
 </style>
