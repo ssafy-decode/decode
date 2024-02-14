@@ -88,8 +88,8 @@ public class UserProfileEntity {
     @OneToMany(mappedBy = "userProfile", fetch = FetchType.LAZY)
     private List<RecommendEntity> recommends = new ArrayList<>();
 
-    @OneToMany(mappedBy = "userProfile", fetch = FetchType.LAZY)
-    private List<QuestionEntity> questions = new ArrayList<>();
+//    @OneToMany(mappedBy = "userProfile", fetch = FetchType.LAZY)
+//    private List<QuestionEntity> questions = new ArrayList<>();
 
 
     @Builder
