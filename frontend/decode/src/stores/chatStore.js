@@ -25,9 +25,20 @@ const useChatStore = defineStore('useChatStore', () => {
       console.log(err);
     }
   };
-  const deleteChatRoom = async (roomId) => {
+  const deleteChatRoom = async (roomId, userId) => {
     try {
-      const res = await axios.delete(`/chat/room/${roomId}`, {});
+      const res = await axios.post(
+        `/chat/room/sub/delete`,
+        {
+          roomId: roomId,
+          userId: userId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userStore.accessToken}`,
+          },
+        },
+      );
       console.log(res);
       return res.data;
     } catch (err) {
@@ -35,7 +46,7 @@ const useChatStore = defineStore('useChatStore', () => {
     }
   };
   const subChatRoom = async (roomId) => {
-    console.log(roomId)
+    console.log(roomId);
     try {
       const res = await axios.post(
         `/chat/room/${roomId}/sub`,
