@@ -61,6 +61,7 @@ const createQuestionTitle = function () {
     },
   })
     .then((res) => {
+      questionStore.inputQuestionContent = inputContent.value;
       questionStore.gptTitles = res.data.data.titles;
       questionStore.gptTagIds = res.data.data.tagIds;
       router.push({ name: 'question-create' });

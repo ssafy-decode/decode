@@ -41,12 +41,6 @@
         <div>
           <v-btn v-if="questionWriterId === userStore.loginUserId" @click="goUpdate()">질문수정</v-btn>
           <v-btn v-if="questionWriterId === userStore.loginUserId" @click="deleteQuestion()">질문삭제</v-btn>
-          <!-- <v-btn
-            v-if="questionWriterId === userStore.loginUserId"
-            :loading="loading"
-            @click="handleGptAnswer(questionId, question.content)"
-            >GPT답변받기</v-btn
-          > -->
         </div>
         <div class="btnBox">
           <div>
