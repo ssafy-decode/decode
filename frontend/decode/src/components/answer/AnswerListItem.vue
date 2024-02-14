@@ -3,15 +3,17 @@
     <div class="myListItem">
       <div class="listItem">
         <div>
-          <p>
-            <span class="nickname title">
-              <profileRouter :uid="answer.answerWriter.id" :nickName="answer.answerWriter.nickname" />
-            </span>
-            &nbsp;
-            <span class="time info">
-              {{ answer.createdTime[0] }}년 {{ answer.createdTime[1] }}월 {{ answer.createdTime[2] }}일
-            </span>
-          </p>
+          <span class="nickname title">
+            <profileRouter :uid="answer.answerWriter.id" :nickName="answer.answerWriter.nickname" />
+          </span>
+          &nbsp;
+          <span class="time info">
+            {{ answer.createdTime[0] }}년 {{ answer.createdTime[1] }}월 {{ answer.createdTime[2] }}일
+          </span>
+          <!-- 개추 토글 -->
+          <v-btn class="ma-2" variant="text" icon="mdi-thumb-up" color="#34a080"></v-btn>
+          <!-- <v-btn v-if="isMeTooed" @click="deleteMeToo(questionId)">나도궁금해요 취소</v-btn>
+            <v-btn v-else @click="addMeToo(userStore.loginUserId, questionId)">나도궁금해요</v-btn> -->
         </div>
       </div>
       <div class="answerBox listItem answerContent">
@@ -58,12 +60,16 @@ import AnswerViewer from '@/components/common/AnswerViewer.vue';
 import { useRoute } from 'vue-router';
 import profileRouter from '@/components/common/profileRouter.vue';
 
-import { useQuestionStore } from '@/stores/questionStore';
-const questionStore = useQuestionStore();
-
+const recommendStore = useRecommendStore();
 const answerStore = useAnswerStore();
 const userStore = useUserStore();
 const route = useRoute();
+
+// 답변 추천을 위한 코드
+// import { storeToRefs } from 'pinia';
+// import { useRecommendStore } from '@/stores/recommendStore';
+// const { setRecommendList, addRecommend, deleteRecommend } = recommendStore;
+// const { handleRecommendList: recommendList, handleRecommendState: isRecommended } = storeToRefs(recommendStore);
 
 const props = defineProps({
   answer: Object,
@@ -133,6 +139,7 @@ div {
   color: #575757;
   display: flex;
   align-items: center;
+  margin: 0px;
 }
 
 .info {

@@ -8,6 +8,7 @@
 import Editor from '@toast-ui/editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import axios from '@/utils/common-axios';
+import { useQuestionStore } from '@/stores/questionStore';
 
 export default {
   data() {
@@ -17,12 +18,16 @@ export default {
   },
 
   mounted() {
+    const questionStore = useQuestionStore();
     this.editor = new Editor({
       el: document.querySelector('#editor'),
       height: '570px',
       initialEditType: 'markdown',
       initialValue:
-        '내용을 마크다운 형식으로 입력해주세요!\n질문을 등록하면 GPT의 답변을 자동으로 받아볼 수 있습니다. :)',
+        '```\n' +
+        questionStore.inputQuestionContent +
+        '\n```' +
+        '\n\n내용을 마크다운 형식으로 입력해주세요!\n질문을 등록하면 GPT의 답변을 자동으로 받아볼 수 있습니다. :)',
       previewStyle: 'vertical',
       hooks: {
         addImageBlobHook: addImageBlobHook,
