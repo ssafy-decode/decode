@@ -36,7 +36,7 @@
     </router-link>
 
     <v-spacer></v-spacer>
-    <v-btn id="loginBtn" v-if="userStore.isLoggedIn" @click="logout">로그아웃</v-btn>
+    <v-btn id="logoutBtn" v-if="userStore.isLoggedIn" @click="logout">로그아웃</v-btn>
     <router-link to="/login" v-else>
       <v-btn id="loginBtn"> 로그인 </v-btn>
     </router-link>
@@ -66,7 +66,16 @@ a {
 #loginBtn {
   background-color: #62c0a6;
   margin-right: 20px;
-  border-radius: 40px;
+  border-radius: 34px;
   font-weight: 800;
+}
+
+#logoutBtn {
+  color: #077f5b;
+  font-weight: 800;
+  background-color: #ffffff;
+  border: 2px solid #62c0a6;
+  border-radius: 34px;
+  margin-right: 20px;
 }
 </style>
