@@ -253,6 +253,17 @@ public class AnswerServiceImpl implements AnswerService {
         if (userProfile.isEmpty()) {
             throw new BadRequestException("유저 아이디를 찾을 수 없습니다.");
         }
-        return null;
+        List<Long> questionIdList = questionELKRepository.findAllByWriterId(userId)
+                .stream()
+                .map(QuestionDocument::getId)
+                .collect(Collectors.toList());
+        List<AnswerEntity> answers = answerRepository.findByQuestionId(questionIdList);
+        return answers.stream()
+                .map(e -> AnswerSomethingDto.builder()
+                        .id(e.getId())
+                        .content(e.getContent())
+                        .recommendCnt(e.getRecommends().size())
+                        .build())
+                .collect(Collectors.toList());
     }
 }

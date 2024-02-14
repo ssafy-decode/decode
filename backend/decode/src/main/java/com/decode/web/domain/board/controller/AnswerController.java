@@ -165,7 +165,7 @@ public class AnswerController {
         List<AnswerSomethingDto> data = answerService.getAdoptAnswersByUserId(userId);
         return ResponseDto.builder()
                 .status(HttpStatus.OK)
-                .message("유저가 추천한 답변 목록 조회")
+                .message("유저가 채택한 답변 목록 조회")
                 .data(data)
                 .build();
     }
