@@ -39,7 +39,7 @@
             >
               <template #append-inner>
                 <v-btn type="submit" class="searchBtn" size="medium" @click="createComment">
-                  <img src="/searchicon.png" alt="검색아이콘" style="width: 40px; height: auto" />
+                  <img src="/searchicon.png" alt="등록아이콘" style="width: 40px; height: auto" />
                 </v-btn>
               </template>
             </v-textarea>
@@ -60,7 +60,7 @@ import AnswerViewer from '@/components/common/AnswerViewer.vue';
 import { useRoute } from 'vue-router';
 import profileRouter from '@/components/common/profileRouter.vue';
 
-const recommendStore = useRecommendStore();
+// const recommendStore = useRecommendStore();
 const answerStore = useAnswerStore();
 const userStore = useUserStore();
 const route = useRoute();
@@ -129,7 +129,7 @@ div {
 .myListItem {
   background-color: white;
   border-radius: 35px;
-  padding-top: 20px;
+  padding-top: 10px;
 }
 
 .listItem {
@@ -157,23 +157,24 @@ div {
 
 .time {
   color: #d9d9d9;
+  font-weight: bold;
 }
 
 .answerContent {
   border: #62c0a6 solid 2px;
   border-radius: 24px;
-  padding: 40px;
+  padding: 20px;
 }
 
 .editDeleteBox {
   display: flex;
   justify-content: flex-end;
-  margin-top: 0;
+  margin-top: 15px;
 }
 
 .deleteText {
   color: #12a980;
-  font-size: small;
+  font-size: 15px;
   font-weight: 800;
 }
 
@@ -192,6 +193,9 @@ div {
 .searchInput {
   padding: 0px;
   margin: 0px;
+  margin-top: 20px;
+  margin-right: 20px;
+  margin-bottom: 20px;
 }
 
 .searchBtn {

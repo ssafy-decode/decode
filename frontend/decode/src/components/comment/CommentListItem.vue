@@ -49,6 +49,7 @@ div {
 }
 
 .commentBox {
+  align-items: center;
   margin-left: 40px;
 }
 
@@ -57,6 +58,7 @@ div {
   background-color: white;
   border-radius: 35px;
   border: #d9d9d9 2px solid;
+  margin-right: 40px;
 }
 
 .listItem {
@@ -94,7 +96,7 @@ div {
 
 .deleteText {
   color: #12a980;
-  font-size: small;
+  font-size: 15px;
   font-weight: 800;
 }
 
