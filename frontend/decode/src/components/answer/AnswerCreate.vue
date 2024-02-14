@@ -204,6 +204,10 @@ span {
 .title {
   font-size: medium;
   font-weight: 800;
+  width: 400px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .img {

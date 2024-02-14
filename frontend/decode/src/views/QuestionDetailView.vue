@@ -1,6 +1,6 @@
 <template>
   <v-card color="#f3f3f3" elevation="16" width="70%" class="card mx-auto px-5 py-5">
-    <v-row>
+    <v-row style="margin-bottom: 10px">
       <v-col :cols="12">
         <div class="myListItem">
           <div class="listItem">
@@ -12,7 +12,7 @@
         </div>
       </v-col>
     </v-row>
-    <br />
+
     <div class="myListItem contentBox">
       <v-row>
         <v-col :cols="12">
@@ -20,7 +20,6 @@
             <span class="nickname title">
               <profileRouter :uid="questionWriterId" :nickName="writerNickname" />
             </span>
-            &nbsp; &nbsp;
             <span class="time info">
               {{ questionCreatedTime[0] }}년 {{ questionCreatedTime[1] }}월 {{ questionCreatedTime[2] }}일
             </span>
@@ -29,7 +28,7 @@
       </v-row>
       <v-row>
         <v-col :cols="12">
-          <QuestionViewer :initialValue="question.content" />
+          <QuestionViewer style="margin-left: 10px; margin-right: 10px" :initialValue="question.content" />
           <div class="tagList">
             <span>&lt;질문 태그&gt;</span>
             <div v-for="(tag, index) in numToStr" :key="index"># {{ tag }} - {{ versions[index] }}</div>
@@ -56,7 +55,7 @@
       </div>
     </div>
     <br />
-    <br />
+
     <div v-if="isAnswerExist" class="myListItem">
       <AnswerList :answer-list="question.answerList" />
     </div>
@@ -232,7 +231,7 @@ button {
 .img {
   width: 75px;
   height: 75px;
-  margin: 5px 10px 5px 5px;
+  margin: 5px 15px 5px 0;
   position: relative;
   top: 0px;
   left: 0px;
@@ -241,8 +240,11 @@ button {
 
 .myListItem {
   border-radius: 35px;
-  padding-bottom: 10px;
+  /* padding-bottom: 10px; */
   background-color: white;
+  margin-top: 10px;
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
 .contentBox {
@@ -251,6 +253,7 @@ button {
 
 .writerBox {
   align-items: flex-end;
+  margin-top: 10px;
 }
 
 .listItem {
@@ -260,6 +263,7 @@ button {
   color: #575757;
   display: flex;
   align-items: center;
+  margin-left: 10px;
 }
 
 .info {
@@ -271,18 +275,22 @@ button {
 }
 
 .title {
-  font-size: medium;
-  font-weight: 700;
+  font-size: large;
+  font-weight: bolder;
+  margin-right: 20px;
 }
 
 .time {
   color: #d9d9d9;
+  font-weight: bold;
 }
 
 .tagList {
   margin-top: 40px;
+  margin-left: 10px;
+  margin-right: 10px;
   color: #575757;
   font-size: small;
-  font-weight: 600;
+  font-weight: bold;
 }
 </style>
