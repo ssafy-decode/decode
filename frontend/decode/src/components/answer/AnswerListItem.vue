@@ -105,28 +105,32 @@ const unRecommend = function () {
 const commentContent = ref('');
 
 const createComment = function () {
-  let data = {
-    content: commentContent.value,
-    userId: userStore.loginUserId,
-    answerId: props.answer.answerId,
-  };
+  if (commentContent.value.trim()) {
+    let data = {
+      content: commentContent.value,
+      userId: userStore.loginUserId,
+      answerId: props.answer.answerId,
+    };
 
-  axios({
-    method: 'post',
-    url: `/comment`,
-    data: data,
-    headers: {
-      Authorization: `Bearer ${userStore.accessToken}`,
-    },
-  })
-    .then((res) => {
-      console.log('댓글 생성됨');
-      location.reload();
+    axios({
+      method: 'post',
+      url: `/comment`,
+      data: data,
+      headers: {
+        Authorization: `Bearer ${userStore.accessToken}`,
+      },
     })
-    .catch((err) => {
-      console.log(err);
-      console.log('댓글 생성 오류');
-    });
+      .then((res) => {
+        console.log('댓글 생성됨');
+        location.reload();
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log('댓글 생성 오류');
+      });
+  } else {
+    alert('댓글 내용을 입력해주세요.');
+  }
 };
 </script>
 
