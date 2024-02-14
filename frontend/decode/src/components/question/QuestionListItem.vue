@@ -36,7 +36,7 @@
             </div>
             <div class="cntBox" style="position: relative; width: 50%; display: flex; align-items: center; justify-content: center;">
               <div style="width: 100%; display: flex; align-items: center; justify-content: start;">
-                <img style="width: 80%; height: auto;" src="./metoopeople.png" alt="답변 아이콘" />
+                <img style="width: 80%; height: auto;" src="./metoopeople.png" alt="미투 아이콘" />
               </div>
               <div style="display: flex; align-items: center; justify-content: start; position: absolute; height: 50%; width: 50%; color:#649591; padding-bottom: 9%;">
                 {{ question.meTooCnt }}<br/></div>

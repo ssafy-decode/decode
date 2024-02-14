@@ -1,5 +1,5 @@
 <template>
-  <div v-if="answer" class="answerContainer">
+  <div v-if="answer" class="answer-container">
     <div class="myListItem">
       <div class="listItem">
         <div>
@@ -136,8 +136,10 @@ const createComment = function () {
 </script>
 
 <style scoped>
-div {
-  margin: 20px;
+
+.answer-container{
+  width: 90%;
+  border: solid red;
 }
 
 .answerBox {
