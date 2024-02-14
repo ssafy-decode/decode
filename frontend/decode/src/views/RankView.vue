@@ -5,7 +5,7 @@
     </div>
     <br />
     <!-- <Search></Search> -->
-    <RankingTable/>
+    <RankingTable />
   </v-container>
 </template>
 
@@ -21,13 +21,10 @@ const userStore = useUserStore();
 const profileStore = useProfileStore();
 const rankStore = useRankStore();
 
-console.log("userID: " + userStore.loginUserId);
-
 onBeforeMount(() => {
   profileStore.setUserProfile(userStore.loginUserId);
   rankStore.getUserRank(userStore.loginUserId);
 });
-
 </script>
 
 <style>

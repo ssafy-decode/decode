@@ -57,15 +57,15 @@
     ></OpenviduModal>
   </div>
   <v-dialog v-model="errorDialog" max-width="400">
-  <v-card>
-    <v-card-title style="color: #34A080;">Error</v-card-title>
-    <v-card-text>세션이 만료됐어요. 다음번엔 빨리 오세요 :></v-card-text>
-    <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-btn color="primary" text @click="errorDialog = false">Okay</v-btn>
-    </v-card-actions>
-  </v-card>
-</v-dialog>
+    <v-card>
+      <v-card-title style="color: #34a080">Error</v-card-title>
+      <v-card-text>세션이 만료됐어요. 다음번엔 빨리 오세요 :></v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="primary" text @click="errorDialog = false">Okay</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 <script>
 import { ref, onMounted, nextTick, watchEffect, onUnmounted, onUpdated } from 'vue';
@@ -128,7 +128,6 @@ export default {
                 const sessionElement = lastMessageContainer.querySelector('.session-id');
                 if (sessionElement) {
                   const sessionId = String(sessionElement.textContent);
-                  console.log(sessionId);
 
                   if (sessionId) {
                     joinSession(sessionId);
@@ -182,9 +181,7 @@ export default {
         messageStore.addMessage(sessionId, messageData);
       });
 
-      session.value.on('exception', ({ exception }) => {
-        console.warn(exception);
-      });
+      session.value.on('exception', ({ exception }) => {});
 
       try {
         const token = await getToken(sessionId);
@@ -195,11 +192,8 @@ export default {
         sessionStore.setMyUserName(sessionId, myUserName);
         rsId.value = sessionId;
 
-        console.log(sessionId);
         showOpenviduModal.value = true;
-      } catch (error) {
-        console.log('There was an error connecting to the session:', error.code, error.message);
-      }
+      } catch (error) {}
     };
     const getToken = async (sessionId) => {
       return await createToken(sessionId);
@@ -218,10 +212,8 @@ export default {
         );
         return response.data;
       } catch (error) {
-        console.error(error);
         // HTTP 상태 코드가 500인 경우 alert 띄우기
         if (error.response && error.response.status === 500) {
-          console.log(123);
           errorMessage.value = '세션이 만료되었습니다. 다음번엔 빨리오세요~';
           errorDialog.value = true;
         }
@@ -233,15 +225,11 @@ export default {
       try {
         const roomId = props.room.id;
         const chatHistory = await chatStore.fetchChatHistory(roomId);
-        console.log(chatHistory, ' 반환됨.');
         if (!Array.isArray(chatHistory)) {
-          console.error('빈 배열 반환:', chatHistory);
         } else {
           messages.value = chatHistory;
         }
-      } catch (error) {
-        console.error('fetchChatHistory API 호출 중 오류', error);
-      }
+      } catch (error) {}
 
       nextTick(() => {
         chatContainer.value.scrollTop = chatContainer.value.scrollHeight;
@@ -250,21 +238,17 @@ export default {
     onUnmounted(() => {
       // 구독 취소
       if (stompStore.subscriptions[props.room.id]) {
-        console.log(stompStore.subscriptions[props.room.id]);
         stompStore.subscriptions[props.room.id].unsubscribe();
       }
-      console.log(session.value);
       if (session.value) {
         sessionStore.exitSession(rsId.value);
       }
     });
     const openDialog = () => {
-      console.log('click');
       dialog.value = true;
     };
 
     const handleYes = (screenSharingPublisher, roomSessionId) => {
-      console.log('Yes 버튼 클릭');
       publisher.value = screenSharingPublisher;
       rsId.value = roomSessionId;
       showOpenviduModal.value = true;
@@ -283,7 +267,6 @@ export default {
       });
     };
     const handleNo = () => {
-      console.log('No 버튼 클릭');
       dialog.value = false;
     };
     const handleExit = () => {
@@ -291,9 +274,7 @@ export default {
       // 여기에 나머지 처리를 추가 가능
     };
     const goBack = () => {
-      console.log(props.room.id);
       if (stompStore[props.room.id]) {
-        console.log('pass here?');
         stompStore.subscriptions[props.room.id].unsubscribe();
       }
       emit('goBack');
@@ -302,8 +283,6 @@ export default {
     const sendMessage = () => {
       if (newMessage.value !== '') {
         // messages.value.push({ nickName: '나', text: newMessage.value });
-        console.log(loginUserId.value);
-        console.log(myProfile.value);
         stompStore.sendMessage(loginUserId.value, myProfile.value.nickname, newMessage.value, props.room.id);
         newMessage.value = '';
         nextTick(() => {

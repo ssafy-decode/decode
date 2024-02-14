@@ -92,7 +92,6 @@ const getOriginalQuestion = function () {
   })
     .then((res) => {
       question.value = res.data.data;
-      console.log(res.data.data);
       questionWriterId.value = question.value.questionWriter.id;
       questionTitle.value = question.value.title;
       tagList.value = question.value.tagList;
@@ -102,10 +101,7 @@ const getOriginalQuestion = function () {
         versions.value.push(item.version);
       });
     })
-    .catch((err) => {
-      console.log(err);
-      console.log('기존 질문 내용 조회 오류');
-    });
+    .catch((err) => {});
 };
 
 onMounted(() => {
@@ -147,13 +143,9 @@ const updateQuestion = function () {
     },
   })
     .then((res) => {
-      console.log('질문 수정 완료');
       router.push({ path: `/board/${questionId.value}` });
     })
-    .catch((err) => {
-      console.log(err);
-      console.log('질문 수정 오류');
-    });
+    .catch((err) => {});
 };
 </script>
 

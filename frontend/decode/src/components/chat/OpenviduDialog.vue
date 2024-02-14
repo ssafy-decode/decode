@@ -38,7 +38,7 @@ import { OpenVidu } from 'openvidu-browser';
 import { useSessionStore } from '@/stores/sessionStore';
 import { useMessageStore } from '@/stores/messageStore';
 import { useUserStore } from '@/stores/userStore';
-  import { storeToRefs } from 'pinia';
+import { storeToRefs } from 'pinia';
 const APPLICATION_SERVER_URL = 'https://i10a507.p.ssafy.io/decode/openvidu';
 // const APPLICATION_SERVER_URL = 'http://localhost:7777/decode/openvidu';
 export default {
@@ -95,7 +95,6 @@ export default {
       localDialog.value = false;
       roomDuration.value = 0;
       roomCapacity.value = 0;
-      console.log('publiser : ', screenSharingPublisher);
       emit('yesClicked', screenSharingPublisher, randomSessionId);
     };
 
@@ -129,9 +128,7 @@ export default {
         }
         messageStore.addMessage(randomSessionId, messageData);
       });
-      session.value.on('exception', ({ exception }) => {
-        console.warn(exception);
-      });
+      session.value.on('exception', ({ exception }) => {});
 
       try {
         const token = await getToken(randomSessionId.value);
@@ -150,9 +147,7 @@ export default {
         sessionStore.setMyUserName(randomSessionId, myUserName);
         sessionStore.setPublisher(randomSessionId, publisher);
         return publisher;
-      } catch (error) {
-        console.log('There was an error connecting to the session:', error.code, error.message);
-      }
+      } catch (error) {}
     };
 
     const leaveSession = () => {
@@ -171,7 +166,6 @@ export default {
 
     const getToken = async (sessionId) => {
       const sId = await createSession(sessionId);
-      console.log(sId)
       return await createToken(sId);
     };
 
@@ -187,14 +181,11 @@ export default {
           },
         );
         return response.data;
-      } catch (error) {
-        console.error(error);
-      }
+      } catch (error) {}
     };
 
     const createToken = async (sessionId) => {
       try {
-        console.log(userStore.accessToken)
         const response = await axios.post(
           APPLICATION_SERVER_URL + `/api/sessions/${sessionId}/connections`,
           {},
@@ -206,7 +197,6 @@ export default {
         );
         return response.data;
       } catch (error) {
-        console.error(error);
         throw error;
       }
     };

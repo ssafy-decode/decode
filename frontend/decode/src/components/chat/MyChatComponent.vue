@@ -63,13 +63,10 @@ export default {
       try {
         const rooms = await chatStore.fetchMyRoomList();
         if (!Array.isArray(rooms)) {
-          console.error('fetchRooms API가 배열을 반환하지 않았습니다:', rooms);
         } else {
           roomList.value = rooms;
         }
-      } catch (error) {
-        console.error('fetchRooms API 호출 중 오류가 발생했습니다:', error);
-      }
+      } catch (error) {}
     };
     onMounted(fetchRooms);
     // 방 목록을 불러오는 메서드를 이벤트 버스에 등록합니다.
@@ -84,7 +81,6 @@ export default {
       }
     };
     const selectRoom = async (room) => {
-      console.log('selected room', room.id);
       selectedRoom.value = room;
     };
 
@@ -95,7 +91,7 @@ export default {
       messages,
       goBack,
       selectRoom,
-      handleDeleteRoom
+      handleDeleteRoom,
     };
   },
 };

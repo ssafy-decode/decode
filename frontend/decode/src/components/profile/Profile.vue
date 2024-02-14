@@ -20,9 +20,6 @@
             <img :src="`../../${profile.tier}.png`" width="30px" />
           </div>
           <div v-if="isMyProfile">
-            <router-link to="/inventory">
-              <v-btn class="btn" color="#62C0A6" size="x-large" type="submit" variant="elevated"> 내 아이템 </v-btn>
-            </router-link>
             <router-link to="/checkpwd" v-if="!oauth">
               <v-btn class="btn" color="#62C0A6" size="x-large" type="submit" variant="elevated"> 회원정보 수정 </v-btn>
             </router-link>

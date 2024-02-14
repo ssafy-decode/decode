@@ -34,7 +34,6 @@ export default {
 
     const deleteRoom = (room) => {
       // TODO: DB에서 해당 방을 삭제하는 API 호출
-      console.log(`Deleting room: ${room.roomName}`);
       chatStore.deleteChatRoom(room.id, userStore.loginUserId);
       // deleteRoom 이벤트 발생시키기
       context.emit('deleteRoom', room);

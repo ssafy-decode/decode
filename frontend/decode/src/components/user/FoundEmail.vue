@@ -27,16 +27,10 @@ const userStore = useUserStore();
 
 const foundEmail = userStore.foundEmail;
 
-console.log('일단 가져왔는지');
-console.log(foundEmail);
-
 const hideEmail = (email) => {
   const idx = email.indexOf('@');
   return email.substring(0, 2) + '*'.repeat(idx - 2) + email.substring(idx);
 };
-
-console.log('제대로 잘렸는지');
-console.log(hideEmail(foundEmail));
 </script>
 
 <style scoped></style>

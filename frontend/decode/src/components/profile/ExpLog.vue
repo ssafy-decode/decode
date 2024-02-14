@@ -88,9 +88,7 @@ const fetchExpData = async () => {
 
     // 차트 초기화
     initChart();
-  } catch (error) {
-    console.error('Failed to fetch exp data:', error);
-  }
+  } catch (error) {}
 };
 
 onMounted(fetchExpData);
