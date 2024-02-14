@@ -21,6 +21,7 @@
           :rules="[writeEmail]"
           label="이메일을 입력하세요."
           prepend-inner
+          @blur="checkEmail"
         >
           <template #prepend-inner>
             <img
@@ -137,6 +138,22 @@ const writePassword = (value) => {
 // 눈 버튼으로 비밀번호 가리고 숨기고
 const toggleEye = () => {
   showPassword.value = !showPassword.value;
+};
+
+// 이메일 형식 올바른지
+const isEmailValid = (email) => {
+  const re =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+  return re.test(String(email).toLowerCase());
+};
+
+// 이메일 형식 alert
+const checkEmail = () => {
+  if (!isEmailValid(email.value)) {
+    alert('올바른 이메일 형식을 입력해주세요.');
+    return;
+  }
 };
 
 // 로그인 버튼 누르면 실행

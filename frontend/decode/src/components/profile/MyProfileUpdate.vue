@@ -13,71 +13,88 @@
       >
         <div style="display: flex; justify-content: flex-start">
           <!-- 뒤로가기 버튼--><router-link :to="`/profile/${userStore.loginUserId}`"
-            ><img style="margin-left: 5px" width="18px" src="../../leftarrowicon.png"
+            ><img style="margin-left: 5px" width="23px" src="./leftarrowicon.png"
           /></router-link>
         </div>
         <v-row style="margin-left: 5px">
-          <v-col cols="5">
-            <div
-              style="
-                background-color: #d9d9d9;
-                padding-top: 10px;
-                padding-bottom: 10px;
-                border-radius: 30px;
-                width: 143px;
-                height: 165px;
-              "
-            >
-              <img style="width: 70%; height: auto; border-radius: 50%" src="../default.png" />
+          <v-col cols="5" style="margin-left: 20px">
+            <div class="upperphoto">
+              <img style="width: 70%; height: auto; border-radius: 50%" src="./default.png" />
               <v-btn class="photobtn" color="#62C0A6" type="submit" variant="elevated">사진 변경</v-btn>
             </div>
-            <!-- 추후 API 연결 -->
           </v-col>
-          <v-col cols="7">
+          <v-col cols="5">
             <div style="font-size: 16px">
               <table class="profile-table">
                 <tr>
-                  <td>이름:</td>
-                  <td>{{ user.name }}</td>
+                  <div class="uppertext active-div" @mouseover="showTooltip('이름')" @mouseleave="hideTooltip">
+                    <span>
+                      <img class="uppericon" src="./person.png" />
+                    </span>
+                    <span style="margin-left: 20px">
+                      <td>{{ user.name }}</td>
+                    </span>
+                  </div>
                 </tr>
                 <tr>
-                  <td>닉네임:</td>
-                  <td>{{ profile.nickname }}</td>
+                  <div class="uppertext active-div">
+                    <span>
+                      <img style="margin-top: 5px; margin-left: 10px" src="./pencil2.png" />
+                    </span>
+                    <span style="margin-left: 20px">
+                      <td>{{ profile.nickname }}</td>
+                    </span>
+                  </div>
                 </tr>
                 <tr>
-                  <td>생년월일:</td>
-                  <td>{{ user.birth }}</td>
+                  <div class="uppertext active-div">
+                    <span>
+                      <img class="uppericon" src="./calendar2.png" />
+                    </span>
+                    <span style="margin-left: 20px">
+                      <td>{{ user.birth }}</td>
+                    </span>
+                  </div>
                 </tr>
               </table>
             </div>
           </v-col>
         </v-row>
-        <br />
-        <div style="text-align: left; margin-left: 20px">
+        <div style="text-align: left; margin-top: 15px; margin-left: 20px">
           <table class="profile-table">
             <tr>
-              <td>이메일:</td>
-              <td>{{ user.email }}</td>
+              <div class="lowertext active-div">
+                <span>
+                  <img class="lowericon" src="./email.png" />
+                </span>
+                <span style="margin-left: 20px">
+                  <td>{{ user.email }}</td>
+                </span>
+              </div>
             </tr>
             <tr>
-              <td>휴대폰 뒷자리:</td>
-              <td>{{ user.phoneNumber }}</td>
+              <div class="lowertext active-div">
+                <span>
+                  <img class="lowericon" src="./phone2.png" />
+                </span>
+                <span style="margin-left: 20px">
+                  <td>{{ user.phoneNumber }}</td>
+                </span>
+              </div>
             </tr>
           </table>
-          <br />
         </div>
-        <br />
-        <div>
-          <span style="margin-bottom: 20px; color: #34a080; font-weight: bold">기술 스택 변경</span>
-          <br />
-          <br />
+        <div style="margin-top: 40px; margin-bottom: 40px">
           <div>
+            <div style="text-align: center">
+              <div style="color: #34a080; font-weight: bold; margin-bottom: 20px">기술 스택 변경</div>
+            </div>
             <template v-if="editing">
               <v-combobox
                 v-if="editing"
                 variant="solo"
                 class="combo"
-                bg-color="#d9d9d9"
+                bg-color="#f3f3f3"
                 v-model="selectedTags"
                 :items="items"
                 placeholder="ex) java, spring boot, sql"
@@ -88,32 +105,31 @@
               ></v-combobox>
             </template>
             <template v-else-if="tagIdList.length > 0">
-              <v-chip
-                v-for="tag in tagIdList"
-                :clearable="editing"
-                :key="tag"
-                label
-                :style="{ backgroundColor: tagBackGroundColor(tag), color: tagTextColor(tag) }"
-                class="mr-2 mb-2 chips"
-              >
-                {{ tagName[tag] }}</v-chip
-              >
+              <div class="chip-container">
+                <v-chip
+                  v-for="tag in tagIdList"
+                  :clearable="editing"
+                  :key="tag"
+                  label
+                  :style="{ backgroundColor: tagBackGroundColor(tag), color: tagTextColor(tag), margin: '5px' }"
+                  class="mr-2 mb-2 chips"
+                >
+                  {{ tagName[tag] }}</v-chip
+                >
+              </div>
             </template>
             <template v-else>
               <div>선택한 기술 스택이 없습니다.</div>
             </template>
           </div>
-          <br />
           <v-btn @click="toggleEdit" class="tagbtn" color="#62C0A6" type="submit" variant="elevated">{{
             editing ? '기술 스택 변경 저장' : '기술 스택 변경'
           }}</v-btn>
         </div>
-        <br />
-        <br />
-        <div>
-          <span style="color: #34a080; font-weight: bold">비밀번호 변경</span>
-          <br />
-          <br />
+        <div style="margin-top: 50px">
+          <div style="margin-bottom: 20px">
+            <span style="color: #34a080; font-weight: bold">비밀번호 변경</span>
+          </div>
           <v-text-field
             bg-color="#d9d9d9"
             :rules="[writePassword]"
@@ -121,12 +137,19 @@
             variant="solo"
             class="textfield"
             clearable
-            label="비밀번호 변경"
+            label="비밀번호"
             hint="영문, 숫자, 특수문자 조합 8자리 이상"
+            prepend-inner
             append-inner
             :type="showPassword ? 'text' : 'password'"
             style="margin-left: 20px; margin-right: 20px; border-radius: 27px"
-          >
+            ><template #prepend-inner>
+              <img
+                src="./pwd.png"
+                alt="비밀번호 아이콘"
+                style="width: auto; height: auto; margin-left: 1px; margin-right: 10px"
+              />
+            </template>
             <template #append-inner>
               <v-icon @click="toggleEye" style="margin-right: 10px">{{
                 showPassword ? 'mdi-eye' : 'mdi-eye-off'
@@ -141,10 +164,17 @@
             class="textfield"
             clearable
             label="비밀번호 확인"
+            prepend-inner
             append-inner
             :type="showPassword2 ? 'text' : 'password'"
             style="margin-left: 20px; margin-right: 20px; border-radius: 27px"
-          >
+            ><template #prepend-inner>
+              <img
+                src="../pwd.png"
+                alt="비밀번호 아이콘"
+                style="width: auto; height: auto; margin-left: 1px; margin-right: 10px"
+              />
+            </template>
             <template #append-inner>
               <v-icon @click="toggleEye2" style="margin-right: 10px">{{
                 showPassword2 ? 'mdi-eye' : 'mdi-eye-off'
@@ -346,11 +376,27 @@ const updatepwd = () => {
 
   updatePwd(user, accessToken.value);
 };
+
+// 마우스 호버에 대한 툴팁 표시 관련 로직
+const tooltip = ref({
+  visible: false,
+  x: 0,
+  y: 0,
+  text: '',
+});
+
+const showTooltip = (text) => {
+  tooltip.value.visible = true;
+  tooltip.value.text = text;
+};
+
+const hideTooltip = () => {
+  tooltip.value.visible = false;
+};
 </script>
 
 <style scoped>
 .profile-table {
-  margin-left: 10px;
   margin-right: 10px;
   width: 100%;
 }
@@ -358,6 +404,19 @@ const updatepwd = () => {
 .profile-table td {
   padding: 5px;
   text-align: left;
+}
+
+.chip-container {
+  border-radius: 34px;
+  background-color: #f1f1f1;
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #62c0a6;
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
 .chips {
@@ -373,16 +432,17 @@ const updatepwd = () => {
   font-size: 12px;
   font-weight: bold;
   border-radius: 34px;
-  margin-top: 10px;
+  margin-top: 15px;
   color: #000000;
 }
 
 .tagbtn {
   height: 34px;
-  width: 150px;
+  width: 376px;
   font-size: 15px;
   font-weight: bold;
   border-radius: 34px;
+  margin-top: 30px;
   color: #000000;
 }
 
@@ -397,6 +457,57 @@ const updatepwd = () => {
 }
 
 .textfield :deep(.v-field) {
-  border-radius: 10px;
+  border-radius: 27px;
+}
+
+.textfield :deep(label) {
+  color: #ffffff;
+}
+
+.upperphoto {
+  background-color: #d9d9d9;
+  padding-top: 20px;
+  padding-bottom: 10px;
+  border-radius: 30px;
+  width: 143px;
+  height: 192px;
+}
+
+.uppertext {
+  background-color: #f1f1f1;
+  border: 2px solid #d9d9d9;
+  border-radius: 27px;
+  width: 187px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.uppertext:hover,
+.lowertext:hover,
+.chip-container:hover {
+  background-color: #dcdcdc;
+}
+
+.lowertext {
+  background-color: #f1f1f1;
+  border: 2px solid #d9d9d9;
+  border-radius: 27px;
+  width: 400px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.active-div:hover {
+  border: 2px solid #62c0a6;
+}
+
+.uppericon,
+.lowericon {
+  margin-top: 5px;
+  margin-left: 15px;
 }
 </style>
