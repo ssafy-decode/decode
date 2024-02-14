@@ -27,7 +27,7 @@
             <div style="font-size: 16px">
               <table class="profile-table">
                 <tr>
-                  <div class="uppertext active-div" @mouseover="showTooltip('이름')" @mouseleave="hideTooltip">
+                  <div class="uppertext active-div">
                     <span>
                       <img class="uppericon" src="./person.png" />
                     </span>
