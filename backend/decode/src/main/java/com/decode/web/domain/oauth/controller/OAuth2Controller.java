@@ -3,7 +3,10 @@ package com.decode.web.domain.oauth.controller;
 import com.decode.web.domain.oauth.dto.GithubUserInfoDto;
 import com.decode.web.domain.oauth.service.OAuth2Service;
 import com.decode.web.domain.user.dto.AuthDto.TokenDto;
+import com.decode.web.domain.user.enums.Point;
+import com.decode.web.domain.user.service.PointService;
 import com.decode.web.global.ResponseDto;
+import com.decode.web.global.utils.authentication.JwtTokenProvider;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class OAuth2Controller {
 
     private final OAuth2Service oAuth2Service;
+    private final PointService pointService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Value("${domain.cookie.max-age}")
     private String COOKIE_MAX_AGE;
@@ -36,6 +41,9 @@ public class OAuth2Controller {
 
         // 3. 사용자 정보 이용해서 회원가입 or 로그인 처리
         TokenDto tokenDto = oAuth2Service.login(userInfo, "github");
+
+        pointService.updateUserPointAndExp(
+                jwtTokenProvider.getAuthUserId(tokenDto.getAccessToken()), Point.LOGIN);
 
         // 4. 이후엔 기존 로그인과 똑같이 처리
         Cookie cookie = new Cookie("refresh-token", tokenDto.getRefreshToken());

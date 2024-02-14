@@ -77,6 +77,7 @@ public class OAuth2ServiceImpl implements OAuth2Service {
 
         // redis에 refresh token 저장
         authService.saveRefreshToken(provider, email, RefreshToken);
+        userService.setAttendance(email);
 
         // 인증 정보 저장
         Authentication newAuthentication = jwtTokenProvider.getAuthentication(AccessToken);
