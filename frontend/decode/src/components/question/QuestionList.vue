@@ -6,16 +6,9 @@
           <v-col cols="9" class="leftBox">
             <span class="text-field-container">
               <div class="search-text-container">
-                <v-text-field
-                variant="plain"
-                label="검색 키워드를 입력하세요"
-                class="searchInput"
-                v-model="keyword"
-                bg-color="fff"
-                rounded
-                hide-details="true"
-                >
-              </v-text-field>
+                <v-text-field variant="plain" label="검색 키워드를 입력하세요" class="searchInput" v-model="keyword" bg-color="fff"
+                  rounded hide-details="true">
+                </v-text-field>
               </div>
               <div class="searchBtn-container">
                 <input class="searchBtn" type="submit" value=" " />
@@ -23,38 +16,27 @@
             </span>
           </v-col>
           <v-col cols="3" class="rightBox">
-            <v-combobox
-              variant="solo"
-              class="stackBox"
-              bg-color="fff"
-              v-model="tagIds"
-              :items="Object.keys(items)"
-              placeholder="ex) java, spring boot, sql"
-              label="기술 스택"
-              multiple
-              chips
-              clearable
-              hide-details="true"
-              rounded=""
-            ></v-combobox>
+            <v-combobox variant="solo" class="stackBox" bg-color="fff" v-model="tagIds" :items="Object.keys(items)"
+              placeholder="ex) java, spring boot, sql" label="기술 스택" multiple chips clearable hide-details="true"
+              rounded=""></v-combobox>
           </v-col>
         </v-row>
       </div>
     </v-form>
   </div>
-  
   <div>
     <v-card color="#f3f3f3" elevation="16" width="70%" class="card mx-auto px-5">
       <v-row>
         <v-col :cols="9">
 
         </v-col>
-        
+
         <v-col :cols="3">
-            <div class="btnContainer d-flex justify-end">
-              <v-btn class="createBtn" @click="goCreateQuestion()">질문생성</v-btn>
-            </div>
+          <div class="btnContainer d-flex justify-end">
+            <v-btn class="createBtn" @click="goCreateQuestion()">질문생성</v-btn>
+          </div>
         </v-col>
+
       </v-row>
       <div>
         <QuestionListItem v-for="question in questionStore.questions" :key="question.id" :question="question" />
@@ -65,10 +47,17 @@
 
 <script setup>
 import { useQuestionStore } from '@/stores/questionStore';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import QuestionListItem from './QuestionListItem.vue';
 import { useRouter } from 'vue-router';
 
+onMounted(async () => {
+  console.log(questionStore.questions)
+})
+const filters = ref({
+  bookmarked: false,
+  curious: false,
+});
 const router = useRouter();
 
 const goCreateQuestion = function () {
@@ -95,6 +84,7 @@ const items = questionStore.items;
   border-bottom-right-radius: 50px;
   padding-bottom: 20px;
 }
+
 .text-field-container {
   display: flex;
   width: 100%;
@@ -168,14 +158,18 @@ span {
   height: 60px;
   /* background-color: white; */
 }
+
 .searchInput input {
-  text-align: left; /* 커서를 왼쪽으로 이동 */
+  text-align: left;
+  /* 커서를 왼쪽으로 이동 */
 }
-.search-text-container{
+
+.search-text-container {
   /* width: calc(100%-70px); */
   width: 100%;
 }
-.searchBtn-container{
+
+.searchBtn-container {
   width: 70px;
   display: flex;
   justify-content: center;

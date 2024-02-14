@@ -15,6 +15,8 @@
 <script>
 import { ref } from 'vue';
 import {useStompStore} from '@/utils/StompUtil';
+import { useChatStore } from '@/stores/chatStore';
+
 export default {
   name: 'RoomList',
   props: {
@@ -22,8 +24,10 @@ export default {
   },
   setup(props, context) {
     const stompStore =  useStompStore();
+    const chatStore = useChatStore();
     const selectRoom = (room) => {
       stompStore.subscribeRoom(room.id);
+      chatStore.subChatRoom(room.id);
       console.log(room)
       context.emit('selectRoom', room);
     }

@@ -163,6 +163,8 @@ export default {
       if (videoElement.value) {
         videoElement.value.srcObject = null;
       }
+      // 세션을 종료하고 상태를 업데이트합니다.
+      sessionStore.exitSession(props.roomSessionId);
     });
     const toggleFullScreen = () => {
       if (!document.fullscreenElement) {

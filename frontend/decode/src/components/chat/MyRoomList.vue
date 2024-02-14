@@ -16,6 +16,7 @@
 <script>
 import { ref } from 'vue';
 import { useStompStore } from '@/utils/StompUtil';
+import { useChatStore } from '@/stores/chatStore';
 export default {
   name: 'RoomList',
   props: {
@@ -23,6 +24,7 @@ export default {
   },
   setup(props, context) {
     const stompStore = useStompStore();
+    const chatStore = useChatStore();
     const selectRoom = (room) => {
       stompStore.subscribeRoom(room.id);
       context.emit('selectRoom', room);
@@ -31,6 +33,7 @@ export default {
     const deleteRoom = (room) => {
       // TODO: DB에서 해당 방을 삭제하는 API 호출
       console.log(`Deleting room: ${room.roomName}`);
+      chatStore.deleteChatRoom(room.id)
     };
 
     return { selectRoom, deleteRoom };

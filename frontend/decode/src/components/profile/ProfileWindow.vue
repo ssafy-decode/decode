@@ -85,43 +85,44 @@
             <v-card
               class="mx-auto px-4 py-8 text-left"
               max-width="1250"
-              style="
-                box-shadow: none;
-                text-align: center;
-                background-color: #f3f3f3;
-                border-radius: 31px;
-                border: 15px solid #d9d9d9;
-              "
+              style="box-shadow: none; text-align: center; border-radius: 31px; border: 15px solid #d9d9d9"
             >
               <div v-if="followerList.length > 0">
-                <v-row>
-                  <v-col cols="1"></v-col>
-                  <v-col cols="1">티어</v-col>
-                  <v-col cols="4">닉네임</v-col>
-                  <v-col cols="6">기술 스택</v-col>
-                </v-row>
                 <v-row v-for="(follower, followerIdx) in followerList" :key="followerIdx">
                   <span hidden>{{ follower.id }}</span>
-                  <v-col cols="1"> {{ follower.tier }}</v-col>
                   <v-col cols="1">
+                    <div style="display: flex; margin-left: 60px">
+                      <img :src="`../../${follower.tier}.png`" width="30px" />
+                      <p :style="{ fontWeight: 'bold', color: getTierColor(follower.tier) }">
+                        {{ capitalize(follower.tier) }}
+                      </p>
+                    </div>
+                  </v-col>
+                  <v-col cols="1"> </v-col>
+                  <v-col cols="3">
                     <img style="width: 30px" src="../default.png" />
                     {{ follower.profileImg }}
-                  </v-col>
-                  <v-col cols="4">
                     <profileRouter :uid="follower.id" :nickName="follower.nickname" />
                   </v-col>
-                  <v-col cols="6">
-                    <template v-if="followerTechStacks[follower.id] && followerTechStacks[follower.id].length > 0">
-                      <div v-for="tag in followerTechStacks[follower.id]" :key="tag">
-                        <v-chip
-                          label
-                          :style="{ backgroundColor: tagBackGroundColor(tag), color: tagTextColor(tag) }"
-                          class="mr-2 mb-2 chips"
-                        >
-                          {{ tagName[tag] }}</v-chip
-                        >
-                      </div>
-                    </template>
+                  <v-col cols="5">
+                    <v-chip
+                      v-if="followerTechStacks[follower.id]"
+                      v-for="tag in showAllTags1[follower.id]
+                        ? followerTechStacks[follower.id]
+                        : followerTechStacks[follower.id].slice(0, 3)"
+                      :key="tag"
+                      label
+                      :style="{ backgroundColor: tagBackGroundColor(tag), color: tagTextColor(tag) }"
+                      class="mb-2 mr-2 chips"
+                    >
+                      {{ tagName[tag] }}
+                    </v-chip>
+                    <button
+                      v-if="followerTechStacks[follower.id] && followerTechStacks[follower.id].length > 3"
+                      @click="toggleTags1(follower.id)"
+                    >
+                      <img src="../plus.png" width="30px" />
+                    </button>
                   </v-col>
                 </v-row>
               </div>
@@ -135,49 +136,51 @@
             <v-card
               class="mx-auto px-4 py-8 text-left"
               max-width="1250"
-              style="
-                box-shadow: none;
-                text-align: center;
-                background-color: #f3f3f3;
-                border-radius: 31px;
-                border: 15px solid #d9d9d9;
-              "
+              style="box-shadow: none; text-align: center; border-radius: 31px; border: 15px solid #d9d9d9"
             >
               <div v-if="followingList.length > 0">
-                <v-row>
-                  <v-col cols="1"></v-col>
-                  <v-col cols="1">티어</v-col>
-                  <v-col cols="4">닉네임</v-col>
-                  <v-col cols="4">기술 스택</v-col>
-                </v-row>
                 <v-row v-for="(following, followingIdx) in followingList" :key="followingIdx">
                   <span hidden>{{ following.id }}</span>
-                  <v-col cols="1"> {{ following.tier }}</v-col>
                   <v-col cols="1">
+                    <div style="display: flex; margin-left: 60px">
+                      <img :src="`../../${following.tier}.png`" width="30px" />
+                      <p :style="{ fontWeight: 'bold', color: getTierColor(following.tier) }">
+                        {{ capitalize(following.tier) }}
+                      </p>
+                    </div>
+                  </v-col>
+                  <v-col cols="1"> </v-col>
+                  <v-col cols="3">
                     <img style="width: 30px" src="../default.png" />
                     {{ following.profileImg }}
-                  </v-col>
-                  <v-col cols="4">
                     <profileRouter :uid="following.id" :nickName="following.nickname" />
                   </v-col>
-                  <v-col cols="4">
-                    <template v-if="followingTechStacks[following.id] && followingTechStacks[following.id].length > 0">
-                      <div v-for="tag in followingTechStacks[following.id]" :key="tag">
-                        <v-chip
-                          label
-                          :style="{ backgroundColor: tagBackGroundColor(tag), color: tagTextColor(tag) }"
-                          class="mr-2 mb-2 chips"
-                        >
-                          {{ tagName[tag] }}</v-chip
-                        >
-                      </div>
-                    </template>
+                  <v-col cols="5">
+                    <v-chip
+                      v-if="followingTechStacks[following.id]"
+                      v-for="tag in showAllTags2[following.id]
+                        ? followingTechStacks[following.id]
+                        : followingTechStacks[following.id].slice(0, 3)"
+                      :key="tag"
+                      label
+                      :style="{ backgroundColor: tagBackGroundColor(tag), color: tagTextColor(tag) }"
+                      class="mb-2 mr-2 chips"
+                    >
+                      {{ tagName[tag] }}
+                    </v-chip>
+                    <button
+                      v-if="followingTechStacks[following.id] && followingTechStacks[following.id].length > 3"
+                      @click="toggleTags2(following.id)"
+                    >
+                      <img src="../plus.png" width="30px" />
+                    </button>
                   </v-col>
-                  <v-col cols="2" offset="4">
+                  <v-col cols="2">
                     <v-btn @click="unfollowById(following.id, followingIdx)">팔로우 취소</v-btn>
                   </v-col>
                 </v-row>
               </div>
+
               <v-col v-else>
                 <v-col>친구가 없으시네요.</v-col>
               </v-col>
@@ -192,12 +195,13 @@
 <script setup>
 import profileRouter from '@/components/common/profileRouter.vue';
 
-import { ref, defineProps, onBeforeMount } from 'vue';
+import { ref, defineProps, onBeforeMount, watch } from 'vue';
 import { useFollowStore } from '@/stores/followStore';
 import { useProfileStore } from '@/stores/profileStore';
 import { useUserStore } from '@/stores/userStore';
 import { storeToRefs } from 'pinia';
 import { useTagStore } from '@/stores/tagStore';
+import axios from '@/utils/common-axios';
 
 const props = defineProps({
   followerList: Array,
@@ -304,33 +308,69 @@ const tagTextColor = (tag) => {
   }
 };
 
-// onBeforeMount(() => {
-//   props.followerList.forEach((follower) => {
-//     getFollowerTechStacks(follower.id);
-//   });
-//   props.followingList.forEach((following) => {
-//     getFollowingTechStacks(following.id);
-//   });
-// });
+const showAllTags1 = ref({});
+const showAllTags2 = ref({});
 
-// // 팔로워/팔로잉 목록 기술 스택 목록 조회
-// const getFollowerTechStacks = async (followerId) => {
-//   await setTagNumList(followerId);
-//   const tagIds = tagStore.tagIdList?.value || [];
-//   const tagNames = tagIds.map((tagId) => tagName[tagId]);
-//   followerTechStacks.value[followerId] = tagNames;
-// };
-// const getFollowingTechStacks = async (followingId) => {
-//   await setTagNumList(followingId);
-//   const tagIds = tagStore.tagIdList?.value || [];
-//   const tagNames = tagIds.map((tagId) => tagName[tagId]);
-//   followingTechStacks.value[followingId] = tagNames;
-// };
+watch(
+  props,
+  () => {
+    props.followerList.forEach((follower) => {
+      axios.get('/tag/' + follower.id).then((res) => {
+        followerTechStacks.value[follower.id] = res.data.data.tagIdList;
+        showAllTags1.value[follower.id] = false;
+      });
+    });
+    props.followingList.forEach((following) => {
+      axios.get('/tag/' + following.id).then((res) => {
+        followingTechStacks.value[following.id] = res.data.data.tagIdList;
+        showAllTags2.value[following.id] = false;
+      });
+    });
+  },
+  {
+    deep: true,
+    immediate: true,
+  },
+);
+
+const toggleTags1 = (id) => {
+  showAllTags1.value[id] = !showAllTags1.value[id];
+};
+const toggleTags2 = (id) => {
+  showAllTags2.value[id] = !showAllTags2.value[id];
+};
+function getTierColor(tier) {
+  if (tier === 'bronze') {
+    return '#D7C3BC';
+  } else if (tier === 'silver') {
+    return '#DCDCDC';
+  } else if (tier === 'gold') {
+    return '#EDE481';
+  } else if (tier === 'platinum') {
+    return '#A5D8D8';
+  } else if (tier === 'diamond') {
+    return '#97D2FF';
+  } else if (tier === 'ruby') {
+    return '#F4A5C5';
+  } else {
+    return 'black';
+  }
+}
+const capitalize = (value) => {
+  if (!value) return '';
+  return value.charAt(0).toUpperCase() + value.slice(1);
+};
 </script>
 
 <style scoped>
 .buttons {
   text-align: end;
+}
+.chips {
+  border-radius: 31px;
+  background-color: #9dd0ff;
+  color: #447cb0;
+  font-weight: bold;
 }
 .btn {
   width: 110px;

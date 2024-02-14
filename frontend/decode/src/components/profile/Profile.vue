@@ -23,7 +23,7 @@
             <router-link to="/inventory">
               <v-btn class="btn" color="#62C0A6" size="x-large" type="submit" variant="elevated"> 내 아이템 </v-btn>
             </router-link>
-            <router-link to="/checkpwd">
+            <router-link to="/checkpwd" v-if="!oauth">
               <v-btn class="btn" color="#62C0A6" size="x-large" type="submit" variant="elevated"> 회원정보 수정 </v-btn>
             </router-link>
           </div>
@@ -128,7 +128,7 @@ const followStore = useFollowStore();
 
 const { updateTechStack } = profileStore;
 const { unFollow, follow } = followStore;
-const { handleAccessToken: accessToken } = storeToRefs(userStore);
+const { handleAccessToken: accessToken, handleIsOAuth: oauth } = storeToRefs(userStore);
 const { setTagNumList } = tagStore;
 const { handleTags: StoreTagIdList } = storeToRefs(tagStore);
 
