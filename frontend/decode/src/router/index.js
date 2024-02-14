@@ -64,7 +64,7 @@ const router = createRouter({
       component: QuestionCreateView,
     },
     {
-      path: '/answer-create',
+      path: '/answer-create/:id',
       name: 'answer-create',
       component: AnswerCreateView,
     },

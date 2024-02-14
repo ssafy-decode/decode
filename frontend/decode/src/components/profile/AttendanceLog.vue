@@ -52,9 +52,7 @@ onMounted(() => {
         attendanceLog.push(date);
       });
     })
-    .catch((err) => {
-      console.log(err);
-    });
+    .catch((err) => {});
 });
 </script>
 

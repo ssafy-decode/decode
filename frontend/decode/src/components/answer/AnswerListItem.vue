@@ -121,13 +121,9 @@ const createComment = function () {
       },
     })
       .then((res) => {
-        console.log('댓글 생성됨');
         location.reload();
       })
-      .catch((err) => {
-        console.log(err);
-        console.log('댓글 생성 오류');
-      });
+      .catch((err) => {});
   } else {
     alert('댓글 내용을 입력해주세요.');
   }

@@ -74,7 +74,6 @@ const useProfileStore = defineStore(
           userStore.accessToken = userStore.parseToken(res);
           if (res.data.status === 'OK') {
             mypwd.value = res.data.data;
-            console.log(mypwd.value);
             if (mypwd.value) {
               userStore.setUser(userStore.loginUserId);
               router.push({ name: 'myprofileupdate' });
@@ -86,7 +85,6 @@ const useProfileStore = defineStore(
         })
         .catch((error) => {
           alert('비밀번호가 일치하지 않습니다.');
-          console.error(error);
           return;
         });
     };

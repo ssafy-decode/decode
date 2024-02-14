@@ -20,7 +20,6 @@ const useRecommendStore = defineStore(
     };
 
     const addRecommend = async (userId, answerId) => {
-      console.log('개추 누름');
       let data = {
         userId,
         answerId,
@@ -31,30 +30,19 @@ const useRecommendStore = defineStore(
             Authorization: `Bearer ${userStore.accessToken}`,
           },
         })
-        .then((res) => {
-          console.log('개추 눌림');
-          console.log('답변 추천');
-        })
-        .catch((error) => {
-          console.error('Recommend error:', error);
-        });
+        .then((res) => {})
+        .catch((error) => {});
     };
 
     const deleteRecommend = async (answerId) => {
-      console.log('추취 누름');
       await axios
         .delete(`/answer/unrecommend/${answerId}`, {
           headers: {
             Authorization: `Bearer ${userStore.accessToken}`,
           },
         })
-        .then((res) => {
-          console.log('답변 추천 취소');
-          console.log('추취 눌림');
-        })
-        .catch((error) => {
-          console.error('deleteRecommend error:', error);
-        });
+        .then((res) => {})
+        .catch((error) => {});
     };
 
     // // computed

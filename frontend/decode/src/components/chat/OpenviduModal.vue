@@ -110,7 +110,6 @@ export default {
       () => publisher.value,
       (newPublisher) => {
         isPublisher.value = newPublisher != null;
-        console.log(isPublisher.value);
       },
     );
     const sendMessage = (event) => {
@@ -147,14 +146,12 @@ export default {
       } else if (publisher.value && publisher.value.stream) {
         videoElement.value.srcObject = publisher.value.stream.mediaStream;
       } else {
-        console.log('Neither publisher nor subscriber stream is defined yet');
       }
     };
     onMounted(async () => {
       const rsId = props.roomSessionId;
       session.value = await sessionStore.getSessionById(rsId)['session'];
       subscriber.value = await sessionStore.getSubscriberById(rsId);
-      console.log(subscriber.value);
 
       username.value = await sessionStore.getMyUserNameById(rsId);
       OV.value = await sessionStore.getOvById(rsId);
@@ -221,7 +218,6 @@ export default {
         publisher.value = null;
         subscriber.value = null;
       } else {
-        console.log('Invalid session or publisher');
       }
 
       sessionStore.exitSession(props.roomSessionId);

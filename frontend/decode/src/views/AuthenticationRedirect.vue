@@ -12,7 +12,6 @@ if (code) {
     window.opener.postMessage(res.data.data, '*');
     window.close();
   } else {
-    console.log('로그인 실패');
   }
 }
 </script>

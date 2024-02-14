@@ -177,22 +177,17 @@ export default {
           this.pointAmount = Math.floor(this.coinAmount * rate);
         }
       } else {
-        console.error('환율이 유효하지 않습니다.');
       }
     },
     async createChart() {
       try {
         const response = await axios.get('https://min-api.cryptocompare.com/data/price?fsym=USDT&tsyms=BNB');
         const timestamp = new Date().toLocaleTimeString();
-        // console.log("USDT -> BNB : ", response.data.BNB)
         const randomIndex = Math.floor(Math.random() * 5);
 
         // 배열 [-10, -5, 0, 5, 10]에서 무작위로 선택된 값 반환
         const values = [-10, -5, 0, 5, 10];
-        // console.log("value : ", values[randomIndex])
         const price = Math.ceil((response.data.BNB / 229.5) * 100000000) + values[randomIndex];
-
-        // console.log("price : ", price)
 
         // 첫 실행 시에만 차트 인스턴스 생성
         if (!chart) {
@@ -214,9 +209,7 @@ export default {
 
         // 차트 업데이트
         chart.update();
-      } catch (error) {
-        console.error('환율 정보를 가져오는 중 오류 발생:', error);
-      }
+      } catch (error) {}
     },
     onPointInput() {
       // 포인트 입력 값이 변경될 때 호출되는 메서드

@@ -41,7 +41,6 @@ const useAdoptStore = defineStore(
           alert('답변을 채택하였습니다!');
         })
         .catch((error) => {
-          console.error('Adopt error:', error);
           alert('답변 채택 중 오류가 발생했습니다.');
         });
     };

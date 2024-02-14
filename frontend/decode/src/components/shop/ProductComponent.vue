@@ -35,12 +35,10 @@ const buyProduct = async () => {
       },
     })
     .then((res) => {
-      console.log(res);
       alert('구매가 완료되었습니다.');
       closeModal();
     })
     .catch((err) => {
-      console.log(err);
       alert('돈이 없으시네요.');
     });
 };

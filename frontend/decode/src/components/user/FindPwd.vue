@@ -192,9 +192,7 @@ const findpwd = () => {
     };
 
     userStore.findUserPwd(user);
-  } catch (error) {
-    console.error('Error:', error);
-  }
+  } catch (error) {}
 };
 </script>
 

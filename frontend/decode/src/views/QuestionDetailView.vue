@@ -111,7 +111,6 @@ const versions = ref([]);
 //     // GPT 답변 요청
 //     await answerStore.getGptAnswer(questionId, questionContent);
 //   } catch (error) {
-//     console.error('GPT 답변 요청 에러:', error);
 //   }
 // };
 
@@ -122,23 +121,25 @@ const getDetailQuestion = function () {
   })
     .then((res) => {
       questionId.value = route.params.id;
-      question.value = res.data.data;
+      /////////////////////////수정중////////////////////////////
+      questionStore.detailQuestion = res.data.data;
+      question.value = questionStore.detailQuestion;
+      /////////////////////////수정중////////////////////////////
+      // question.value = res.data.data;
+      /////////////////////////수정중////////////////////////////
       questionStore.originalContent = question.value.content;
       isAnswerExist.value = question.value.answerList.length > 0;
       writerNickname.value = question.value.questionWriter.nickname;
       questionWriterId.value = question.value.questionWriter.id;
       questionCreatedTime.value = question.value.createdTime;
-      // bookmarkCnt.value = question.value.bookmarkCnt;
-      // meTooCnt.value = question.value.meTooCnt;
       question.value.tagList.forEach((item) => {
         numToStr.value.push(questionStore.reverseItems[item.tagId]);
         versions.value.push(item.version);
       });
+      // bookmarkCnt.value = question.value.bookmarkCnt;
+      // meTooCnt.value = question.value.meTooCnt;
     })
-    .catch((err) => {
-      console.log(err);
-      console.log('상세 질문 조회 오류');
-    });
+    .catch((err) => {});
 };
 
 const { setBookmarkList, addBookmark, deleteBookmark } = bookmarkStore;
@@ -183,15 +184,11 @@ const deleteQuestion = function () {
       },
     })
       .then((res) => {
-        console.log('삭제됨');
         router.push({
           path: '/board',
         });
       })
-      .catch((err) => {
-        console.log(err);
-        console.log('질문 삭제 오류');
-      });
+      .catch((err) => {});
   } else {
   }
 };
@@ -202,7 +199,7 @@ const goUpdate = function () {
 
 const goCreateAnswer = function () {
   answerStore.questionId = questionId.value;
-  router.push({ path: `/answer-create` });
+  router.push({ path: `/answer-create/${questionId.value}` });
 };
 </script>
 

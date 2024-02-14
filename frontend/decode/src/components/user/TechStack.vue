@@ -115,9 +115,7 @@ const checkboxIcon = (item) => {
 const complete = async () => {
   try {
     await userStore.saveTechStack(select.value);
-  } catch (error) {
-    console.error('Error saving tech stack:', error);
-  }
+  } catch (error) {}
 };
 
 const toggleSelection = (item) => {

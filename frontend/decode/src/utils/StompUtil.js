@@ -17,10 +17,8 @@ export const useStompStore = defineStore({
         connectHeaders: {},
         onConnect: (frame) => {
           this.connected = true;
-          console.log('소켓 연결 성공', frame);
         },
         onStompError: (error) => {
-          console.log('소켓 연결 실패', error);
           this.connected = false;
         },
       });
@@ -34,7 +32,6 @@ export const useStompStore = defineStore({
           if (!this.messages[roomId]) {
             this.messages[roomId] = [];
           }
-          console.log(JSON.parse(res.body))
           this.messages[roomId].push(JSON.parse(res.body));
         });
       }
@@ -48,7 +45,6 @@ export const useStompStore = defineStore({
             text: text,
             roomId: roomId,
           };
-          console.log(msg)
           this.stompClient.publish({ destination: '/app/chat/message', body: JSON.stringify(msg) });
         }
       }

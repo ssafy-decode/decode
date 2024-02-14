@@ -41,7 +41,6 @@ const useBookmarkStore = defineStore(
           alert('북마크에 추가했습니다!');
         })
         .catch((error) => {
-          console.error('bookmark error:', error);
           alert('북마크 추가에 실패했습니다.');
         });
     };
@@ -58,7 +57,6 @@ const useBookmarkStore = defineStore(
           alert('북마크에서 제외되었습니다.');
         })
         .catch((error) => {
-          console.error('deleteBookmark error:', error);
           alert('북마크 취소 실패');
         });
     };
