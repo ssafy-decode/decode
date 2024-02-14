@@ -2,7 +2,7 @@ package com.decode.web.domain.board.controller;
 
 import com.decode.web.domain.board.dto.AnswerCountResponseDto;
 import com.decode.web.domain.board.dto.AnswerDoAdoptDto;
-import com.decode.web.domain.board.dto.AnswerRecommendDto;
+import com.decode.web.domain.board.dto.AnswerSomethingDto;
 import com.decode.web.domain.board.dto.BoardProfileResponseDto;
 import com.decode.web.domain.board.dto.CreateAnswerDto;
 import com.decode.web.domain.board.dto.RecommendDto;
@@ -151,7 +151,18 @@ public class AnswerController {
     @GetMapping("/recommend/{userId}")
     public ResponseDto getRecommendAnswersByUserId(@PathVariable Long userId)
             throws BadRequestException {
-        List<AnswerRecommendDto> data = answerService.getRecommendAnswersByUserId(userId);
+        List<AnswerSomethingDto> data = answerService.getRecommendAnswersByUserId(userId);
+        return ResponseDto.builder()
+                .status(HttpStatus.OK)
+                .message("유저가 추천한 답변 목록 조회")
+                .data(data)
+                .build();
+    }
+
+    @GetMapping("/adopt/{userId}")
+    public ResponseDto getAdoptAnswersByUserId(@PathVariable Long userId)
+            throws BadRequestException {
+        List<AnswerSomethingDto> data = answerService.getAdoptAnswersByUserId(userId);
         return ResponseDto.builder()
                 .status(HttpStatus.OK)
                 .message("유저가 추천한 답변 목록 조회")

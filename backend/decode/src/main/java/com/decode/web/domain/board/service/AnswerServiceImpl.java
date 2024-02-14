@@ -1,7 +1,7 @@
 package com.decode.web.domain.board.service;
 
 import com.decode.web.domain.board.dto.AnswerCountResponseDto;
-import com.decode.web.domain.board.dto.AnswerRecommendDto;
+import com.decode.web.domain.board.dto.AnswerSomethingDto;
 import com.decode.web.domain.board.dto.BoardProfileDto;
 import com.decode.web.domain.board.dto.BoardProfileResponseDto;
 import com.decode.web.domain.board.dto.CreateAnswerDto;
@@ -229,7 +229,7 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
-    public List<AnswerRecommendDto> getRecommendAnswersByUserId(Long userId)
+    public List<AnswerSomethingDto> getRecommendAnswersByUserId(Long userId)
             throws BadRequestException {
         Optional<UserProfileEntity> userProfile = userProfileRepository.findById(userId);
         if (userProfile.isEmpty()) {
@@ -238,11 +238,21 @@ public class AnswerServiceImpl implements AnswerService {
         UserProfileEntity userProfileEntity = userProfile.get();
         return userProfileEntity.getRecommends()
                 .stream()
-                .map(e -> AnswerRecommendDto.builder()
+                .map(e -> AnswerSomethingDto.builder()
                         .id(e.getAnswer().getId())
                         .content(e.getAnswer().getContent())
                         .recommendCnt(e.getAnswer().getRecommends().size())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AnswerSomethingDto> getAdoptAnswersByUserId(Long userId)
+            throws BadRequestException {
+        Optional<UserProfileEntity> userProfile = userProfileRepository.findById(userId);
+        if (userProfile.isEmpty()) {
+            throw new BadRequestException("유저 아이디를 찾을 수 없습니다.");
+        }
+        return null;
     }
 }
