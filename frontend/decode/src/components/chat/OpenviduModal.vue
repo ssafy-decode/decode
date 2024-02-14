@@ -20,7 +20,7 @@
 
         <div class="chat-container">
           <div class="chat-messages" ref="chatContainer">
-            <div v-for="(message, index) in messages" :key="index">
+            <div v-for="(message, index) in messages" :key="index" :class="messageClass(message)">
               <div class="message-content">
                 <div class="nickname">{{ message.username }}</div>
                 <p>{{ message.message }}</p>
@@ -75,10 +75,13 @@
 <script>
 import VueDraggableResizable from 'vue-draggable-resizable';
 import 'vue-draggable-resizable/style.css';
+import { storeToRefs } from 'pinia';
 import OpenviduTest from '@/components/openvidu/OpenviduTest.vue';
 import { ref, onMounted, onBeforeUnmount, computed, watchEffect, nextTick, watch } from 'vue';
 import { useSessionStore } from '@/stores/sessionStore';
 import { useMessageStore } from '@/stores/messageStore';
+import { useUserStore } from '@/stores/userStore';
+
 export default {
   components: {
     VueDraggableResizable,
@@ -89,6 +92,7 @@ export default {
   setup(props, context) {
     const inputMessage = ref('');
     const isComponentVisible = ref(true);
+    const userStore = useUserStore();
     const sessionStore = useSessionStore();
     const messageStore = useMessageStore();
     const messages = computed(() => messageStore.messages[props.roomSessionId] || []);
@@ -100,6 +104,8 @@ export default {
     const chatContainer = ref(null);
     const isMuted = ref(false);
     const isScreenSharing = ref(true);
+    const { handleMyprofile: myProfile } = storeToRefs(userStore);
+
     const videoElement = ref(null); // videoElement를 선언합니다.
 
     const sendMessage = (event) => {
@@ -205,6 +211,9 @@ export default {
       // 나가기 이벤트를 발생시킵니다.
       context.emit('exit');
     };
+    const messageClass = (message) => {
+      return message.username === '나' ? 'my-message' : 'other-message';
+    };
 
     return {
       inputMessage,
@@ -224,6 +233,7 @@ export default {
       toggleFullScreen,
       sendMessage,
       toggleAudio,
+      messageClass,
       // 나머지 메서드도 반환 객체에 포함시켜 주세요
     };
   },
@@ -282,14 +292,20 @@ export default {
 }
 .video-element {
   padding: 1px;
-  width: 100%;
-  height: auto;
-  border: solid 0.5px #ccc;
+  width: auto;
+  max-width: 840px;
+  height: 100%;
+  border: solid 0.5px #34a080;
+  border-radius: 3px;
 }
 
 .screen-container {
   width: 80%;
+  max-width: 840px;
   height: 100%;
+  margin: 1px;
+  background-color: black;
+  border-radius: 3px;
 }
 
 .chat-container {
@@ -332,6 +348,45 @@ export default {
   position: absolute;
   bottom: 0;
 }
+
+
+/* 메시지 디자인 */
+.my-message .message-content,
+.other-message .message-content {
+  margin: 5px;
+}
+
+.my-message .message-content {
+  text-align: right;
+}
+
+.my-message p,
+.other-message p {
+  font-size: 12px;
+  display: inline-block;
+  background-color: #93D5D1;
+  padding: 5px;
+  border-radius: 5px;
+  max-width: 65%;
+  word-break: break-word; /* 줄바꿈을 추가합니다 */
+}
+
+.other-message .message-content {
+  text-align: left;
+}
+
+.other-message p {
+  display: inline-block;
+  background-color: #D3EEEC;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.nickname {
+  font-size: 13px;
+}
+
+
 /* 스크롤바 전체의 너비를 설정 */
 .chat-messages::-webkit-scrollbar {
   width: 8px;
