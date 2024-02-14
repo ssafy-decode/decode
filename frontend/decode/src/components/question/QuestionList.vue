@@ -34,24 +34,15 @@
       </v-row>
     </v-form>
   </div>
-  <div class="btnContainer d-flex justify-end">
-    <v-btn class="createBtn" @click="goCreateQuestion()">질문등록</v-btn>
-  </div>
 
   <div>
     <v-card color="#f3f3f3" elevation="16" width="70%" class="card mx-auto px-5">
+      <div class="btnContainer d-flex justify-end">
+        <v-btn class="createBtn" @click="goCreateQuestion()">질문등록</v-btn>
+      </div>
       <v-row>
-        <v-col :cols="9">
-          <v-list-item class="titleBox">
-            <v-list-item-title class="text-center title"> 질 문 </v-list-item-title>
-          </v-list-item>
-        </v-col>
-
-        <v-col :cols="3">
-          <v-list-item class="titleBox">
-            <v-list-item-title class="text-center title"> 작 성 </v-list-item-title>
-          </v-list-item>
-        </v-col>
+        <v-checkbox v-model="filters.bookmarked" label="북마크"></v-checkbox>
+  <v-checkbox v-model="filters.curious" label="나도 궁금해요"></v-checkbox>
       </v-row>
       <QuestionListItem v-for="question in questionStore.questions" :key="question.id" :question="question" />
     </v-card>
@@ -60,10 +51,17 @@
 
 <script setup>
 import { useQuestionStore } from '@/stores/questionStore';
-import { ref } from 'vue';
+import { ref,onMounted } from 'vue';
 import QuestionListItem from './QuestionListItem.vue';
 import { useRouter } from 'vue-router';
 
+onMounted (async() => {
+  console.log(questionStore.questions)
+})
+const filters = ref({
+    bookmarked: false,
+    curious: false,
+  });
 const router = useRouter();
 
 const goCreateQuestion = function () {

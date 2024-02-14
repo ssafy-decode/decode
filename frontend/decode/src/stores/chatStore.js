@@ -46,7 +46,6 @@ const useChatStore = defineStore('useChatStore', () => {
           },
         },
       );
-      console.log(res.data);
       return res.data;
     } catch (err) {
       console.log(err);
@@ -59,8 +58,7 @@ const useChatStore = defineStore('useChatStore', () => {
           Authorization: `Bearer ${userStore.accessToken}`,
         },
       });
-      console.log(res.data);
-      return res.data;
+      return res.data.data;
     } catch (err) {
       console.log(err);
     }
