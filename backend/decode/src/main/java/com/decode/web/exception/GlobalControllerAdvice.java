@@ -78,10 +78,10 @@ public class GlobalControllerAdvice {
     private ResponseEntity<ResponseDto> entityNotFoundException(EntityNotFoundException e) {
         log.error("{}", e.getMessage());
         return new ResponseEntity<>(ResponseDto.builder()
-                .status(HttpStatus.UNAUTHORIZED)
+                .status(HttpStatus.NOT_FOUND)
                 .message(e.getMessage())
                 .data("")
-                .build(), HttpStatus.UNAUTHORIZED);
+                .build(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(NotEnoughCoinException.class)
