@@ -56,8 +56,10 @@ public class AuthServiceImpl implements AuthService {
         String principal = jwtTokenProvider.getPrincipal(token);
         String provider = jwtTokenProvider.getProvider(token);
         String refreshTokenInRedis = redisService.getValues("RT:" + provider + ":" + principal);
-
-        return refreshTokenInRedis != null && refreshTokenInRedis.equals(token);
+        if (refreshTokenInRedis == null) {
+            return false;
+        }
+        return jwtTokenProvider.validateToken(refreshTokenInRedis);
     }
 
     @Override
