@@ -277,8 +277,12 @@ const createComment = function () {
   border: #62c0a6 solid 2px;
   background-color: white;
   border-radius: 24px;
-  padding: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 20px;
+  padding-right: 20px;
   margin: 0;
+  font-size: 15px;
 }
 
 .editDeleteBox {
