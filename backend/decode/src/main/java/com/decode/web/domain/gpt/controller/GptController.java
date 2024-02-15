@@ -27,6 +27,8 @@ public class GptController {
                 .titles(gptApiService.titlesByError(gptApiDto.getContent()))
                 .build();
 
+        //
+
         return ResponseDto.builder()
                 .status(HttpStatus.OK)
                 .message("GPT 추천 완료")
@@ -39,6 +41,19 @@ public class GptController {
     public ResponseDto generateAnswer(@RequestBody @Valid GptApiRequestDto gptApiDto) {
         GptApiAnswerResponseDto data = GptApiAnswerResponseDto.builder()
                 .answer(gptApiService.answerByError(gptApiDto.getContent()))
+                .build();
+
+        return ResponseDto.builder()
+                .status(HttpStatus.OK)
+                .message("GPT 답변 완료")
+                .data(data)
+                .build();
+    }
+
+    @PostMapping("/answer/sof")
+    public ResponseDto generateSofTitle(@RequestBody @Valid GptApiRequestDto gptApiDto) {
+        GptApiAnswerResponseDto data = GptApiAnswerResponseDto.builder()
+                .answer(gptApiService.answerBySofError(gptApiDto.getContent()))
                 .build();
 
         return ResponseDto.builder()

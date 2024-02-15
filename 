@@ -1,0 +1,527 @@
+[33mcommit 03b35cadca899997ee624d8f43e59853e5229be6[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mbe-develop-chat[m[33m)[m
+Author: woghk6761 <woghk6761@pusan.ac.kr>
+Date:   Tue Feb 6 15:23:14 2024 +0900
+
+    Fix: 순환참조 에러 해결
+    
+    레디스 저장할 때 직렬화 과정 중
+    인포와 프로필 간 순환 참조 해결
+
+[33mcommit 52f2c86003c9e9a7166651c9b8b70f8b570b97d3[m
+Author: woghk6761 <woghk6761@pusan.ac.kr>
+Date:   Tue Jan 30 23:36:21 2024 +0900
+
+    Feat: Add WebSocket config
+    
+    config 파일 생성
+
+[33mcommit 6c0e33672f9727e0613f2f1cfe8ce79c5ef1fac4[m[33m ([m[1;31morigin/be-develop-chat[m[33m)[m
+Author: woghk6761 <woghk6761@pusan.ac.kr>
+Date:   Tue Jan 30 23:32:45 2024 +0900
+
+    Feat: Add Openvidu Controller
+    
+    오프비두로 api 전송을 해서 세션을 만들고 연결하는
+    api까지 작성됨.
+
+[33mcommit 04613bb03cbf7122e9e097090b0e822fa181dc36[m[33m ([m[1;31morigin/be-develop[m[33m, [m[1;32mbe-develop[m[33m)[m
+Merge: 70c2e87 2e8dacc
+Author: 박정규 <cdex6531@gmail.com>
+Date:   Tue Jan 30 12:03:14 2024 +0900
+
+    Merge branch 'be-develop-gptapifix' into 'be-develop'
+    
+    Feat : Gpt API 제목 추출 기능 변경
+    
+    See merge request s10-webmobile2-sub2/S10P12A507!75
+
+[33mcommit 2e8dacc88d7e38308c5424afe945be752949a93f[m
+Author: 박정규 <cdex6531@gmail.com>
+Date:   Tue Jan 30 12:00:20 2024 +0900
+
+    Feat : Gpt API 제목 추출 기능 변경
+    
+    제목 추출시 3개의 옵션을 생성했지만 하나만 생성하게 수정했습니다
+
+[33mcommit 70c2e87afae9ce48263ff2d9f44821489f4df1b1[m
+Merge: 83dab0b 0776be7
+Author: 박우철 <woochul102@gmail.com>
+Date:   Tue Jan 30 10:01:01 2024 +0900
+
+    Merge branch 'be-develop-woochul' into 'be-develop'
+    
+    Fix: ResponseDto header 삭제
+    
+    See merge request s10-webmobile2-sub2/S10P12A507!73
+
+[33mcommit 0776be7f8754dd09633451d338b1cceced518387[m[33m ([m[1;31morigin/be-develop-woochul[m[33m)[m
+Author: woochul102 <woochul102@gmail.com>
+Date:   Tue Jan 30 09:59:49 2024 +0900
+
+    Fix: ResponseDto header 삭제
+
+[33mcommit 83dab0b750e9b7b377ae8e7d96bfde5e3adc30f7[m
+Merge: 2c4316f eb842b5
+Author: 박우철 <woochul102@gmail.com>
+Date:   Mon Jan 29 17:58:15 2024 +0900
+
+    Merge branch 'be-develop-woochul' into 'be-develop'
+    
+    Fix: 비번 수정 api 버그 해결
+    
+    See merge request s10-webmobile2-sub2/S10P12A507!71
+
+[33mcommit eb842b50ff48aff87754194edbc675543724b766[m
+Author: woochul102 <woochul102@gmail.com>
+Date:   Mon Jan 29 17:36:53 2024 +0900
+
+    Fix: 비번 수정 api 버그 해결
+    
+    id가 not blank로 들어가던거 수정
+
+[33mcommit 2c4316f4e25f53d12f3d312ff68ff9ba8d75728b[m
+Merge: db5c8f8 c598c73
+Author: 박우철 <woochul102@gmail.com>
+Date:   Mon Jan 29 15:20:36 2024 +0900
+
+    Merge branch 'be-develop-woochul' into 'be-develop'
+    
+    Feat: 팔로우 여부 체크 api 추가
+    
+    See merge request s10-webmobile2-sub2/S10P12A507!69
+
+[33mcommit c598c7396916652a72ba1165e1cf83b9930dbe93[m
+Merge: 5c6bccd 13dd961
+Author: woochul102 <woochul102@gmail.com>
+Date:   Mon Jan 29 15:19:08 2024 +0900
+
+    Merge remote-tracking branch 'origin/be-develop-woochul' into be-develop-woochul
+
+[33mcommit 5c6bccda6ed4033b26b562c8166d954ec5740b19[m
+Author: woochul102 <woochul102@gmail.com>
+Date:   Mon Jan 29 15:18:29 2024 +0900
+
+    Feat: 팔로우 여부 체크 api 추가
+    
+    추가하였읍니다.
+
+[33mcommit db5c8f8ee13cc9938a312e2fa3a05bd6b4a7fcfe[m
+Merge: b15a229 13dd961
+Author: 박정규 <cdex6531@gmail.com>
+Date:   Mon Jan 29 14:59:57 2024 +0900
+
+    Merge branch 'be-develop-woochul' into 'be-develop'
+    
+    Merge: 코드리팩토링 및 팔로우 api 추가
+    
+    See merge request s10-webmobile2-sub2/S10P12A507!67
+
+[33mcommit 13dd961eef4bfb0ad31e8b5921316d4792a2ced1[m
+Merge: b8bd0c6 b15a229
+Author: 박우철 <woochul102@gmail.com>
+Date:   Mon Jan 29 14:37:43 2024 +0900
+
+    Merge branch 'be-develop' into 'be-develop-woochul'
+    
+    # Conflicts:
+    #   backend/decode/src/main/java/com/decode/web/entity/UserProfileEntity.java
+
+[33mcommit b8bd0c631e2b204d6e35415657cd25d61dfe7c5d[m
+Author: woochul102 <woochul102@gmail.com>
+Date:   Mon Jan 29 14:32:53 2024 +0900
+
+    Feat: 팔로우 API 추가
+    
+    팔로우 API 추가하였읍니다.
+
+[33mcommit b15a22902f9142046e7d3ba844bb277eaf340e85[m
+Merge: 500a6f6 192f975
+Author: 박정규 <cdex6531@gmail.com>
+Date:   Mon Jan 29 13:39:11 2024 +0900
+
+    Merge branch 'be-develop-sunmyeong' into 'be-develop'
+    
+    Feat Question, BookMark 유효성 검사
+    
+    See merge request s10-webmobile2-sub2/S10P12A507!65
+
+[33mcommit 192f975ead4185f4c746d1634749192880d64384[m
+Merge: 70a7d3e 500a6f6
+Author: 제선명 <jesunmyeong@gmail.com>
+Date:   Mon Jan 29 13:33:54 2024 +0900
+
+    Merge branch 'be-develop' of https://lab.ssafy.com/s10-webmobile2-sub2/S10P12A507 into be-develop-sunmyeong
+
+[33mcommit 70a7d3e312b24cd98d8f4e76f1486a2a247aa658[m
+Author: 제선명 <jesunmyeong@gmail.com>
+Date:   Mon Jan 29 13:32:43 2024 +0900
+
+    Feat 게시판 API 유효성 검사
+    
+    게시판(질문, 답변, 댓글, 미투, 북마크, 추천) 유효성검사 완료
+
+[33mcommit 500a6f6ed8fae3319679dbee8358401526a33148[m
+Merge: 5b5be90 7df8f9f
+Author: 박정규 <cdex6531@gmail.com>
+Date:   Mon Jan 29 12:28:52 2024 +0900
+
+    Merge branch 'be-develop-gptapi' into 'be-develop'
+    
+    Feat : GptApi 개발
+    
+    See merge request s10-webmobile2-sub2/S10P12A507!63
+
+[33mcommit 22557ec854c93bbee0883da29a88f4cca9c13bdd[m
+Author: woochul102 <woochul102@gmail.com>
+Date:   Mon Jan 29 10:25:28 2024 +0900
+
+    Feat: 팔로우 엔티티 수정
+    
+    유저 엔티티에 팔로잉, 팔로워 필드 추가
+
+[33mcommit 111051e58d1eea5827c07ab6f36f07486ed0d4e1[m
+Author: woochul102 <woochul102@gmail.com>
+Date:   Mon Jan 29 10:12:04 2024 +0900
+
+    Refactor: 예외 처리 완료
+    
+    정규님의 말을 따랐읍니다.
+
+[33mcommit 8686afdcaf6dde84d3316f2ecfd39087e57985eb[m
+Author: woochul102 <woochul102@gmail.com>
+Date:   Mon Jan 29 09:34:35 2024 +0900
+
+    Refactor: 코드 리팩토링
+    
+    백과장님의 말씀대로 리팩토링 진행하였읍니다.
+
+[33mcommit 5b5be9013f6541ed7c3c62f97ac95b8136798622[m
+Merge: d0b42d1 28af46e
+Author: 박우철 <woochul102@gmail.com>
+Date:   Mon Jan 29 09:24:45 2024 +0900
+
+    Merge branch 'be-develop-woochul' into 'be-develop'
+    
+    Merge: 로그인 uid 추가
+    
+    See merge request s10-webmobile2-sub2/S10P12A507!61
+
+[33mcommit 28af46ee0eae34b21f129eaa94bf2ab64d346ed5[m
+Author: woochul102 <woochul102@gmail.com>
+Date:   Mon Jan 29 09:18:24 2024 +0900
+
+    Feat: 로그인 시 body에 uid 정보 포함
+    
+    body data에 포함되게 변경
+
+[33mcommit 7df8f9ff2bd19e4d4f9cf2c2bf6a6f953fbcc817[m[33m ([m[1;31morigin/be-develop-gptapi[m[33m)[m
+Author: 박정규 <cdex6531@gmail.com>
+Date:   Sun Jan 28 20:11:15 2024 +0900
+
+    git config 변경 테스트
+
+[33mcommit a94f4e17b8ce0c57d6db36c8c8945927b526ec84[m
+Author: jeounpar <cdex6531@ajou.ac.kr>
+Date:   Sun Jan 28 20:08:19 2024 +0900
+
+    Refactor : 채팅 관련 디렉토리 삭제
+    
+    아직 구현 안한 부분은 그냥 삭제했습니다
+
+[33mcommit 64a47420339897dda8533b4dac204d0f3167c2cf[m
+Author: jeounpar <cdex6531@ajou.ac.kr>
+Date:   Sun Jan 28 19:59:52 2024 +0900
+
+    Refactor : GlobalControllerAdvice handleException() 로그 레벨 조정
+
+[33mcommit 1eb046b95f765f9d66d7ddd47000c0a2cd6f67fa[m
+Author: jeounpar <cdex6531@ajou.ac.kr>
+Date:   Sun Jan 28 16:28:26 2024 +0900
+
+    Feat : GPT API 개발중
+
+[33mcommit e5b28ceeb53ae3388d9fbed19a38e54a1c653eba[m
+Author: 제선명 <jesunmyeong@gmail.com>
+Date:   Fri Jan 26 18:02:45 2024 +0900
+
+    Feat Question, BookMark 유효성 검사
+    
+    BookMark유효성검사 완료, Question하는중
+
+[33mcommit d0b42d1fc2b433c21f02f5629437ffd96559968c[m
+Merge: 09b9137 922372f
+Author: 박우철 <woochul102@gmail.com>
+Date:   Fri Jan 26 17:45:41 2024 +0900
+
+    Merge branch 'be-develop-woochul' into 'be-develop'
+    
+    Fix: 비번 찾기 기능 버그 수정
+    
+    See merge request s10-webmobile2-sub2/S10P12A507!59
+
+[33mcommit 922372f553245b4dcb9ae6eff2e6e91a1df75d79[m
+Author: woochul102 <woochul102@gmail.com>
+Date:   Fri Jan 26 17:16:03 2024 +0900
+
+    Feat: controller 유효성검사 일부 추가
+    
+    유효성검사
+
+[33mcommit 6c077a77bd3e6a4ff14390e9f074b8918c28898d[m
+Author: woochul102 <woochul102@gmail.com>
+Date:   Fri Jan 26 17:15:41 2024 +0900
+
+    Fix: 비번 확인 오류 수정
+    
+    .equals 가 아니라 encoder의 matches로 변경
+
+[33mcommit 7ffb68cd6f9c4bdfb86b2f1fc8c5fda36ca1299e[m
+Author: 박정규 <cdex6531@gmail.com>
+Date:   Fri Jan 26 16:25:53 2024 +0900
+
+    Feat : GptApi 개발
+    
+    GptApi 개발 중
+
+[33mcommit 0ea0c2bd9d880e0f19c5db2055b409af1bed9479[m
+Author: woochul102 <woochul102@gmail.com>
+Date:   Fri Jan 26 12:56:11 2024 +0900
+
+    Fix: 비번 찾기 기능 버그 수정
+    
+    encoding 2번 하는 과정 수정함
+
+[33mcommit 09b913755f9edb385e5c7de4a8ff1d7611f1abd1[m
+Merge: 91d7067 349bc9c
+Author: 박우철 <woochul102@gmail.com>
+Date:   Fri Jan 26 09:41:10 2024 +0900
+
+    Merge branch 'be-develop-woochul' into 'be-develop'
+    
+    Feat: 현재 로그인한 유저 프로필 조회 api 추가
+    
+    See merge request s10-webmobile2-sub2/S10P12A507!57
+
+[33mcommit 349bc9c7e16da4348ec7a538854c3e179c4cc70f[m
+Merge: dcf5884 e0b6085
+Author: woochul102 <woochul102@gmail.com>
+Date:   Fri Jan 26 09:39:55 2024 +0900
+
+    Merge remote-tracking branch 'origin/be-develop-woochul' into be-develop-woochul
+
+[33mcommit dcf5884a2df0dbc098ca81f338bb21ca0c7b1c74[m
+Author: woochul102 <woochul102@gmail.com>
+Date:   Fri Jan 26 09:39:31 2024 +0900
+
+    Feat: 현재 로그인한 유저 프로필 조회 api 추가
+    
+    헤더에 토큰 넣어주면 조회 가능
+
+[33mcommit 91d7067f2dacd2844ee0bc40102adc549dcd385b[m
+Merge: 86d3bcd e0b6085
+Author: 박우철 <woochul102@gmail.com>
+Date:   Thu Jan 25 20:48:31 2024 +0900
+
+    Merge branch 'be-develop-woochul' into 'be-develop'
+    
+    Feat: jwt 필터 주석
+    
+    See merge request s10-webmobile2-sub2/S10P12A507!55
+
+[33mcommit e0b60854f072ae10dc51cbee68fe148ef72d707c[m
+Author: skajd1 <woochul102@gmail.com>
+Date:   Thu Jan 25 20:47:26 2024 +0900
+
+    Feat: jwt 필터 주석
+    
+    개발 편의를 위해 껐음
+
+[33mcommit d1a8bacb02150c058a831e0f80852b40825718f5[m
+Merge: 7d71864 86d3bcd
+Author: 박우철 <woochul102@gmail.com>
+Date:   Thu Jan 25 16:55:03 2024 +0900
+
+    Merge branch 'be-develop' into 'be-deploy'
+    
+    deploy by 우철
+    
+    See merge request s10-webmobile2-sub2/S10P12A507!54
+
+[33mcommit 86d3bcd293571c2027d84325f8d34fae38654b47[m
+Merge: d2efe86 2dd625b
+Author: 박우철 <woochul102@gmail.com>
+Date:   Thu Jan 25 16:53:59 2024 +0900
+
+    Merge branch 'be-develop-woochul' into 'be-develop'
+    
+    Fix: 토큰 Header 허용
+    
+    See merge request s10-webmobile2-sub2/S10P12A507!53
+
+[33mcommit 2dd625b86b63ec58b989149d6a02e4e8e3d1b687[m
+Merge: 64d1d78 d2efe86
+Author: 박우철 <woochul102@gmail.com>
+Date:   Thu Jan 25 16:53:53 2024 +0900
+
+    Merge branch 'be-develop' into 'be-develop-woochul'
+    
+    # Conflicts:
+    #   backend/decode/src/main/java/com/decode/web/global/config/CorsConfig.java
+
+[33mcommit 64d1d7829a09dcb01d6b40ba537020eecb360ac4[m
+Author: woochul102 <woochul102@gmail.com>
+Date:   Thu Jan 25 16:50:55 2024 +0900
+
+    Fix: 토큰 Header 허용
+    
+    드디어 프론트에서 토큰을 헤더에서 받을 수 있게 되었습니다.
+
+[33mcommit d2efe86be2926a3dae0f675c3fcc4569f5a87005[m
+Merge: 83327a9 a360968
+Author: 박정규 <cdex6531@gmail.com>
+Date:   Thu Jan 25 16:35:05 2024 +0900
+
+    Merge branch 'be-develop-woochul' into 'be-develop'
+    
+    Merge: 인증/인가 작업 진짜 찐 완료
+    
+    See merge request s10-webmobile2-sub2/S10P12A507!52
+
+[33mcommit a360968309d1da66ae97a544d2d2de3baea0cd33[m
+Author: woochul102 <woochul102@gmail.com>
+Date:   Thu Jan 25 16:21:58 2024 +0900
+
+    Refactor: UserId 불러올 때, contextHolder로부터 불러오게 변경
+    
+    컨트롤러에서 uid 쓸 때, requestHeader가 아닌 쓰레드로컬의 ContextHolder로부터 불러올 수 있도록 변경
+
+[33mcommit 7d7186449eaf22af96ed5341f985fb05ce6747c3[m
+Merge: 22c87d3 83327a9
+Author: 제선명 <jesunmyeong@gmail.com>
+Date:   Thu Jan 25 15:34:50 2024 +0900
+
+    Merge branch 'be-develop' into 'be-deploy'
+    
+    Fix Options 를 처리해보자
+    
+    See merge request s10-webmobile2-sub2/S10P12A507!51
+
+[33mcommit 83327a92d9c74c191785dee0e7df8595e6bd6787[m
+Merge: b10b0ac 58fee6d
+Author: 제선명 <jesunmyeong@gmail.com>
+Date:   Thu Jan 25 15:31:24 2024 +0900
+
+    Merge branch 'be-develop-sunmyeong' into 'be-develop'
+    
+    Fix Options 를 처리해보자
+    
+    See merge request s10-webmobile2-sub2/S10P12A507!50
+
+[33mcommit 0793448deb8d9896a031fda0066640aa452faf1e[m
+Author: woochul102 <woochul102@gmail.com>
+Date:   Thu Jan 25 15:15:37 2024 +0900
+
+    Fix: SecurityContextHolder 정상 작동
+    
+    이제 authentication 객체가 제대로 인증된 채로 들어갑니다.
+
+[33mcommit 58fee6d4c028fd349163fc051e6272e9e25b8b42[m
+Merge: f7dd995 22c87d3
+Author: 제선명 <jesunmyeong@gmail.com>
+Date:   Thu Jan 25 15:04:04 2024 +0900
+
+    Merge branch 'be-deploy' of https://lab.ssafy.com/s10-webmobile2-sub2/S10P12A507 into be-develop-sunmyeong
+
+[33mcommit f7dd995026f0f11091394a94aa7a74bafa43f017[m
+Merge: ad7b11b b10b0ac
+Author: 제선명 <jesunmyeong@gmail.com>
+Date:   Thu Jan 25 14:49:16 2024 +0900
+
+    Merge branch 'be-develop' of https://lab.ssafy.com/s10-webmobile2-sub2/S10P12A507 into be-develop-sunmyeong
+
+[33mcommit ad7b11bf44c3ddfc2e0441ef28c4e7cc0cfeca15[m
+Author: 제선명 <jesunmyeong@gmail.com>
+Date:   Thu Jan 25 14:48:29 2024 +0900
+
+    Fix Options 를 처리해보자
+    
+    Options method Response만들기
+
+[33mcommit 22c87d3a4e2c4937c41a9b5651264d9f65cf4528[m
+Merge: c00f905 b10b0ac
+Author: 박우철 <woochul102@gmail.com>
+Date:   Thu Jan 25 11:11:17 2024 +0900
+
+    Merge branch 'be-develop' into 'be-deploy'
+    
+    Deploy: 토큰 헤더 설정, 토큰 재발급 추가
+    
+    See merge request s10-webmobile2-sub2/S10P12A507!49
+
+[33mcommit b10b0ac81bbd1b5e67f2b1cd22b54a3c17a3a0d6[m
+Merge: ce582d6 83dcfc8
+Author: 박정규 <cdex6531@gmail.com>
+Date:   Thu Jan 25 10:57:21 2024 +0900
+
+    Merge branch 'be-develop-sunmyeong' into 'be-develop'
+    
+    Fix: solved Cors error
+    
+    See merge request s10-webmobile2-sub2/S10P12A507!48
+
+[33mcommit 83dcfc833607dd0641debc84ce2a5a7466b7b9e3[m
+Merge: bf73666 ce582d6
+Author: 제선명 <jesunmyeong@gmail.com>
+Date:   Thu Jan 25 10:55:02 2024 +0900
+
+    Fix conflict 해결
+    
+    be-deploy에 머지 안하겠습니다...
+    
+    Merge branch 'be-develop' of https://lab.ssafy.com/s10-webmobile2-sub2/S10P12A507 into be-develop-sunmyeong
+
+[33mcommit ce582d68a24ee7eec636e4d27f1b103fd87939c3[m
+Merge: e4eda0e 8a38fd6
+Author: 박우철 <woochul102@gmail.com>
+Date:   Thu Jan 25 10:47:34 2024 +0900
+
+    Merge branch 'be-develop-woochul' into 'be-develop'
+    
+    Merge: 토큰 재발급, 토큰 전달방식 변경
+    
+    See merge request s10-webmobile2-sub2/S10P12A507!47
+
+[33mcommit 8a38fd61ae42bcbec92e0bb43bd94984760d32a4[m
+Author: woochul102 <woochul102@gmail.com>
+Date:   Thu Jan 25 10:45:12 2024 +0900
+
+    Fix: 액세스토큰 전달 방식 변경
+    
+    body 말고 header에 넘겨주는 것으로 변경
+
+[33mcommit 96195889de770e5cec42e9dd90874066fd8432db[m
+Author: woochul102 <woochul102@gmail.com>
+Date:   Thu Jan 25 09:38:32 2024 +0900
+
+    Refactor: change redis key style
+    
+    redis에 저장되는 refresh token 값의 형식을 변경했습니다.
+
+[33mcommit 959bca0a2ad93956206db9d565bb90f861935886[m
+Author: woochul102 <woochul102@gmail.com>
+Date:   Thu Jan 25 09:28:43 2024 +0900
+
+    Feat: JWT 필터 토큰 재발급 기능 추가
+    
+    filter 단에서 redis의 refresh token을 검증하여 재발급 할 수 있는 기능 추가.
+
+[33mcommit c00f905908648254e86415ad371c8ad715bbbfd8[m
+Merge: 8ab6e33 bf73666
+Author: 제선명 <jesunmyeong@gmail.com>
+Date:   Thu Jan 25 08:50:33 2024 +0900
+
+    Merge branch 'be-develop-sunmyeong' into 'be-deploy'
+    
+    Feat Cors 해결중
+    
+    See merge request s10-webmobile2-sub2/S10P12A507!46
