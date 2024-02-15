@@ -1,72 +1,52 @@
 <template>
-  <v-card color="#f3f3f3" elevation="16" width="70%" class="card mx-auto px-5 py-5">
-    <v-row style="margin-bottom: 10px">
-      <v-col :cols="12">
-        <div class="myListItem">
-          <div class="listItem">
-            <img class="img" src="/questionIcon2.png" alt="질문아이콘" />
-            <div>
-              <p class="title">{{ question.title }}</p>
-            </div>
-          </div>
-        </div>
-      </v-col>
-    </v-row>
+  <v-card color="#f3f3f3" elevation="16" width="70%" class="card mx-auto py-5">
+    <div class="title-container">
+      <div class="title-img-container">
+        <img class="title-img" src="/questionIcon2.png" alt="질문아이콘" />
+      </div>
+      <div class="title-text-container">
+        <p class="title">{{ question.title }}</p>
+      </div>
+    </div>
 
-    <div class="myListItem contentBox">
-      <v-row>
-        <v-col :cols="12">
-          <div class="listItem writerBox">
-            <span class="nickname title">
-              <profileRouter :uid="questionWriterId" :nickName="writerNickname" />
-            </span>
-            <span class="time info">
-              {{ questionCreatedTime[0] }}년 {{ questionCreatedTime[1] }}월 {{ questionCreatedTime[2] }}일
-            </span>
-          </div>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col :cols="12">
-          <QuestionViewer style="margin-left: 10px; margin-right: 10px" :initialValue="question.content" />
-          <div class="tagList">
-            <span>&lt;질문 태그&gt;</span>
-            <div v-for="(tag, index) in numToStr" :key="index"># {{ tag }} - {{ versions[index] }}</div>
-          </div>
-        </v-col>
-      </v-row>
-      <br /><br />
-      <div class="btnBox">
-        <div>
-          <v-btn v-if="questionWriterId === userStore.loginUserId" @click="goUpdate()">질문수정</v-btn>
-          <v-btn v-if="questionWriterId === userStore.loginUserId" @click="deleteQuestion()">질문삭제</v-btn>
+    <div class="question-container">
+      <div class="question-info-container">
+        <div class="listItem writerBox">
+          <span class="nickname title">
+            <profileRouter :uid="questionWriterId" :nickName="writerNickname" />
+          </span>
+          <span class="time info">
+            {{ questionCreatedTime[0] }}년 {{ questionCreatedTime[1] }}월 {{ questionCreatedTime[2] }}일
+          </span>
         </div>
-        <div class="btnBox">
-          <div>
-            <v-btn
-              v-if="isMeTooed"
-              @click="deleteMeToo(questionId)"
-              style="background-color: #fff; color: #575757; border: 2px solid #62c0a6"
-              >나도궁금해요 취소</v-btn
-            >
-            <v-btn v-else @click="addMeToo(userStore.loginUserId, questionId)">나도궁금해요</v-btn>
-            <!-- {{ meTooCnt }} -->
-            <v-btn
-              v-if="isBookmarked"
-              @click="deleteBookmark(questionId)"
-              style="background-color: #fff; color: #575757; border: 2px solid #62c0a6"
-              >북마크 취소</v-btn
-            >
-            <v-btn v-else @click="addBookmark(userStore.loginUserId, questionId)">북마크</v-btn>
-            <!-- {{ bookmarkCnt }} -->
-            <v-btn @click="goCreateAnswer()">답변달기</v-btn>
+        <div class="edit-btnBox">
+          <div class="edit-btn" v-if="questionWriterId === userStore.loginUserId" @click="goUpdate()">
+            <span class="edit-text">답변수정</span>
+          </div>
+          <div class="edit-btn" v-if="questionWriterId === userStore.loginUserId" @click="deleteQuestion()">
+            <span class="edit-text">답변삭제</span>
           </div>
         </div>
       </div>
+      <div class="question-content-container">
+        <QuestionViewer style="margin-left: 10px; margin-right: 10px" :initialValue="question.content" />
+        <div class="tagList">
+          <span>&lt;질문 태그&gt;</span>
+          <div v-for="(tag, index) in numToStr" :key="index"># {{ tag }} - {{ versions[index] }}</div>
+        </div>
+      </div>
+      <div class="question-btn-container">
+        <div class="btnBox">
+          <v-btn v-if="isMeTooed" @click="deleteMeToo(questionId)">나도궁금해요 취소</v-btn>
+          <v-btn v-else @click="addMeToo(userStore.loginUserId, questionId)">나도궁금해요</v-btn>
+          <v-btn v-if="isBookmarked" @click="deleteBookmark(questionId)">북마크 취소</v-btn>
+          <v-btn v-else @click="addBookmark(userStore.loginUserId, questionId)">북마크</v-btn>
+          <v-btn @click="goCreateAnswer()">답변달기</v-btn>
+        </div>
+      </div>
     </div>
-    <br />
 
-    <div v-if="isAnswerExist" class="myListItem">
+    <div v-if="isAnswerExist" class="answer-list-container">
       <AnswerList :answer-list="question.answerList" />
     </div>
   </v-card>
@@ -202,6 +182,91 @@ const goCreateAnswer = function () {
 </script>
 
 <style scoped>
+.title-container{
+  height: fit-content;
+  width: 90%;
+  background-color: #fff;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.4);
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+}
+.title-img-container{
+  height: 100%;
+  width: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.title-text-container{
+  height: 100%;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+}
+.title-img{
+  height: 60px;
+  width: 60px;
+}
+.question-container{
+  width: 90%;
+  padding-top: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-top: 10px;
+  background-color: white;
+  border-radius: 35px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.4);
+
+}
+.question-info-container{
+  width: 100%;
+  border-bottom: solid 0.5px #ccc;
+  display: flex;
+}
+.question-content-container{
+  width: 100%;
+}
+.question-btn-container{
+  width: 100%;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border-top: solid 0.5px #ccc;
+  display: flex;
+  justify-content: flex-end;
+}
+.btnBox {
+  display: flex;
+  justify-content: space-between;
+}
+.edit-btnBox {
+  width: fit-content;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+.edit-btn{
+  margin-left: 5px;
+  margin-right: 5px;
+}
+.edit-text{
+  color: #aaa;
+  font-size: 15px;
+  cursor: pointer;
+  white-space: nowrap;
+
+}
+.answer-list-container{
+  display: flex;
+  margin-top: 10px;
+  width: 90%;
+}
+
 button {
   background-color: #62c0a6;
   border-radius: 35px;
@@ -216,32 +281,15 @@ button {
   border-top-left-radius: 50px;
   border-bottom-left-radius: 50px;
   border-bottom-right-radius: 50px;
-  margin: 100px 40px;
-}
-
-.btnBox {
-  display: flex;
-  justify-content: space-between;
-}
-
-.img {
-  width: 75px;
-  height: 75px;
-  margin: 5px 15px 5px 0;
-  position: relative;
-  top: 0px;
-  left: 0px;
-  /* object-fit: cover; 이미지가 부모 요소에 맞게 조절되면서 원래 비율을 유지합니다. */
-}
-
-.myListItem {
-  border-radius: 35px;
-  /* padding-bottom: 10px; */
-  background-color: white;
   margin-top: 10px;
-  margin-left: 20px;
-  margin-right: 20px;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
+
+
 
 .contentBox {
   padding: 25px 40px 25px;
@@ -273,6 +321,7 @@ button {
 .title {
   font-size: large;
   font-weight: bolder;
+  color: #575757;
   margin-right: 20px;
 }
 

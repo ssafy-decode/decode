@@ -207,8 +207,9 @@ span {
   top: 0px;
   right: 16%;
   border-radius: 30px;
+  color: #565656;
   background-color: #62c0a6;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .titleBox {

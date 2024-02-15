@@ -149,7 +149,7 @@
               style="width: auto; height: auto; margin-left: 4px; margin-right: 10px"
             /> </template
         ></v-text-field>
-        <span style="display: flex; justify-content: end; margin-right: 20px">
+        <span style="display: flex; justify-content: flex-end; margin-right: 20px">
           <v-btn
             @click.prevent="regist"
             color="#62C0A6"
