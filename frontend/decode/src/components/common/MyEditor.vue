@@ -9,6 +9,11 @@ import Editor from '@toast-ui/editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import axios from '@/utils/common-axios';
 import { useQuestionStore } from '@/stores/questionStore';
+import 'tui-color-picker/dist/tui-color-picker.css';
+import '@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css';
+import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
+import fontSize from 'tui-editor-plugin-font-size';
+import 'tui-editor-plugin-font-size/dist/tui-editor-plugin-font-size.css';
 
 export default {
   data() {
@@ -32,6 +37,7 @@ export default {
       hooks: {
         addImageBlobHook: addImageBlobHook,
       },
+      plugins: [colorSyntax, fontSize],
     });
 
     this.editor.on('change', () => {
