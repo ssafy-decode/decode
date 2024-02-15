@@ -37,9 +37,19 @@
       </div>
       <div class="question-btn-container">
         <div class="btnBox">
-          <v-btn v-if="isMeTooed" @click="deleteMeToo(questionId)">나도궁금해요 취소</v-btn>
+          <v-btn
+            v-if="isMeTooed"
+            @click="deleteMeToo(questionId)"
+            style="background-color: #ffffff; border: 2px solid #62c0a6; color: #575757"
+            >나도궁금해요 취소</v-btn
+          >
           <v-btn v-else @click="addMeToo(userStore.loginUserId, questionId)">나도궁금해요</v-btn>
-          <v-btn v-if="isBookmarked" @click="deleteBookmark(questionId)">북마크 취소</v-btn>
+          <v-btn
+            v-if="isBookmarked"
+            @click="deleteBookmark(questionId)"
+            style="background-color: #ffffff; border: 2px solid #62c0a6; color: #575757"
+            >북마크 취소</v-btn
+          >
           <v-btn v-else @click="addBookmark(userStore.loginUserId, questionId)">북마크</v-btn>
           <v-btn @click="goCreateAnswer()">답변달기</v-btn>
         </div>

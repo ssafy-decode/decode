@@ -71,21 +71,21 @@
             <!-- 나궁 수 -->
 
             <!-- 북마크수 -->
-            <!-- <div
+            <div
               class="cntBox"
               style="position: relative; width: 50%%; display: flex; justify-content: center; align-items: center"
             >
               <div style="width: 100%; display: flex; justify-content: center; align-items: center">
                 <img
                   style="width: 50%; height: auto transform: translateY(-30%);"
-                  src="./answerCountIcon.png"
+                  src="./bookmarkIcon.png"
                   alt="북마크 아이콘"
                 />
               </div>
               <div style="position: absolute; transform: translateY(-15%); color: #649591">
                 {{ question.bookmarkCnt }}<br />
               </div>
-            </div> -->
+            </div>
             <!-- 북마크수 -->
           </div>
         </v-col>
