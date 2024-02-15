@@ -200,29 +200,29 @@ import { useFollowStore } from '@/stores/followStore';
 import { useProfileStore } from '@/stores/profileStore';
 import { useUserStore } from '@/stores/userStore';
 import { storeToRefs } from 'pinia';
-import { useTagStore } from '@/stores/tagStore';
 import axios from '@/utils/common-axios';
 
 const props = defineProps({
   followerList: Array,
   followingList: Array,
   profile: Object,
+  isMyProfile: Boolean,
 });
 
 const tab = ref(0);
 const profileStore = useProfileStore();
 const followStore = useFollowStore();
 const userStore = useUserStore();
-const tagStore = useTagStore();
 
 const { handleQuestions: qList, handleAnswers: aList } = storeToRefs(profileStore);
 const { handleAccessToken: accessToken } = storeToRefs(userStore);
 
 const { unFollow } = followStore;
-const { setTagNumList } = tagStore;
 
 const unfollowById = (id, index) => {
-  props.followingList.splice(index, 1);
+  if (props.isMyProfile) {
+    props.followingList.splice(index, 1);
+  }
   unFollow(id, accessToken.value);
 };
 
@@ -310,7 +310,6 @@ const tagTextColor = (tag) => {
 
 const showAllTags1 = ref({});
 const showAllTags2 = ref({});
-
 watch(
   props,
   () => {
