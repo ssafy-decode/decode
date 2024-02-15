@@ -50,7 +50,7 @@
               class="cntBox"
               style="position: relative; width: 50%; display: flex; align-items: center; justify-content: center"
             >
-              <div style="width: 100%; display: flex; align-items: center; justify-content: start">
+              <div style="width: 100%; display: flex; align-items: center; justify-content: center">
                 <img style="width: 80%; height: auto" src="./metoopeople.png" alt="답변 아이콘" />
               </div>
               <div
@@ -63,6 +63,7 @@
                   width: 50%;
                   color: #649591;
                   padding-bottom: 9%;
+                  margin-left: 18%;
                 "
               >
                 {{ question.meTooCnt }}<br />
@@ -73,7 +74,14 @@
             <!-- 북마크수 -->
             <div
               class="cntBox"
-              style="position: relative; width: 50%%; display: flex; justify-content: center; align-items: center"
+              style="
+                position: relative;
+                left: -4%;
+                width: 50%%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              "
             >
               <div style="width: 100%; display: flex; justify-content: center; align-items: center">
                 <img
