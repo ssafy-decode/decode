@@ -29,20 +29,16 @@
       </div>
       <div class="question-btn-container">
         <div class="btnBox">
-          <div>
+          <div class="btnBox">
             <v-btn v-if="questionWriterId === userStore.loginUserId" @click="goUpdate()">질문수정</v-btn>
             <v-btn v-if="questionWriterId === userStore.loginUserId" @click="deleteQuestion()">질문삭제</v-btn>
           </div>
           <div class="btnBox">
-            <div>
-              <v-btn v-if="isMeTooed" @click="deleteMeToo(questionId)">나도궁금해요 취소</v-btn>
-              <v-btn v-else @click="addMeToo(userStore.loginUserId, questionId)">나도궁금해요</v-btn>
-              <!-- {{ meTooCnt }} -->
-              <v-btn v-if="isBookmarked" @click="deleteBookmark(questionId)">북마크 취소</v-btn>
-              <v-btn v-else @click="addBookmark(userStore.loginUserId, questionId)">북마크</v-btn>
-              <!-- {{ bookmarkCnt }} -->
-              <v-btn @click="goCreateAnswer()">답변달기</v-btn>
-            </div>
+            <v-btn v-if="isMeTooed" @click="deleteMeToo(questionId)">나도궁금해요 취소</v-btn>
+            <v-btn v-else @click="addMeToo(userStore.loginUserId, questionId)">나도궁금해요</v-btn>
+            <v-btn v-if="isBookmarked" @click="deleteBookmark(questionId)">북마크 취소</v-btn>
+            <v-btn v-else @click="addBookmark(userStore.loginUserId, questionId)">북마크</v-btn>
+            <v-btn @click="goCreateAnswer()">답변달기</v-btn>
           </div>
         </div>
       </div>
@@ -56,7 +52,7 @@
 
 <script setup>
 import axios from '@/utils/common-axios';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import AnswerList from '@/components/answer/AnswerList.vue';
@@ -85,26 +81,8 @@ const questionWriterId = ref(null);
 const isAnswerExist = ref(false);
 const questionCreatedTime = ref('');
 
-// const bookmarkCnt = ref(0);
-// const meTooCnt = ref(0);
-
 const numToStr = ref([]);
 const versions = ref([]);
-
-// const loading = ref(false);
-
-// const handleGptAnswer = async (questionId, questionContent) => {
-//   // 로딩 시작
-//   loading.value = true;
-//   setTimeout(() => (loading.value = false), 16000);
-
-//   try {
-//     // GPT 답변 요청
-//     await answerStore.getGptAnswer(questionId, questionContent);
-//   } catch (error) {
-//     console.error('GPT 답변 요청 에러:', error);
-//   }
-// };
 
 const getDetailQuestion = function () {
   axios({
@@ -113,23 +91,23 @@ const getDetailQuestion = function () {
   })
     .then((res) => {
       questionId.value = route.params.id;
-      question.value = res.data.data;
+      questionStore.detailQuestion = res.data.data;
+      question.value = questionStore.detailQuestion;
       questionStore.originalContent = question.value.content;
       isAnswerExist.value = question.value.answerList.length > 0;
       writerNickname.value = question.value.questionWriter.nickname;
       questionWriterId.value = question.value.questionWriter.id;
       questionCreatedTime.value = question.value.createdTime;
-      // bookmarkCnt.value = question.value.bookmarkCnt;
-      // meTooCnt.value = question.value.meTooCnt;
       question.value.tagList.forEach((item) => {
         numToStr.value.push(questionStore.reverseItems[item.tagId]);
         versions.value.push(item.version);
       });
+      /////////////////////////수정중////////////////////////////
+      // bookmarkCnt.value = question.value.bookmarkCnt;
+      // meTooCnt.value = question.value.meTooCnt;
+      /////////////////////////수정중////////////////////////////
     })
-    .catch((err) => {
-      console.log(err);
-      console.log('상세 질문 조회 오류');
-    });
+    .catch((err) => {});
 };
 
 const { setBookmarkList, addBookmark, deleteBookmark } = bookmarkStore;
@@ -174,15 +152,11 @@ const deleteQuestion = function () {
       },
     })
       .then((res) => {
-        console.log('삭제됨');
         router.push({
           path: '/board',
         });
       })
-      .catch((err) => {
-        console.log(err);
-        console.log('질문 삭제 오류');
-      });
+      .catch((err) => {});
   } else {
   }
 };
@@ -193,8 +167,16 @@ const goUpdate = function () {
 
 const goCreateAnswer = function () {
   answerStore.questionId = questionId.value;
-  router.push({ path: `/answer-create` });
+  router.push({ path: `/answer-create/${questionId.value}` });
 };
+
+// watchEffect(() => {
+// if (props.answer && props.recommendedAnswerList) {
+//   recommendList.value.forEach(function (a_id) {
+//     props.recommendedAnswerList[a_id] = true;
+//   });
+// }
+// });
 </script>
 
 <style scoped>

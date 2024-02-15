@@ -6,6 +6,7 @@ export const useQuestionStore = defineStore(
   'useQuestionStore',
   () => {
     const accessToken = ref(null);
+    const detailQuestion = ref({});
     const questions = ref([]);
     const gptTitles = ref('');
     const gptTagIds = ref([]);
@@ -53,16 +54,13 @@ export const useQuestionStore = defineStore(
       })
         .then((res) => {
           questions.value = res.data.data;
-          console.log('검색 성공');
         })
-        .catch((err) => {
-          console.log(err);
-          console.log('게시글 목록 조회 오류');
-        });
+        .catch((err) => {});
     };
 
     return {
       accessToken,
+      detailQuestion,
       questions,
       gptTitles,
       gptTagIds,

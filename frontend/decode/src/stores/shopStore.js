@@ -12,9 +12,7 @@ const useShopStore = defineStore('useShopStore', () => {
       .then((res) => {
         products.value = res.data.data;
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   };
 
   const fetchInventory = async (uid) => {
@@ -22,11 +20,8 @@ const useShopStore = defineStore('useShopStore', () => {
       .get(`/item/list/${uid}`)
       .then((res) => {
         myItems.value = res.data.data;
-        console.log(myItems.value);
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   };
 
   const allProducts = computed(() => products.value);

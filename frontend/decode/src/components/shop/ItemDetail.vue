@@ -25,12 +25,8 @@ const useItem = () => {
         },
       },
     )
-    .then((res) => {
-      console.log(res);
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+    .then((res) => {})
+    .catch((err) => {});
 };
 </script>
 

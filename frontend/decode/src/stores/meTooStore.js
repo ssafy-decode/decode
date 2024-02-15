@@ -41,7 +41,6 @@ const useMeTooStore = defineStore(
           alert('나도 궁금해요!에 추가했습니다!');
         })
         .catch((error) => {
-          console.error('addMeToo error:', error);
           alert('나도 궁금해요! 추가에 실패했습니다.');
         });
     };
@@ -58,7 +57,6 @@ const useMeTooStore = defineStore(
           alert('나도 궁금해요!에서 제외되었습니다.');
         })
         .catch((error) => {
-          console.error('deleteMeToo error:', error);
           alert('나도 궁금해요! 취소 실패');
         });
     };

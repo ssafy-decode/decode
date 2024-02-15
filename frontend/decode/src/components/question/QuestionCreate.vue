@@ -13,16 +13,19 @@
       </v-text-field>
       <v-container class="tagContainer" v-if="tagIds">
         <template v-for="(tag, index) in tagIds" :key="index">
-          <v-row align="center" class="d-flex justify-end">
+          <v-row class="d-flex justify-end">
             <v-col cols="12" sm="6" md="4" class="tagContainer">
-              <v-text-field
+              <v-combobox
                 variant="solo"
                 class="stackBox"
                 bg-color="fff"
-                v-model.trim="tagIds[index]"
+                v-model="tagIds[index]"
+                :items="Object.keys(items)"
                 placeholder="ex) java, spring boot, sql"
-                label="관련 태그"
-              ></v-text-field>
+                label="관련 기술 태그"
+                clearable
+                hide-details="true"
+              ></v-combobox>
             </v-col>
             <v-col cols="12" sm="6" md="4" class="tagContainer">
               <v-text-field
@@ -80,72 +83,63 @@ const questionId = ref(null);
 
 const items = questionStore.items;
 
-////////////////////////////////////////////////////////////
-// 로딩 오버레이를 제어할 변수
 const showLoadingOverlay = ref(false);
-////////////////////////////////////////////////////////////
 
 const updateEditorContent = function (content) {
   questionContent.value = content;
 };
 
 const createQuestion = function () {
-  ////////////////////////////////////////////////////////////
-  // createQuestion 함수 진입 시 로딩 오버레이 표시
-  showLoadingOverlay.value = true;
-  ////////////////////////////////////////////////////////////
-
   const tags = tagIds.value.map((tagId, index) => {
     return {
       tagId: items[tagId],
       version: versions.value[index],
     };
   });
-
-  let data = {
-    title: questionTitle.value,
-    content: questionContent.value,
-    questionWriterId: userStore.loginUserId,
-    tags: tags,
-  };
-  console.log('data의 내용', data);
-  axios({
-    method: 'post',
-    url: `/question`,
-    data: data,
-    headers: {
-      Authorization: `Bearer ${userStore.accessToken}`,
-    },
-  })
-    .then((res) => {
-      console.log('질문 생성 완료');
-      console.log('res.data.id', res.data.data.id);
-      questionId.value = res.data.data.id;
-      questionStore.gptTitles = [''];
-      questionStore.gptTagIds = [''];
+  // 유효성 검사
+  if (tags[0].tagId && tags[0].version && questionContent.value.trim() && questionTitle.value.trim()) {
+    showLoadingOverlay.value = true;
+    let data = {
+      title: questionTitle.value,
+      content: questionContent.value,
+      questionWriterId: userStore.loginUserId,
+      tags: tags,
+    };
+    axios({
+      method: 'post',
+      url: `/question`,
+      data: data,
+      headers: {
+        Authorization: `Bearer ${userStore.accessToken}`,
+      },
     })
-    .then((res) => {
-      // GPT 답변 자동 생성
-      console.log('GPT답변 자동생성 함수 실행');
-      answerStore.getGptAnswer(questionId.value, questionContent.value);
-      alert('잠시 후 GPT의 답변이 생성됩니다.');
+      .then((res) => {
+        questionId.value = res.data.data.id;
+        questionStore.gptTitles = [''];
+        questionStore.gptTagIds = [''];
+      })
+      .then((res) => {
+        // GPT 답변 자동 생성
+        answerStore.getGptAnswer(questionId.value, questionContent.value);
+        alert('잠시 후 GPT의 답변이 생성됩니다.');
 
-      ////////////////////////////////////////////////////////////
-      setTimeout(() => {
+        setTimeout(() => {
+          showLoadingOverlay.value = false;
+          if (confirm('GPT 답변이 생성되면 알려드릴게요!')) {
+            router.push({ name: 'questionview' });
+          } else {
+            router.push({ name: 'questionview' });
+          }
+        }, 1000);
+      })
+      .catch((err) => {
+        alert('제목과 내용, 태그를 입력해주세요');
+
         showLoadingOverlay.value = false;
-      }, 8000);
-      ////////////////////////////////////////////////////////////
-    })
-    .catch((err) => {
-      console.log(err);
-      console.log('질문 생성 오류');
-      alert('제목과 내용, 태그를 입력해주세요');
-
-      ////////////////////////////////////////////////////////////
-      // createQuestion 함수 오류 발생 시 로딩 오버레이 숨김
-      showLoadingOverlay.value = false;
-      ////////////////////////////////////////////////////////////
-    });
+      });
+  } else {
+    alert('제목, 내용, 태그, 버전을 빠짐 없이 입력해주세요');
+  }
 };
 
 onMounted(() => {

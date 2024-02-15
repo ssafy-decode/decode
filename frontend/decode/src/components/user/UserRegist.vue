@@ -241,7 +241,7 @@ const isEmailValid = (email) => {
 
 // 비밀번호 형식 올바른지
 const isPasswordValid = (pwd) => {
-  return pwd.length >= 8 && /[!@#$%^&*(),.?":{}|<>]/g.test(pwd);
+  return pwd.length >= 8 && /[!@#$%^&*(),.?":{}|<script>]/g.test(pwd);
 };
 
 // 생년월일 형식 올바른지
@@ -268,9 +268,7 @@ const checkDuplicateEmail = async () => {
     if (!isDuplicate) {
       alert('이미 존재하는 이메일입니다.');
     }
-  } catch (error) {
-    console.error('Error checking duplicate email:', error);
-  }
+  } catch (error) {}
 };
 
 // 닉네임 중복체크
@@ -287,9 +285,7 @@ const checkDuplicateNickname = async () => {
     if (!isDuplicate) {
       alert('이미 존재하는 닉네임입니다.');
     }
-  } catch (error) {
-    console.error('Error checking duplicate nickname:', error);
-  }
+  } catch (error) {}
 };
 
 // 회원가입 버튼 누르면 전체 정보 올바른지 확인
@@ -343,9 +339,7 @@ const regist = () => {
     };
 
     userStore.createUser(user);
-  } catch (error) {
-    console.error('Error:', error);
-  }
+  } catch (error) {}
 };
 </script>
 

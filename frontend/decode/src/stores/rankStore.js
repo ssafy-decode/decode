@@ -20,8 +20,8 @@ const useRankStore = defineStore(
       gold: 450,
       platinum: 700,
       diamond: 1000,
-      rubi: 1500
-    }
+      rubi: 1500,
+    };
 
     // 함수
     // 경험치순 모든 회원 목록 조회
@@ -31,7 +31,6 @@ const useRankStore = defineStore(
         if (res.data.status === 'OK') {
           rankList.value = res.data.data;
           rankList.value.sort((a, b) => b.exp - a.exp);
-          console.log("rankList: "+rankList.value);  
         }
       });
     };
@@ -41,18 +40,17 @@ const useRankStore = defineStore(
         userStore.accessToken = userStore.parseToken(res);
         if (res.data.status === 'OK') {
           userRank.value = res.data.data;
-          console.log("rankList: "+rankList.value);  
         }
       });
     };
 
     const getNeedExp = (tier) => {
       return needExp[tier];
-    }
+    };
 
     const getNextTier = (tier) => {
-      const nextTier=ref();
-      switch(tier){
+      const nextTier = ref();
+      switch (tier) {
         case 'bronze':
           nextTier.value = 'silver';
           break;
@@ -64,7 +62,7 @@ const useRankStore = defineStore(
           break;
       }
       return nextTier.value;
-    }
+    };
 
     // computed
     const handleRank = computed(() => rankList.value);
