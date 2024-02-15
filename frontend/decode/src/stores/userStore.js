@@ -192,7 +192,7 @@ const useUserStore = defineStore(
   },
   {
     // 새로고침해도 로그인 풀리지 않게 설정
-    persist: {},
+    persist: true,
   },
 );
 
