@@ -21,10 +21,10 @@
         </div>
         <div class="edit-btnBox">
           <div class="edit-btn" v-if="questionWriterId === userStore.loginUserId" @click="goUpdate()">
-            <span class="edit-text">답변수정</span>
+            <span class="edit-text">질문수정</span>
           </div>
           <div class="edit-btn" v-if="questionWriterId === userStore.loginUserId" @click="deleteQuestion()">
-            <span class="edit-text">답변삭제</span>
+            <span class="edit-text">질문삭제</span>
           </div>
         </div>
       </div>
@@ -109,7 +109,10 @@ const getDetailQuestion = function () {
       // meTooCnt.value = question.value.meTooCnt;
       /////////////////////////수정중////////////////////////////
     })
-    .catch((err) => {});
+    .catch((err) => {
+      router.push({ name: 'mainview' });
+      alert('접근 권한이 없습니다.');
+    });
 };
 
 const { setBookmarkList, addBookmark, deleteBookmark } = bookmarkStore;
@@ -182,7 +185,7 @@ const goCreateAnswer = function () {
 </script>
 
 <style scoped>
-.title-container{
+.title-container {
   height: fit-content;
   width: 90%;
   background-color: #fff;
@@ -194,24 +197,24 @@ const goCreateAnswer = function () {
   padding: 0;
   margin: 0;
 }
-.title-img-container{
+.title-img-container {
   height: 100%;
   width: 70px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.title-text-container{
+.title-text-container {
   height: 100%;
   flex-grow: 1;
   display: flex;
   align-items: center;
 }
-.title-img{
+.title-img {
   height: 60px;
   width: 60px;
 }
-.question-container{
+.question-container {
   width: 90%;
   padding-top: 10px;
   padding-left: 20px;
@@ -222,17 +225,16 @@ const goCreateAnswer = function () {
   display: flex;
   flex-direction: column;
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.4);
-
 }
-.question-info-container{
+.question-info-container {
   width: 100%;
   border-bottom: solid 0.5px #ccc;
   display: flex;
 }
-.question-content-container{
+.question-content-container {
   width: 100%;
 }
-.question-btn-container{
+.question-btn-container {
   width: 100%;
   margin-top: 5px;
   margin-bottom: 5px;
@@ -250,18 +252,17 @@ const goCreateAnswer = function () {
   align-items: flex-end;
   justify-content: flex-end;
 }
-.edit-btn{
+.edit-btn {
   margin-left: 5px;
   margin-right: 5px;
 }
-.edit-text{
+.edit-text {
   color: #aaa;
   font-size: 15px;
   cursor: pointer;
   white-space: nowrap;
-
 }
-.answer-list-container{
+.answer-list-container {
   display: flex;
   margin-top: 10px;
   width: 90%;
@@ -288,8 +289,6 @@ button {
   align-items: center;
   flex-direction: column;
 }
-
-
 
 .contentBox {
   padding: 25px 40px 25px;

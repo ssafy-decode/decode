@@ -12,7 +12,7 @@
       "
     >
       <v-row>
-        <v-col :cols="2">
+        <v-col :cols="2" v-if="profile">
           <v-avatar image="../../default.png" size="100px" />
           <div>{{ profile.nickname }}</div>
           <div style="display: flex; margin-left: 60px">

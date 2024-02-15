@@ -90,7 +90,10 @@ const getDetailQuestion = function () {
       questionUpdatedTime.value = questionInfo.value.updatedTime;
       questionMeTooCnt.value = questionInfo.value.meTooCnt;
     })
-    .catch((err) => {});
+    .catch((err) => {
+      router.push({ name: 'mainview' });
+      alert('접근 권한이 없습니다.');
+    });
 };
 
 onMounted(() => {

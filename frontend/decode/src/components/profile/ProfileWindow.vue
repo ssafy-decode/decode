@@ -3,6 +3,7 @@
     <v-card width="1250" style="box-shadow: none; margin-top: 10px; background-color: transparent">
       <v-tabs v-model="tab" background-color="transparent" grow>
         <v-tab
+          v-if="profile"
           v-for="(item, index) in 3"
           :key="index"
           :value="index"
@@ -175,7 +176,7 @@
                       <img src="../plus.png" width="30px" />
                     </button>
                   </v-col>
-                  <v-col cols="2">
+                  <v-col cols="2" v-if="isMyProfile">
                     <v-btn @click="unfollowById(following.id, followingIdx)">팔로우 취소</v-btn>
                   </v-col>
                 </v-row>
