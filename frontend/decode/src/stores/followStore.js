@@ -14,21 +14,37 @@ const useFollowStore = defineStore(
 
     // 함수
     const setFollowerList = async (userid) => {
-      await axios.get(`/followerlist/${userid}`).then((res) => {
-        followerList.value = [];
-        res.data.data.forEach((follower) => {
-          followerList.value.push(follower);
+      await axios
+        .get(`/followerlist/${userid}`)
+        .then((res) => {
+          followerList.value = [];
+          res.data.data.forEach((follower) => {
+            followerList.value.push(follower);
+          });
+        })
+        .catch((error) => {
+          if (error.response && error.response.status === 401) {
+            router.push({ name: 'mainview' });
+            alert('접근 권한이 없습니다.');
+          }
         });
-      });
     };
 
     const setFollowingList = async (userid) => {
-      await axios.get(`/followinglist/${userid}`).then((res) => {
-        followingList.value = [];
-        res.data.data.forEach((following) => {
-          followingList.value.push(following);
+      await axios
+        .get(`/followinglist/${userid}`)
+        .then((res) => {
+          followingList.value = [];
+          res.data.data.forEach((following) => {
+            followingList.value.push(following);
+          });
+        })
+        .catch((error) => {
+          if (error.response && error.response.status === 401) {
+            router.push({ name: 'mainview' });
+            alert('접근 권한이 없습니다.');
+          }
         });
-      });
     };
 
     const follow = async (userid, token) => {

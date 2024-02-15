@@ -129,7 +129,10 @@ const getDetailQuestion = function () {
       // meTooCnt.value = question.value.meTooCnt;
       /////////////////////////수정중////////////////////////////
     })
-    .catch((err) => {});
+    .catch((err) => {
+      router.push({ name: 'mainview' });
+      alert('접근 권한이 없습니다.');
+    });
 };
 
 const { setBookmarkList, addBookmark, deleteBookmark } = bookmarkStore;

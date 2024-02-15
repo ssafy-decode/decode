@@ -151,7 +151,7 @@ const router = createRouter({
     },
     {
       path: '/:catchAll(.*)',
-      name: 'error',
+      name: 'error', // 404 페이지
       component: ErrorView,
     },
   ],
