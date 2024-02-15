@@ -6,14 +6,12 @@
 
 <script setup>
 import myaxios from '@/utils/common-axios.js';
-import { ref, onMounted } from 'vue';
+import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { Chart } from 'chart.js';
 
 const route = useRoute();
-
-const uid = route.params.id;
-
+let chart;
 // 차트 데이터를 저장할 배열
 const expLog = ref([]);
 
@@ -22,7 +20,8 @@ const initChart = () => {
   // 차트를 렌더링할 캔버스 엘리먼트 가져오기
   const ctx = document.getElementById('expChart').getContext('2d');
   // Chart.js를 사용하여 차트 생성
-  new Chart(ctx, {
+  if (chart) chart.destroy();
+  chart = new Chart(ctx, {
     type: 'line',
     data: {
       labels: expLog.value.map((log) => {
@@ -51,7 +50,7 @@ const initChart = () => {
 };
 
 // 경험치 로그 데이터를 가져와 차트를 초기화하는 함수
-const fetchExpData = async () => {
+const fetchExpData = async (uid) => {
   try {
     const res = await myaxios.get(`/exp/${uid}`);
     const data = res.data.data;
@@ -85,13 +84,21 @@ const fetchExpData = async () => {
       sum += log.exp;
       log.exp = sum;
     });
-
     // 차트 초기화
     initChart();
   } catch (error) {}
 };
-
-onMounted(fetchExpData);
+watch(
+  route,
+  () => {
+    expLog.value = [];
+    fetchExpData(route.params.id);
+  },
+  {
+    immediate: true,
+    deep: true,
+  },
+);
 </script>
 
 <style scoped>
