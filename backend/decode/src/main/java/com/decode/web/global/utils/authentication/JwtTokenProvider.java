@@ -12,6 +12,7 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -84,10 +85,8 @@ public class JwtTokenProvider {
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-
         } catch (ExpiredJwtException e) {
-            log.info(e.getMessage());
-            throw new ExpiredJwtException(null, null, e.getMessage());
+            return e.getClaims();
         }
     }
 
@@ -105,12 +104,6 @@ public class JwtTokenProvider {
         return getClaims(token).get("userId", Long.class);
     }
 
-    public String getProvider(String token) {
-        if (token.startsWith("Bearer ")) {
-            token = token.substring(7);
-        }
-        return getClaims(token).get("provider", String.class);
-    }
 
     public long getTokenExpirationTime(String token) {
         return getClaims(token).getExpiration().getTime();
@@ -120,13 +113,19 @@ public class JwtTokenProvider {
         try {
             return !getClaims(token).getExpiration().before(new Date());
         } catch (ExpiredJwtException e) {
-            log.error("access token expired");
             return false;
         }
     }
 
     public String getPrincipal(String token) {
         return getClaims(token).get("email", String.class);
+
+    }
+    public String getProvider(String token) {
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        return getClaims(token).get("provider", String.class);
     }
 
 }
