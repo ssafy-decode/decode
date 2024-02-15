@@ -28,11 +28,7 @@
 <script setup></script>
 
 <style>
-.test {
-  border: solid;
-  padding: 0;
-  margin: 0;
-}
+
 .flex-container {
   display: flex;
   margin: 0;

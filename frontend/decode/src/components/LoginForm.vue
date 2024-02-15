@@ -57,7 +57,7 @@
           </template>
         </v-text-field>
 
-        <div style="display: flex; justify-content: end; margin-right: 50px">
+        <div style="display: flex; justify-content: flex-end; margin-right: 50px">
           <span style="color: #34a080; font-size: 13px"
             ><router-link style="text-decoration: none" to="/findemail"
               ><a href="/findemail" style="text-decoration: none; color: #34a080">이메일 찾기</a></router-link

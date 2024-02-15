@@ -52,7 +52,7 @@
         </v-container>
       </div>
 
-      <span style="display: flex; justify-content: end; margin-right: 30px">
+      <span style="display: flex; justify-content: flex-end; margin-right: 30px">
         <router-link to="/"
           ><v-btn
             @click="complete"

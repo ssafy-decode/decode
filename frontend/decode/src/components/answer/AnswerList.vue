@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="answer-list-box">
     <AnswerListItem
       v-for="answer in answerList"
       :key="answer.answerId"
@@ -44,4 +44,12 @@ onMounted(() => {
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.answer-list-box {
+  border-radius: 35px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+</style>

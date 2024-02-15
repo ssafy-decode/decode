@@ -68,7 +68,7 @@
         </v-text-field>
 
         <div style="text-align: center">
-          <span style="display: flex; justify-content: end; margin-right: 20px">
+          <span style="display: flex; justify-content: flex-end; margin-right: 20px">
             <router-link to="/foundemail"
               ><v-btn
                 @click.prevent="findemail"
