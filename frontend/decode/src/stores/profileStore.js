@@ -32,34 +32,63 @@ const useProfileStore = defineStore(
 
     // 해당 유저 프로필 조회 (id, exp, point, coin, nickname, tier, profileImg)
     const setUserProfile = async (userid) => {
-      await axios.get(`/profile/${userid}`).then((res) => {
-        userStore.accessToken = userStore.parseToken(res);
-        if (res.data.status === 'OK') {
-          profile.value = res.data.data;
-        }
-      });
+      await axios
+        .get(`/profile/${userid}`)
+        .then((res) => {
+          if (res.data.data) {
+            userStore.accessToken = userStore.parseToken(res);
+            if (res.data.status === 'OK') {
+              profile.value = res.data.data;
+            }
+          } else {
+            router.push({ name: 'mainview' });
+            alert('접근 권한이 없습니다.');
+          }
+        })
+        .catch((error) => {
+          if (error.response && error.response.status === 401) {
+            router.push({ name: 'mainview' });
+            alert('접근 권한이 없습니다.');
+          }
+        });
     };
 
     // 해당 유저 프로필에서 그 사람이 올린 질문 목록 조회
     const setQList = async (userid) => {
-      await axios.get(`/question/list/${userid}`).then((res) => {
-        userStore.accessToken = userStore.parseToken(res);
-        if (res.data.status === 'OK') {
-          qList.value = res.data.data.list;
-          qListLength.value = res.data.data.size;
-        }
-      });
+      await axios
+        .get(`/question/list/${userid}`)
+        .then((res) => {
+          userStore.accessToken = userStore.parseToken(res);
+          if (res.data.status === 'OK') {
+            qList.value = res.data.data.list;
+            qListLength.value = res.data.data.size;
+          }
+        })
+        .catch((error) => {
+          if (error.response && error.response.status === 401) {
+            router.push({ name: 'mainview' });
+            alert('접근 권한이 없습니다.');
+          }
+        });
     };
 
     // 해당 유저 프로필에서 그 사람이 작성한 답변이 들어 있는 질문 목록 조회
     const setAList = async (userid) => {
-      await axios.get(`/answer/list/${userid}`).then((res) => {
-        userStore.accessToken = userStore.parseToken(res);
-        if (res.data.status === 'OK') {
-          aList.value = res.data.data.list;
-          aListLength.value = res.data.data.size;
-        }
-      });
+      await axios
+        .get(`/answer/list/${userid}`)
+        .then((res) => {
+          userStore.accessToken = userStore.parseToken(res);
+          if (res.data.status === 'OK') {
+            aList.value = res.data.data.list;
+            aListLength.value = res.data.data.size;
+          }
+        })
+        .catch((error) => {
+          if (error.response && error.response.status === 401) {
+            router.push({ name: 'mainview' });
+            alert('접근 권한이 없습니다.');
+          }
+        });
     };
 
     // 회원 수정 전 비밀번호 확인
