@@ -3,6 +3,7 @@
     <v-card width="1250" style="box-shadow: none; margin-top: 10px; background-color: transparent">
       <v-tabs v-model="tab" background-color="transparent" grow>
         <v-tab
+          v-if="profile"
           v-for="(item, index) in 3"
           :key="index"
           :value="index"
