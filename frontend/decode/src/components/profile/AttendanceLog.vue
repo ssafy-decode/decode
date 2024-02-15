@@ -1,14 +1,12 @@
 <script setup>
 import myaxios from '@/utils/common-axios.js';
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
 
-const id = route.params.id;
-
 const now = new Date();
-const attendanceLog = reactive([]);
+const attendanceLog = ref([]);
 const weeks = ref([]);
 const tooltipDate = ref('');
 
@@ -32,7 +30,7 @@ function splitIntoWeeks(startDate, endDate) {
 }
 
 function isDayActive(date) {
-  return attendanceLog.includes(date);
+  return attendanceLog.value.includes(date);
 }
 
 function hoverDay(date) {
@@ -44,16 +42,27 @@ function hideTooltip() {
 }
 
 // uid로 해당 유저의 출석 로그 API 호출
-onMounted(() => {
-  myaxios
-    .get(`/attendance/${id}`)
-    .then((res) => {
-      res.data.data.forEach((date) => {
-        attendanceLog.push(date);
+
+watch(
+  route,
+  () => {
+    myaxios
+      .get(`/attendance/${route.params.id}`)
+      .then((res) => {
+        attendanceLog.value = [];
+        res.data.data.forEach((date) => {
+          attendanceLog.value.push(date);
+        });
+      })
+      .catch((err) => {
+        console.log(err);
       });
-    })
-    .catch((err) => {});
-});
+  },
+  {
+    immediate: true,
+    deep: true,
+  },
+);
 </script>
 
 <template>
