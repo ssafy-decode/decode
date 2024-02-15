@@ -66,9 +66,9 @@ public class GptApiServiceImpl {
             log.debug("sof link : {}", s);
         }
         log.debug("error log : {}", convertListToString(error, list));
-        return response(ANSWER_SOF_VALUE,convertListToString(error, list)).title().trim();
-//        return response(convertListToString(error, list),
-//                ANSWER_SOF_VALUE).title();
+//        return response(ANSWER_SOF_VALUE,convertListToString(error, list)).title().trim();
+        return response(convertListToString(error, list).trim(),
+                ANSWER_SOF_VALUE).title();
     }
 
     public List<String> getSofLinkByError(String error) {
