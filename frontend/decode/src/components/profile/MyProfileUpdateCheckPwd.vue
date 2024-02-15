@@ -92,7 +92,7 @@ const confirmpwd = () => {
 
 <style scoped>
 .buttons {
-  text-align: end;
+  text-align: flex-end;
   margin: 0 20px;
 }
 .btn {

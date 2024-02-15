@@ -50,6 +50,6 @@ onMounted(() => {
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: end;
+  align-items: flex-end;
 }
 </style>

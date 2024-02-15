@@ -60,7 +60,7 @@ const props = defineProps({
   flex-grow: 1;
   display: flex;
   align-items: flex-end;
-  justify-content: end;
+  justify-content: flex-end;
 }
 .comment-content {
   align-items: center;
@@ -103,7 +103,7 @@ const props = defineProps({
 
 .deleteText {
   color: #12a980;
-  text-align: end;
+  text-align: flex-end;
   font-size: 10px;
   font-weight: 800;
   cursor: pointer;

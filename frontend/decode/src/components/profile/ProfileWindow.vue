@@ -364,7 +364,7 @@ const capitalize = (value) => {
 
 <style scoped>
 .buttons {
-  text-align: end;
+  text-align: flex-end;
 }
 .chips {
   border-radius: 31px;

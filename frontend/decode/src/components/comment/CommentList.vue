@@ -17,7 +17,7 @@ defineProps({
   padding: 0px;
   display: flex;
   flex-direction: column;
-  align-items: end;
-  justify-content: end;
+  align-items: flex-end;
+  justify-content: flex-end;
 }
 </style>

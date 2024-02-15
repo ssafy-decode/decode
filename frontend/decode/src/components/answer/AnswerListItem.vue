@@ -264,8 +264,8 @@ const createComment = function () {
 .answer-delete-container{
   flex-grow: 1;
   display: flex;
-  align-items: end;
-  justify-content: end;
+  align-items: flex-end;
+  justify-content: flex-end;
 }
 .answerContent {
   border: #62c0a6 solid 2px;
@@ -277,10 +277,9 @@ const createComment = function () {
 
 .editDeleteBox {
   width: fit-content;
-  border: solid black;
   display: flex;
-  align-items: end;
-  justify-content: end;
+  align-items: flex-end;
+  justify-content: flex-end;
 }
 
 .deleteText {
@@ -292,7 +291,7 @@ const createComment = function () {
 
 .searchBox {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   margin-top: 5px;
   margin-bottom: 5px;
   padding: 0;
