@@ -1,6 +1,7 @@
 package com.decode.web.global.filter;
 
 import com.decode.web.domain.user.service.AuthService;
+import com.decode.web.exception.CustomLoginException;
 import com.decode.web.global.utils.authentication.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -52,6 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             else{
                 SecurityContextHolder.clearContext();
                 res.setHeader("Authorization", null);
+
             }
 
         }
