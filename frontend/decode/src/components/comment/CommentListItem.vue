@@ -67,7 +67,11 @@ const props = defineProps({
   background-color: white;
   border: #62c0a6 solid 0.5px;
   border-radius: 35px;
-  padding: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 15px;
+  padding-right: 15px;
+  font-size: 13px;
 }
 
 .listItem {
