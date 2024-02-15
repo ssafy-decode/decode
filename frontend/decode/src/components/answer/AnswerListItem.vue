@@ -41,7 +41,7 @@
         </div>
         <div class="answer-delete-container">
           <div v-if="answer.answerWriter.id === userStore.loginUserId" class="editDeleteBox" @click="answerStore.deleteAnswer(answer.answerId)">
-            <span  class="deleteText">답변삭제</span>
+            <span class="deleteText">답변삭제</span>
           </div>
         </div>
       </div>
@@ -186,12 +186,13 @@ const createComment = function () {
 
 <style scoped>
 .answer-img-container{
-  height: 40px;
-  width: 40px;
+  height: 30px;
+  width: 30px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-right: 5px;
 }
 .answer-img{
   width: 80%;
@@ -200,15 +201,19 @@ const createComment = function () {
   background-color: white;
   border-radius: 50%;
   text-align: center;
+  font-size: 15px;
   font-weight: bold;
   color: #12a980;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .answer-container{
   width: 95%;
 }
 .answer-info-container{
   height: 40px;
-  margin-left: 15px;
+  margin-left: 5px;
   display: flex;
   align-items: center;
 }
@@ -266,6 +271,7 @@ const createComment = function () {
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
+  padding-right: 20px;
 }
 .answerContent {
   border: #62c0a6 solid 2px;
@@ -283,9 +289,8 @@ const createComment = function () {
 }
 
 .deleteText {
-  color: #12a980;
+  color: #aaa;
   font-size: 15px;
-  font-weight: 800;
   cursor: pointer;
 }
 

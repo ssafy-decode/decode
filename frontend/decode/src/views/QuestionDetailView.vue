@@ -19,6 +19,14 @@
             {{ questionCreatedTime[0] }}년 {{ questionCreatedTime[1] }}월 {{ questionCreatedTime[2] }}일
           </span>
         </div>
+        <div class="edit-btnBox">
+          <div class="edit-btn" v-if="questionWriterId === userStore.loginUserId" @click="goUpdate()">
+            <span class="edit-text">답변수정</span>
+          </div>
+          <div class="edit-btn" v-if="questionWriterId === userStore.loginUserId" @click="deleteQuestion()">
+            <span class="edit-text">답변삭제</span>
+          </div>
+        </div>
       </div>
       <div class="question-content-container">
         <QuestionViewer style="margin-left: 10px; margin-right: 10px" :initialValue="question.content" />
@@ -29,17 +37,11 @@
       </div>
       <div class="question-btn-container">
         <div class="btnBox">
-          <div class="btnBox">
-            <v-btn v-if="questionWriterId === userStore.loginUserId" @click="goUpdate()">질문수정</v-btn>
-            <v-btn v-if="questionWriterId === userStore.loginUserId" @click="deleteQuestion()">질문삭제</v-btn>
-          </div>
-          <div class="btnBox">
-            <v-btn v-if="isMeTooed" @click="deleteMeToo(questionId)">나도궁금해요 취소</v-btn>
-            <v-btn v-else @click="addMeToo(userStore.loginUserId, questionId)">나도궁금해요</v-btn>
-            <v-btn v-if="isBookmarked" @click="deleteBookmark(questionId)">북마크 취소</v-btn>
-            <v-btn v-else @click="addBookmark(userStore.loginUserId, questionId)">북마크</v-btn>
-            <v-btn @click="goCreateAnswer()">답변달기</v-btn>
-          </div>
+          <v-btn v-if="isMeTooed" @click="deleteMeToo(questionId)">나도궁금해요 취소</v-btn>
+          <v-btn v-else @click="addMeToo(userStore.loginUserId, questionId)">나도궁금해요</v-btn>
+          <v-btn v-if="isBookmarked" @click="deleteBookmark(questionId)">북마크 취소</v-btn>
+          <v-btn v-else @click="addBookmark(userStore.loginUserId, questionId)">북마크</v-btn>
+          <v-btn @click="goCreateAnswer()">답변달기</v-btn>
         </div>
       </div>
     </div>
@@ -224,6 +226,8 @@ const goCreateAnswer = function () {
 }
 .question-info-container{
   width: 100%;
+  border-bottom: solid 0.5px #ccc;
+  display: flex;
 }
 .question-content-container{
   width: 100%;
@@ -232,11 +236,30 @@ const goCreateAnswer = function () {
   width: 100%;
   margin-top: 5px;
   margin-bottom: 5px;
+  border-top: solid 0.5px #ccc;
+  display: flex;
+  justify-content: flex-end;
 }
 .btnBox {
-  margin-top: 5px;
   display: flex;
   justify-content: space-between;
+}
+.edit-btnBox {
+  width: fit-content;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+.edit-btn{
+  margin-left: 5px;
+  margin-right: 5px;
+}
+.edit-text{
+  color: #aaa;
+  font-size: 15px;
+  cursor: pointer;
+  white-space: nowrap;
+
 }
 .answer-list-container{
   display: flex;
