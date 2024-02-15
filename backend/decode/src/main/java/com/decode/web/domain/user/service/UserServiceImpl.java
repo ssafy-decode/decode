@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
         Optional<UserProfileEntity> profile = userProfileRepository.findById(id);
         log.info("id: {}", id);
         if (profile.isPresent()) {
-            log.info("profile: {}", profile.get());
+
             UserProfileEntity userProfile = profile.get();
             userProfile.setTier(Tier.expToTier(profile.get().getExp()));
             return userProfile;
@@ -132,8 +132,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean pwConfirm(Long id, String password) {
         UserInfoEntity user = userInfoRepository.getReferenceById(id);
-        log.info("user: {}", user.getPassword());
-        log.info("password: {}", password);
         return user.getPassword().equals(password);
     }
 
