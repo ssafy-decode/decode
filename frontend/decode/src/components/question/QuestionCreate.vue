@@ -121,11 +121,12 @@ const createQuestion = function () {
       .then((res) => {
         // GPT 답변 자동 생성
         answerStore.getGptAnswer(questionId.value, questionContent.value);
-        alert('잠시 후 GPT의 답변이 생성됩니다.');
+        answerStore.getSofAnswer(questionId.value, questionContent.value);
+        alert('잠시 후 GPT의 답변과 Stackoverflow의 답변이 생성됩니다.');
 
         setTimeout(() => {
           showLoadingOverlay.value = false;
-          if (confirm('GPT 답변이 생성되면 알려드릴게요!')) {
+          if (confirm('GPT와 Stackoverflow의 답변이 생성되면 알려드릴게요!')) {
             router.push({ name: 'questionview' });
           } else {
             router.push({ name: 'questionview' });
