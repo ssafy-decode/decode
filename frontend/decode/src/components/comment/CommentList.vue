@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="comment-list-container">
     <CommentListItem v-for="comment in commentList" :key="comment.commentId" :comment="comment" />
   </div>
 </template>
@@ -11,4 +11,13 @@ defineProps({
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.comment-list-container {
+  width: 100%;
+  padding: 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  justify-content: end;
+}
+</style>

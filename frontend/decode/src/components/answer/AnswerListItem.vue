@@ -2,12 +2,15 @@
   <div v-if="answer" class="answer-container">
     <div class="myListItem">
       <div class="listItem">
-        <div>
-          <span class="nickname title">
+        <div class="answer-info-container">
+          <div class="answer-img-container">
+            <p class="answer-img"> A </p>
+          </div>
+          <span class="answer-nickname">
             <profileRouter :uid="answer.answerWriter.id" :nickName="answer.answerWriter.nickname" />
           </span>
           &nbsp;
-          <span class="time info">
+          <span class="answer-time">
             {{ answer.createdTime[0] }}년 {{ answer.createdTime[1] }}월 {{ answer.createdTime[2] }}일
           </span>
           <v-btn
@@ -20,15 +23,17 @@
           ></v-btn>
           <v-btn v-else @click="recommend()" class="ma-2" variant="text" icon="mdi-thumb-up" color="#c2c2c2"></v-btn>
         </div>
+        <div class="answer-delete-container">
+          <div v-if="answer.answerWriter.id === userStore.loginUserId" class="editDeleteBox" @click="answerStore.deleteAnswer(answer.answerId)">
+            <span  class="deleteText">답변삭제</span>
+          </div>
+        </div>
       </div>
       <div class="answerBox listItem answerContent">
         <AnswerViewer :initialValue="answer.content" :answerId="answer.answerId" />
       </div>
-      <div class="editDeleteBox" @click="answerStore.deleteAnswer(answer.answerId)">
-        <span v-if="answer.answerWriter.id === userStore.loginUserId" class="deleteText">답변삭제</span>
-      </div>
     </div>
-    <div class="commentBox">
+    <div class="comment-list-container">
       <CommentList :comment-list="answer.commentList" />
       <div class="searchBox">
         <div class="midBox">
@@ -40,6 +45,7 @@
               class="searchInput"
               v-model="commentContent"
               clearable
+              hide-details
               label="댓글을 작성해주세요"
             >
               <template #append-inner>
@@ -136,21 +142,38 @@ const createComment = function () {
 </script>
 
 <style scoped>
-
-.answer-container{
-  width: 90%;
-  border: solid red;
+.answer-img-container{
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-
+.answer-img{
+  width: 80%;
+  height: 80%;
+  border: solid #12a980 2px;
+  background-color: white;
+  border-radius: 50%;
+  text-align: center;
+  font-weight: bold;
+  color: #12a980;
+}
+.answer-container{
+  width: 95%;
+}
+.answer-info-container{
+  height: 40px;
+  margin-left: 15px;
+  display: flex;
+  align-items: center;
+}
 .answerBox {
   display: flex;
   justify-content: space-between;
 }
 
-.commentBox {
-  margin-left: 10px;
-  padding: 0px;
-}
 
 .commentInputArea {
   margin: 0px;
@@ -160,9 +183,10 @@ const createComment = function () {
 }
 
 .myListItem {
-  background-color: white;
+  height: fit-content;
   border-radius: 35px;
-  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
 }
 
 .listItem {
@@ -179,7 +203,8 @@ const createComment = function () {
   font-size: small;
 }
 
-.nickname {
+.answer-nickname {
+  font-size: 15px;
   color: #62c0a6;
 }
 
@@ -188,47 +213,58 @@ const createComment = function () {
   font-weight: 800;
 }
 
-.time {
+.answer-time {
   color: #d9d9d9;
+  font-size: 10px;
   font-weight: bold;
 }
-
+.answer-delete-container{
+  flex-grow: 1;
+  display: flex;
+  align-items: end;
+  justify-content: end;
+}
 .answerContent {
   border: #62c0a6 solid 2px;
+  background-color: white;
   border-radius: 24px;
   padding: 20px;
+  margin: 0;
 }
 
 .editDeleteBox {
+  width: fit-content;
+  border: solid black;
   display: flex;
-  justify-content: flex-end;
-  margin-top: 15px;
+  align-items: end;
+  justify-content: end;
 }
 
 .deleteText {
   color: #12a980;
   font-size: 15px;
   font-weight: 800;
+  cursor: pointer;
 }
 
 .searchBox {
-  position: relative;
-  right: -18px;
-  padding-left: 127px;
-  margin: 0px;
+  display: flex;
+  justify-content: end;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding: 0;
 }
 
 .midBox {
   padding: 0px;
   margin: 0px;
+  width: 70%;
 }
 
 .searchInput {
   padding: 0px;
   margin: 0px;
-  margin-top: 20px;
-  margin-right: 20px;
-  margin-bottom: 20px;
+
 }
 
 .searchBtn {

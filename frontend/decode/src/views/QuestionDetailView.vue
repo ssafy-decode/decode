@@ -199,10 +199,10 @@ const goCreateAnswer = function () {
 
 <style scoped>
 .title-container{
-  height: 70px;
+  height: fit-content;
   width: 90%;
   background-color: #fff;
-  border: solid black;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.4);
   border-radius: 50px;
   display: flex;
   justify-content: center;
@@ -229,16 +229,19 @@ const goCreateAnswer = function () {
 }
 .question-container{
   width: 90%;
+  padding-top: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
   margin-top: 10px;
-  border: solid red;
   background-color: white;
   border-radius: 35px;
   display: flex;
   flex-direction: column;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.4);
+
 }
 .question-info-container{
   width: 100%;
-  border: solid blue;
 }
 .question-content-container{
   width: 100%;
@@ -249,9 +252,16 @@ const goCreateAnswer = function () {
   margin-bottom: 5px;
 }
 .btnBox {
+  margin-top: 5px;
   display: flex;
   justify-content: space-between;
 }
+.answer-list-container{
+  display: flex;
+  margin-top: 10px;
+  width: 90%;
+}
+
 button {
   background-color: #62c0a6;
   border-radius: 35px;
@@ -274,13 +284,7 @@ button {
   flex-direction: column;
 }
 
-.answer-list-container {
-  border-radius: 35px;
-  border: solid blue;
-  margin-top: 10px;
-  background-color: white;
-  width: 90%;
-}
+
 
 .contentBox {
   padding: 25px 40px 25px;
@@ -312,6 +316,7 @@ button {
 .title {
   font-size: large;
   font-weight: bolder;
+  color: #575757;
   margin-right: 20px;
 }
 
