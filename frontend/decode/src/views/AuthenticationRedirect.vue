@@ -11,7 +11,6 @@ if (code) {
   if (res.data.status === 'OK') {
     window.opener.postMessage(res.data.data, '*');
     window.close();
-  } else {
   }
 }
 </script>
