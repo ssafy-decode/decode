@@ -43,14 +43,6 @@
                 + {{ question.answerCnt }}<br />
               </div>
             </div>
-            <div
-              class="cntBox"
-              style="position: relative; width: 50%; display: flex; align-items: center; justify-content: center"
-            >
-              <div style="width: 100%; display: flex; align-items: center; justify-content: start">
-                <img style="width: 80%; height: auto" src="./metoopeople.png" alt="미투 아이콘" />
-              </div>
-            </div>
             <!-- 답변 수 -->
 
             <!-- 나궁 수 -->
@@ -87,11 +79,11 @@
                 <img
                   style="width: 50%; height: auto transform: translateY(-30%);"
                   src="./answerCountIcon.png"
-                  alt="답변 아이콘"
+                  alt="북마크 아이콘"
                 />
               </div>
               <div style="position: absolute; transform: translateY(-15%); color: #649591">
-                + {{ question.bookmarkCnt }}<br />
+                {{ question.bookmarkCnt }}<br />
               </div>
             </div> -->
             <!-- 북마크수 -->

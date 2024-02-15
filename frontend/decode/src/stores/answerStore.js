@@ -9,7 +9,7 @@ export const useAnswerStore = defineStore('answer', () => {
   const questionId = ref(null);
   const router = useRouter();
   const gptAnswer = ref('');
-  // const loading = ref(false);
+  const sofAnswer = ref('');
 
   const deleteAnswer = function (answerId) {
     if (confirm('답변을 삭제하시겠습니까?')) {
@@ -47,7 +47,6 @@ export const useAnswerStore = defineStore('answer', () => {
   };
 
   const getGptAnswer = function (questionId, questionContent) {
-    // if (confirm('포인트를 사용하여 GPT 4.0의 답변을 받을까요?')) {
     let data = {
       content: questionContent,
     };
@@ -62,22 +61,61 @@ export const useAnswerStore = defineStore('answer', () => {
       .then((res) => {
         gptAnswer.value = '이 답변은 gpt 4.0에 의해 생성된 답변입니다.\n\n' + res.data.data.answer;
         createGptAnswer(questionId);
-        // alert('답변 목록에 GPT 답변이 추가되었습니다.\n새로고침으로 GPT가 생성한 답변을 확인해보세요!');
-        if (confirm('생성하신 질문에 GPT 답변이 추가되었습니다.\n지금 바로 답변을 확인하실래요?')) {
+      })
+      .catch((err) => {});
+  };
+
+  // Stackoverflow 답변 받으면 생성하는 함수
+  const createSofAnswer = function (questionId) {
+    let data = {
+      questionId: parseInt(questionId),
+      userId: parseInt(userStore.loginUserId),
+      content: sofAnswer.value,
+    };
+    axios({
+      method: 'post',
+      url: `/answer`,
+      data: data,
+      headers: {
+        Authorization: `Bearer ${userStore.accessToken}`,
+      },
+    })
+      .then((res) => {})
+      .catch((err) => {});
+  };
+
+  // Stackoverflow 답변 받고 생성하는 함수
+  const getSofAnswer = function (questionId, questionContent) {
+    let data = {
+      content: questionContent,
+    };
+    axios({
+      method: 'post',
+      url: `/gpt/answer/sof`,
+      data: data,
+      headers: {
+        Authorization: `Bearer ${userStore.accessToken}`,
+      },
+    })
+      .then((res) => {
+        sofAnswer.value =
+          '올려주신 질문을 기반으로, stackoverflow에서 받아온 유사 질문의 답변입니다.\n\n' + res.data.data.answer;
+        createSofAnswer(questionId);
+        if (confirm('생성하신 질문에 GPT와 Stackoverflow 답변이 추가되었습니다.\n지금 바로 답변을 확인하실래요?')) {
           router.push({ name: 'question-detail', params: { id: questionId } });
         }
       })
       .catch((err) => {});
-    // } else {
-    // }
   };
 
   return {
     questionId,
     gptAnswer,
-    // loading,
+    sofAnswer,
     deleteAnswer,
     createGptAnswer,
     getGptAnswer,
+    createSofAnswer,
+    getSofAnswer,
   };
 });
