@@ -1,26 +1,23 @@
 <template>
-  <div class="bigBox">
-    <br />
-    <div class="myListItem" v-if="comment">
-      <div class="listItem">
-        <div class="writerInfo">
-          <p>
-            <span class="nickname title">
-              <profileRouter :uid="comment.commentWriter.id" :nickName="comment.commentWriter.nickname" />
-            </span>
-            &nbsp;
-            <span class="time info">
-              {{ comment.createdTime[0] }}년 {{ comment.createdTime[1] }}월 {{ comment.createdTime[2] }}일
-            </span>
-          </p>
+  <div class="comment-container">
+    <div class="content-header" v-if="comment">
+      <div class="comment-info-container">
+          <span class="comment-nickname">
+            <profileRouter :uid="comment.commentWriter.id" :nickName="comment.commentWriter.nickname" />
+          </span>
+          &nbsp;
+          <span class="comment-time">
+            {{ comment.createdTime[0] }}년 {{ comment.createdTime[1] }}월 {{ comment.createdTime[2] }}일
+          </span>
+      </div>
+      <div class="comment-delete-container">
+        <div v-if="comment.commentWriter.id === userStore.loginUserId" class="editDeleteBox" @click="commentStore.deleteComment(comment.commentId)">
+          <span  class="deleteText">댓글삭제</span>
         </div>
       </div>
-      <div class="commentBox listItem">
-        {{ comment.content }}
-      </div>
-      <div class="editDeleteBox" @click="commentStore.deleteComment(comment.commentId)">
-        <span v-if="comment.commentWriter.id === userStore.loginUserId" class="deleteText">댓글삭제</span>
-      </div>
+    </div>
+    <div class="comment-content">
+      {{ comment.content }}
     </div>
   </div>
 </template>
@@ -39,29 +36,42 @@ const props = defineProps({
 </script>
 
 <style scoped>
-div {
-  margin: 20px;
-}
 
-.bigBox {
-  position: relative;
-  right: -80px;
+.comment-container {
+  width: 95%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
 }
-
-.commentBox {
+.content-header {
+  width: 100%;
+  height: auto;
+  display: flex;
   align-items: center;
-  margin-left: 40px;
+  margin: 0;
+  padding: 0;
 }
-
-.myListItem {
-  position: relative;
+.comment-info-container {
+  width: fit-content;
+  margin-left: 15px;
+}
+.comment-delete-container{
+  flex-grow: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+.comment-content {
+  align-items: center;
   background-color: white;
+  border: #62c0a6 solid 0.5px;
   border-radius: 35px;
-  border: #d9d9d9 2px solid;
-  margin-right: 40px;
+  padding: 10px;
 }
 
 .listItem {
+  border: solid red;
   width: 100%;
   height: auto;
   font-size: large;
@@ -74,17 +84,14 @@ div {
   font-size: small;
 }
 
-.nickname {
+.comment-nickname {
   color: #62c0a6;
+  font-size: 12px;
 }
 
-.title {
-  font-size: large;
-  font-weight: 800;
-}
-
-.time {
+.comment-time {
   color: #d9d9d9;
+  font-size: 10px;
 }
 
 .editDeleteBox {
@@ -96,14 +103,11 @@ div {
 
 .deleteText {
   color: #12a980;
-  font-size: 15px;
+  text-align: flex-end;
+  font-size: 10px;
   font-weight: 800;
+  cursor: pointer;
 }
 
-.writerInfo {
-  position: absolute;
-  top: -50px;
-  background-color: white;
-  border: 15px solid white;
-}
+
 </style>

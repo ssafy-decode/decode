@@ -1,9 +1,9 @@
 <template>
   <div style="height: 70px; display: flex; align-items: center;">
-    <div class="item-container">
+    <div class="item-container"  @click="goDetail(question.id)">
     <v-row style="margin: 0; padding: 0; height: 100%;">
         <v-col :cols="10" style="margin: 0; padding: 0; display: flex; align-items: center; width: 100%; height: 100%;">
-          <div class="myListItem" @click="goDetail(question.id)">
+          <div class="myListItem">
             <div class="listItem">
               <div class="img-container">
                 <img class="q-img" src="./questionIcon.png" alt="질문아이콘" />
@@ -19,7 +19,6 @@
                   </span>
                 </p>
                 <p class="title" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%">
-                  <!-- {{ question.title && question.title.length > 80 ? question.title.slice(0, 80) + '...' : question.title }} -->
                   {{ question.title }}
                 </p>
               </div>
@@ -36,7 +35,7 @@
             </div>
             <div class="cntBox" style="position: relative; width: 50%; display: flex; align-items: center; justify-content: center;">
               <div style="width: 100%; display: flex; align-items: center; justify-content: start;">
-                <img style="width: 80%; height: auto;" src="./metoopeople.png" alt="답변 아이콘" />
+                <img style="width: 80%; height: auto;" src="./metoopeople.png" alt="미투 아이콘" />
               </div>
               <div style="display: flex; align-items: center; justify-content: start; position: absolute; height: 50%; width: 50%; color:#649591; padding-bottom: 9%;">
                 {{ question.meTooCnt }}<br/></div>
@@ -131,7 +130,6 @@ defineProps({
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: #575757;
   font-weight: 600;
   font-size: 13px;
   width: 50%;

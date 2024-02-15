@@ -86,7 +86,7 @@
         </v-text-field>
 
         <div style="text-align: center">
-          <span style="display: flex; justify-content: end; margin-right: 50px">
+          <span style="display: flex; justify-content: flex-end; margin-right: 50px">
             <v-btn
               @click.prevent="findpwd"
               color="#62C0A6"
