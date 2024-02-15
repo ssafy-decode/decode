@@ -102,10 +102,14 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public void logout(String token) {
+
         String requestAccessToken = resolveToken(token);
+        if(requestAccessToken == null){
+            throw new CustomLoginException("알 수 없는 오류");
+        }
+
         String principal = jwtTokenProvider.getPrincipal(requestAccessToken);
         String provider = jwtTokenProvider.getProvider(requestAccessToken);
-        log.info("logout principal : {}", principal);
 
         String refreshTokenInRedis = redisService.getValues("RT:" + provider + ":" + principal);
         if (refreshTokenInRedis != null) {

@@ -25,7 +25,7 @@ public class GptApiServiceImpl {
     private static final String MESSAGES_KEY = "messages";
     private static final String ROLE_KEY = "role";
     private static final String CONTENT_KEY = "content";
-    private static final String MODEL_VALUE = "gpt-3.5-turbo";
+    private static final String MODEL_VALUE = "gpt-4";
     private static final String SYSTEM_ROLE_VALUE = "system";
     private static final String USER_ROLE_VALUE = "user";
     private static final String KEYWORD_VALUE =
