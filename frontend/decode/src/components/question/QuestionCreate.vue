@@ -44,6 +44,7 @@
         </template>
       </v-container>
       <div class="addTagBox">
+        <div>주의) 최소 1개 이상의 태그를 입력해주세요.</div>
         <div>주의) 태그를 입력할 땐, react.js, vue.js 등은 뒤에 ".js"를 지워주세요</div>
         <div class="addTagBtnBox">
           <v-btn class="submitBtn" @click="addEmptyFields">태그추가</v-btn>
@@ -90,56 +91,60 @@ const updateEditorContent = function (content) {
 };
 
 const createQuestion = function () {
-  const tags = tagIds.value.map((tagId, index) => {
-    return {
-      tagId: items[tagId],
-      version: versions.value[index],
-    };
-  });
-  // 유효성 검사
-  if (tags[0].tagId && tags[0].version && questionContent.value.trim() && questionTitle.value.trim()) {
-    showLoadingOverlay.value = true;
-    let data = {
-      title: questionTitle.value,
-      content: questionContent.value,
-      questionWriterId: userStore.loginUserId,
-      tags: tags,
-    };
-    axios({
-      method: 'post',
-      url: `/question`,
-      data: data,
-      headers: {
-        Authorization: `Bearer ${userStore.accessToken}`,
-      },
-    })
-      .then((res) => {
-        questionId.value = res.data.data.id;
-        questionStore.gptTitles = [''];
-        questionStore.gptTagIds = [''];
+  if (typeof tagIds.value[0] !== 'undefined') {
+    const tags = tagIds.value.map((tagId, index) => {
+      return {
+        tagId: items[tagId],
+        version: versions.value[index],
+      };
+    });
+    // 유효성 검사
+    if (tags[0].tagId && tags[0].version && questionContent.value.trim() && questionTitle.value.trim()) {
+      showLoadingOverlay.value = true;
+      let data = {
+        title: questionTitle.value,
+        content: questionContent.value,
+        questionWriterId: userStore.loginUserId,
+        tags: tags,
+      };
+      axios({
+        method: 'post',
+        url: `/question`,
+        data: data,
+        headers: {
+          Authorization: `Bearer ${userStore.accessToken}`,
+        },
       })
-      .then((res) => {
-        // GPT 답변 자동 생성
-        answerStore.getGptAnswer(questionId.value, questionContent.value);
-        answerStore.getSofAnswer(questionId.value, questionContent.value);
-        alert('잠시 후 GPT의 답변과 Stackoverflow의 답변이 생성됩니다.');
+        .then((res) => {
+          questionId.value = res.data.data.id;
+          questionStore.gptTitles = [''];
+          questionStore.gptTagIds = [''];
+        })
+        .then((res) => {
+          // GPT 답변 자동 생성
+          answerStore.getGptAnswer(questionId.value, questionContent.value);
+          answerStore.getSofAnswer(questionId.value, questionContent.value);
+          alert('잠시 후 GPT의 답변과 Stackoverflow의 답변이 생성됩니다.');
 
-        setTimeout(() => {
+          setTimeout(() => {
+            showLoadingOverlay.value = false;
+            if (confirm('GPT와 Stackoverflow의 답변이 생성되면 알려드릴게요!')) {
+              router.push({ name: 'questionview' });
+            } else {
+              router.push({ name: 'questionview' });
+            }
+          }, 1000);
+        })
+        .catch((err) => {
+          alert('제목과 내용, 태그를 입력해주세요');
+
           showLoadingOverlay.value = false;
-          if (confirm('GPT와 Stackoverflow의 답변이 생성되면 알려드릴게요!')) {
-            router.push({ name: 'questionview' });
-          } else {
-            router.push({ name: 'questionview' });
-          }
-        }, 1000);
-      })
-      .catch((err) => {
-        alert('제목과 내용, 태그를 입력해주세요');
-
-        showLoadingOverlay.value = false;
-      });
+        });
+    } else {
+      alert('제목, 내용, 태그, 버전을 빠짐 없이 입력해주세요');
+    }
   } else {
-    alert('제목, 내용, 태그, 버전을 빠짐 없이 입력해주세요');
+    alert('관련 태그를 한 개 이상 입력해주세요!');
   }
 };
 
