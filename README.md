@@ -6,12 +6,18 @@
 ### [Domain](https://i10a507.p.ssafy.io)
 ### [Notion](https://marvelous-enquiry-169.notion.site/5-7-Small-7alk-7d5de04be0c64b739a25a2d006bc5b0b?pvs=4)
 
-
 ## :two_men_holding_hands: Contributors
-| <a href="https://github.com/ggramgyo"><img src="https://github.com/ggramgyo.png" width="120"/></a> | <a href="https://github.com/skajd1"><img src="https://github.com/skajd1.png" width="120"/></a> | <a href="https://github.com/je-sunmeng"><img src="https://github.com/je-sunmeng.png" width="120"/></a> | <a href="https://github.com/serethia"><img src="https://github.com/serethia.png" width="120"/></a> | <a href="https://github.com/jeounpar"><img src="https://github.com/jeounpar.png" width="120"/></a> | <a href="https://github.com/jinddobaegi"><img src="https://github.com/jinddobaegi.png" width="120"/></a> |
-|:--------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------:|
-|                                  [서재화(팀장)](https://github.com/ggramgyo)                                   |                                 [박우철](https://github.com/skajd1)                                  |                                 [제선명(PM)](https://github.com/je-sunmeng)                                 |                                 [엄세원](https://github.com/serethia)                                  |                                [박정규](https://github.com/jeounpar)                                 |                                [정진영](https://github.com/jinddobaegi)                                 |
-|인프라, 풀스택|풀스택 리드|풀스택|프론트엔드|백엔드 리드|프론트엔드 리드|
+
+| 프로필 | 이름 | 역할 |
+|--------------|------|------|
+| [<img src="https://github.com/ggramgyo.png" width="120"/>](https://github.com/ggramgyo) | [서재화(팀장)](https://github.com/ggramgyo) | Openvidu 활용 화면 공유 <br> redis stomp 이용 채팅방 구현 <br> infra 구성 <br> Stackoverflow api 가공 |
+| [<img src="https://github.com/je-sunmeng.png" width="120"/>](https://github.com/je-sunmeng) | [제선명(PM)](https://github.com/je-sunmeng) | 게시판 관련 백엔드 API 담당 <br> 게시판 ELK 적용 <br> 기타 프론트엔드 작업 |
+| [<img src="https://github.com/jeounpar.png" width="120"/>](https://github.com/jeounpar) | [박정규](https://github.com/jeounpar) | gpt, s3 등 클라우드 서비스 API 연동 <br> 백엔드 유지보수 담당 |
+| [<img src="https://github.com/skajd1.png" width="120"/>](https://github.com/skajd1) | [박우철](https://github.com/skajd1) | Spring Security + JWT + OAUTH2 활용 인증/인가 작업 담당 <br> 회원 관련 백엔드 API 담당 <br> Redis 이용 사용자 로그 컴포넌트 개발 |
+| [<img src="https://github.com/serethia.png" width="120"/>](https://github.com/serethia) | [엄세원](https://github.com/serethia) | 회원 관련 페이지 작성 <br> 권한에 따른 페이지 구분 <br> 폰트 및 디자인 통일 |
+| [<img src="https://github.com/jinddobaegi.png" width="120"/>](https://github.com/jinddobaegi) | [정진영](https://github.com/jinddobaegi) | 마크 다운 에디터/뷰어 이용 질문 게시판 구현 <br> GPT, Stackoverflow 답변 요청/응답 UX, UI 구현 |
+
+
 
 ## :sparkles: Introduction
 ### 개발자들의 자유로운 IT 커뮤니티 de;code
@@ -21,8 +27,12 @@
     - GPT 기반 자동 생성 질문/답변 제공
     - 마크다운 에디터를 통한 편리한 질문/답변 UX
     - ELK를 적용한 텍스트 및 기술 태그 기반 검색 기능
+    - 채택 및 북마크 기능
 - 에러 해결을 위한 채팅 및 화면공유 서비스
+  - Openvidu 및 Stomp로 구현
 - 소셜 및 랭킹 기능
+  - 개인 프로필 구독 기능
+  - 사이트 내부 활동을 통한 랭킹 상승
 
 ### Sub Service
 - 깃허브 소셜 로그인
