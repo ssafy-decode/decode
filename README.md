@@ -1,4 +1,4 @@
-![image](/uploads/517fb310b0b1f402ef5c1576aa3a41fd/image.png){: width="800"}
+<img src = "https://github.com/skajd1/decode/assets/86655177/6fb253c5-ec37-4633-8730-b80433aec063" width = "800">
 
 
 
@@ -30,7 +30,7 @@
 
 
 ## :star: Service Architecture
-![Architecture2](/uploads/44f5e1d8862524abbdda7353c9e2ff62/Architecture2.jpg){: width="450" height="600"}
+<img src = "https://github.com/skajd1/decode/assets/86655177/13e986bd-ff8a-43e3-bf7b-407429e54d8d" width="450" height="600">
 
 ## :tada: Stacks
 ### Backend
@@ -61,23 +61,23 @@
 ![Nginx](https://img.shields.io/badge/nginx-%23009639.svg?style=for-the-badge&logo=nginx&logoColor=white)
 
 ## :balloon: Service Layout
-| ![1_main](/uploads/8f7dfe10f2526c39a2899f92357e298e/1_main.gif)|![4_login](/uploads/913e903bebb8f2bec7a9e57a07b06972/4_login.gif)|
+|![image3](https://github.com/skajd1/decode/assets/86655177/d86445f1-7269-4dc9-b04f-da91ccc233d1)|![image4](https://github.com/skajd1/decode/assets/86655177/e221e7a5-321d-46dc-87d5-cdee5e872908)|
 |:---------------------------------------------------------:|:-------------------------------------------------------:|
 |                     Main Page                             |                     Login                               |
 
-| ![16_1_mypage_tab](/uploads/ba1350c725389994c98e189aefdd3eb0/16_1_mypage_tab.gif) | ![15_rank_search](/uploads/cb12a50e22becbf3a815eb7000bb8928/15_rank_search.gif) |
+|![image5](https://github.com/skajd1/decode/assets/86655177/c5b3ecb7-e880-4394-b44a-0201c7bf2d36)|![image6](https://github.com/skajd1/decode/assets/86655177/92d678c7-dbad-4c8e-b87f-b21dab57dc92)|
 |:---------------------------------------------------------:|:-------------------------------------------------------:|
 |                     Profile                               |                      Ranking                            |
 
-|![6_create_title](/uploads/c2cf993236a6d1642f4f7a892e3fb9d6/6_create_title.gif)|![7_2_gpt_sof_answer](/uploads/fc8031de37820cb21e2a907f6d81facd/7_2_gpt_sof_answer.gif)|
+|![image7](https://github.com/skajd1/decode/assets/86655177/3465ff63-6a10-41db-97ea-5971952ae36c)|![image8](https://github.com/skajd1/decode/assets/86655177/2c7e5e24-e93c-42f5-b6b4-2d14e0bc6e56)|
 |:---------------------------------------------------------:|:-------------------------------------------------------:|
 |                     Question                              |                       Answer                            |
 
-|![5_board_search](/uploads/efa29921c5e5a8db5522f3af5071fd29/5_board_search.gif)|![14_2_screen_share](/uploads/8179230f2f1a90516e6efa0f0dd8ebb0/14_2_screen_share.gif)|
+|![image9](https://github.com/skajd1/decode/assets/86655177/c67b7edd-9d01-4c5d-a8a9-281b8e04c305)|![image10](https://github.com/skajd1/decode/assets/86655177/808c90f7-dfea-462a-ae6d-4586d254da64)|
 |:---------------------------------------------------------:|:-------------------------------------------------------:|
 |                     Search                                |                     Screen Share                        |
 
-|![13_chatting](/uploads/bea5e484115ae12015762a3a883cb062/13_chatting.gif)|
+|![image11](https://github.com/skajd1/decode/assets/86655177/81cef91f-25c3-41f3-96fb-aac62fd2829f)|
 |:---------------------------------------------------------:|
 |                          Chat                             |
 
